@@ -6,7 +6,7 @@
   ordinary touchscreen phones/tablets:
     * android.software.leanback  -> NOT required (TV manifest + leanbackassistant
       both declare it required=true; tools:replace forces the merged value false).
-    * android.hardware.touchscreen -> NOT required either (MEETUBE(tv), issue #21): Android TV and
+    * android.hardware.touchscreen -> NOT required either (GUTUBE(tv), issue #21): Android TV and
       TV boxes have none, and the app is used there with the remote.
 
   SplashActivity already carries the normal LAUNCHER category in the main manifest,
@@ -47,7 +47,7 @@
          primitives, which only the Vibrator plays - View.performHapticFeedback has no way to ask
          for them. Normal, auto-granted permission. -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- MEETUBE(tv install): finding and reaching the TV on the Wi-Fi (asked for on Android 17+). -->
+    <!-- GUTUBE(tv install): finding and reaching the TV on the Wi-Fi (asked for on Android 17+). -->
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
 
     <!-- The in-app updater hands its APK straight to Android's installer (AppUpdates.systemInstaller):
@@ -79,7 +79,7 @@
 
     <!-- TV leftovers the phone never uses, dropped from the merged manifest: Play Protect scored
          "draw over other apps + record audio + uninstall apps + autostart on boot/screen on/charger"
-         as a banking trojan (3.2.5), and banking apps then refused to open while MeeTube was
+         as a banking trojan (3.2.5), and banking apps then refused to open while GuTube was
          installed. Overlay was only for TV remote control (device link is forced off on the phone),
          voice search is RecognizerIntent (the recognizer app records, not us), uninstall was the TV
          bridge. RECEIVE_BOOT_COMPLETED stays: WorkManager's reschedule receiver needs it. -->
@@ -105,7 +105,7 @@
          player re-colours its watch page in place so the video never stops. -->
     <application
         android:name="com.newtube.mobile.MobileMainApplication"
-        android:banner="@drawable/meetube_tv_banner"
+        android:banner="@drawable/gutube_tv_banner"
         android:theme="@style/Theme.NewTube"
         tools:replace="android:name,android:theme">
 
@@ -125,13 +125,13 @@
             android:name="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity"
             android:launchMode="singleTop"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|uiMode"
-            android:theme="@style/Theme.MeeTube.Splash"
+            android:theme="@style/Theme.GuTube.Splash"
             tools:replace="android:launchMode,android:configChanges">
-            <!-- MEETUBE(app icon): the launcher entries are the aliases below, one per icon. -->
+            <!-- GUTUBE(app icon): the launcher entries are the aliases below, one per icon. -->
             <intent-filter tools:node="removeAll" />
         </activity>
 
-        <!-- MEETUBE(app icon): Settings > Customization > App icon enables exactly one (AppIcon). -->
+        <!-- GUTUBE(app icon): Settings > Customization > App icon enables exactly one (AppIcon). -->
         <activity-alias
             android:name="com.newtube.mobile.icon.Default"
             android:enabled="true"
@@ -142,7 +142,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -156,7 +156,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -170,7 +170,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -184,7 +184,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -198,7 +198,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -212,7 +212,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -226,7 +226,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -240,7 +240,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- MEETUBE(tv): the TV home screen's entry (the application's banner). -->
+                <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity-alias>
@@ -383,19 +383,19 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <!-- MEETUBE(settings-transfer): invisible host for the settings file's save / open pickers. -->
+        <!-- GUTUBE(settings-transfer): invisible host for the settings file's save / open pickers. -->
         <activity
             android:name="com.newtube.mobile.ui.settings.SettingsTransferActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- MEETUBE(download-folder): invisible host for the system folder picker. -->
+        <!-- GUTUBE(download-folder): invisible host for the system folder picker. -->
         <activity
             android:name="com.newtube.mobile.downloads.DownloadFolderActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- MEETUBE(seek thumb): invisible host for the image picker of the seek bar's picture. -->
+        <!-- GUTUBE(seek thumb): invisible host for the image picker of the seek bar's picture. -->
         <activity
             android:name="com.newtube.mobile.ui.playback.SeekThumb"
             android:exported="false"

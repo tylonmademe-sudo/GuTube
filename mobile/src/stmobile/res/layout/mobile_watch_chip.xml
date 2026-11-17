@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #105): one Up next pill, a compact mobile_search_chip; its background is set from
+<!-- GUTUBE(issue #105): one Up next pill, a compact mobile_search_chip; its background is set from
      code (MobilePlaybackActivity.syncRelatedChips). -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"

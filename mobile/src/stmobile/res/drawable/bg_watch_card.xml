@@ -5,9 +5,9 @@
     android:color="?android:attr/colorControlHighlight">
     <item>
         <shape android:shape="rectangle">
-            <!-- MEETUBE(glass) -->
-            <solid android:color="@color/meetube_watch_card" />
-            <stroke android:width="0.5dp" android:color="@color/meetube_glass_stroke" />
+            <!-- GUTUBE(glass) -->
+            <solid android:color="@color/gutube_watch_card" />
+            <stroke android:width="0.5dp" android:color="@color/gutube_glass_stroke" />
             <corners android:radius="22dp" />
         </shape>
     </item>

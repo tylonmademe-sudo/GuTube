@@ -68,18 +68,18 @@ public class PlayerTimeBar extends View implements TimeBar {
         void onReleaseToCancel(boolean armed);
     }
 
-    static final int PLAYED_COLOR = 0xFFFF453A; // MEETUBE accent
+    static final int PLAYED_COLOR = 0xFFFF453A; // GUTUBE accent
     static final int PLAYED_TAIL_COLOR = 0xFFFF2791;
     static final int BUFFERED_COLOR = 0x80FFFFFF;
     static final int UNPLAYED_COLOR = 0x33FFFFFF;
 
     private static final float TRACK_DP = 2f;
-    private static final float TRACK_DRAGGING_DP = 8f; // MEETUBE: a fat bar under the finger, like YouTube's
+    private static final float TRACK_DRAGGING_DP = 8f; // GUTUBE: a fat bar under the finger, like YouTube's
     private static final float GAP_DP = 2f;
     private static final float GAP_DRAGGING_DP = 3f;
     private static final float SCRUBBER_DP = 12f;
     private static final float SCRUBBER_DRAGGING_DP = 28f;
-    /** MEETUBE(most replayed): the graph's full height, and its gap above the dragged bar. */
+    /** GUTUBE(most replayed): the graph's full height, and its gap above the dragged bar. */
     private static final float HEAT_DP = 24f;
     private static final float HEAT_GAP_DP = 4f;
     /** The pink tail of the played track, ending at the dot. */
@@ -148,7 +148,7 @@ public class PlayerTimeBar extends View implements TimeBar {
     private long mBufferedPosition;
     /** Chapter starts after 0, ascending. */
     private long[] mChapterStarts = new long[0];
-    /** MEETUBE(most replayed): the graph's scores (0-1), evenly over the video; null = none. */
+    /** GUTUBE(most replayed): the graph's scores (0-1), evenly over the video; null = none. */
     @Nullable private float[] mHeatmap;
     private final android.graphics.Path mHeatPath = new android.graphics.Path();
     /** ...its top edge alone, for the glass rim. */
@@ -180,7 +180,7 @@ public class PlayerTimeBar extends View implements TimeBar {
 
     private boolean mScrubbing;
     private boolean mDotHidden;
-    /** MEETUBE(seek thumb): the user's picture in place of the dot, or null. */
+    /** GUTUBE(seek thumb): the user's picture in place of the dot, or null. */
     @Nullable private android.graphics.drawable.Drawable mThumb;
     private long mScrubPosition;
     /** Where playback was when the drag began: the cancel spot. */
@@ -270,13 +270,13 @@ public class PlayerTimeBar extends View implements TimeBar {
         }
     }
 
-    /** MEETUBE(issue #200): Settings > Customize can turn the portrait line off; on by default. */
+    /** GUTUBE(issue #200): Settings > Customize can turn the portrait line off; on by default. */
     public static boolean isLineOn(Context context) {
-        return context.getSharedPreferences("meetube_app", Context.MODE_PRIVATE).getBoolean("seek_line", true);
+        return context.getSharedPreferences("gutube_app", Context.MODE_PRIVATE).getBoolean("seek_line", true);
     }
 
     public static void setLineOn(Context context, boolean on) {
-        context.getSharedPreferences("meetube_app", Context.MODE_PRIVATE).edit().putBoolean("seek_line", on).apply();
+        context.getSharedPreferences("gutube_app", Context.MODE_PRIVATE).edit().putBoolean("seek_line", on).apply();
     }
 
     /** Whether the played part stays on screen as a line while the controls are hidden. */
@@ -363,7 +363,7 @@ public class PlayerTimeBar extends View implements TimeBar {
         invalidate();
     }
 
-    /** MEETUBE(most replayed): the scores over the video (null clears); drawn while the bar is dragged. */
+    /** GUTUBE(most replayed): the scores over the video (null clears); drawn while the bar is dragged. */
     public void setHeatmap(@Nullable float[] scores) {
         mHeatmap = scores != null && scores.length > 1 ? scores : null;
         invalidate();
@@ -476,7 +476,7 @@ public class PlayerTimeBar extends View implements TimeBar {
     // Drawing
     // ---------------------------------------------------------------------------------
 
-    /** MEETUBE(progress colour): the played line in the picked palette's gradient (Ember: red to pink). */
+    /** GUTUBE(progress colour): the played line in the picked palette's gradient (Ember: red to pink). */
     private void applyColor(int key) {
         mColor = key;
         int[] colors = com.newtube.mobile.ui.common.ProgressColor.videoColors(getContext());
@@ -564,7 +564,7 @@ public class PlayerTimeBar extends View implements TimeBar {
             }
         }
 
-        // MEETUBE(progress glow): the played part's head glows, under the dot when it shows.
+        // GUTUBE(progress glow): the played part's head glows, under the dot when it shows.
         if (hasDuration && playedX > left && playedX < right) {
             // The head's colour is the tail's end of the played gradient.
             mGlow.draw(getContext(), canvas, playedX, (top + bottom) / 2f, dp(10), mTailColor);
@@ -590,7 +590,7 @@ public class PlayerTimeBar extends View implements TimeBar {
     }
 
     /**
-     * MEETUBE(most replayed): a soft wave rising from {@code base}, grown in with the drag (this view
+     * GUTUBE(most replayed): a soft wave rising from {@code base}, grown in with the drag (this view
      * draws unclipped, so it sits over the video above the bar). Brighter up to the dot, like YouTube's.
      */
     private void drawHeatmap(Canvas canvas, float left, float right, float base, float playedX) {

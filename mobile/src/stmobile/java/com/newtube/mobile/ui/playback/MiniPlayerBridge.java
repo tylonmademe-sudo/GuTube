@@ -147,7 +147,7 @@ public final class MiniPlayerBridge {
         sClosingAbort = abort;
     }
 
-    /** MEETUBE(issue #233): a card already dismissed must not be saved by a Shorts takeover. */
+    /** GUTUBE(issue #233): a card already dismissed must not be saved by a Shorts takeover. */
     static boolean isClosing() {
         return sClosingAbort != null;
     }

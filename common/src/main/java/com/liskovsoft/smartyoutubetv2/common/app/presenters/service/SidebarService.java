@@ -174,7 +174,7 @@ public class SidebarService implements ProfileChangeListener {
         return index;
     }
 
-    /** MEETUBE(you order): retain disabled choices, with enabled choices in the live sidebar order. */
+    /** GUTUBE(you order): retain disabled choices, with enabled choices in the live sidebar order. */
     public List<Integer> getSectionOrder(List<Integer> sectionIds) {
         List<Integer> order = new ArrayList<>();
         for (int sectionId : mSectionOrder) {
@@ -203,7 +203,7 @@ public class SidebarService implements ProfileChangeListener {
         return order;
     }
 
-    /** MEETUBE(you order): reorder these choices in their sidebar slots and remember disabled rows too. */
+    /** GUTUBE(you order): reorder these choices in their sidebar slots and remember disabled rows too. */
     public void setSectionOrder(List<Integer> sectionIds) {
         List<Integer> current = new ArrayList<>();
         List<Integer> order = new ArrayList<>();
@@ -432,7 +432,7 @@ public class SidebarService implements ProfileChangeListener {
     }
 
     public void persistState() {
-        // MEETUBE(you order): long-press section moves also update the remembered positions of enabled choices.
+        // GUTUBE(you order): long-press section moves also update the remembered positions of enabled choices.
         mSectionOrder = getSectionOrder(mSectionOrder);
         mPrefs.setSidebarData(Helpers.mergeData(mPinnedItems, mBootSectionId, mIsSettingsSectionEnabled, mSectionOrder));
     }

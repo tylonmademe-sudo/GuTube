@@ -16,7 +16,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.ConscryptMode;
 
-/** MEETUBE(bounce): a pulled list follows with resistance, never past its limit, and lets go cleanly. */
+/** GUTUBE(bounce): a pulled list follows with resistance, never past its limit, and lets go cleanly. */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 31, manifest = Config.NONE, application = Application.class)
 @ConscryptMode(ConscryptMode.Mode.OFF)

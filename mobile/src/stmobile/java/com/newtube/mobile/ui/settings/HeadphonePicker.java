@@ -36,7 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * MEETUBE(autoeq): pick a headphone model from AutoEq's index (results/INDEX.md, ~9k profiles,
+ * GUTUBE(autoeq): pick a headphone model from AutoEq's index (results/INDEX.md, ~9k profiles,
  * ~850 KB, kept 2 weeks in files/) and fetch only its ParametricEQ.txt. Search matches every word.
  */
 final class HeadphonePicker {
@@ -64,7 +64,7 @@ final class HeadphonePicker {
 
     /** {@code changed} runs after a pick or "Off", on the main thread. */
     static void show(Context context, Runnable changed) {
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // GUTUBE(glass): frosted
         Context themed = sheet.getContext();
         LinearLayout root = new LinearLayout(themed);
         root.setOrientation(LinearLayout.VERTICAL);

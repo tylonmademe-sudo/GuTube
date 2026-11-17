@@ -252,6 +252,9 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         mToolbar = findViewById(R.id.mobile_dialog_toolbar);
         mBackButton = findViewById(R.id.mobile_dialog_back);
 
+        mRecyclerView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(mBackButton);
+
         // Sheet mode: tapping the dim scrim dismisses the whole dialog (like a Material sheet).
         mScrim.setOnClickListener(v -> dismissSheet());
         installSheetDrag();
@@ -310,7 +313,7 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
     }
 
     /**
-     * MEETUBE(sheet-landscape): over the fullscreen video a picker is the gear sheet's twin
+     * GUTUBE(sheet-landscape): over the fullscreen video a picker is the gear sheet's twin
      * (MobilePlaybackActivity.showPlayerSheet): it stops short of the top, the video in sight above
      * it, and when its list does not fit the last row shows cut about in half, fading out. The 72%
      * cap let a sheet with a title run into the top edge, its handle cut off.
@@ -426,7 +429,7 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         mScrim.setVisibility(View.VISIBLE);
         mHandle.setVisibility(View.VISIBLE);
         mContent.setBackgroundResource(R.drawable.bg_glass_sheet);
-        // MEETUBE(glass): frosted with the screen under this one, once laid out.
+        // GUTUBE(glass): frosted with the screen under this one, once laid out.
         mContent.post(() -> {
             android.app.Activity page = com.newtube.mobile.ui.common.SheetGlass.backdrop();
             com.newtube.mobile.ui.common.SheetGlass.frost(mContent, page);
@@ -605,7 +608,7 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
     private VelocityTracker mDragVelocity;
 
     /**
-     * MEETUBE(sheet drag): the sheet follows a finger dragged down, from its handle and title or from
+     * GUTUBE(sheet drag): the sheet follows a finger dragged down, from its handle and title or from
      * the list once it is at its top, and on release closes or springs back. Without this the
      * header's touches fell through to the scrim, whose click closed the sheet at once on any drag.
      */

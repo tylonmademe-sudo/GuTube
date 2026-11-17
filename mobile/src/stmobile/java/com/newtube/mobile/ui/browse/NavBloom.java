@@ -27,7 +27,7 @@ import com.newtube.mobile.ui.common.Motion;
 import com.newtube.mobile.ui.common.NavLens;
 
 /**
- * MEETUBE(nav bloom, issue #47): a soft glow behind the lit tab's icon, the bar's background. On a
+ * GUTUBE(nav bloom, issue #47): a soft glow behind the lit tab's icon, the bar's background. On a
  * switch it slides to the new tab, dimming as it travels and changing colour on the way. The lit
  * icon and its name take the glow's colour. Settings > Customization > Tab glow picks the colour
  * (plain white unless changed) or turns it off; it runs with or without Liquid glass.
@@ -37,7 +37,7 @@ public final class NavBloom extends Drawable {
     public static final int MODE_TABS = 1;
     public static final int MODE_ACCENT = 2;
     public static final int MODE_WHITE = 3;
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_MODE = "nav_bloom";
     private static final long GLIDE_MS = 360;
     private static final float RADIUS_DP = 30f;
@@ -83,7 +83,7 @@ public final class NavBloom extends Drawable {
     /** Until the user picks one: the accent (red) in the light theme, the plain white in the dark. */
     public static int mode(Context context) {
         if (com.newtube.mobile.ui.common.YouTubeMode.isOn(context)) {
-            return MODE_OFF; // MEETUBE(youtube mode): a plain bar, the filled icon marks the tab
+            return MODE_OFF; // GUTUBE(youtube mode): a plain bar, the filled icon marks the tab
         }
         if (sMode == -1) {
             sMode = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getInt(KEY_MODE, UNSET);
@@ -133,7 +133,7 @@ public final class NavBloom extends Drawable {
     }
 
     /**
-     * MEETUBE(#90): the glow under a finger dragging along the bar, at {@code x} (bar coordinates) in
+     * GUTUBE(#90): the glow under a finger dragging along the bar, at {@code x} (bar coordinates) in
      * the colour of the tab it is over; NaN lets go, and it glides to the lit tab from there.
      */
     void follow(float x, int itemId) {
@@ -203,7 +203,7 @@ public final class NavBloom extends Drawable {
         invalidateSelf();
     }
 
-    /** MEETUBE(issue #130): the glow's colour for a tab, or 0 with the glow off (the held tab's hint). */
+    /** GUTUBE(issue #130): the glow's colour for a tab, or 0 with the glow off (the held tab's hint). */
     public static int colorOf(Context context, int itemId) {
         int mode = mode(context);
         return mode == MODE_OFF ? 0 : colorFor(context, mode, itemId);
@@ -215,7 +215,7 @@ public final class NavBloom extends Drawable {
             return ContextCompat.getColor(context, R.color.mobile_color_primary);
         }
         if (mode == MODE_WHITE) { // white on the dark glass; on the light glass white would vanish, so grey
-            return ContextCompat.getColor(context, R.color.meetube_nav_bloom_plain);
+            return ContextCompat.getColor(context, R.color.gutube_nav_bloom_plain);
         }
         if (itemId == MobileBrowseActivity.YOU_ITEM_ID) {
             return 0xFFBF5AF2; // purple

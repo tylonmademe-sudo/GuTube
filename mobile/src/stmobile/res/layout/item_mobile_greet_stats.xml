@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(stats): the greeting's frosted card - today's time in MeeTube big, then today's watch
+<!-- GUTUBE(stats): the greeting's frosted card - today's time in GuTube big, then today's watch
      time, videos and the 7-day daily average; the last 7 days as bars, a tapped bar's day spelled
      out under them. Clickable, so a tap on it never reaches the overlay (which closes on a tap). -->
 <com.newtube.mobile.ui.common.GlassView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,9 +8,9 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    app:glassCornerRadius="24dp"
+    app:glassCornerRadius="22dp"
     app:glassOnGlass="true"
-    app:glassTint="@color/meetube_greet_glass_tint">
+    app:glassTint="@color/gutube_greet_glass_tint">
 
     <LinearLayout
         android:layout_width="match_parent"

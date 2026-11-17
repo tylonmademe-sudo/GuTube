@@ -43,17 +43,17 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * MEETUBE(issue #220): new uploads from your subscriptions in the notification shade, app closed or
+ * GUTUBE(issue #220): new uploads from your subscriptions in the notification shade, app closed or
  * not. Every hour by default (online, battery not low) this reads the Subscriptions feed (the account's,
  * or the local subscriptions when signed out) and posts each video it hasn't seen; a tap plays it in
- * MeeTube. The first check only remembers what is there. Not push: a video shows up at the next check.
- * MEETUBE(issue #239): each channel has a bell (the channel page, Settings > Notifications); a channel
+ * GuTube. The first check only remembers what is there. Not push: a video shows up at the next check.
+ * GUTUBE(issue #239): each channel has a bell (the channel page, Settings > Notifications); a channel
  * whose bell is off is skipped. Kept locally: YouTube's own bell setting is not readable by this client.
  */
 public class NewUploadsWorker extends Worker {
     private static final String TAG = "NewUploads";
     private static final String WORK = "new_uploads";
-    private static final String CHANNEL_ID = "meetube_new_uploads";
+    private static final String CHANNEL_ID = "gutube_new_uploads";
     private static final String PREFS = "new_uploads";
     private static final String KEY_ON = "on";
     private static final String KEY_SEEN = "seen";
@@ -201,7 +201,7 @@ public class NewUploadsWorker extends Worker {
     private static void post(Context context, MediaItem item) {
         String videoId = item.getVideoId();
         Log.d(TAG, "new upload " + videoId);
-        // The same router a shared YouTube link goes through: it opens the player in MeeTube's task
+        // The same router a shared YouTube link goes through: it opens the player in GuTube's task
         Intent open = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videoId))
                 .setComponent(new ComponentName(context, "com.liskovsoft.smartyoutubetv2.tv.ui.main.IntentRouterActivity"))
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

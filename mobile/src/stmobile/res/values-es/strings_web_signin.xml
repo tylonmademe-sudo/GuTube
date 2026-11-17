@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mobile_web_signin_title">Iniciar sesión en YouTube</string>
-    <string name="mobile_web_signin_privacy">Esta es la página de Google. MeeTube nunca ve tu contraseña.</string>
+    <string name="mobile_web_signin_privacy">Esta es la página de Google. GuTube nunca ve tu contraseña.</string>
     <string name="mobile_web_signin_loading">Abriendo Google</string>
     <string name="mobile_web_signin_finishing">Terminando el inicio de sesión</string>
     <string name="mobile_web_signin_failed">No se pudo terminar de iniciar sesión en YouTube. Comprueba tu conexión e inténtalo de nuevo.</string>
@@ -13,7 +13,7 @@
     <string name="mobile_web_signin_google">Iniciar sesión con Google</string>
     <string name="mobile_web_signin_not_now">Ahora no</string>
     <string name="mobile_web_signin_sign_out">¿Cerrar la sesión web de YouTube?</string>
-    <string name="mobile_web_signin_sign_out_confirm">Tendrás que volver a iniciar sesión para enviar mensajes en el chat en directo. Tu sesión actual de MeeTube se queda como está.</string>
+    <string name="mobile_web_signin_sign_out_confirm">Tendrás que volver a iniciar sesión para enviar mensajes en el chat en directo. Tu sesión actual de GuTube se queda como está.</string>
     <string name="mobile_web_signin_sign_out_failed">No se pudo cerrar sesión. Inténtalo de nuevo.</string>
     <string name="mobile_web_signin_signed_out">Sesión web de YouTube cerrada</string>
     <string name="mobile_web_signin_add">Añadir cuenta web</string>

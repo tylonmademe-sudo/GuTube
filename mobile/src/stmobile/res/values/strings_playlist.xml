@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- MEETUBE(playlist page): English labels for the phone playlist header. -->
+    <!-- GUTUBE(playlist page): English labels for the phone playlist header. -->
     <string name="mobile_playlist_by_owner">by %1$s</string>
     <string name="mobile_playlist_type">Playlist</string>
     <string name="mobile_playlist_download_all">Download all</string>

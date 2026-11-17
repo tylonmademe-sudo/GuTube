@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.transition.TransitionValues;
 import androidx.transition.Visibility;
 
-/** MEETUBE(frost): settings pages fade through the same frost as Home's tabs. */
+/** GUTUBE(frost): settings pages fade through the same frost as Home's tabs. */
 public final class FrostTransition extends Visibility {
     @Nullable
     @Override

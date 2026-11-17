@@ -50,7 +50,7 @@ public final class Motion {
     }
 
     /**
-     * MEETUBE(frost): {@code view} arrives out of frosted glass - it fades in while its blur clears,
+     * GUTUBE(frost): {@code view} arrives out of frosted glass - it fades in while its blur clears,
      * on the GPU (RenderEffect, Android 12+; older ones get the fade alone). The blur is cleared at
      * the end, so scrolling and the glass that samples the page pay nothing afterwards. A new call
      * on the same view takes over from the running one.
@@ -88,7 +88,7 @@ public final class Motion {
         frost.start();
     }
 
-    /** MEETUBE(motion): the same pop, barely there - for a whole bar acknowledging a change. */
+    /** GUTUBE(motion): the same pop, barely there - for a whole bar acknowledging a change. */
     public static void nudge(android.view.View view) {
         pop(view, 0.965f, 1.015f);
     }

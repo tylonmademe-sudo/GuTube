@@ -90,7 +90,7 @@ public final class MobileDownloadService extends Service {
     }
 
     /**
-     * MEETUBE(auto download): from a background worker. Android 12+ refuses a foreground start while
+     * GUTUBE(auto download): from a background worker. Android 12+ refuses a foreground start while
      * the app is not in front; then the caller's thread drains the queue itself (no notification).
      */
     static void startOrDrain(Context context) {
@@ -315,7 +315,7 @@ public final class MobileDownloadService extends Service {
         try {
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
             if (pm != null && mWakeLock == null) {
-                mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MeeTube:downloads");
+                mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "GuTube:downloads");
                 mWakeLock.setReferenceCounted(false);
                 mWakeLock.acquire(6 * 60 * 60 * 1000L);
             }

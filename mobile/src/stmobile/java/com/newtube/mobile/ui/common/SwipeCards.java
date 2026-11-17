@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MEETUBE(hype): cards stacked in one place that a sideways swipe pages through, like the YouTube
+ * GUTUBE(hype): cards stacked in one place that a sideways swipe pages through, like the YouTube
  * watch page's comments / "Hype this video" carousel. Its pages are the children that are not GONE,
  * in order, so a card that hides itself simply drops out. With two or more, dots sit in the top
  * right, left of the comments card's arrow; the lit one is a pill that slides with the finger.

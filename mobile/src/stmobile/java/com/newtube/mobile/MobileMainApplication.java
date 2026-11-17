@@ -156,7 +156,7 @@ public class MobileMainApplication extends MainApplication {
         if (isPhoenixProcess()) {
             return;
         }
-        // MEETUBE(glass): the text dialogs (Create playlist, Rename...) as the app's frosted, rounded card.
+        // GUTUBE(glass): the text dialogs (Create playlist, Rename...) as the app's frosted, rounded card.
         com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog.sStyle =
                 new com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog.Style() {
                     @Override
@@ -223,17 +223,17 @@ public class MobileMainApplication extends MainApplication {
         // Keep ALL existing TV init: Conscrypt, GlobalPreferences, multidex, the
         // global exception handler and every other View->Activity mapping.
         super.onCreate();
-        com.newtube.mobile.player.Media3PlayerController.applyHdrSetting(this); // MEETUBE(issue #35)
-        // MEETUBE(glass): which screen a sheet in its own activity frosts.
+        com.newtube.mobile.player.Media3PlayerController.applyHdrSetting(this); // GUTUBE(issue #35)
+        // GUTUBE(glass): which screen a sheet in its own activity frosts.
         com.newtube.mobile.ui.common.SheetGlass.track(this, com.newtube.mobile.ui.dialog.MobileAppDialogActivity.class);
         com.newtube.mobile.ui.common.SheetGlass.liveOver(com.newtube.mobile.ui.playback.MobilePlaybackActivity.class);
-        com.newtube.mobile.ui.common.CountStyle.install(this); // MEETUBE(counts): K/M or lakh/crore
+        com.newtube.mobile.ui.common.CountStyle.install(this); // GUTUBE(counts): K/M or lakh/crore
 
         // Release-visible launch milestones + the "first frame drawn" hook used below.
         LaunchMilestones.install(this);
-        com.newtube.mobile.ui.common.UsageStats.install(this); // MEETUBE(stats): time spent, for the greeting
-        com.newtube.mobile.ui.common.BatterySaver.install(this); // MEETUBE(issue #93)
-        com.newtube.mobile.ui.common.FocusTimer.install(this); // MEETUBE(focus): the greeting's Focus pill
+        com.newtube.mobile.ui.common.UsageStats.install(this); // GUTUBE(stats): time spent, for the greeting
+        com.newtube.mobile.ui.common.BatterySaver.install(this); // GUTUBE(issue #93)
+        com.newtube.mobile.ui.common.FocusTimer.install(this); // GUTUBE(focus): the greeting's Focus pill
 
         // Counts our started screens from the first one on, so a PiP the user opened from the
         // player menu is not "restored" by Home gaining focus under it (SystemPipBridge).
@@ -770,7 +770,7 @@ public class MobileMainApplication extends MainApplication {
         // NO NOTIFICATIONS (mobile-only): YouTube refuses the notification inbox to the TV sign-in
         // (HTTP 400 signed in and out, 2026-09-30), so the phone shows no Notifications section: not
         // in the You panel, Set-up sections or Boot to section (SidebarService). Prefs untouched.
-        // Re-checked 2026-10-18 (MeeTube issue #6) on a signed-in phone: every client - TV,
+        // Re-checked 2026-10-18 (GuTube issue #6) on a signed-in phone: every client - TV,
         // TVLegacy, TV_UA, Kids ("Precondition check failed"), Android, MWeb, Web ("invalid
         // argument") - gets 400 with the TV OAuth token. The inbox wants a web cookie sign-in.
         com.liskovsoft.smartyoutubetv2.common.app.presenters.service.SidebarService.setNotificationsSectionHidden(true);
@@ -794,9 +794,9 @@ public class MobileMainApplication extends MainApplication {
                                 context != null ? context : MobileMainApplication.this);
                     }
                 });
-        // MEETUBE(update notify): a new version shows up in the notification shade, app closed or not
+        // GUTUBE(update notify): a new version shows up in the notification shade, app closed or not
         com.newtube.mobile.update.UpdateNotifyWorker.schedule(this);
-        // MEETUBE(issue #220): new uploads from subscriptions in the notification shade
+        // GUTUBE(issue #220): new uploads from subscriptions in the notification shade
         com.newtube.mobile.notify.NewUploadsWorker.schedule(this);
 
         // FEED FIRST-PAINT (mobile-only, round 2): Home's eager row-pad continuations exist to
@@ -1158,7 +1158,7 @@ public class MobileMainApplication extends MainApplication {
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
 
-        // MEETUBE(app icon): a new launcher icon is applied once nothing of the app is on screen;
+        // GUTUBE(app icon): a new launcher icon is applied once nothing of the app is on screen;
         // not while a player plays on in the background (the alias switch closes its task).
         if (level == TRIM_MEMORY_UI_HIDDEN
                 && com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter.instance(this).getView() == null) {

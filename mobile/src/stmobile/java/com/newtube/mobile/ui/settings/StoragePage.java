@@ -37,7 +37,7 @@ import java.io.File;
 import java.util.Collections;
 
 /**
- * MEETUBE(storage): Settings > Storage - how full the phone is, what MeeTube takes (app, cache,
+ * GUTUBE(storage): Settings > Storage - how full the phone is, what GuTube takes (app, cache,
  * downloads, everything else) and a button that empties the cache. Downloads are never touched
  * here; they are deleted one by one on the Downloads screen.
  */
@@ -50,7 +50,7 @@ final class StoragePage {
         String title = context.getString(R.string.mobile_settings_storage);
         java.util.List<SettingsRow> rows = new java.util.ArrayList<>();
         rows.add(SettingsRow.custom(title, (parent, page) -> card(parent.getContext())));
-        // MEETUBE(stats): the greeting's time-spent stats, deleted on their own.
+        // GUTUBE(stats): the greeting's time-spent stats, deleted on their own.
         rows.add(SettingsRow.header(context.getString(R.string.mobile_stats_storage_header)));
         rows.add(SettingsRow.action(R.drawable.ic_settings_storage, context.getString(R.string.mobile_stats_delete),
                 () -> context.getResources().getQuantityString(R.plurals.mobile_stats_delete_summary,
@@ -174,7 +174,7 @@ final class StoragePage {
         clear.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(onSurface));
         clear.setCompoundDrawablePadding(dp(context, 8));
         clear.setPadding(dp(context, 16), dp(context, 14), dp(context, 16), dp(context, 14));
-        // MEETUBE(glass): a plain frosted pill, the buttons' own tint; no source - the list it sits in is the glass source
+        // GUTUBE(glass): a plain frosted pill, the buttons' own tint; no source - the list it sits in is the glass source
         GlassDrawable.applyPage(clear, null, 0);
         LinearLayout.LayoutParams clearParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -213,7 +213,7 @@ final class StoragePage {
             long[] sizes = measure(app);
             boolean empty = clearable(app) < EMPTY_BYTES;
             root.post(() -> {
-                // MEETUBE(storage): nothing left to clear - say so with a joke, and the button rests
+                // GUTUBE(storage): nothing left to clear - say so with a joke, and the button rests
                 clear.setEnabled(!empty);
                 clear.setAlpha(empty ? 0.5f : 1f);
                 clear.setText(empty ? R.string.mobile_settings_storage_clear_empty : R.string.mobile_settings_storage_clear);
@@ -251,7 +251,7 @@ final class StoragePage {
     }
 
     /**
-     * MEETUBE(storage): the device bar - a slim glass rail with the accent filling it to the used
+     * GUTUBE(storage): the device bar - a slim glass rail with the accent filling it to the used
      * share, a soft accent glow under the fill and a light sheen on its top; it fills in from empty
      * when the page opens. No glow on a weak phone.
      */
@@ -269,8 +269,8 @@ final class StoragePage {
         GlowBar(Context context, float fraction) {
             super(context);
             mDp = context.getResources().getDisplayMetrics().density;
-            mAccent = ContextCompat.getColor(context, R.color.meetube_accent);
-            mRail = ContextCompat.getColor(context, R.color.meetube_switch_off);
+            mAccent = ContextCompat.getColor(context, R.color.gutube_accent);
+            mRail = ContextCompat.getColor(context, R.color.gutube_switch_off);
             mGlow = !NavLens.lowEnd(context);
             mTarget = Math.max(0f, Math.min(1f, fraction));
             if (mGlow && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {

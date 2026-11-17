@@ -2,142 +2,119 @@
 <!--
   Touch Search screen (Wave 4b).
 
-  Toolbar = back arrow + a rounded EditText (IME action = search) + a mic button for
-  voice input. Below the toolbar, a horizontally-scrolling strip of tag SUGGESTION chips
-  (fed live as the user types, via SearchPresenter's MediaServiceSearchTagProvider), and
-  under that a single Material RecyclerView GRID of results (reuses VideoCardAdapter and
-  the same runtime span-count math + onScrollEnd pagination as the Home/Channel grids).
-
-  Drives the unchanged SearchPresenter via the standard MVP seam; this is the touch
-  replacement for the Leanback SearchTagsFragment/SearchTagsActivity.
+  Structured identically to the Home page:
+  - Base FrameLayout / GlassSource filling the screen with RecyclerView (mobile_search_grid)
+    set to clipToPadding="false" and paddingTop="@dimen/mobile_search_results_top".
+  - Floating Top Bar (mobile_search_toolbar) at the top with transparent background and elevation 6dp.
+  - Floating Chip Bar (mobile_search_chip_track / mobile_search_chips_scroll) below toolbar with
+    transparent background and elevation 4dp.
+  - Results scroll smoothly BEHIND the Top Bar and Chip Bar.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<LinearLayout
     android:id="@+id/mobile_search_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mobile_color_background"
-    android:orientation="vertical">
+    android:background="@color/mobile_color_background">
 
-    <!-- MEETUBE(glass): the results scroll under the floating search pill, which frosts them. -->
+    <!-- The results scroll under the floating search pill, which frosts them. -->
     <com.newtube.mobile.ui.common.GlassSource
         android:id="@+id/mobile_search_glass_source"
-        android:background="@color/mobile_color_background"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:background="@color/mobile_color_background">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- MEETUBE(glass): the results alone, which the chips below frost (a glass may not sit
-             in the source it samples). -->
-        <com.newtube.mobile.ui.common.GlassSource
-            android:id="@+id/mobile_search_chips_source"
-            android:background="@color/mobile_color_background"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mobile_search_grid"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="@dimen/mobile_search_results_top"
-            android:paddingHorizontal="@dimen/mobile_card_spacing"
-            android:paddingBottom="@dimen/mobile_card_spacing"
-            android:scrollbars="none"
-            tools:listitem="@layout/item_video_card" />
+            <!-- The results alone, which the chips below frost (a glass may not sit
+                 in the source it samples). -->
+            <com.newtube.mobile.ui.common.GlassSource
+                android:id="@+id/mobile_search_chips_source"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/mobile_color_background">
 
-        </com.newtube.mobile.ui.common.GlassSource>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mobile_search_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="@dimen/mobile_search_results_top"
+                    android:paddingHorizontal="@dimen/mobile_card_spacing"
+                    android:paddingBottom="@dimen/mobile_card_spacing"
+                    android:scrollbars="none"
+                    tools:listitem="@layout/item_video_card" />
 
-        <!-- NEWTUBE(motion): results load under card ghosts (the feed's shimmering skeleton), not
-             a centered spinner; only over an empty list (MobileSearchActivity.showProgressBar). -->
-        <include
-            layout="@layout/mobile_feed_skeleton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/mobile_search_results_top"
-            android:visibility="gone" />
+            </com.newtube.mobile.ui.common.GlassSource>
 
-        <!-- A search that ends with zero rows used to just... stop (spinner gone, screen
-             blank). Shown by showProgressBar(false) when the grid is empty, worded by
-             SearchLoadState: no connection / couldn't load (both with Try again) / no results. -->
-        <include
-            android:id="@+id/mobile_search_message"
-            layout="@layout/mobile_page_load_state"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/mobile_search_results_top" />
+            <!-- Feed skeleton shimmer overlay -->
+            <include
+                layout="@layout/mobile_feed_skeleton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/mobile_search_results_top"
+                android:visibility="gone" />
 
-        <!-- MEETUBE(search chips): YouTube's chip row over the results - All, Videos, Shorts, Live,
-             Recently uploaded - shortcuts to the filter dialog's own flags. Shown from the first
-             search on; the suggestions list below covers it while the query is edited. -->
-        <com.newtube.mobile.ui.common.GlassChipTrack
-            android:id="@+id/mobile_search_chip_track"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="@dimen/mobile_title_bar_height"
-            android:visibility="gone" />
+            <!-- Empty / error message -->
+            <include
+                android:id="@+id/mobile_search_message"
+                layout="@layout/mobile_page_load_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/mobile_search_results_top" />
 
-        <HorizontalScrollView
-            android:id="@+id/mobile_search_chips_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="@dimen/mobile_title_bar_height"
-            android:clipToPadding="false"
-            android:paddingHorizontal="12dp"
-            android:scrollbars="none"
-            android:visibility="gone"
-            tools:visibility="visible">
+            <!-- Chip track (segmented style) -->
+            <com.newtube.mobile.ui.common.GlassChipTrack
+                android:id="@+id/mobile_search_chip_track"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="@dimen/mobile_title_bar_height"
+                android:background="@android:color/transparent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:elevation="4dp"
+                android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/mobile_search_chips"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal" />
+            <!-- Chip scroll (pills style) -->
+            <HorizontalScrollView
+                android:id="@+id/mobile_search_chips_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="@dimen/mobile_title_bar_height"
+                android:background="@android:color/transparent"
+                android:clipToPadding="false"
+                android:elevation="4dp"
+                android:paddingHorizontal="12dp"
+                android:scrollbars="none"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-        </HorizontalScrollView>
+                <LinearLayout
+                    android:id="@+id/mobile_search_chips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal" />
 
-        <!-- Suggestions/history: a full-height vertical list OVER the results while the user
-             is editing the query (YouTube-style; was a one-line horizontal chip strip).
-             Empty query = search history (clock rows), typed query = live suggestions.
-             Elevation 8dp, no shadow: the chips above carry 4dp, which drew them over this
-             list despite the order (issue #224). -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mobile_search_suggestions"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/mobile_color_background"
-            android:clipToPadding="false"
-            android:elevation="8dp"
-            android:outlineProvider="none"
-            android:paddingTop="@dimen/mobile_title_bar_height"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_mobile_search_suggestion"
-            tools:visibility="visible" />
+            </HorizontalScrollView>
 
-    </FrameLayout>
+        </FrameLayout>
 
     </com.newtube.mobile.ui.common.GlassSource>
 
-</LinearLayout>
-
-    <!-- MEETUBE(glass): back + a floating liquid-glass search pill (the query, clear and voice
-         inside it) + filters. The results and suggestions scroll under it. -->
+    <!-- Top Bar: Search Toolbar floating over the results with transparent background -->
     <LinearLayout
         android:id="@+id/mobile_search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mobile_title_bar_height"
+        android:layout_gravity="top"
+        android:background="@android:color/transparent"
+        android:elevation="6dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="4dp">
@@ -148,9 +125,9 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_marginStart="4dp"
-            android:elevation="6dp"
+            android:elevation="0dp"
             app:glassCornerRadius="22dp"
-            app:glassTint="@color/meetube_search_glass_tint">
+            app:glassTint="@color/gutube_search_glass_tint">
 
             <ImageButton
                 android:id="@+id/mobile_search_back"
@@ -169,9 +146,9 @@
             android:layout_height="44dp"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:elevation="6dp"
+            android:elevation="0dp"
             app:glassCornerRadius="22dp"
-            app:glassTint="@color/meetube_search_glass_tint">
+            app:glassTint="@color/gutube_search_glass_tint">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,7 +172,7 @@
                     android:singleLine="true"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textColorHint="@color/mobile_color_on_surface_secondary"
-                    android:textCursorDrawable="@drawable/meetube_search_cursor"
+                    android:textCursorDrawable="@drawable/gutube_search_cursor"
                     android:textSize="18sp" />
 
                 <!-- Clear the query; visible only while the field has text. -->
@@ -224,16 +201,15 @@
 
         </com.newtube.mobile.ui.common.GlassView>
 
-        <!-- MEETUBE(search filters): upload date, duration, type, features, sort. -->
-        <!-- A frosted circle like the search pill beside it (same tint, height and lift). -->
+        <!-- GUTUBE(search filters): upload date, duration, type, features, sort. -->
         <com.newtube.mobile.ui.common.GlassView
             android:id="@+id/mobile_search_filters_glass"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_marginEnd="4dp"
-            android:elevation="6dp"
+            android:elevation="0dp"
             app:glassCornerRadius="22dp"
-            app:glassTint="@color/meetube_search_glass_tint">
+            app:glassTint="@color/gutube_search_glass_tint">
 
             <ImageButton
                 android:id="@+id/mobile_search_filters"
@@ -248,22 +224,35 @@
 
     </LinearLayout>
 
-    <!-- MEETUBE(search nav): Browse's floating nav pill over the results, Search lit
-         (MobileBrowseActivity.copyNavTabs); hidden while the query is being typed. -->
+    <!-- Suggestions/history: full-height overlay below toolbar while editing query -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mobile_search_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/mobile_title_bar_height"
+        android:background="@color/mobile_color_background"
+        android:clipToPadding="false"
+        android:elevation="8dp"
+        android:outlineProvider="none"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_mobile_search_suggestion" />
+
+    <!-- GUTUBE(search nav): Browse's floating nav pill over the results, Search lit -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_nav_glass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginHorizontal="?attr/meetubeNavSideMargin"
-        android:layout_marginBottom="?attr/meetubeNavBottomMargin"
+        android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
+        android:layout_marginBottom="?attr/gutubeNavBottomMargin"
         android:elevation="6dp"
         android:padding="6dp"
         android:visibility="gone"
-        app:glassCornerRadius="?attr/meetubeNavCorner"
-        app:glassMaxWidth="?attr/meetubeNavMaxWidth"
-        app:glassLiquid="?attr/meetubeNavLiquid"
-        app:glassTint="?attr/meetubeNavTint">
+        app:glassCornerRadius="?attr/gutubeNavCorner"
+        app:glassMaxWidth="?attr/gutubeNavMaxWidth"
+        app:glassLiquid="?attr/gutubeNavLiquid"
+        app:glassTint="?attr/gutubeNavTint">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mobile_bottom_nav"
@@ -271,7 +260,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:elevation="0dp"
-            app:itemBackground="?attr/meetubeNavItemBackground"
+            app:itemBackground="@android:color/transparent"
             app:itemIconSize="24dp"
             app:itemIconTint="@color/mobile_bottom_nav_item"
             app:itemRippleColor="@android:color/transparent"

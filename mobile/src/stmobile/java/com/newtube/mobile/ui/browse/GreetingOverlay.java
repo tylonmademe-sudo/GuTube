@@ -22,9 +22,9 @@ import com.newtube.mobile.ui.settings.SettingsPages;
 import java.util.Calendar;
 
 /**
- * MEETUBE(greeting): a held brand pill frosts the whole screen (a full-screen glass over the page)
+ * GUTUBE(greeting): a held brand pill frosts the whole screen (a full-screen glass over the page)
  * with a greeting for the time of day and three glass shortcuts: Settings, Customization and Check
- * for updates, under a card of time spent in MeeTube (UsageStats). A tap anywhere else, or Back, closes it.
+ * for updates, under a card of time spent in GuTube (UsageStats). A tap anywhere else, or Back, closes it.
  */
 final class GreetingOverlay {
     private static final int[][] PERIODS = {
@@ -61,9 +61,12 @@ final class GreetingOverlay {
         mStats = LayoutInflater.from(activity).inflate(R.layout.item_mobile_greet_stats, content, false);
         content.addView(mStats);
         frost(mStats);
+        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(mStats);
+
         mFocus = LayoutInflater.from(activity).inflate(R.layout.item_mobile_greet_focus, content, false);
         content.addView(mFocus);
         frost(mFocus);
+        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(mFocus);
         mFocus.findViewById(R.id.focus_label).setOnClickListener(v -> {
             if (FocusTimer.remainingMs() < 0) { // running: the countdown is not a picker
                 com.newtube.mobile.ui.common.Haptics.tick(v);
@@ -109,6 +112,7 @@ final class GreetingOverlay {
         text.setText(label);
         text.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
         frost(option);
+        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(option);
         option.setOnClickListener(v -> {
             hide();
             action.run();
@@ -116,7 +120,7 @@ final class GreetingOverlay {
         parent.addView(option);
     }
 
-    /** MEETUBE(stats): its own heavier frost of the page, so a card or button reads as frosted glass on the greeting's. */
+    /** GUTUBE(stats): its own heavier frost of the page, so a card or button reads as frosted glass on the greeting's. */
     private void frost(View glass) {
         ((com.newtube.mobile.ui.common.GlassView) glass).setBlur(28f);
         com.newtube.mobile.ui.common.Glass.blur(glass, mActivity.findViewById(R.id.mobile_blur_target));
@@ -160,7 +164,7 @@ final class GreetingOverlay {
                 .withEndAction(() -> mOverlay.setVisibility(View.GONE)).start();
     }
 
-    /** MEETUBE(focus): a held Timer pill asks for any length in minutes. */
+    /** GUTUBE(focus): a held Timer pill asks for any length in minutes. */
     private void askMinutes() {
         float dp = mActivity.getResources().getDisplayMetrics().density;
         android.widget.EditText input = new android.widget.EditText(mActivity);
@@ -192,7 +196,7 @@ final class GreetingOverlay {
         dialog.show();
     }
 
-    /** MEETUBE(focus): the picked minutes, or the countdown (ticking each second while shown). */
+    /** GUTUBE(focus): the picked minutes, or the countdown (ticking each second while shown). */
     private void bindFocus() {
         mFocus.removeCallbacks(mFocusTick);
         long left = FocusTimer.remainingMs();
@@ -211,7 +215,7 @@ final class GreetingOverlay {
     }
 
     /**
-     * MEETUBE(stats): today's time in MeeTube, big; today's watch time and videos and the 7-day daily
+     * GUTUBE(stats): today's time in GuTube, big; today's watch time and videos and the 7-day daily
      * average under it; the 7 days as bars under their total. A tapped bar lights up and its day is spelled out.
      */
     private void bindStats() {

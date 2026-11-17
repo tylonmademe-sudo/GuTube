@@ -40,7 +40,7 @@ public final class SettingsRow {
     public static final int KIND_CHOICE = 3;
     public static final int KIND_NOTE = 4;
     public static final int KIND_DIVIDER = 5;
-    /** MEETUBE(bar editor): a row that is its own view (the Tabs page's drag-to-order bar). */
+    /** GUTUBE(bar editor): a row that is its own view (the Tabs page's drag-to-order bar). */
     public static final int KIND_CUSTOM = 7;
 
     /** What a toggle or a choice does after it has been applied. */
@@ -204,7 +204,7 @@ public final class SettingsRow {
     }
 
     /**
-     * MEETUBE(customize): this choice as a {@link #KIND_CUSTOM} row (its view set by the caller),
+     * GUTUBE(customize): this choice as a {@link #KIND_CUSTOM} row (its view set by the caller),
      * keeping title, options and pick (a switch's summary and state), so search still finds it by them.
      */
     SettingsRow asCustom() {

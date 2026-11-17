@@ -15,13 +15,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(focus): a Pomodoro-style focus timer, started from the greeting's Focus pill. When the
+ * GUTUBE(focus): a Pomodoro-style focus timer, started from the greeting's Focus pill. When the
  * minutes run out, the screen in front asks "Are ya winning, son?": back to work, or 5 more min.
  * The end is a wall-clock time in prefs, so it survives the app being closed; one that ran out
- * while MeeTube was away asks on the next screen that comes up.
+ * while GuTube was away asks on the next screen that comes up.
  */
 public final class FocusTimer {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_END = "focus_end";
     private static final String KEY_MINUTES = "focus_minutes";
     private static final String KEY_SNOOZES = "focus_snoozes";
@@ -144,11 +144,11 @@ public final class FocusTimer {
         if (blur) {
             android.graphics.drawable.GradientDrawable card = new android.graphics.drawable.GradientDrawable();
             card.setCornerRadius(28 * dp);
-            // MEETUBE(glass): the grey surface at 72% washed the blurred page out to milk on the dark
+            // GUTUBE(glass): the grey surface at 72% washed the blurred page out to milk on the dark
             // theme; a black tint keeps it dark glass, as the search bar.
-            card.setColor(androidx.core.content.ContextCompat.getColor(context, R.color.meetube_dialog_glass_tint));
+            card.setColor(androidx.core.content.ContextCompat.getColor(context, R.color.gutube_dialog_glass_tint));
             card.setStroke(Math.max(1, Math.round(dp)), androidx.core.content.ContextCompat.getColor(context,
-                    R.color.meetube_frost_tint));
+                    R.color.gutube_frost_tint));
             builder.setBackground(card);
         }
         androidx.appcompat.app.AlertDialog dialog = builder.create();

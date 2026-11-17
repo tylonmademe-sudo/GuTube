@@ -100,7 +100,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
         int ACTION_ADD_TO_QUEUE = 5;
         int ACTION_PLAY_NEXT = 6;
         int ACTION_REMOVE_AUTHOR = 7;
-        /** MEETUBE(#65): the video is back in the playlist (Undo), or its removal failed. */
+        /** GUTUBE(#65): the video is back in the playlist (Undo), or its removal failed. */
         int ACTION_RESTORE_TO_PLAYLIST = 8;
         void onItemAction(Video videoItem, int action);
     }
@@ -312,7 +312,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
     }
 
     /**
-     * MEETUBE(#65): the menu's "Remove from" without the menu, for a swipe on a playlist page:
+     * GUTUBE(#65): the menu's "Remove from" without the menu, for a swipe on a playlist page:
      * removed, a snackbar with Undo, and the callback told either way (see ACTION_RESTORE_TO_PLAYLIST).
      */
     public void removeFromOwnPlaylist(Video video, String playlistId, String playlistTitle, VideoMenuCallback callback) {
@@ -322,7 +322,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
     }
 
     /**
-     * MEETUBE(#65): {@code onOwn} gets the playlist's title when {@code playlistId} is one of the
+     * GUTUBE(#65): {@code onOwn} gets the playlist's title when {@code playlistId} is one of the
      * signed-in user's own playlists holding {@code video} (the menu's Remove test); never otherwise.
      */
     public void findOwnPlaylist(Video video, String playlistId, com.liskovsoft.sharedutils.rx.OnResult<String> onOwn) {
@@ -740,7 +740,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
                 }));
     }
 
-    /** MEETUBE(#71): the menu's "Remove from history" without the menu, for a swipe on the History page. */
+    /** GUTUBE(#71): the menu's "Remove from history" without the menu, for a swipe on the History page. */
     public void removeFromHistory(Video video) {
         RxHelper.disposeActions(mNotInterestedAction);
         mVideo = video;

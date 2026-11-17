@@ -30,7 +30,7 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 /**
- * MEETUBE(accent): the accent colour palette, one sheet. The app's accent, then the Player and the
+ * GUTUBE(accent): the accent colour palette, one sheet. The app's accent, then the Player and the
  * Shorts progress lines, each from the same named, slightly gradient palette; a tap applies at once.
  * A new accent rebuilds the screens (their theme carries it) when the sheet closes.
  */
@@ -41,7 +41,7 @@ final class ProgressColorSheet {
     static void show(SettingsPageFragment page) {
         Context context = page.requireContext();
         int accentBefore = Accent.key(context);
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // GUTUBE(glass): frosted
         Context c = sheet.getContext();
         float dp = c.getResources().getDisplayMetrics().density;
         LinearLayout content = new LinearLayout(c);

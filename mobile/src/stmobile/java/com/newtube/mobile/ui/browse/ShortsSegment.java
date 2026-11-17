@@ -12,7 +12,7 @@ import com.newtube.mobile.ui.common.GlassChipTrack;
 import java.util.Arrays;
 
 /**
- * MEETUBE(feed segment): the All | Videos | Shorts pill at the top of Subscriptions and of a
+ * GUTUBE(feed segment): the All | Videos | Shorts pill at the top of Subscriptions and of a
  * channel pinned to You, the playlist page's control. One row in front of the cards, or none.
  */
 class ShortsSegment extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

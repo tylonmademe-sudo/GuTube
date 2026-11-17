@@ -57,7 +57,7 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
      * Up-next list the playing video isn't present at all.
      */
     private String mCurrentVideoId;
-    /** MEETUBE(list layout): full-width cards (item_mobile_related_card) instead of rows. */
+    /** GUTUBE(list layout): full-width cards (item_mobile_related_card) instead of rows. */
     private boolean mCards;
 
     /** Set before the list binds (Customization > Video layout: Cards). */
@@ -145,7 +145,7 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
 
             mThumbnail = itemView.findViewById(R.id.related_thumbnail);
             mBadge = itemView.findViewById(R.id.related_badge);
-            // MEETUBE(glass): the duration pill frosts the thumbnail, as on the Home cards.
+            // GUTUBE(glass): the duration pill frosts the thumbnail, as on the Home cards.
             com.newtube.mobile.ui.common.GlassDrawable.apply(mBadge, itemView.findViewById(R.id.related_thumbnail_glass), 0);
             mWatchProgress = itemView.findViewById(R.id.related_watch_progress);
             mTitle = itemView.findViewById(R.id.related_title);
@@ -156,7 +156,7 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
                     clickListener.onRelatedClick(mVideo, mThumbnail);
                 }
             });
-            // MEETUBE(issue #66): a hold opens the video's menu, the feeds' (queue, playlist, share...).
+            // GUTUBE(issue #66): a hold opens the video's menu, the feeds' (queue, playlist, share...).
             itemView.setOnLongClickListener(v -> {
                 if (mVideo == null) {
                     return false;

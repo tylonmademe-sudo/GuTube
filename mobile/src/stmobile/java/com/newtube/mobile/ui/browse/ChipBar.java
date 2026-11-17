@@ -4,45 +4,39 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
 /**
- * MEETUBE(feed-strip): how Home's floating chip row behaves while the feed scrolls. At the top the
- * chips show; scrolling down slides them away; scrolling back up (still down the feed) brings only
- * a small glass arrow, and a tap on it brings the chips. The row keeps its layout height while
- * hidden (INVISIBLE, never GONE) so the feed never jumps under it.
+ * GUTUBE(feed-strip): how Home's floating chip row behaves while the feed scrolls (native YouTube UX).
+ * At the top the chips show; scrolling down smoothly slides them upwards (-mRow.getHeight()) and fades them out (alpha 1.0 -> 0.0);
+ * scrolling back up smoothly slides them back down into view and fades them back in (alpha 0.0 -> 1.0).
+ * The row keeps its layout height while hidden (INVISIBLE, never GONE) so the feed never jumps under it.
  */
 final class ChipBar {
     private static final int SHOWN = 0;
     private static final int HIDDEN = 1;
-    private static final int ARROW = 2;
-    private static final long DURATION_MS = 220;
+    private static final long DURATION_MS = 240;
 
     private final View mRow;
-    private final View mArrow;
     private final int mSlopPx;
     private boolean mActive;
     private int mState = SHOWN;
     private int mTravel; // signed scroll distance since the last change of direction
 
-    ChipBar(View row, View arrow) {
+    ChipBar(View row) {
         mRow = row;
-        mArrow = arrow;
-        mSlopPx = Math.round(24 * row.getResources().getDisplayMetrics().density);
-        mArrow.setOnClickListener(v -> show());
+        mSlopPx = Math.round(16 * row.getResources().getDisplayMetrics().density);
     }
 
-    /** On for Home and its topics (not over the You panel); off hides both, without animation. */
+    /** On for Home and its topics (not over the You panel); off hides row, without animation. */
     void setActive(boolean active) {
         if (active == mActive) {
             return;
         }
         mActive = active;
         mRow.animate().cancel();
-        mArrow.animate().cancel();
         mState = SHOWN;
         mTravel = 0;
-        mRow.setAlpha(1f);
         mRow.setTranslationY(0f);
+        mRow.setAlpha(1f);
         mRow.setVisibility(active ? View.VISIBLE : View.GONE);
-        mArrow.setVisibility(View.GONE);
     }
 
     boolean isActive() {
@@ -55,6 +49,7 @@ final class ChipBar {
             return;
         }
         if (atTop) {
+            mTravel = 0;
             show();
             return;
         }
@@ -63,53 +58,57 @@ final class ChipBar {
         }
         mTravel = Integer.signum(dy) == Integer.signum(mTravel) ? mTravel + dy : dy;
         if (mTravel > mSlopPx && mState != HIDDEN) {
+            mTravel = 0;
             hide();
-        } else if (mTravel < -mSlopPx && mState == HIDDEN) {
-            showArrow();
         }
+        // Intermediate upward scrolls do not show the chips; only atTop shows them.
     }
 
-    /** A new section or a scroll to the top: the chips again. */
+    /** A new section, scroll to the top, or scroll up: show the chips smoothly. */
     void show() {
-        if (!mActive || mState == SHOWN) {
+        if (!mActive) {
+            return;
+        }
+        if (mState == SHOWN && mRow.getVisibility() == View.VISIBLE
+                && mRow.getTranslationY() == 0f && mRow.getAlpha() == 1f) {
             return;
         }
         mState = SHOWN;
-        fadeOut(mArrow, View.GONE, 0);
         mRow.setVisibility(View.VISIBLE);
         mRow.animate().cancel();
-        mRow.animate().alpha(1f).translationY(0f).setDuration(DURATION_MS)
-                .setInterpolator(new DecelerateInterpolator()).start();
+        mRow.animate()
+                .translationY(0f)
+                .alpha(1f)
+                .setDuration(DURATION_MS)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
     }
 
     private void hide() {
-        boolean fromArrow = mState == ARROW;
-        mState = HIDDEN;
-        if (fromArrow) {
-            fadeOut(mArrow, View.GONE, 0);
-        } else {
-            fadeOut(mRow, View.INVISIBLE, -mRow.getHeight() / 2f);
-        }
-    }
-
-    private void showArrow() {
-        mState = ARROW;
-        mArrow.animate().cancel();
-        mArrow.setVisibility(View.VISIBLE);
-        mArrow.setAlpha(0f);
-        mArrow.setScaleX(0.6f);
-        mArrow.setScaleY(0.6f);
-        mArrow.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(DURATION_MS)
-                .setInterpolator(new DecelerateInterpolator()).start();
-    }
-
-    private static void fadeOut(View view, int endVisibility, float translationY) {
-        view.animate().cancel();
-        if (view.getVisibility() != View.VISIBLE) {
+        if (mState == HIDDEN) {
             return;
         }
-        view.animate().alpha(0f).translationY(translationY).setDuration(DURATION_MS)
+        mState = HIDDEN;
+        mRow.animate().cancel();
+        float travel = -getSlideDistance();
+        mRow.animate()
+                .translationY(travel)
+                .alpha(0f)
+                .setDuration(DURATION_MS)
                 .setInterpolator(new DecelerateInterpolator())
-                .withEndAction(() -> view.setVisibility(endVisibility)).start();
+                .withEndAction(() -> {
+                    if (mState == HIDDEN) {
+                        mRow.setVisibility(View.INVISIBLE);
+                    }
+                })
+                .start();
+    }
+
+    private float getSlideDistance() {
+        int h = mRow.getHeight();
+        if (h <= 0) {
+            h = Math.round(48 * mRow.getResources().getDisplayMetrics().density);
+        }
+        return h;
     }
 }

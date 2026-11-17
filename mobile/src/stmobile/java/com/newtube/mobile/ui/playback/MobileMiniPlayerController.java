@@ -70,14 +70,14 @@ public final class MobileMiniPlayerController {
     private final MiniPlayerBridge.CardFold mCardFold = this::foldForPlayer;
 
     /**
-     * MEETUBE(glass): the mini card's buttons on the player's see-through discs (close and audio:
+     * GUTUBE(glass): the mini card's buttons on the player's see-through discs (close and audio:
      * 40dp in a 48dp target). They are ImageButtons: with no background they show the platform's
      * grey button box, so every screen with a card calls this (Home has its own card code).
      */
     public static void glassButtons(Activity activity) {
         MiniSize.apply(activity);
         int inset = Math.round(4 * activity.getResources().getDisplayMetrics().density);
-        // MEETUBE(minimal buttons): Minimal drops these discs too; the card is behind them, no halo
+        // GUTUBE(minimal buttons): Minimal drops these discs too; the card is behind them, no halo
         com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_play_pause), null, 0, false);
         com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_close), null, inset, false);
         com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_audio), null, inset, false);
@@ -220,7 +220,7 @@ public final class MobileMiniPlayerController {
     }
 
     /**
-     * MEETUBE(issue #125): the nav bar under the card slid to {@code navY} (NavHider.setOnSlide):
+     * GUTUBE(issue #125): the nav bar under the card slid to {@code navY} (NavHider.setOnSlide):
      * a card at a bottom corner follows it down and back up, as Home's does.
      */
     public void followNav(float navY) {
@@ -247,7 +247,7 @@ public final class MobileMiniPlayerController {
         mBar.setScaleX(1f);
         mBar.setScaleY(1f);
         mBar.setTranslationX(0f); // a card swiped away (MiniCardSwipe)
-        mBar.setTranslationY(mSwipe.homeY()); // or dragged to another corner (MEETUBE(mini-float)); lower while the nav is away
+        mBar.setTranslationY(mSwipe.homeY()); // or dragged to another corner (GUTUBE(mini-float)); lower while the nav is away
 
         mEntryAnimating = animateFromPlayer;
         mTextureHasFrame = false;
@@ -418,7 +418,7 @@ public final class MobileMiniPlayerController {
                     // The playback Activity owns the session texture. Release only a temporary
                     // TextureView-created surface that was never replaced by that session - checked
                     // against the one adopted too: the bridge hands out nothing once the player
-                    // took the session back (MEETUBE(issue #38)).
+                    // took the session back (GUTUBE(issue #38)).
                     return texture != mAdopted && texture != MiniPlayerBridge.getSessionTexture();
                 }
 

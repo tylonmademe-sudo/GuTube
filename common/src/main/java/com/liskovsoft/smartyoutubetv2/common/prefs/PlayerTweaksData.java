@@ -536,7 +536,7 @@ public class PlayerTweaksData implements ProfileChangeListener {
         persistData();
     }
 
-    /** MEETUBE(issue #35): HDR video, off by default. */
+    /** GUTUBE(issue #35): HDR video, off by default. */
     public boolean isHdrEnabled() {
         return mIsHdrEnabled;
     }

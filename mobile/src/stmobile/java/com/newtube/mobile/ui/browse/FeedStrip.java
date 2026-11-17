@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MEETUBE(feed-strip, 2.9.8): the horizontal strip at the top of a browse feed, YouTube-style. Home
+ * GUTUBE(feed-strip, 2.9.8): the horizontal strip at the top of a browse feed, YouTube-style. Home
  * shows topic chips (issue #4: All / Music / Gaming / ...), Subscriptions shows the subscribed
  * channels' avatars (issue #2: All first, a tap filters the feed to that channel). The avatars are
  * the grid's first row (a ConcatAdapter header, full span) and scroll away with the feed; the chips
@@ -61,9 +61,9 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
     @Nullable private com.newtube.mobile.ui.common.GlassChipTrack mTrack;
     private int mMode = MODE_NONE;
     private long mSelected;
-    /** MEETUBE(all subscriptions): long-press on the avatars' "All". */
+    /** GUTUBE(all subscriptions): long-press on the avatars' "All". */
     @Nullable private Runnable mOnAllLongPressed;
-    // MEETUBE(issue #87): a channel avatar opens its own menu.
+    // GUTUBE(issue #87): a channel avatar opens its own menu.
     @Nullable private Listener mOnAvatarLongPressed;
 
     FeedStrip(Listener listener, @Nullable GlassSource glass) {
@@ -236,7 +236,7 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
                 ImageView avatar = new ImageView(context);
                 avatar.setId(android.R.id.icon);
                 avatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                // MEETUBE(issue #73): a channel seen live gets the glowing red ring over its avatar.
+                // GUTUBE(issue #73): a channel seen live gets the glowing red ring over its avatar.
                 android.widget.FrameLayout avatarBox = new android.widget.FrameLayout(context);
                 avatarBox.addView(avatar, new android.widget.FrameLayout.LayoutParams(dp(context, 56), dp(context, 56)));
                 com.newtube.mobile.ui.common.LiveRingView ring = new com.newtube.mobile.ui.common.LiveRingView(context, null);
@@ -260,15 +260,19 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
                 TextView chip = new TextView(context);
                 chip.setId(android.R.id.text1);
                 chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                chip.setSingleLine(true);
+                chip.setIncludeFontPadding(false);
                 chip.setGravity(Gravity.CENTER);
-                chip.setMinHeight(dp(context, 34));
-                chip.setPadding(dp(context, 14), 0, dp(context, 14), 0);
+                chip.setMinHeight(dp(context, 32));
+                int padH = dp(context, 12);
+                int padV = dp(context, 6);
+                chip.setPadding(padH, padV, padH, padV);
                 RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, dp(context, 36));
+                        ViewGroup.LayoutParams.WRAP_CONTENT, dp(context, 32));
                 lp.rightMargin = dp(context, 8);
                 chip.setLayoutParams(lp);
                 chip.setElevation(dp(context, 4));
-                // MEETUBE(glass): frosted, saturated feed under each pill (liquid: grain + rim too);
+                // GUTUBE(glass): frosted, saturated feed under each pill (liquid: grain + rim too);
                 // made once per cell - apply() hooks a pre-draw listener.
                 GlassDrawable.applyPage(chip, mGlass, 0);
                 chip.setTag(R.id.mobile_feed_strip, chip.getBackground());
@@ -319,19 +323,18 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
                                 && com.newtube.mobile.ui.common.LiveRingView.isLive(
                                         ((com.liskovsoft.smartyoutubetv2.common.app.models.data.Video) item.data).channelId), 0);
             } else {
-                // The picked chip is a solid light pill on the glass row, the rest are glass.
-                if (selected) {
-                    GradientDrawable bg = new GradientDrawable();
-                    bg.setCornerRadius(dp(context, 18));
-                    bg.setColor(GlassDrawable.pickedPill(context));
-                    label.setBackground(bg);
-                } else {
-                    label.setBackground((android.graphics.drawable.Drawable) label.getTag(R.id.mobile_feed_strip));
-                }
-                label.setTextColor(selected ? GlassDrawable.pickedInk(context) : GlassDrawable.pageInk(context));
+                int padH = dp(context, 12);
+                int padV = dp(context, 6);
+                // The selected chip has no solid pill background; preserves the touch/ripple background
+                label.setBackground((android.graphics.drawable.Drawable) label.getTag(R.id.mobile_feed_strip));
+                label.setPaddingRelative(padH, padV, padH, padV);
+                // Indicated ONLY by its text color
+                label.setTextColor(ContextCompat.getColor(context, selected
+                        ? R.color.mobile_color_on_surface
+                        : R.color.mobile_color_on_surface_secondary));
             }
             holder.itemView.setOnClickListener(v -> {
-                // MEETUBE(issue #87): a picked avatar can widen the feed to All.
+                // GUTUBE(issue #87): a picked avatar can widen the feed to All.
                 if (item.id != mSelected || (mMode == MODE_AVATARS && item.data != null)) {
                     mListener.onPicked(item);
                 }

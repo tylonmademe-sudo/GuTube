@@ -42,7 +42,7 @@ class YouTubeOverlay(context: Context, private val attrs: AttributeSet?) :
     private var classicBackgroundColor = 0
 
     /**
-     * MEETUBE(seek pill): true = the count pill (the ripple only keeps time, its end hides the
+     * GUTUBE(seek pill): true = the count pill (the ripple only keeps time, its end hides the
      * overlay); false = the original ripple with the three triangles and "10 seconds".
      */
     var pillStyle = true
@@ -88,7 +88,7 @@ class YouTubeOverlay(context: Context, private val attrs: AttributeSet?) :
             secondsView.seconds = 0
             secondsView.stop()
             pillSeconds = 0
-            // MEETUBE(seek pill): the pill fades out first; a tap meanwhile cancels this and goes on.
+            // GUTUBE(seek pill): the pill fades out first; a tap meanwhile cancels this and goes on.
             if (pillStyle) seekPill.hide { performListener?.onAnimationEnd() } else performListener?.onAnimationEnd()
         }
     }
@@ -361,7 +361,7 @@ class YouTubeOverlay(context: Context, private val attrs: AttributeSet?) :
         if (player == null || playerView == null) return
 
         val shouldForward = performListener?.shouldForward(player!!, playerView!!, posX)
-        // MEETUBE(haptics): every double-tap seek step (forward or rewind) clicks.
+        // GUTUBE(haptics): every double-tap seek step (forward or rewind) clicks.
         if (shouldForward != null) performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
 
         // YouTube behavior: show overlay on MOTION_UP
@@ -472,7 +472,7 @@ class YouTubeOverlay(context: Context, private val attrs: AttributeSet?) :
         seekToPosition(player?.currentPosition?.minus(seekSeconds * 1000))
     }
 
-    /** MEETUBE(seek pill): the count grows per tap; the host pops the video with it. */
+    /** GUTUBE(seek pill): the count grows per tap; the host pops the video with it. */
     private fun showPill(forward: Boolean) {
         if (!pillStyle) return
         val first = pillSeconds == 0
@@ -513,7 +513,7 @@ class YouTubeOverlay(context: Context, private val attrs: AttributeSet?) :
          */
         fun onAnimationEnd()
 
-        /** MEETUBE(seek pill): one tap's seek, for the host's own feedback (the video's pop). */
+        /** GUTUBE(seek pill): one tap's seek, for the host's own feedback (the video's pop). */
         fun onSeekTap(forward: Boolean)
 
         /**

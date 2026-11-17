@@ -86,8 +86,17 @@ public class CastPickerSheet {
         mProgressRow = content.findViewById(R.id.cast_sheet_progress);
         mEmptyView = content.findViewById(R.id.cast_sheet_empty);
         mSmartTubePrompt = content.findViewById(R.id.cast_smarttube_prompt);
-        content.findViewById(R.id.cast_sheet_link_code).setOnClickListener(v -> showCodeDialog());
-        content.findViewById(R.id.cast_chooser_back).setOnClickListener(v -> showDeviceList());
+        View linkCode = content.findViewById(R.id.cast_sheet_link_code);
+        linkCode.setOnClickListener(v -> showCodeDialog());
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(linkCode);
+
+        View chooserBack = content.findViewById(R.id.cast_chooser_back);
+        chooserBack.setOnClickListener(v -> showDeviceList());
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(chooserBack);
+
+        content.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        mTargetsContainer.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        mChooserOptions.setBackgroundColor(android.graphics.Color.TRANSPARENT);
 
         for (CastTarget target : CastPrefs.getPairedTargets(mActivity)) mDevices.add(target);
         renderDevices();
@@ -243,6 +252,8 @@ public class CastPickerSheet {
 
     private View inflateRow(LinearLayout container, String title, int subtitle) {
         View row = LayoutInflater.from(mActivity).inflate(R.layout.item_mobile_cast_target, container, false);
+        row.setBackground(null);
+        row.setForeground(null);
         ((TextView) row.findViewById(R.id.cast_target_name)).setText(title);
         ((TextView) row.findViewById(R.id.cast_target_badge)).setText(subtitle);
         container.addView(row);

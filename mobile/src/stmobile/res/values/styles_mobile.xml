@@ -24,37 +24,37 @@
       stays dark in both, like YouTube's: its chrome uses the fixed mobile_player_* colours.
     -->
     <style name="Theme.NewTube" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- MEETUBE(scrollbars): no scroll bar at the side of anything, sheets and dialogs included
+        <!-- GUTUBE(scrollbars): no scroll bar at the side of anything, sheets and dialogs included
              (screens also turn them off at runtime: BounceOverscroll). -->
-        <item name="android:scrollViewStyle">@style/Widget.MeeTube.NoScrollbars.ScrollView</item>
-        <item name="android:listViewStyle">@style/Widget.MeeTube.NoScrollbars.ListView</item>
-        <!-- MEETUBE(launch): the system splash shows the launch animation's first frame, still, from
+        <item name="android:scrollViewStyle">@style/Widget.GuTube.NoScrollbars.ScrollView</item>
+        <item name="android:listViewStyle">@style/Widget.GuTube.NoScrollbars.ListView</item>
+        <!-- GUTUBE(launch): the system splash shows the launch animation's first frame, still, from
              the tap; the animation itself plays in-app over Home (LaunchSplash), since vivo's splash
              never animates. The same on every phone and for every app icon. -->
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/splash_play_still</item>
         <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/mobile_color_background</item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="31">0</item>
-        <!-- MEETUBE(loader): every circular spinner is the loader picked in Settings > Customization
-             (meetubeLoader; Loader applies the pick's overlay to each screen's theme). -->
-        <item name="meetubeLoader">@drawable/avd_neon_ring</item>
-        <item name="android:progressBarStyle">@style/Widget.MeeTube.Loader</item>
-        <item name="android:progressBarStyleLarge">@style/Widget.MeeTube.Loader.Large</item>
-        <item name="android:progressBarStyleSmall">@style/Widget.MeeTube.Loader.Small</item>
-        <!-- MEETUBE(accent): Ember, the red; Accent applies another palette's overlay. -->
-        <item name="meetubeAccent">#FFFF453A</item>
-        <item name="meetubeAccentDeep">#FFD7372D</item>
-        <!-- MEETUBE(youtube mode): rounded cards and the floating bar unless YouTube mode is on. -->
-        <item name="meetubeCardCorner">@dimen/mobile_card_corner_radius</item>
-        <item name="meetubeRowCorner">12dp</item>
-        <item name="meetubeRelatedCorner">14dp</item>
-        <item name="meetubeNavCorner">34dp</item>
-        <item name="meetubeNavSideMargin">16dp</item>
-        <item name="meetubeNavBottomMargin">12dp</item>
-        <item name="meetubeNavMaxWidth">@dimen/meetube_nav_max_width</item>
-        <item name="meetubeNavTint">@color/meetube_glass_tint</item>
-        <item name="meetubeNavItemBackground">@drawable/bg_nav_item</item>
-        <item name="meetubeNavLiquid">true</item>
-        <item name="colorPrimary">?attr/meetubeAccent</item>
+        <!-- GUTUBE(loader): every circular spinner is the loader picked in Settings > Customization
+             (gutubeLoader; Loader applies the pick's overlay to each screen's theme). -->
+        <item name="gutubeLoader">@drawable/avd_neon_ring</item>
+        <item name="android:progressBarStyle">@style/Widget.GuTube.Loader</item>
+        <item name="android:progressBarStyleLarge">@style/Widget.GuTube.Loader.Large</item>
+        <item name="android:progressBarStyleSmall">@style/Widget.GuTube.Loader.Small</item>
+        <!-- GUTUBE(accent): Ember, the red; Accent applies another palette's overlay. -->
+        <item name="gutubeAccent">#FFFF453A</item>
+        <item name="gutubeAccentDeep">#FFD7372D</item>
+        <!-- GUTUBE(youtube mode): rounded cards and the floating bar unless YouTube mode is on. -->
+        <item name="gutubeCardCorner">@dimen/mobile_card_corner_radius</item>
+        <item name="gutubeRowCorner">12dp</item>
+        <item name="gutubeRelatedCorner">14dp</item>
+        <item name="gutubeNavCorner">34dp</item>
+        <item name="gutubeNavSideMargin">16dp</item>
+        <item name="gutubeNavBottomMargin">12dp</item>
+        <item name="gutubeNavMaxWidth">@dimen/gutube_nav_max_width</item>
+        <item name="gutubeNavTint">@color/gutube_glass_tint</item>
+        <item name="gutubeNavItemBackground">@android:color/transparent</item>
+        <item name="gutubeNavLiquid">true</item>
+        <item name="colorPrimary">?attr/gutubeAccent</item>
         <item name="colorPrimaryDark">@color/mobile_color_primary_dark</item>
         <!-- Selection controls (checkbox, radio, switch, text caret) and any untinted
              indeterminate ProgressBar read the accent. Left at the framework default this
@@ -110,31 +110,31 @@
              light one) in the app's ink, not red - "Sign in" / "Undo" / "View" are choices,
              not alarms. -->
         <item name="snackbarButtonStyle">@style/Widget.NewTube.Snackbar.Action</item>
-        <!-- MEETUBE: no sharp corners - snackbars are rounded like the rest of the glass UI. -->
-        <item name="snackbarStyle">@style/Widget.MeeTube.Snackbar</item>
-        <!-- MEETUBE: modern capsule switches everywhere (Settings rows, dialog rows). -->
-        <item name="switchStyle">@style/Widget.MeeTube.Switch</item>
+        <!-- GUTUBE: no sharp corners - snackbars are rounded like the rest of the glass UI. -->
+        <item name="snackbarStyle">@style/Widget.GuTube.Snackbar</item>
+        <!-- GUTUBE: modern capsule switches everywhere (Settings rows, dialog rows). -->
+        <item name="switchStyle">@style/Widget.GuTube.Switch</item>
     </style>
 
-    <style name="Widget.MeeTube.Snackbar" parent="Widget.MaterialComponents.Snackbar">
-        <item name="shapeAppearance">@style/ShapeAppearance.MeeTube.Round</item>
+    <style name="Widget.GuTube.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="shapeAppearance">@style/ShapeAppearance.GuTube.Round</item>
     </style>
 
-    <style name="ShapeAppearance.MeeTube.Round" parent="">
+    <style name="ShapeAppearance.GuTube.Round" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
 
-    <!-- MEETUBE(issue #107): the one loader - the one picked in Settings (meetubeLoader, the neon
+    <!-- GUTUBE(issue #107): the one loader - the one picked in Settings (gutubeLoader, the neon
          ring by default), on every page, sheet and button. Layouts set no size or tint of their own. -->
-    <style name="Widget.MeeTube.GlassSpinner" parent="android:Widget.Material.ProgressBar.Large">
+    <style name="Widget.GuTube.GlassSpinner" parent="android:Widget.Material.ProgressBar.Large">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:padding">8dp</item>
-        <item name="android:indeterminateDrawable">?attr/meetubeLoader</item>
+        <item name="android:indeterminateDrawable">?attr/gutubeLoader</item>
     </style>
 
-    <style name="Widget.MeeTube.GlassSpinner.Small" parent="Widget.MeeTube.GlassSpinner">
+    <style name="Widget.GuTube.GlassSpinner.Small" parent="Widget.GuTube.GlassSpinner">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
         <item name="android:padding">1dp</item>
@@ -181,10 +181,10 @@
         <item name="cornerRadius">22dp</item>
     </style>
 
-    <style name="Widget.MeeTube.NoScrollbars.ScrollView" parent="android:Widget.ScrollView">
+    <style name="Widget.GuTube.NoScrollbars.ScrollView" parent="android:Widget.ScrollView">
         <item name="android:scrollbars">none</item>
     </style>
-    <style name="Widget.MeeTube.NoScrollbars.ListView" parent="android:Widget.ListView">
+    <style name="Widget.GuTube.NoScrollbars.ListView" parent="android:Widget.ListView">
         <item name="android:scrollbars">none</item>
     </style>
 
@@ -203,11 +203,11 @@
       the colour runs under the gesture bar to the display edge.
     -->
     <style name="Widget.NewTube.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="backgroundTint">@color/meetube_sheet_glass</item>
+        <item name="backgroundTint">@color/gutube_sheet_glass</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.NewTube.BottomSheet</item>
-        <!-- MEETUBE: Material squares the top corners off once a sheet is expanded; keep them round. -->
+        <!-- GUTUBE: Material squares the top corners off once a sheet is expanded; keep them round. -->
         <item name="shouldRemoveExpandedCorners">false</item>
-        <item name="android:maxWidth">@dimen/meetube_sheet_max_width</item>
+        <item name="android:maxWidth">@dimen/gutube_sheet_max_width</item>
     </style>
 
     <style name="ShapeAppearance.NewTube.BottomSheet" parent="">
@@ -337,7 +337,7 @@
         <item name="shapeAppearanceMediumComponent">@style/MobileAlertDialogShape</item>
     </style>
 
-    <!-- MEETUBE(glass): a dialog whose multi-choice rows tick frosted glass boxes. -->
+    <!-- GUTUBE(glass): a dialog whose multi-choice rows tick frosted glass boxes. -->
     <style name="MobileAlertDialog.GlassCheck">
         <item name="alertDialogStyle">@style/MobileAlertDialog.GlassCheckList</item>
     </style>
@@ -447,7 +447,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!-- MEETUBE(fullscreen-actions): an action on the fullscreen pill - a size under the player's
+    <!-- GUTUBE(fullscreen-actions): an action on the fullscreen pill - a size under the player's
          48dp buttons. -->
     <style name="MobilePlayerAction">
         <item name="android:layout_width">38dp</item>
@@ -458,7 +458,7 @@
         <item name="android:tint">@color/mobile_player_on_video</item>
     </style>
 
-    <!-- MEETUBE(lock, issue #98): the fullscreen lock button, on the controls' glass (GlassDrawable). -->
+    <!-- GUTUBE(lock, issue #98): the fullscreen lock button, on the controls' glass (GlassDrawable). -->
     <style name="MobilePlayerLock">
         <item name="android:layout_width">44dp</item>
         <item name="android:layout_height">44dp</item>
@@ -468,7 +468,7 @@
         <item name="android:tint">@color/mobile_player_on_video</item>
     </style>
 
-    <!-- MEETUBE(watch-look): an icon-only glass pill on the compact watch page's action row. -->
+    <!-- GUTUBE(watch-look): an icon-only glass pill on the compact watch page's action row. -->
     <style name="MobileWatchIconPill">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -482,7 +482,7 @@
         <item name="android:paddingVertical">14dp</item>
     </style>
 
-    <!-- MEETUBE(description): a section heading in the Description panel (Transcript, Video details). -->
+    <!-- GUTUBE(description): a section heading in the Description panel (Transcript, Video details). -->
     <style name="MobileDescriptionHeading">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -498,7 +498,7 @@
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
     </style>
-    <!-- MEETUBE(issue #91): a List layout feed row's ghost (item_video_row: margin card_spacing). -->
+    <!-- GUTUBE(issue #91): a List layout feed row's ghost (item_video_row: margin card_spacing). -->
     <style name="MobileSkeletonFeedRow" parent="MobileSkeletonRelatedRow">
         <item name="android:paddingTop">@dimen/mobile_card_spacing</item>
         <item name="android:paddingBottom">@dimen/mobile_card_spacing</item>
@@ -624,15 +624,15 @@
         <item name="android:background">@drawable/bg_skeleton_block</item>
     </style>
 
-    <!-- MEETUBE(shorts): the vertical player's action column (mobile_shorts_overlay). -->
-    <style name="MeeTubeShortsAction">
+    <!-- GUTUBE(shorts): the vertical player's action column (mobile_shorts_overlay). -->
+    <style name="GuTubeShortsAction">
         <item name="android:layout_width">42dp</item>
         <item name="android:layout_height">42dp</item>
         <item name="android:padding">10dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:tint">@android:color/white</item>
     </style>
-    <style name="MeeTubeShortsActionLabel">
+    <style name="GuTubeShortsActionLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">2dp</item>
@@ -644,82 +644,82 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- MEETUBE(loader): the other loaders of the picker (Loader), over the default neon ring. -->
-    <!-- MEETUBE(accent): one per palette (ui.common.Accent). -->
-    <style name="ThemeOverlay.MeeTube.Accent.Ember" parent="">
-        <item name="meetubeAccent">#FFFF453A</item>
-        <item name="meetubeAccentDeep">#FFD7372D</item>
+    <!-- GUTUBE(loader): the other loaders of the picker (Loader), over the default neon ring. -->
+    <!-- GUTUBE(accent): one per palette (ui.common.Accent). -->
+    <style name="ThemeOverlay.GuTube.Accent.Ember" parent="">
+        <item name="gutubeAccent">#FFFF453A</item>
+        <item name="gutubeAccentDeep">#FFD7372D</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Sakura" parent="">
-        <item name="meetubeAccent">#FFFF2D87</item>
-        <item name="meetubeAccentDeep">#FFD61F6E</item>
+    <style name="ThemeOverlay.GuTube.Accent.Sakura" parent="">
+        <item name="gutubeAccent">#FFFF2D87</item>
+        <item name="gutubeAccentDeep">#FFD61F6E</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Sunset" parent="">
-        <item name="meetubeAccent">#FFFF7A00</item>
-        <item name="meetubeAccentDeep">#FFC25E00</item>
+    <style name="ThemeOverlay.GuTube.Accent.Sunset" parent="">
+        <item name="gutubeAccent">#FFFF7A00</item>
+        <item name="gutubeAccentDeep">#FFC25E00</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Honey" parent="">
-        <item name="meetubeAccent">#FFFFC300</item>
-        <item name="meetubeAccentDeep">#FF9A7400</item>
+    <style name="ThemeOverlay.GuTube.Accent.Honey" parent="">
+        <item name="gutubeAccent">#FFFFC300</item>
+        <item name="gutubeAccentDeep">#FF9A7400</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Jade" parent="">
-        <item name="meetubeAccent">#FF1FD67A</item>
-        <item name="meetubeAccentDeep">#FF138A4F</item>
+    <style name="ThemeOverlay.GuTube.Accent.Jade" parent="">
+        <item name="gutubeAccent">#FF1FD67A</item>
+        <item name="gutubeAccentDeep">#FF138A4F</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Ocean" parent="">
-        <item name="meetubeAccent">#FF0A84FF</item>
-        <item name="meetubeAccentDeep">#FF0062CC</item>
+    <style name="ThemeOverlay.GuTube.Accent.Ocean" parent="">
+        <item name="gutubeAccent">#FF0A84FF</item>
+        <item name="gutubeAccentDeep">#FF0062CC</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Amethyst" parent="">
-        <item name="meetubeAccent">#FF8E5CFF</item>
-        <item name="meetubeAccentDeep">#FF6E3FD9</item>
+    <style name="ThemeOverlay.GuTube.Accent.Amethyst" parent="">
+        <item name="gutubeAccent">#FF8E5CFF</item>
+        <item name="gutubeAccentDeep">#FF6E3FD9</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Accent.Pearl" parent="">
-        <item name="meetubeAccent">#FFF2F2F7</item>
-        <item name="meetubeAccentDeep">#FF48484A</item>
+    <style name="ThemeOverlay.GuTube.Accent.Pearl" parent="">
+        <item name="gutubeAccent">#FFF2F2F7</item>
+        <item name="gutubeAccentDeep">#FF48484A</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.Frosted" parent="">
-        <item name="meetubeLoader">@drawable/avd_frosted_ring</item>
+    <style name="ThemeOverlay.GuTube.Loader.Frosted" parent="">
+        <item name="gutubeLoader">@drawable/avd_frosted_ring</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.Cookie" parent="">
-        <item name="meetubeLoader">@drawable/meetube_loader</item>
+    <style name="ThemeOverlay.GuTube.Loader.Cookie" parent="">
+        <item name="gutubeLoader">@drawable/gutube_loader</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.FrostedCookie" parent="">
-        <item name="meetubeLoader">@drawable/avd_frosted_cookie</item>
+    <style name="ThemeOverlay.GuTube.Loader.FrostedCookie" parent="">
+        <item name="gutubeLoader">@drawable/avd_frosted_cookie</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.LiquidRing" parent="">
-        <item name="meetubeLoader">@drawable/avd_liquid_ring</item>
+    <style name="ThemeOverlay.GuTube.Loader.LiquidRing" parent="">
+        <item name="gutubeLoader">@drawable/avd_liquid_ring</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.GlassOrb" parent="">
-        <item name="meetubeLoader">@drawable/avd_glass_orb</item>
+    <style name="ThemeOverlay.GuTube.Loader.GlassOrb" parent="">
+        <item name="gutubeLoader">@drawable/avd_glass_orb</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.MorphingBlob" parent="">
-        <item name="meetubeLoader">@drawable/avd_morphing_blob</item>
+    <style name="ThemeOverlay.GuTube.Loader.MorphingBlob" parent="">
+        <item name="gutubeLoader">@drawable/avd_morphing_blob</item>
     </style>
-    <style name="ThemeOverlay.MeeTube.Loader.GlassOrbit" parent="">
-        <item name="meetubeLoader">@drawable/avd_glass_orbit</item>
-    </style>
-
-    <style name="Widget.MeeTube.Loader" parent="android:Widget.Material.ProgressBar">
-        <item name="android:indeterminateDrawable">?attr/meetubeLoader</item>
-    </style>
-    <style name="Widget.MeeTube.Loader.Large" parent="android:Widget.Material.ProgressBar.Large">
-        <item name="android:indeterminateDrawable">?attr/meetubeLoader</item>
-    </style>
-    <style name="Widget.MeeTube.Loader.Small" parent="android:Widget.Material.ProgressBar.Small">
-        <item name="android:indeterminateDrawable">?attr/meetubeLoader</item>
+    <style name="ThemeOverlay.GuTube.Loader.GlassOrbit" parent="">
+        <item name="gutubeLoader">@drawable/avd_glass_orbit</item>
     </style>
 
-    <style name="Widget.MeeTube.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="Widget.GuTube.Loader" parent="android:Widget.Material.ProgressBar">
+        <item name="android:indeterminateDrawable">?attr/gutubeLoader</item>
+    </style>
+    <style name="Widget.GuTube.Loader.Large" parent="android:Widget.Material.ProgressBar.Large">
+        <item name="android:indeterminateDrawable">?attr/gutubeLoader</item>
+    </style>
+    <style name="Widget.GuTube.Loader.Small" parent="android:Widget.Material.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">?attr/gutubeLoader</item>
+    </style>
+
+    <style name="Widget.GuTube.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="useMaterialThemeColors">false</item>
-        <item name="android:thumb">@drawable/meetube_switch_thumb</item>
-        <item name="track">@drawable/meetube_switch_track</item>
+        <item name="android:thumb">@drawable/gutube_switch_thumb</item>
+        <item name="track">@drawable/gutube_switch_track</item>
         <item name="thumbTint">@null</item>
         <item name="trackTint">@null</item>
         <item name="android:background">@null</item>
     </style>
-    <!-- MEETUBE(up-next): the countdown card's three pills. -->
-    <style name="MeeTubeNextButton">
+    <!-- GUTUBE(up-next): the countdown card's three pills. -->
+    <style name="GuTubeNextButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:drawablePadding">4dp</item>
@@ -730,19 +730,19 @@
         <item name="android:textSize">13sp</item>
     </style>
 
-    <!-- MEETUBE(youtube mode): sharp video cards and the bottom bar docked full width, flat. -->
-    <style name="ThemeOverlay.MeeTube.YouTubeMode" parent="">
-        <item name="meetubeCardCorner">0dp</item>
-        <item name="meetubeRowCorner">0dp</item>
-        <item name="meetubeRelatedCorner">0dp</item>
-        <item name="meetubeNavCorner">0dp</item>
-        <item name="meetubeNavSideMargin">0dp</item>
-        <item name="meetubeNavBottomMargin">0dp</item>
-        <item name="meetubeNavMaxWidth">4000dp</item>
-        <item name="meetubeNavTint">@color/meetube_youtube_nav_tint</item>
-        <item name="meetubeNavItemBackground">@android:color/transparent</item>
+    <!-- GUTUBE(youtube mode): sharp video cards and the bottom bar docked full width, flat. -->
+    <style name="ThemeOverlay.GuTube.YouTubeMode" parent="">
+        <item name="gutubeCardCorner">0dp</item>
+        <item name="gutubeRowCorner">0dp</item>
+        <item name="gutubeRelatedCorner">0dp</item>
+        <item name="gutubeNavCorner">0dp</item>
+        <item name="gutubeNavSideMargin">0dp</item>
+        <item name="gutubeNavBottomMargin">0dp</item>
+        <item name="gutubeNavMaxWidth">4000dp</item>
+        <item name="gutubeNavTint">@color/gutube_youtube_nav_tint</item>
+        <item name="gutubeNavItemBackground">@android:color/transparent</item>
         <!-- A flat frost, as the top bar: no rim down its sides, no grain, no lens edge. -->
-        <item name="meetubeNavLiquid">false</item>
+        <item name="gutubeNavLiquid">false</item>
     </style>
 
 </resources>

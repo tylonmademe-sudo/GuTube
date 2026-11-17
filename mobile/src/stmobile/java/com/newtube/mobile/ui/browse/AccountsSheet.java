@@ -217,6 +217,8 @@ public final class AccountsSheet {
 
     private static void addActionRow(Activity activity, LinearLayout parent, int iconRes, int labelRes, Runnable onClick) {
         View row = LayoutInflater.from(activity).inflate(R.layout.item_mobile_you_row, parent, false);
+        row.setBackground(null);
+        row.setForeground(null);
         ((ImageView) row.findViewById(R.id.mobile_you_row_icon)).setImageResource(iconRes);
         row.findViewById(R.id.mobile_you_row_glass).setWillNotDraw(true); // the You page's bubble, not the sheet's
         ((TextView) row.findViewById(R.id.mobile_you_row_label)).setText(labelRes);
@@ -226,6 +228,8 @@ public final class AccountsSheet {
 
     private static View inflateAccountRow(Activity activity, LinearLayout parent) {
         View row = LayoutInflater.from(activity).inflate(R.layout.item_mobile_account_row, parent, false);
+        row.setBackground(null);
+        row.setForeground(null);
         parent.addView(row);
         return row;
     }

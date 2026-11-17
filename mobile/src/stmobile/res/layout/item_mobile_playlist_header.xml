@@ -2,7 +2,7 @@
 <!--
   Playlist page header, rendered as the FIRST (full-span) ITEM of the uploads grid.
 
-  MEETUBE(playlist page): cover, title, owner, metadata, Play all, Shuffle, Download all and Sort.
+  GUTUBE(playlist page): cover, title, owner, metadata, Play all, Shuffle, Download all and Sort.
   The activity draws the scrolling ambient cover behind this row and the top of the list.
 
   It is a list item rather than an AppBarLayout/CollapsingToolbarLayout child on purpose:
@@ -133,7 +133,7 @@
                 app:iconSize="20dp"
                 app:iconTint="@android:color/black" />
 
-            <!-- MEETUBE(playlist page): + on Watch later and your own playlists, search to add. -->
+            <!-- GUTUBE(playlist page): + on Watch later and your own playlists, search to add. -->
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mobile_channel_uploads_add"
                 android:layout_width="48dp"
@@ -146,7 +146,7 @@
                 android:visibility="gone"
                 app:tint="@color/mobile_color_on_surface" />
 
-            <!-- MEETUBE(issue #242): save someone else's playlist to You, and to the account's library when signed in. -->
+            <!-- GUTUBE(issue #242): save someone else's playlist to You, and to the account's library when signed in. -->
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/mobile_channel_uploads_save"
                 android:layout_width="48dp"
@@ -183,7 +183,7 @@
 
         </LinearLayout>
 
-        <!-- MEETUBE(playlist page): the sort chip, then the liquid All | Videos | Shorts segment
+        <!-- GUTUBE(playlist page): the sort chip, then the liquid All | Videos | Shorts segment
              (GlassChipTrack, the Home chips' control) when the list holds Shorts. -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -222,7 +222,7 @@
 
                 <ProgressBar
                     android:id="@+id/mobile_channel_uploads_sort_progress"
-                    style="@style/Widget.MeeTube.GlassSpinner"
+                    style="@style/Widget.GuTube.GlassSpinner"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginStart="8dp"

@@ -73,7 +73,7 @@ public abstract class BaseMenuPresenter extends BasePresenter<Void> {
         }
 
         boolean isPlaylist = original.hasPlaylist() || original.isPlaylistAsChannel() || (original.hasNestedItems() && original.belongsToUserPlaylists());
-        // MEETUBE(pin): an item already pinned offers Unpin. The pinned copy is matched by its id: a
+        // GUTUBE(pin): an item already pinned offers Unpin. The pinned copy is matched by its id: a
         // fresh copy of the card isn't equal() to it (Video's hash covers the card's own mediaItem).
         Video pinned = findPinned(original);
         getDialogPresenter().appendSingleButton(
@@ -255,7 +255,7 @@ public abstract class BaseMenuPresenter extends BasePresenter<Void> {
             return;
         }
 
-        // MEETUBE(issue #242): signed out, this account action only failed; "Save playlist to You" saves on the phone.
+        // GUTUBE(issue #242): signed out, this account action only failed; "Save playlist to You" saves on the phone.
         if (PhoneUi.isEnabled() && !com.liskovsoft.youtubeapi.service.YouTubeSignInService.instance().isSigned()) {
             return;
         }

@@ -3,11 +3,11 @@ package com.newtube.mobile.ui.common;
 import android.content.Context;
 
 /**
- * MEETUBE(home bar): Settings > Customization can hide Home's Cast button (top bar) and its topic
+ * GUTUBE(home bar): Settings > Customization can hide Home's Cast button (top bar) and its topic
  * chips. Both on by default.
  */
 public final class HomeBar {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_CAST = "home_cast_button";
     private static final String KEY_CHIPS = "home_chips";
 

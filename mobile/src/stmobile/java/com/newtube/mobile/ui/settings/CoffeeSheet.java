@@ -21,12 +21,12 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.ui.common.FocusRing;
 import com.newtube.mobile.ui.common.MobileSheets;
 
-// MEETUBE(coffee): a warm thank-you sheet with local cups and a UPI fallback.
+// GUTUBE(coffee): a warm thank-you sheet with local cups and a UPI fallback.
 final class CoffeeSheet {
     private CoffeeSheet() { }
 
     static void show(Context context) {
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // GUTUBE(glass): frosted
         Context themed = sheet.getContext();
         ViewGroup root = (ViewGroup) LayoutInflater.from(themed).inflate(R.layout.sheet_mobile_coffee, null);
         root.findViewById(R.id.coffee_india).setOnClickListener(v -> {
@@ -35,13 +35,12 @@ final class CoffeeSheet {
             GradientDrawable selected = new GradientDrawable();
             float dp = themed.getResources().getDisplayMetrics().density;
             selected.setCornerRadius(22 * dp);
-            selected.setColor(ContextCompat.getColor(themed, R.color.meetube_glass_selected));
-            selected.setStroke(Math.round(2 * dp), ContextCompat.getColor(themed, R.color.meetube_accent));
+            selected.setColor(ContextCompat.getColor(themed, R.color.gutube_glass_selected));
+            selected.setStroke(Math.round(2 * dp), ContextCompat.getColor(themed, R.color.gutube_accent));
             v.setBackground(selected);
             root.findViewById(R.id.coffee_india_panel).setVisibility(View.VISIBLE);
         });
         root.findViewById(R.id.coffee_elsewhere).setOnClickListener(v -> {
-            Utils.openLinkExt(context, context.getString(R.string.mobile_settings_coffee_url));
             sheet.dismiss();
         });
         root.findViewById(R.id.coffee_copy).setOnClickListener(v -> copy(themed, R.string.mobile_settings_coffee_copied));

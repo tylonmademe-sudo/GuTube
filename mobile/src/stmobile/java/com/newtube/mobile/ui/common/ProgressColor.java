@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 
 /**
- * MEETUBE(progress colour): the played line's palette ({@link Accent}'s), one for videos (the
+ * GUTUBE(progress colour): the played line's palette ({@link Accent}'s), one for videos (the
  * player's seek bar and the Home preview) and one for Shorts. {@link #DEFAULT}: videos follow the
  * accent, Shorts stay white.
  */
@@ -67,6 +67,6 @@ public final class ProgressColor {
     }
 
     private static SharedPreferences prefs(Context context) {
-        return context.getApplicationContext().getSharedPreferences("meetube_app", Context.MODE_PRIVATE);
+        return context.getApplicationContext().getSharedPreferences("gutube_app", Context.MODE_PRIVATE);
     }
 }

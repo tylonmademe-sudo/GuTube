@@ -7,7 +7,7 @@ import com.liskovsoft.sharedutils.helpers.Helpers;
 
 import org.junit.Test;
 
-/** MEETUBE(settings-transfer): a settings file never carries passwords, and an import keeps this phone's. */
+/** GUTUBE(settings-transfer): a settings file never carries passwords, and an import keeps this phone's. */
 public class SettingsTransferTest {
     /** general_data with every field set, its settings / master passwords (33, 41) included. */
     private static String generalData(String settingsPassword, String masterPassword) {

@@ -90,15 +90,15 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         /** The panel now covers (true) or uncovers the watch page. */
         void onCommentsPanelShown(boolean shown);
 
-        /** MEETUBE(shorts): the panel has started closing; it is gone in {@code durationMs}. */
+        /** GUTUBE(shorts): the panel has started closing; it is gone in {@code durationMs}. */
         default void onCommentsPanelClosing(long durationMs) {
         }
 
-        /** MEETUBE(shorts): the sheet moved, {@code gone} of the way off the screen (0 open, 1 gone). */
+        /** GUTUBE(shorts): the sheet moved, {@code gone} of the way off the screen (0 open, 1 gone). */
         default void onCommentsPanelMoved(float gone) {
         }
 
-        /** MEETUBE(watch-look): the top comments' first page arrived (the watch page shows them one by one). */
+        /** GUTUBE(watch-look): the top comments' first page arrived (the watch page shows them one by one). */
         default void onTopComments(List<CommentItem> comments) {
         }
 
@@ -274,7 +274,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
     private boolean mUiTest;
     @Nullable
     private PopupWindow mCommentMenu;
-    /** MEETUBE(issue #139): comments whose translation is on its way (a second tap waits for it). */
+    /** GUTUBE(issue #139): comments whose translation is on its way (a second tap waits for it). */
     private final Set<CommentsAdapter.Entry> mTranslating = new HashSet<>();
     private final Set<CommentsAdapter.Entry> mDetecting = new HashSet<>();
 
@@ -342,9 +342,13 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         setUpList(mReplies, mRepliesAdapter);
 
         layout.setCallback(this);
-        layout.findViewById(R.id.comments_close).setOnClickListener(v -> close());
+        View closeBtn = layout.findViewById(R.id.comments_close);
+        closeBtn.setOnClickListener(v -> close());
         mBack.setOnClickListener(v -> leaveReplies());
         mSort.setOnClickListener(v -> showSortMenu());
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(closeBtn);
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(mBack);
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(mSort);
         ViewCompat.setAccessibilityPaneTitle(layout.getSheet(), activity.getString(R.string.mobile_comments_title));
         updateSortLabel();
 
@@ -600,7 +604,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
     // ---------------------------------------------------------------------------------
 
     /**
-     * MEETUBE: opened from the watch page's comments card, the comment it showed is scrolled to
+     * GUTUBE: opened from the watch page's comments card, the comment it showed is scrolled to
      * near the top and lit for a moment. A comment the open order doesn't list (Newest picked)
      * just opens the panel as it stands.
      */
@@ -673,7 +677,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
             bindFeedToList(feed, false);
         }
         if (!mLayout.isOpen()) {
-            // MEETUBE(glass): the sheet is the frosted page under it, as the Description sheet is -
+            // GUTUBE(glass): the sheet is the frosted page under it, as the Description sheet is -
             // copied now, before the sheet comes up over it.
             com.newtube.mobile.ui.common.SheetGlass.frost(mLayout.getSheet(), mActivity.getWindow());
         }
@@ -1128,7 +1132,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
     }
 
     /**
-     * MEETUBE(glass): a comments popup (Top / Newest, a comment's menu) is frosted glass like the
+     * GUTUBE(glass): a comments popup (Top / Newest, a comment's menu) is frosted glass like the
      * panel under it - the page copied as it opens, blurred, inside the menu's 18dp corners.
      */
     private void frostMenu(View content) {
@@ -1167,7 +1171,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         menu.setAnimationStyle(0);
         menu.setOutsideTouchable(true);
         menu.setElevation(8 * mDensity);
-        com.newtube.mobile.ui.common.Haptics.watch(menu); // MEETUBE(haptics)
+        com.newtube.mobile.ui.common.Haptics.watch(menu); // GUTUBE(haptics)
         menu.setOnDismissListener(() -> {
             if (mSortMenu == menu) {
                 mSortMenu = null;
@@ -1787,7 +1791,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         setComposeRowsHidden(true);
     }
 
-    /** MEETUBE: while the composer is open its bar is the only "Add a comment…" on screen. */
+    /** GUTUBE: while the composer is open its bar is the only "Add a comment…" on screen. */
     private void setComposeRowsHidden(boolean hidden) {
         mListAdapter.setComposeHidden(hidden);
         mRepliesAdapter.setComposeHidden(hidden);
@@ -2060,7 +2064,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         menu.setAnimationStyle(0);
         menu.setOutsideTouchable(true);
         menu.setElevation(8 * mDensity);
-        com.newtube.mobile.ui.common.Haptics.watch(menu); // MEETUBE(haptics)
+        com.newtube.mobile.ui.common.Haptics.watch(menu); // GUTUBE(haptics)
         menu.setOnDismissListener(() -> {
             if (mCommentMenu == menu) {
                 mCommentMenu = null;
@@ -2095,7 +2099,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
     }
 
     /**
-     * MEETUBE(issue #139): the comment in the app's language, in place; again, the original. A
+     * GUTUBE(issue #139): the comment in the app's language, in place; again, the original. A
      * translation is fetched once per comment and kept on its entry.
      */
     @Override
@@ -2137,7 +2141,7 @@ public final class CommentsPanel implements CommentsAdapter.Listener, CommentsPa
         });
     }
 
-    /** MEETUBE(issue #139): whether a comment gets "Translate to …" under it, asked once per comment, on the device. */
+    /** GUTUBE(issue #139): whether a comment gets "Translate to …" under it, asked once per comment, on the device. */
     @Override
     public void onDetectLanguage(CommentsAdapter.Entry entry) {
         String text = entry.item.getMessage();

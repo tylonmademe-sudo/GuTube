@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GUTUBE(loader): the picked loader drawable (Widget.GuTube.GlassSpinner, Widget.GuTube.Loader). -->
+    <attr name="gutubeLoader" format="reference" />
+    <!-- GUTUBE(accent): the picked accent (ui.common.Accent), bright and a deeper one for a light page. -->
+    <attr name="gutubeAccent" format="color" />
+    <attr name="gutubeAccentDeep" format="color" />
+    <!-- GUTUBE(youtube mode): video card corners and the bottom bar's shape; all 0 in
+         ThemeOverlay.GuTube.YouTubeMode (ui.common.YouTubeMode). -->
+    <attr name="gutubeCardCorner" format="dimension" />
+    <attr name="gutubeRowCorner" format="dimension" />
+    <attr name="gutubeRelatedCorner" format="dimension" />
+    <attr name="gutubeNavCorner" format="dimension" />
+    <attr name="gutubeNavSideMargin" format="dimension" />
+    <attr name="gutubeNavBottomMargin" format="dimension" />
+    <attr name="gutubeNavMaxWidth" format="dimension" />
+    <attr name="gutubeNavTint" format="color" />
+    <attr name="gutubeNavItemBackground" format="reference" />
+    <attr name="gutubeNavLiquid" format="boolean" />
+    <!-- GUTUBE(glass): GlassView's shape and tint. -->
+    <declare-styleable name="GlassView">
+        <attr name="glassCornerRadius" format="dimension" />
+        <attr name="glassTint" format="color" />
+        <attr name="glassLiquid" format="boolean" />
+        <!-- On a surface that is already glass (a frosted sheet): no backdrop of its own, and the
+             tint stays see-through instead of the near-opaque no-backdrop fallback. -->
+        <attr name="glassOnGlass" format="boolean" />
+        <!-- GUTUBE(issue #118): the widest it grows; centre it with its layout gravity. -->
+        <attr name="glassMaxWidth" format="dimension" />
+        <!-- A flat bar's frost thins out to nothing over this much of its bottom (Settings' top bar). -->
+        <attr name="glassFadeBottom" format="dimension" />
+    </declare-styleable>
+
+    <!-- GUTUBE(spotlight): Adaptive Spotlight effect attributes for cards, buttons and containers. -->
+    <declare-styleable name="SpotlightView">
+        <attr name="spotlightColor" format="color" />
+        <attr name="spotlightIntensity" format="float" />
+        <attr name="spotlightSize" format="dimension" />
+        <attr name="spotlightSoftness" format="float" />
+        <attr name="spotlightBorderGlow" format="float" />
+        <attr name="spotlightSmoothing" format="float" />
+        <attr name="spotlightFlare" format="boolean" />
+        <attr name="spotlightAmbient" format="boolean" />
+        <attr name="spotlightCornerRadius" format="dimension" />
+        <attr name="spotlightTrackChildren" format="boolean" />
+        <attr name="spotlightTilt" format="boolean" />
+        <attr name="spotlightDrawEdge" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SpotlightCardView">
+        <attr name="spotlightColor" />
+        <attr name="spotlightIntensity" />
+        <attr name="spotlightSize" />
+        <attr name="spotlightSoftness" />
+        <attr name="spotlightBorderGlow" />
+        <attr name="spotlightSmoothing" />
+        <attr name="spotlightFlare" />
+        <attr name="spotlightAmbient" />
+        <attr name="spotlightCornerRadius" />
+        <attr name="spotlightTrackChildren" />
+        <attr name="spotlightTilt" />
+        <attr name="spotlightDrawEdge" />
+    </declare-styleable>
+
+    <declare-styleable name="SpotlightCardLayout">
+        <attr name="spotlightColor" />
+        <attr name="spotlightIntensity" />
+        <attr name="spotlightSize" />
+        <attr name="spotlightSoftness" />
+        <attr name="spotlightBorderGlow" />
+        <attr name="spotlightSmoothing" />
+        <attr name="spotlightFlare" />
+        <attr name="spotlightAmbient" />
+        <attr name="spotlightCornerRadius" />
+        <attr name="spotlightTrackChildren" />
+        <attr name="spotlightTilt" />
+        <attr name="spotlightDrawEdge" />
+    </declare-styleable>
+
+    <!-- GUTUBE(gooey-nav): React Bits GooeyNav component attributes. -->
+    <declare-styleable name="GooeyNav">
+        <attr name="gnParticleCount" format="integer" />
+        <attr name="gnSpread" format="dimension" />
+        <attr name="gnAnimationTime" format="integer" />
+        <attr name="gnTimeVariance" format="integer" />
+        <attr name="gnGooeyness" format="float" />
+        <attr name="gnWobble" format="float" />
+        <attr name="gnFrame" format="boolean" />
+        <attr name="gnPillColor" format="color" />
+        <attr name="gnActiveTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="GooeyNavLayout">
+        <attr name="gnParticleCount" />
+        <attr name="gnSpread" />
+        <attr name="gnAnimationTime" />
+        <attr name="gnTimeVariance" />
+        <attr name="gnGooeyness" />
+        <attr name="gnWobble" />
+        <attr name="gnFrame" />
+        <attr name="gnPillColor" />
+        <attr name="gnActiveTextColor" />
+    </declare-styleable>
+
+    <!-- GUTUBE(flip-card): React Bits FlipCard component attributes with 3D spring dynamics and Spotlight lighting. -->
+    <declare-styleable name="FlipCardLayout">
+        <attr name="fcAxis" format="enum">
+            <enum name="y" value="0" />
+            <enum name="x" value="1" />
+        </attr>
+        <attr name="fcFlipOnClick" format="boolean" />
+        <attr name="fcDraggable" format="boolean" />
+        <attr name="fcDragDistance" format="dimension" />
+        <attr name="fcTilt" format="boolean" />
+        <attr name="fcTiltMax" format="float" />
+        <attr name="fcGlare" format="boolean" />
+        <attr name="fcGlareOpacity" format="float" />
+        <attr name="fcHoverScale" format="float" />
+        <attr name="fcPerspective" format="float" />
+        <attr name="fcStiffness" format="float" />
+        <attr name="fcDamping" format="float" />
+        <attr name="fcCardWidth" format="dimension" />
+        <attr name="fcCardHeight" format="dimension" />
+        <attr name="fcRadius" format="dimension" />
+        <attr name="fcBackground" format="color" />
+        <attr name="fcColor" format="color" />
+        <attr name="fcShadow" format="boolean" />
+        <attr name="fcShadowColor" format="color" />
+        <attr name="fcShadowOpacity" format="float" />
+        <attr name="fcFlipped" format="boolean" />
+        <attr name="fcDisabled" format="boolean" />
+    </declare-styleable>
+</resources>

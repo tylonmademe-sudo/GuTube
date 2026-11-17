@@ -10,9 +10,11 @@
     android:id="@+id/mobile_browse_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="@color/mobile_color_background">
 
-    <!-- MEETUBE(glass): everything the floating glass blurs. The nav pill and mini player sit
+    <!-- GUTUBE(glass): everything the floating glass blurs. The nav pill and mini player sit
          outside it (a GlassSource may not hold the GlassView that samples it). -->
     <com.newtube.mobile.ui.common.GlassSource
         android:id="@+id/mobile_blur_target"
@@ -46,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingHorizontal="@dimen/mobile_card_spacing"
-                android:paddingBottom="@dimen/meetube_nav_clearance"
+                android:paddingBottom="@dimen/gutube_nav_clearance"
                 android:scrollbars="none"
                 tools:listitem="@layout/item_video_card" />
 
@@ -78,7 +80,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp"
-            android:paddingBottom="@dimen/meetube_nav_clearance"
+            android:paddingBottom="@dimen/gutube_nav_clearance"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <!-- MEETUBE(rgb glow): the RGB light in the top left, behind the header and the top pills
+            <!-- GUTUBE(rgb glow): the RGB light in the top left, behind the header and the top pills
                  (the rows below are padded by padUnderTopBar). Its own glass source: the Accounts and
                  Settings pills frost it (they sit inside mobile_blur_target, so can't sample that). -->
             <com.newtube.mobile.ui.common.GlassSource
@@ -151,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/meetube_nav_clearance">
+                android:paddingBottom="@dimen/gutube_nav_clearance">
 
                 <!-- Account header, as YouTube's You page has it: a big avatar, the name and the
                      email, then the Accounts and Settings pills. A tap on the header or on Accounts
@@ -169,13 +171,13 @@
                     android:paddingTop="16dp"
                     android:paddingBottom="12dp">
 
-                    <!-- MEETUBE(glass): the avatar sits in a frosted disc; signed out, the disc is the avatar. -->
+                    <!-- GUTUBE(glass): the avatar sits in a frosted disc; signed out, the disc is the avatar. -->
                     <com.newtube.mobile.ui.common.GlassView
                         android:id="@+id/mobile_you_avatar_glass"
                         android:layout_width="96dp"
                         android:layout_height="96dp"
                         app:glassCornerRadius="48dp"
-                        app:glassTint="@color/meetube_glass_button">
+                        app:glassTint="@color/gutube_glass_button">
 
                         <ImageView
                             android:id="@+id/mobile_you_avatar"
@@ -220,7 +222,7 @@
 
                 </LinearLayout>
 
-                <!-- MEETUBE(you page): Accounts / Settings as two tiles on an accent glass card, like Library's
+                <!-- GUTUBE(you page): Accounts / Settings as two tiles on an accent glass card, like Library's
                      (the card is set in MobileBrowseActivity.setupYouPanel). -->
                 <LinearLayout
                     android:id="@+id/mobile_you_actions"
@@ -251,7 +253,7 @@
                             android:textColor="@color/mobile_color_on_surface"
                             android:textSize="14sp"
                             app:cornerRadius="20dp"
-                            app:rippleColor="@color/mobile_color_divider" />
+                            app:rippleColor="@android:color/transparent" />
 
                     </FrameLayout>
 
@@ -276,7 +278,7 @@
                             android:textColor="@color/mobile_color_on_surface"
                             android:textSize="14sp"
                             app:cornerRadius="20dp"
-                            app:rippleColor="@color/mobile_color_divider" />
+                            app:rippleColor="@android:color/transparent" />
 
                     </FrameLayout>
 
@@ -329,7 +331,7 @@
         </ScrollView>
 
 
-        <!-- MEETUBE(shorts): the Shorts tab shows only this while its player opens. -->
+        <!-- GUTUBE(shorts): the Shorts tab shows only this while its player opens. -->
         <FrameLayout
             android:id="@+id/mobile_shorts_loading"
             android:layout_width="0dp"
@@ -343,7 +345,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ProgressBar
-                style="@style/Widget.MeeTube.GlassSpinner"
+                style="@style/Widget.GuTube.GlassSpinner"
                 android:layout_gravity="center" />
 
         </FrameLayout>
@@ -352,39 +354,8 @@
 
     </com.newtube.mobile.ui.common.GlassSource>
 
-    <!-- MEETUBE(you top fade): on the You page, the page colour fading down to nothing behind the
-         top pills, coming in as the page scrolls, so the rows melt away under them - no bar edge,
-         no blur (a full-width live frost made scrolling lag). Gradient and alpha: MobileBrowseActivity. -->
-    <View
-        android:id="@+id/mobile_you_top_fade"
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:alpha="0"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- MEETUBE(youtube mode): YouTube's top bar - one flat frost behind the brand, the buttons and
-         the tabs, full width, down to the tabs' foot (the top row alone when there are none). Gone
-         unless YouTube mode is on; MobileBrowseActivity slides it with them. -->
-    <com.newtube.mobile.ui.common.GlassView
-        android:id="@+id/mobile_top_frost"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:glassCornerRadius="0dp"
-        app:glassLiquid="false"
-        app:glassTint="?attr/meetubeNavTint"
-        app:layout_constraintBottom_toBottomOf="@id/mobile_chip_track"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- MEETUBE(glass): no top bar - two floating liquid-glass pills, the same glass as the nav
-         capsule (Glass.blur): the brand on the left (a You sub-screen swaps it for a back arrow and
-         the section's name - BrowseTopBar), cast and search on the right. The page scrolls under
-         both; MobileBrowseActivity pads the lists by this row's height. -->
+    <!-- GUTUBE(top bar): fixed, solid top bar containing brand on the left and actions on the right.
+         The page content scrolls underneath; MobileBrowseActivity pads the lists by this row's height. -->
     <LinearLayout
         android:id="@+id/mobile_top_glass"
         android:layout_width="0dp"
@@ -392,6 +363,10 @@
         android:clipToPadding="false"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:background="@color/mobile_color_background"
+        android:elevation="8dp"
+        android:clickable="true"
+        android:focusable="false"
         android:paddingHorizontal="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -399,152 +374,128 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.newtube.mobile.ui.common.GlassView
+        <LinearLayout
             android:id="@+id/mobile_brand_glass"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginEnd="12dp"
-            android:elevation="6dp"
-            app:glassCornerRadius="22dp"
-            app:glassTint="@color/meetube_glass_tint">
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="16dp">
 
-            <LinearLayout
+            <!-- NEWTUBE(you-subscreen): only on a section opened from a You row - BrowseTopBar. -->
+            <ImageButton
+                android:id="@+id/mobile_title_back"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="-6dp"
+                android:layout_marginEnd="4dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/mobile_dialog_back"
+                android:padding="7dp"
+                android:src="@drawable/ic_mobile_back_arrow"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/mobile_brand_mark"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_gutube_mark_default" />
+
+            <TextView
+                android:id="@+id/mobile_title_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="14dp"
-                android:paddingEnd="16dp">
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:maxWidth="200dp"
+                android:text="@string/app_name"
+                android:textColor="@color/mobile_color_on_surface"
+                android:textSize="15sp" />
 
-                <!-- NEWTUBE(you-subscreen): only on a section opened from a You row - BrowseTopBar. -->
-                <ImageButton
-                    android:id="@+id/mobile_title_back"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="-6dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_dialog_back"
-                    android:padding="7dp"
-                    android:src="@drawable/ic_mobile_back_arrow"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/mobile_brand_mark"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginEnd="8dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_meetube_mark_default" />
-
-                <TextView
-                    android:id="@+id/mobile_title_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="1"
-                    android:maxWidth="200dp"
-                    android:text="@string/app_name"
-                    android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
-
-        </com.newtube.mobile.ui.common.GlassView>
-
-        <!-- MEETUBE(feed-strip): what Home's chips fold into while the feed scrolls back up, beside
-             the brand pill (ChipBar); a tap brings the chips back. -->
-        <ImageView
-            android:id="@+id/mobile_chip_expand"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_feed_show_filters"
-            android:elevation="6dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_chips_expand"
-            app:tint="@color/mobile_color_on_surface"
-            android:visibility="gone" />
+        </LinearLayout>
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <com.newtube.mobile.ui.common.GlassView
+        <LinearLayout
             android:id="@+id/mobile_actions_glass"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:elevation="6dp"
-            app:glassCornerRadius="22dp"
-            app:glassTint="@color/meetube_glass_tint">
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="2dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingHorizontal="2dp">
+            <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
+                 accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->
+            <ImageButton
+                android:id="@+id/mobile_cast_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/mobile_cast_button"
+                android:padding="11dp"
+                android:src="@drawable/ic_mobile_cast" />
 
-                <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
-                     accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->
-                <ImageButton
-                    android:id="@+id/mobile_cast_button"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_cast_button"
-                    android:padding="11dp"
-                    android:src="@drawable/ic_mobile_cast" />
+            <ImageButton
+                android:id="@+id/mobile_search_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/mobile_search_button"
+                android:padding="11dp"
+                android:src="@drawable/ic_mobile_search"
+                android:visibility="gone" />
 
-                <ImageButton
-                    android:id="@+id/mobile_search_button"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:visibility="gone"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_search_button"
-                    android:padding="11dp"
-                    android:src="@drawable/ic_mobile_search" />
-
-            </LinearLayout>
-
-        </com.newtube.mobile.ui.common.GlassView>
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- MEETUBE(feed-strip): Home's topic chips, liquid-glass pills floating under the top pills;
+    <!-- GUTUBE(feed-strip): Home's topic chips, liquid-glass pills floating under the top pills;
          the feed scrolls under them (FeedStrip, the page padded by this row too).
-         MEETUBE(issue #161): 4dp of headroom laid over the top row, so the chips' shadows aren't
+         GUTUBE(issue #161): 4dp of headroom laid over the top row, so the chips' shadows aren't
          cut flat on top; refreshTopPadding takes it back off. -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mobile_chip_row"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-4dp"
+        android:clipChildren="false"
         android:clipToPadding="false"
         android:overScrollMode="never"
         android:paddingHorizontal="16dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:elevation="4dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mobile_top_glass" />
 
-    <!-- MEETUBE(glass segmented): the same chips as one glass segment (Settings > Customization > Chips
+    <!-- GUTUBE(glass segmented): the same chips as one glass segment (Settings > Customization > Chips
          style); ChipBar floats whichever is picked. -->
     <com.newtube.mobile.ui.common.GlassChipTrack
         android:id="@+id/mobile_chip_track"
         android:layout_width="0dp"
         android:layout_height="44dp"
         android:layout_marginHorizontal="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="4dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mobile_top_glass" />
 
-    <!-- MEETUBE(quotes): the quote a tap on the brand pill shows for three seconds (QuoteCard),
+    <!-- GUTUBE(quotes): the quote a tap on the brand pill shows for three seconds (QuoteCard),
          on the same liquid glass as the pills. -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_quote_card"
@@ -556,7 +507,7 @@
         android:focusable="true"
         android:visibility="gone"
         app:glassCornerRadius="28dp"
-        app:glassTint="@color/meetube_glass_tint"
+        app:glassTint="@color/gutube_glass_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -605,8 +556,8 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mobile_mini_player"
         android:contentDescription="@string/mobile_mini_expand"
-        android:layout_width="@dimen/meetube_mini_width"
-        android:layout_height="@dimen/meetube_mini_height"
+        android:layout_width="@dimen/gutube_mini_width"
+        android:layout_height="@dimen/gutube_mini_height"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
         android:clickable="true"
@@ -615,7 +566,7 @@
         app:cardBackgroundColor="@android:color/black"
         app:cardCornerRadius="18dp"
         app:cardElevation="8dp"
-        app:strokeColor="@color/meetube_glass_stroke"
+        app:strokeColor="@color/gutube_glass_stroke"
         app:strokeWidth="1dp"
         app:layout_constraintBottom_toTopOf="@id/mobile_nav_glass"
         app:layout_constraintEnd_toEndOf="parent"
@@ -643,7 +594,7 @@
 
             </androidx.media3.ui.AspectRatioFrameLayout>
 
-            <!-- MEETUBE(issue #233): compact corner controls on the Default card. -->
+            <!-- GUTUBE(issue #233): compact corner controls on the Default card. -->
             <ImageButton
                 android:id="@+id/mobile_mini_play_pause"
                 android:layout_width="36dp"
@@ -719,24 +670,24 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- MEETUBE(glass): the bottom nav floats as a blurred glass capsule over the page (Glass.blur).
+    <!-- GUTUBE(glass): the bottom nav floats as a blurred glass capsule over the page (Glass.blur).
          The screen's content already stops above the system navigation bar (MobileActivity insets),
          so the 12dp margin is measured from there. -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_nav_glass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="?attr/meetubeNavSideMargin"
-        android:layout_marginBottom="?attr/meetubeNavBottomMargin"
+        android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
+        android:layout_marginBottom="?attr/gutubeNavBottomMargin"
         android:elevation="6dp"
         android:padding="6dp"
-        app:glassCornerRadius="?attr/meetubeNavCorner"
-        app:glassLiquid="?attr/meetubeNavLiquid"
-        app:glassTint="?attr/meetubeNavTint"
+        app:glassCornerRadius="?attr/gutubeNavCorner"
+        app:glassLiquid="?attr/gutubeNavLiquid"
+        app:glassTint="?attr/gutubeNavTint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_max="?attr/meetubeNavMaxWidth">
+        app:layout_constraintWidth_max="?attr/gutubeNavMaxWidth">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mobile_bottom_nav"
@@ -744,7 +695,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:elevation="0dp"
-            app:itemBackground="?attr/meetubeNavItemBackground"
+            app:itemBackground="@android:color/transparent"
             app:itemIconSize="24dp"
             app:itemIconTint="@color/mobile_bottom_nav_item"
             app:itemRippleColor="@android:color/transparent"
@@ -757,7 +708,7 @@
 
     </com.newtube.mobile.ui.common.GlassView>
 
-    <!-- MEETUBE(search fab): a scroll down shrinks the nav bar into this Search bubble in a bottom
+    <!-- GUTUBE(search fab): a scroll down shrinks the nav bar into this Search bubble in a bottom
          corner, a scroll up stretches it back into the bar (MobileBrowseActivity.morphSearch; the
          corner is Settings > Customization's, set in code). Corners always round: a capsule at any size. -->
     <com.newtube.mobile.ui.common.GlassView
@@ -772,7 +723,7 @@
         android:focusable="true"
         android:visibility="invisible"
         app:glassCornerRadius="999dp"
-        app:glassTint="@color/meetube_glass_tint"
+        app:glassTint="@color/gutube_glass_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -786,7 +737,7 @@
 
     </com.newtube.mobile.ui.common.GlassView>
 
-    <!-- MEETUBE(nav lens, issue #46): the liquid glass lens a tab switch glides across the bar;
+    <!-- GUTUBE(nav lens, issue #46): the liquid glass lens a tab switch glides across the bar;
          sized and placed in code (NavLens.play), there only while it moves. -->
     <com.newtube.mobile.ui.common.NavLens
         android:id="@+id/mobile_nav_lens"
@@ -797,7 +748,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- MEETUBE(issue #130): a held tab's glass hint above the bar - "Tabs customization" with the
+    <!-- GUTUBE(issue #130): a held tab's glass hint above the bar - "Tabs customization" with the
          tab names on; with them off the tab's name, and "Change" on a tab Settings can swap.
          Placed in code (showNavHint). -->
     <com.newtube.mobile.ui.common.GlassView
@@ -809,7 +760,7 @@
         android:focusable="true"
         android:visibility="gone"
         app:glassCornerRadius="22dp"
-        app:glassTint="@color/meetube_glass_tint"
+        app:glassTint="@color/gutube_glass_tint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -844,7 +795,7 @@
 
     </com.newtube.mobile.ui.common.GlassView>
 
-    <!-- MEETUBE(greeting): a held brand pill frosts the whole screen with a greeting for the time
+    <!-- GUTUBE(greeting): a held brand pill frosts the whole screen with a greeting for the time
          of day and three glass shortcuts (GreetingOverlay). A tap off the shortcuts closes it. -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_greet_overlay"
@@ -856,7 +807,7 @@
         android:visibility="gone"
         app:glassCornerRadius="0dp"
         app:glassLiquid="false"
-        app:glassTint="@color/meetube_glass_tint"
+        app:glassTint="@color/gutube_glass_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * MEETUBE(issue #227): a Short opened from Home's shelf had only that shelf's 6 or 7 shorts as its
+ * GUTUBE(issue #227): a Short opened from Home's shelf had only that shelf's 6 or 7 shorts as its
  * queue, and nothing added to it: the player asks the browse screen for the next page, which on
  * Home is a no-op (the Home walk and the shelf tail page from the grid's scroll, and the grid is
  * behind the player). This pulls the Shorts tab's feed into such a queue, a page at a time, as the

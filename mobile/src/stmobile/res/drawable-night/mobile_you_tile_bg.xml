@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(you page): a You tile on its card: frosted glass, the frost brightest at the top and fading down, under a
+<!-- GUTUBE(you page): a You tile on its card: frosted glass, the frost brightest at the top and fading down, under a
      glass hairline. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <gradient

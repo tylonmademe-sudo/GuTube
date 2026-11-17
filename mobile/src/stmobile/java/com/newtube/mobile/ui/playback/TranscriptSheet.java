@@ -40,7 +40,7 @@ import java.util.function.LongSupplier;
 import okhttp3.Request;
 
 /**
- * MEETUBE(transcript): the video's transcript under it, like YouTube's panel. YouTube's own
+ * GUTUBE(transcript): the video's transcript under it, like YouTube's panel. YouTube's own
  * get_transcript refuses this app (LyricsSources), but its panel is the caption track, and the
  * player already holds those links: one is fetched as json3 (an event per caption) here. The
  * uploader's captions win over the automatic ones. The line being said lights up and stays in view
@@ -112,7 +112,7 @@ final class TranscriptSheet {
         return dialog;
     }
 
-    // MEETUBE(transcript-panel): a fresh body resets the search, list and their listeners.
+    // GUTUBE(transcript-panel): a fresh body resets the search, list and their listeners.
     static Runnable bindPanel(@NonNull CommentsPanelLayout panel, @NonNull MediaSubtitle track,
                               @NonNull LongSupplier position, @NonNull LongConsumer seek, boolean noLyrics) {
         ViewGroup sheet = (ViewGroup) panel.getSheet();
@@ -133,6 +133,9 @@ final class TranscriptSheet {
         View close = content.findViewById(R.id.transcript_sheet_close);
         EditText search = content.findViewById(R.id.transcript_sheet_search);
         close.setOnClickListener(v -> dismiss.run());
+        if (close != null) {
+            com.newtube.mobile.ui.common.SpotlightHelper.attach(close);
+        }
         Runnable release = LyricsSheet.releaseOnDetach(content.findViewById(R.id.transcript_sheet_body), () -> {
             if (!bound[0]) {
                 return;
@@ -179,7 +182,7 @@ final class TranscriptSheet {
             }
             List<Line> answer = lines;
             main.post(() -> {
-                if (bound[0]) { // MEETUBE(transcript-panel): ignore the previous binding's answer
+                if (bound[0]) { // GUTUBE(transcript-panel): ignore the previous binding's answer
                     stopFollowing[0] = show(content, answer, position, seek, active);
                 }
             });
@@ -197,6 +200,7 @@ final class TranscriptSheet {
             return () -> {};
         }
         RecyclerView list = content.findViewById(R.id.transcript_sheet_list);
+        list.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         LinearLayoutManager layout = new LinearLayoutManager(list.getContext());
         list.setLayoutManager(layout);
         Adapter adapter = new Adapter(lines, line -> seek.accept(line.startMs));
@@ -232,7 +236,7 @@ final class TranscriptSheet {
             @Override
             public void run() {
                 if (!showing.getAsBoolean() || !list.isAttachedToWindow()) {
-                    return; // MEETUBE(transcript-panel): the panel stays attached while closed
+                    return; // GUTUBE(transcript-panel): the panel stays attached while closed
                 }
                 int said = adapter.said(position.getAsLong());
                 if (said >= 0 && SystemClock.uptimeMillis() - touchedAt[0] > HANDS_OFF_MS

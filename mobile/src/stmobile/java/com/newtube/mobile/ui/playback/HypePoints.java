@@ -13,7 +13,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * MEETUBE(hype): a video's hype points, for the "Hype this video" card beside the comments. Only
+ * GUTUBE(hype): a video's hype points, for the "Hype this video" card beside the comments. Only
  * the mobile web client's /next carries them signed out (frameworkUpdates > hypePointsEntity; WEB
  * and TV have none), about 20 KB gzipped. Only videos in their first week can be hyped; the rest
  * have no entity and get no card.

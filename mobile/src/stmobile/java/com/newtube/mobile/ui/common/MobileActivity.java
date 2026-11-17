@@ -52,11 +52,11 @@ public abstract class MobileActivity extends MotherActivity {
      */
     private int mThemedNight;
 
-    /** MEETUBE(loader): the loader this screen's theme was given (see {@link #onResume}). */
+    /** GUTUBE(loader): the loader this screen's theme was given (see {@link #onResume}). */
     private String mLoader;
-    /** MEETUBE(accent): the accent palette this screen's theme was given. */
+    /** GUTUBE(accent): the accent palette this screen's theme was given. */
     private int mAccent = -1;
-    /** MEETUBE(card style): the card style this screen's You and Settings cards were drawn in. */
+    /** GUTUBE(card style): the card style this screen's You and Settings cards were drawn in. */
     private int mCardStyle = -1;
 
     @Override
@@ -80,18 +80,19 @@ public abstract class MobileActivity extends MotherActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        FocusRing.install(getWindow()); // MEETUBE(tv): the remote's highlight, on every screen
-        BounceOverscroll.install(getWindow()); // MEETUBE(bounce): lists bounce at their ends
+        FocusRing.install(getWindow()); // GUTUBE(tv): the remote's highlight, on every screen
+        BounceOverscroll.install(getWindow()); // GUTUBE(bounce): lists bounce at their ends
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        Haptics.onTouch(getWindow().peekDecorView(), event); // MEETUBE(haptics): every tap clicks
+        SpotlightDispatcher.dispatch(getWindow().peekDecorView(), event); // GUTUBE(spotlight): universal dynamic touch lighting
+        Haptics.onTouch(getWindow().peekDecorView(), event); // GUTUBE(haptics): every tap clicks
         return super.dispatchTouchEvent(event);
     }
 
     /**
-     * MEETUBE(issue #143): opening one of our own screens is not the user leaving the app. Without
+     * GUTUBE(issue #143): opening one of our own screens is not the user leaving the app. Without
      * this flag Android sends this screen onUserLeaveHint, which before Android 12 is the PiP entry
      * (MiniPip, the player) - Home with a docked card opening Search went to PiP on Android 8 and the
      * card was gone, audio playing. ViewManager.isNewViewPending() guarded it only by a 1 s window.
@@ -252,7 +253,7 @@ public abstract class MobileActivity extends MotherActivity {
     }
 
     /**
-     * MEETUBE(issue #144): a screen that moves its own content clear of the keyboard (IME insets)
+     * GUTUBE(issue #144): a screen that moves its own content clear of the keyboard (IME insets)
      * says so here, and keeps drawing behind it. A fitted window (the edge-to-edge opt-out, up to
      * Android 15) is otherwise shrunk above the keyboard by the system, and what a see-through
      * keyboard showed behind it was the bare window background: a black slab. From Android 16 every
@@ -328,7 +329,7 @@ public abstract class MobileActivity extends MotherActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        HighRefresh.apply(this); // MEETUBE(performance): back from Settings with it changed
+        HighRefresh.apply(this); // GUTUBE(performance): back from Settings with it changed
 
         // Mandatory: keeps the ViewManager back-stack/parent lookup correct.
         if (isBackStackScreen()) {
@@ -344,7 +345,7 @@ public abstract class MobileActivity extends MotherActivity {
         // theme changed.
         mResumed = true;
         checkTheme();
-        // MEETUBE(loader): Settings picked another loader while this screen was open. Not the
+        // GUTUBE(loader): Settings picked another loader while this screen was open. Not the
         // player: it keeps playing, and its spinner changes the next time it opens.
         if (mLoader != null && (!mLoader.equals(Loader.current(this)) || mAccent != Accent.key(this)
                 || mCardStyle != AccentCard.style(this)) && !mRecreating
@@ -392,7 +393,7 @@ public abstract class MobileActivity extends MotherActivity {
         finishReally(true);
     }
 
-    // MEETUBE(issue #171): a tab already launched Browse; close without routing Back through the player.
+    // GUTUBE(issue #171): a tab already launched Browse; close without routing Back through the player.
     public void finishReally(boolean startParent) {
         // Mandatory line. Fix un-proper view order (especially for playback view).
         //

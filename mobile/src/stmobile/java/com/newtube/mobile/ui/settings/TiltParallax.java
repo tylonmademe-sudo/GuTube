@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 /**
- * MEETUBE(about): the About card leans with the phone - it tilts a few degrees and the photo floats
+ * GUTUBE(about): the About card leans with the phone - it tilts a few degrees and the photo floats
  * over it (and every button on it), like a card held in the hand. Reads gravity, not the gyroscope (no drift), and only while
  * the card is on screen. The neutral pose follows how the phone is held, so a new grip re-centres it.
  */

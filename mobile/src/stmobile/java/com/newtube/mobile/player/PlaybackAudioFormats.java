@@ -14,7 +14,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 
-/** MEETUBE(issue #177): one selection for DASH, SABR and recovery, without mutating cached metadata. */
+/** GUTUBE(issue #177): one selection for DASH, SABR and recovery, without mutating cached metadata. */
 final class PlaybackAudioFormats implements MediaItemFormatInfo {
     private final MediaItemFormatInfo mInfo;
     private final List<MediaFormat> mFormats;

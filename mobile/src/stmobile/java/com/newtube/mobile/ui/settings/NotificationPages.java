@@ -22,9 +22,9 @@ import java.util.Map;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
 /**
- * MEETUBE(issue #239): Settings > Notifications - new uploads on or off, how often they are checked,
+ * GUTUBE(issue #239): Settings > Notifications - new uploads on or off, how often they are checked,
  * which channels ring (the same bell as beside Subscribed on a channel page), and what keeps the
- * checks running with MeeTube closed.
+ * checks running with GuTube closed.
  */
 final class NotificationPages {
     private NotificationPages() {

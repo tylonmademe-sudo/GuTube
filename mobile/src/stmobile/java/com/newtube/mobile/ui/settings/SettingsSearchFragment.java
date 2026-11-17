@@ -60,7 +60,7 @@ public final class SettingsSearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mobile_settings_search, container, false);
-        // MEETUBE(status bar): the activity no longer pads for it; this page, whose results have no
+        // GUTUBE(status bar): the activity no longer pads for it; this page, whose results have no
         // frosted bar to blend, keeps clear of it itself.
         View status = view.findViewById(R.id.settings_search_status);
         View pill = view.findViewById(R.id.settings_search_glass);
@@ -92,7 +92,7 @@ public final class SettingsSearchFragment extends Fragment {
         com.newtube.mobile.ui.common.Glass.blur(view.findViewById(R.id.settings_search_status),
                 view.findViewById(R.id.settings_search_blur_target));
         com.newtube.mobile.ui.common.Glass.blur(view.findViewById(R.id.settings_search_glass),
-                view.findViewById(R.id.settings_search_blur_target)); // MEETUBE(glass)
+                view.findViewById(R.id.settings_search_blur_target)); // GUTUBE(glass)
 
         view.findViewById(R.id.settings_search_back).setOnClickListener(v -> {
             hideKeyboard();

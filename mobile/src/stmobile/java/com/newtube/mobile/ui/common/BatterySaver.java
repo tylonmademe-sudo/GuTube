@@ -18,13 +18,13 @@ import androidx.annotation.Nullable;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(issue #93): with the phone's Battery Saver on, the effects can go - no animations (as the
+ * GUTUBE(issue #93): with the phone's Battery Saver on, the effects can go - no animations (as the
  * phone's own "Remove animations": every ValueAnimator and spring jumps to its end), and glass is a
  * plain tint (no live blur, lens or frosted player buttons). The first time Battery Saver is on, a
  * message asks once; Settings > Battery Saver changes the answer.
  */
 public final class BatterySaver {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_MODE = "battery_saver_effects";
     private static final String KEY_ASKED = "battery_saver_asked";
     private static final String KEY_MANUAL = "battery_saver_manual";

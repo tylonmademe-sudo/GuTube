@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(more videos, issue #196): Material "expand_less", the More videos toggle's chevron. -->
+<!-- GUTUBE(more videos, issue #196): Material "expand_less", the More videos toggle's chevron. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="18dp"
     android:height="18dp"

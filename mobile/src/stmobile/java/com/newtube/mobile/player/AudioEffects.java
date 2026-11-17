@@ -11,7 +11,7 @@ import com.liskovsoft.sharedutils.mylogger.Log;
 
 import java.util.function.Consumer;
 
-/** MEETUBE(issue #177): optional effects on the main player's session; failures never stop audio. */
+/** GUTUBE(issue #177): optional effects on the main player's session; failures never stop audio. */
 public final class AudioEffects {
     private static final String TAG = AudioEffects.class.getSimpleName();
     @Nullable private static AudioEffects sCurrent;
@@ -85,7 +85,7 @@ public final class AudioEffects {
             return;
         }
         try {
-            // MEETUBE(eq switch): the effect stays on and Off is a flat curve. setEnabled() rebuilds
+            // GUTUBE(eq switch): the effect stays on and Off is a flat curve. setEnabled() rebuilds
             // the phone's effect chain, which dropped the sound for about a second on every switch.
             int preset = AudioPreferences.getPreset(context);
             if (!enabled) {

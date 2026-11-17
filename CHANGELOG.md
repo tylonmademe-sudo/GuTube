@@ -1,8 +1,8 @@
 <div align="center">
 
-# MeeTube Changelog
+# GuTube Changelog
 
-Every MeeTube release, newest first.<br>
+Every GuTube release, newest first.<br>
 ✨ New &nbsp;·&nbsp; 🛠️ Changed &nbsp;·&nbsp; 🐛 Fixed
 
 </div>
@@ -20,13 +20,13 @@ Every MeeTube release, newest first.<br>
 | [**3.2.5** Plazma](#325-plazma) | 2026-11-01 | Smoother |
 | [**3.2.3** Mirage](#323-mirage) | 2026-10-31 | Pick your spinner and icon, Shorts autoscroll, a mini player that rides the bottom bar |
 | [**3.2.1** Sublime](#321-sublime) | 2026-10-28 | Shorts open instantly, a SponsorBlock skip pill, transcripts for songs without lyrics |
-| [**3.2.0** Rebirth](#320-rebirth) | 2026-10-28 | MeTube is now MeeTube, downloads up to 4K, GlowFlow everywhere |
+| [**3.2.0** Rebirth](#320-rebirth) | 2026-10-28 | MeTube is now GuTube, downloads up to 4K, GlowFlow everywhere |
 | [**3.1.8** Lora](#318-lora) | 2026-10-27 | Live rings, a playful Customization page, zoom anywhere |
 | [**3.1.7** Clozone](#317-clozone) | 2026-10-26 | Your bars your way, live chat beside the video, share from the second |
 | [**3.1.5** Orizon](#315-orizon) | 2026-10-25 | A new You page, More videos in fullscreen, HDR video |
-| [**3.1.1** Spectre](#311-spectre) | 2026-10-22 | MeeTube on Android TV, Shorts quality, tablet fixes |
+| [**3.1.1** Spectre](#311-spectre) | 2026-10-22 | GuTube on Android TV, Shorts quality, tablet fixes |
 | [**3.1.0** DoomsSlay](#310-doomsslay) | 2026-10-22 | Actions in fullscreen, a video box that fits, quicker Shorts |
-| [**3.0.5**](#305) | 2026-10-21 | MeeTube in Traditional Chinese, Shorts on channels, search chips |
+| [**3.0.5**](#305) | 2026-10-21 | GuTube in Traditional Chinese, Shorts on channels, search chips |
 | [**3.0.1**](#301) | 2026-10-19 | YouTube's search filters, Shorts in search, a real channel page |
 | [**3.0.0**](#300) | 2026-10-19 | Your own bottom bar, three app icons, a truthful quality label |
 | [**2.9.9**](#299) | 2026-10-18 | Shorts in picture-in-picture, channel pictures, a new icon |
@@ -54,15 +54,15 @@ Every MeeTube release, newest first.<br>
 
 ### ✨ Highlights
 
-- **Stable build:** after Android clears MeeTube in the background, the player comes back right where you left off instead of a blank video or 0:00, and the mini player and picture-in-picture behave on return.
-- **Timer:** hold the logo for a small frosted Timer (15, 25, 45, 60 min, or hold it to type any length). When it runs out MeeTube asks "Are ya winning, son?" and sends you back to focus, or gives you 5 more min.
-- **Battery Saver:** with the phone's Battery Saver on, MeeTube offers once to turn off animations and frosted glass, and Settings > Battery Saver has a switch to turn them off any time (#93).
-- **Your stats:** holding the logo also shows today's time in MeeTube, watch time, videos and the last 7 days as bars, kept only on your phone.
+- **Stable build:** after Android clears GuTube in the background, the player comes back right where you left off instead of a blank video or 0:00, and the mini player and picture-in-picture behave on return.
+- **Timer:** hold the logo for a small frosted Timer (15, 25, 45, 60 min, or hold it to type any length). When it runs out GuTube asks "Are ya winning, son?" and sends you back to focus, or gives you 5 more min.
+- **Battery Saver:** with the phone's Battery Saver on, GuTube offers once to turn off animations and frosted glass, and Settings > Battery Saver has a switch to turn them off any time (#93).
+- **Your stats:** holding the logo also shows today's time in GuTube, watch time, videos and the last 7 days as bars, kept only on your phone.
 
 ### 📣 A note from me
 
-- **MeeTube TV now lives in its own repo, give it a try on your TV whenever you like:** [yashoncode/meetube-tv](https://github.com/yashoncode/meetube-tv) has its downloads, changelog and issues. Settings > About > Install on my TV sends it over from your phone. No rush at all, only if you feel like it.
-- **Love MeeTube? A coffee keeps the late nights going, totally optional:** sudo brew coffee in About, [Buy me a coffee](https://buymeacoffee.com/yashwynth), or UPI `yashwynth@slc` in India. Thank you for every star, issue and kind word.
+- **GuTube TV now lives in its own repo, give it a try on your TV whenever you like:** [gutube/gutube-tv](https://github.com/gutube/gutube-tv) has its downloads, changelog and issues. Settings > About > Install on my TV sends it over from your phone. No rush at all, only if you feel like it.
+
 
 ### New
 
@@ -70,12 +70,12 @@ Every MeeTube release, newest first.<br>
 - A layout for every page: pick the video layout for Home, Subscriptions, playlists, channels, search and Up next, with Customization split into five pages (#92).
 - Save other people's playlists to You (and your account's library when signed in), with Saved playlists and Pinned channels on glass cards under History (#242).
 - 240p and 144p join the default quality choices for Wi-Fi, mobile data and Shorts, for limited data plans (#244).
-- About ends with a MeeTube TV card that leans with your phone, with Install on my TV and a link to its repo.
+- About ends with a GuTube TV card that leans with your phone, with Install on my TV and a link to its repo.
 - Home's chip segments are jelly: they swell under your finger, stretch toward a new pick and wobble back. Hold and drag the lens, and the row glides along at either end.
 
 ### Changed
 
-- Install on TV downloads MeeTube TV from its own repo, and the steps name the right TV menus.
+- Install on TV downloads GuTube TV from its own repo, and the steps name the right TV menus.
 - Up next rows match the other lists: a three-line title, two lines of details and the overflow button (#131).
 - Chapters upright open in the panel under the video, like the transcript, and the video still takes taps (#238).
 - Menus follow a finger dragged down and close or spring back on release.
@@ -90,7 +90,7 @@ Every MeeTube release, newest first.<br>
 
 ### Thanks
 
-Thanks to everyone who reports issues, tests builds and shares MeeTube with friends.
+Thanks to everyone who reports issues, tests builds and shares GuTube with friends.
 
 ## 3.4.0 Bleach
 
@@ -99,12 +99,12 @@ Thanks to everyone who reports issues, tests builds and shares MeeTube with frie
 
 ### ✨ Highlights
 
-- **YouTube mode:** one switch in Settings > Customization > Look makes MeeTube feel like YouTube. The bottom bar sits flat on the bottom edge on frosted glass, Search moves up to the top bar, Home's chips become text tabs and every video card gets sharp corners.
+- **YouTube mode:** one switch in Settings > Customization > Look makes GuTube feel like YouTube. The bottom bar sits flat on the bottom edge on frosted glass, Search moves up to the top bar, Home's chips become text tabs and every video card gets sharp corners.
 - **Any accent colour:** pick a Custom colour with a full colour picker (hue, saturation, brightness, 16 quick picks or a hex code), and the whole app follows it.
 - **Settings revamp:** Settings sit on grouped glass cards with seven card styles to choose from, pages frost in and out, and Customization shows a picture for more of its options.
 - **Hyped:** YouTube's Charts in Explore (or as a bottom bar tab), every video ranked on its thumbnail, and a Hype this video card beside the comments on the watch page.
 - **New uploads in your notifications:** new videos from your subscriptions show up in the notification shade, with or without an account. Settings > General > Notify about new uploads turns it off (#220).
-- **Polish and Brazilian Portuguese:** MeeTube now speaks both in full, every screen and setting translated.
+- **Polish and Brazilian Portuguese:** GuTube now speaks both in full, every screen and setting translated.
 - **Magic under the hood:** seeking shows the real frame in the video's own quality, a Most replayed graph rises over the seek bar, and taps on the bottom bar buzz so you feel them.
 
 ### New
@@ -127,7 +127,7 @@ Thanks to everyone who reports issues, tests builds and shares MeeTube with frie
 - A headset's button resumes a video it paused (#235).
 - The mini player keeps showing after Shorts (#233).
 - Restart in Settings works again.
-- Sudo brew coffee in About and the README have a new QR and UPI ID (`yashwynth@slc`). Sorry if you tried to donate while the old one wasn't working.
+
 
 ### Thanks
 
@@ -140,17 +140,17 @@ Thanks to everyone who reports issues, and in this release to @m0in01, @sirpaart
 
 ### ✨ Highlights
 
-- **Community posts:** channels have a Posts tab. Like posts, comment and reply right in MeeTube, with counts that update at once and a little pop on every like.
+- **Community posts:** channels have a Posts tab. Like posts, comment and reply right in GuTube, with counts that update at once and a little pop on every like.
 - **Live chat on live videos:** chat along with the stream from a real comment box, pick which Google account to chat as (with avatars), and see the full Live chat feed with its history the moment it opens.
-- **AutoEq headphone correction:** search about 9,000 headphone profiles from AutoEq in the Equalizer and MeeTube tunes the sound for your exact pair, exact on every phone and kept for offline use.
-- **Update notifications:** a new MeeTube version now shows up in your notification shade, even with the app closed. Settings > About > Notify about updates turns it off.
+- **AutoEq headphone correction:** search about 9,000 headphone profiles from AutoEq in the Equalizer and GuTube tunes the sound for your exact pair, exact on every phone and kept for offline use.
+- **Update notifications:** a new GuTube version now shows up in your notification shade, even with the app closed. Settings > About > Notify about updates turns it off.
 
 ### New
 
 - Web accounts for chatting and posts sit in their own tab in the Accounts sheet, separate from your main account, and Sign in is now Add account.
 - Accent colour palette: pick the app's accent from eight gradient palettes in Customization, and the Player and Shorts progress line colours with it.
 - Double tap to skip shows a springy glass seek pill that counts up +10, +20, +30 as you tap. Customization > Seek pill brings back the classic ripple.
-- Settings > Storage shows how full your phone is, what MeeTube takes, and clears the cache in one tap while your downloads stay.
+- Settings > Storage shows how full your phone is, what GuTube takes, and clears the cache in one tap while your downloads stay.
 - Mix and playlist cards are a stack, with two cards peeking above the thumbnail.
 - Time pills show radio waves before a Mix and a music note before a music video. Customization > Icons on time pills turns them off.
 - Ambient mode in landscape: the bands beside a video that doesn't fill the screen glow with its colours.
@@ -166,7 +166,7 @@ Thanks to everyone who reports issues, and in this release to @m0in01, @sirpaart
 - Chapter titles show as a frosted pill above the seek bar instead of a pop-up that stuck over the video (#223).
 - The Storage page is all glass: a frosted Clear cache button and a glowing storage line in your accent.
 - Back from a channel's Posts returns to the channel.
-- More of MeeTube speaks Russian, thanks to @MAKAKAIglitch (#221).
+- More of GuTube speaks Russian, thanks to @MAKAKAIglitch (#221).
 
 ### Fixed
 
@@ -191,7 +191,7 @@ Thanks to everyone who reports issues, and in this release to @Ishaanj2007, @dha
 
 - **Home autoplay:** the card in the middle of your feed plays muted right in its thumbnail, with mute and captions buttons and a countdown. Pick Wi-Fi only, always or off in Settings > Playback.
 - **Smart downloads:** a new Settings > Downloads page. Pick the folder and a default quality so one tap downloads, or turn on auto download for new uploads from the channels and playlists you choose (#202, #203).
-- **Dolby Atmos:** when a video has a Dolby Atmos or 5.1 track and your phone can decode it, MeeTube plays it instead of stereo. It's on by default, and you can turn it off in Settings > Audio.
+- **Dolby Atmos:** when a video has a Dolby Atmos or 5.1 track and your phone can decode it, GuTube plays it instead of stereo. It's on by default, and you can turn it off in Settings > Audio.
 - **Your own seek bar thumb:** swap the player's dot for any picture from your phone in Customization > Seek bar thumb. GIFs and animated WebP move too.
 - **iOS-style segment pills:** Home chips, search filters and Up next sit in a glass segment bar with a springy pill you can drag. Customization > Chips style brings the old pills back.
 
@@ -201,11 +201,11 @@ Thanks to everyone who reports issues, and in this release to @Ishaanj2007, @dha
 - A More videos button in the fullscreen controls (#196).
 - Mini player styles in Customization: Default (pinch to resize), Minimal, Minimal 2 or Disabled. It also stays wherever you let it go (#188).
 - Home can be removed from the bottom bar (#213).
-- Settings > Install on TV puts MeeTube TV on your Android TV, Google TV or Fire TV straight from your phone, with a step-by-step guide.
+- Settings > Install on TV puts GuTube TV on your Android TV, Google TV or Fire TV straight from your phone, with a step-by-step guide.
 - A Haptics toggle in Settings > App turns off every vibration.
 - Customization toggles to hide the Cast button and Home's topic chips.
 - Sudo brew coffee in About now asks where you are: UPI for India, Buy Me a Coffee everywhere else.
-- MeeTube speaks Russian, thanks to @MAKAKAIglitch (#194).
+- GuTube speaks Russian, thanks to @MAKAKAIglitch (#194).
 
 ### Changed
 
@@ -241,9 +241,9 @@ Thanks to everyone who reports issues, and in this release to @KrishnakantShedge
 - Stable volume is off by default, so you hear YouTube's original audio instead of its compressed track.
 - Player volume goes up to 200%.
 
-### 📺 Try MeeTube TV
+### 📺 Try GuTube TV
 
-MeeTube's glass design is on Android TV and Google TV, in beta. Get [MeeTube TV 0.0.1 Beta](https://github.com/yashoncode/meetube/releases/tag/tv-v0.0.1-beta), try it on your TV and tell me what you think: [open an issue](https://github.com/yashoncode/meetube/issues/new/choose) and pick MeeTube TV, or say it in [Discussions](https://github.com/yashoncode/meetube/discussions).
+GuTube's glass design is on Android TV and Google TV, in beta. Get [GuTube TV 0.0.1 Beta](https://github.com/gutube/gutube/releases/tag/tv-v0.0.1-beta), try it on your TV and tell me what you think: [open an issue](https://github.com/gutube/gutube/issues/new/choose) and pick GuTube TV, or say it in [Discussions](https://github.com/gutube/gutube/discussions).
 
 ### New
 
@@ -252,7 +252,7 @@ MeeTube's glass design is on Android TV and Google TV, in beta. Get [MeeTube TV 
 - Hold a channel in the Subscriptions strip to open its menu, and tap it again to go back to All (#87).
 - Player button style in Customization: See-through, Frosted, or Minimal with bare icons like YouTube.
 - App name in the top bar in Customization: turn it off and only the icon shows.
-- MeeTube speaks Arabic on every phone screen and setting, with fixes to the existing Arabic text (#69).
+- GuTube speaks Arabic on every phone screen and setting, with fixes to the existing Arabic text (#69).
 
 ### Changed
 
@@ -286,7 +286,7 @@ Thanks to everyone who reports issues, and in this release to @Hammoudi99, @Kris
 
 ### New
 
-- Try [MeeTube TV](https://github.com/yashoncode/meetube/releases/tag/tv-v0.0.1-beta) on your TV now, in beta on Releases.
+- Try [GuTube TV](https://github.com/gutube/gutube/releases/tag/tv-v0.0.1-beta) on your TV now, in beta on Releases.
 - Held sideways, the description opens as a card beside the video, which keeps playing.
 - Tap the video title in fullscreen to open the description (#164).
 - Tap the channel name in the description to open the channel, so the Videos button is gone (#160).
@@ -304,7 +304,7 @@ Thanks to everyone who reports issues, and in this release to @Hammoudi99, @Kris
 - Customization shows its choices and switches as pictures.
 - Shorts tiles have rounded corners everywhere.
 - Light theme: a red tab glow and launch animation, brighter Accounts and Settings buttons, a see-through Comments card, and Ambient mode off unless you turn it on.
-- The cast screens name MeeTube TV / SmartTube TV wherever they said SmartTube.
+- The cast screens name GuTube TV / SmartTube TV wherever they said SmartTube.
 - No shadow under the Up next chips.
 
 ### Fixed
@@ -384,7 +384,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ### Coming soon
 
-**MeeTube for TV.**
+**GuTube for TV.**
 
 ## 3.2.3 Mirage
 
@@ -430,21 +430,21 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 | Issue | Asked for | In 3.2.3 |
 | :-- | :-- | :-- |
-| [#85](https://github.com/yashoncode/meetube/issues/85) | 4K, 2K and 60 fps qualities on every phone | Rungs the decoder doubts are listed too |
-| [#114](https://github.com/yashoncode/meetube/issues/114) | The frosted loading spinner back | Spinner picker with Frosted glass and more |
-| [#117](https://github.com/yashoncode/meetube/issues/117) | A smoother Shorts edge fade | Half as wide, eased, follows a zoomed short |
-| [#118](https://github.com/yashoncode/meetube/issues/118) | A nav bar that fits landscape | Centred, at most 480dp wide |
-| [#120](https://github.com/yashoncode/meetube/issues/120) | Turn off the refresh sound | Off by default, a switch in Customization |
-| [#121](https://github.com/yashoncode/meetube/issues/121) | Controls after a play from outside | Headphones, lock screen and notification show them |
-| [#122](https://github.com/yashoncode/meetube/issues/122) | Hide Up next hides it all | No label, placeholder rows or chips |
-| [#123](https://github.com/yashoncode/meetube/issues/123) | A smaller Up next card in fullscreen | The card sizes to its content |
-| [#124](https://github.com/yashoncode/meetube/issues/124) | A glass lock button that moves | Lock on the player glass, drag it anywhere |
-| [#125](https://github.com/yashoncode/meetube/issues/125) | Mini player down with the bottom bar | It rides the bar on Home, Search and channels |
-| [#127](https://github.com/yashoncode/meetube/issues/127) | A clear locked state | "Locked · tap to unlock" pill with a shut padlock |
-| [#129](https://github.com/yashoncode/meetube/issues/129) | A linear brightness swipe | Half way up is half the brightness |
-| [#130](https://github.com/yashoncode/meetube/issues/130) | A new bottom bar long press | A glass hint that opens Tabs customization |
-| [#132](https://github.com/yashoncode/meetube/issues/132) | Hide the red watched line | A switch in Customization |
-| [#134](https://github.com/yashoncode/meetube/issues/134) | Autoscroll in Shorts | Replay or move to the next short when one ends |
+| [#85](https://github.com/gutube/gutube/issues/85) | 4K, 2K and 60 fps qualities on every phone | Rungs the decoder doubts are listed too |
+| [#114](https://github.com/gutube/gutube/issues/114) | The frosted loading spinner back | Spinner picker with Frosted glass and more |
+| [#117](https://github.com/gutube/gutube/issues/117) | A smoother Shorts edge fade | Half as wide, eased, follows a zoomed short |
+| [#118](https://github.com/gutube/gutube/issues/118) | A nav bar that fits landscape | Centred, at most 480dp wide |
+| [#120](https://github.com/gutube/gutube/issues/120) | Turn off the refresh sound | Off by default, a switch in Customization |
+| [#121](https://github.com/gutube/gutube/issues/121) | Controls after a play from outside | Headphones, lock screen and notification show them |
+| [#122](https://github.com/gutube/gutube/issues/122) | Hide Up next hides it all | No label, placeholder rows or chips |
+| [#123](https://github.com/gutube/gutube/issues/123) | A smaller Up next card in fullscreen | The card sizes to its content |
+| [#124](https://github.com/gutube/gutube/issues/124) | A glass lock button that moves | Lock on the player glass, drag it anywhere |
+| [#125](https://github.com/gutube/gutube/issues/125) | Mini player down with the bottom bar | It rides the bar on Home, Search and channels |
+| [#127](https://github.com/gutube/gutube/issues/127) | A clear locked state | "Locked · tap to unlock" pill with a shut padlock |
+| [#129](https://github.com/gutube/gutube/issues/129) | A linear brightness swipe | Half way up is half the brightness |
+| [#130](https://github.com/gutube/gutube/issues/130) | A new bottom bar long press | A glass hint that opens Tabs customization |
+| [#132](https://github.com/gutube/gutube/issues/132) | Hide the red watched line | A switch in Customization |
+| [#134](https://github.com/gutube/gutube/issues/134) | Autoscroll in Shorts | Replay or move to the next short when one ends |
 
 ## 3.2.1 Sublime
 
@@ -459,7 +459,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 - **New to you and Continue watching.** Up next chips that split the related videos into ones you haven't seen and ones you started (#104, #105).
 - **Picture-in-picture when you leave, your choice.** Settings > Playback > Picture-in-picture: off, leaving the app with a video playing goes on as audio. The player menu still opens picture-in-picture (#103).
 - **Shorts in History.** History lists the Shorts you watched, and a tapped one plays in the Shorts player with your other watched Shorts.
-- **A rest nudge.** After half an hour of swiping Shorts, MeeTube suggests a break.
+- **A rest nudge.** After half an hour of swiping Shorts, GuTube suggests a break.
 - **Built in public.** About and the README link to the workflow that builds every release.
 
 ### 🛠️ Changed
@@ -479,23 +479,23 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ## 3.2.0 Rebirth
 
-> **MeTube is now MeeTube: downloads up to 4K, GlowFlow everywhere**<br>
+> **MeTube is now GuTube: downloads up to 4K, GlowFlow everywhere**<br>
 > 📅 2026-10-28 · closes #47, #71, #74, #75, #76, #77, #90, #91, #94, #98, #99 and #101
 
-### 📣 MeTube is now MeeTube
+### 📣 MeTube is now GuTube
 
-- **A new name, a new app.** MeTube is reborn as MeeTube, with a new app id (`io.yash.meetube`). Android sees it as a different app, so **MeeTube installs as a separate app next to MeTube** instead of updating it.
-- **Install MeeTube, then uninstall the old MeTube.** Sign in again in MeeTube and set your settings once; the old app keeps its own and gets no more updates.
-- **Your old downloads stay where they were,** in Movies/MeTube and Music/MeTube. New ones go to Movies/MeeTube and Music/MeeTube.
-- **A new default icon.** The red heart on a white tile is MeeTube's icon now. The painted heart is still there as Fantasy, and Classic too, in Settings > Customization > App icon.
+- **A new name, a new app.** MeTube is reborn as GuTube, with a new app id (`io.gutube.gutube`). Android sees it as a different app, so **GuTube installs as a separate app next to MeTube** instead of updating it.
+- **Install GuTube, then uninstall the old MeTube.** Sign in again in GuTube and set your settings once; the old app keeps its own and gets no more updates.
+- **Your old downloads stay where they were,** in Movies/MeTube and Music/MeTube. New ones go to Movies/GuTube and Music/GuTube.
+- **A new default icon.** The red heart on a white tile is GuTube's icon now. The painted heart is still there as Fantasy, and Classic too, in Settings > Customization > App icon.
 
 ### ✨ New
 
-- **Downloads up to 4K.** Save videos in 1440p and 4K as well as up to 1080p. YouTube serves those only as VP9, so MeeTube fetches the best VP9 video and Opus audio and joins them into one WebM file on your phone. Up to 1080p stays MP4 (#94).
+- **Downloads up to 4K.** Save videos in 1440p and 4K as well as up to 1080p. YouTube serves those only as VP9, so GuTube fetches the best VP9 video and Opus audio and joins them into one WebM file on your phone. Up to 1080p stays MP4 (#94).
 - **Save downloads where you like.** Pick any folder on your phone in Settings, or long press Download on the watch page. If the folder stops being writable, downloads go to the default one again (#75).
 - **Open in folder.** A download's menu opens its folder in your file manager.
 - **GlowFlow, a glow that moves with you.** Light now flows through the whole app:
-  - **Tab glow.** A soft glow sits behind the lit tab and slides to the next one as you switch, changing colour on the way. Pick White, Tab colors (each tab its own colour) or Accent (MeeTube red) in Settings > Customization > Tab glow, or turn it off (#47).
+  - **Tab glow.** A soft glow sits behind the lit tab and slides to the next one as you switch, changing colour on the way. Pick White, Tab colors (each tab its own colour) or Accent (GuTube red) in Settings > Customization > Tab glow, or turn it off (#47).
   - **Progress glow.** The played part of every progress line glows at its head and ends round: the player's seek bar, the cards' watched line, the mini player and Shorts. Settings > Customization > Progress glow turns it off.
   - **Counts that run up.** A short's counts run up from zero the first time it shows.
 - **Drag along the bottom bar.** Slide your finger along the bar: the glass lens follows it with a tick per tab, and the tab you let go on opens (#90).
@@ -531,18 +531,18 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 | Issue | Asked for | In 3.2.0 |
 | :-- | :-- | :-- |
-| [#47](https://github.com/yashoncode/meetube/issues/47) | A colour bloom on the selected tab | Tab glow: White, Tab colors or Accent |
-| [#71](https://github.com/yashoncode/meetube/issues/71) | Side swipe on the History page | Swipe a card to remove it |
-| [#74](https://github.com/yashoncode/meetube/issues/74) | Topic chips while watching | All and From the channel chips on Up next |
-| [#75](https://github.com/yashoncode/meetube/issues/75) | Long press Download to save to phone storage | Long press picks the download folder |
-| [#76](https://github.com/yashoncode/meetube/issues/76) | Customizable player controls | Show or hide each player button |
-| [#77](https://github.com/yashoncode/meetube/issues/77) | A glass loading spinner | A white arc on frosted glass |
-| [#90](https://github.com/yashoncode/meetube/issues/90) | A better navigation bar | Drag along the bar to switch tabs |
-| [#91](https://github.com/yashoncode/meetube/issues/91) | Refresh shows cards in List layout | Row placeholders for lists |
-| [#94](https://github.com/yashoncode/meetube/issues/94) | 4K downloads | 1440p and 4K downloads |
-| [#98](https://github.com/yashoncode/meetube/issues/98) | A player lock | Lock button in fullscreen |
-| [#99](https://github.com/yashoncode/meetube/issues/99) | Mini player grow animation | Grows from the card, no stretch |
-| [#101](https://github.com/yashoncode/meetube/issues/101) | Show controls after an outside pause | Controls come up on any pause |
+| [#47](https://github.com/gutube/gutube/issues/47) | A colour bloom on the selected tab | Tab glow: White, Tab colors or Accent |
+| [#71](https://github.com/gutube/gutube/issues/71) | Side swipe on the History page | Swipe a card to remove it |
+| [#74](https://github.com/gutube/gutube/issues/74) | Topic chips while watching | All and From the channel chips on Up next |
+| [#75](https://github.com/gutube/gutube/issues/75) | Long press Download to save to phone storage | Long press picks the download folder |
+| [#76](https://github.com/gutube/gutube/issues/76) | Customizable player controls | Show or hide each player button |
+| [#77](https://github.com/gutube/gutube/issues/77) | A glass loading spinner | A white arc on frosted glass |
+| [#90](https://github.com/gutube/gutube/issues/90) | A better navigation bar | Drag along the bar to switch tabs |
+| [#91](https://github.com/gutube/gutube/issues/91) | Refresh shows cards in List layout | Row placeholders for lists |
+| [#94](https://github.com/gutube/gutube/issues/94) | 4K downloads | 1440p and 4K downloads |
+| [#98](https://github.com/gutube/gutube/issues/98) | A player lock | Lock button in fullscreen |
+| [#99](https://github.com/gutube/gutube/issues/99) | Mini player grow animation | Grows from the card, no stretch |
+| [#101](https://github.com/gutube/gutube/issues/101) | Show controls after an outside pause | Controls come up on any pause |
 
 ## 3.1.8 Lora
 
@@ -584,32 +584,32 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 | Issue | Asked for | In 3.1.8 |
 | :-- | :-- | :-- |
-| [#46](https://github.com/yashoncode/meetube/issues/46) | A liquid glass bottom bar with effect settings | A glass lens glides between tabs, with its own switch |
-| [#55](https://github.com/yashoncode/meetube/issues/55) | Zoom in the video player | Pinch to zoom up to 5x, everywhere |
-| [#73](https://github.com/yashoncode/meetube/issues/73) | A red ring on live channels | A glowing ring wherever the channel shows |
-| [#78](https://github.com/yashoncode/meetube/issues/78) | YouTube style comment taps | Tap for replies, double tap to like |
-| [#79](https://github.com/yashoncode/meetube/issues/79) | Personal Home chips | Chips for the channels you watch most |
-| [#80](https://github.com/yashoncode/meetube/issues/80) | Glass player buttons are gone | Frosted player buttons setting |
-| [#81](https://github.com/yashoncode/meetube/issues/81) | Bottom bar names out of line | "Subs" fits on one line |
-| [#82](https://github.com/yashoncode/meetube/issues/82) | Videos as a list | Video layout: Cards or List |
-| [#83](https://github.com/yashoncode/meetube/issues/83) | Recent live streams only show Retry | They play from the start |
-| [#86](https://github.com/yashoncode/meetube/issues/86) | Back from a channel goes Home | Back goes to All first |
+| [#46](https://github.com/gutube/gutube/issues/46) | A liquid glass bottom bar with effect settings | A glass lens glides between tabs, with its own switch |
+| [#55](https://github.com/gutube/gutube/issues/55) | Zoom in the video player | Pinch to zoom up to 5x, everywhere |
+| [#73](https://github.com/gutube/gutube/issues/73) | A red ring on live channels | A glowing ring wherever the channel shows |
+| [#78](https://github.com/gutube/gutube/issues/78) | YouTube style comment taps | Tap for replies, double tap to like |
+| [#79](https://github.com/gutube/gutube/issues/79) | Personal Home chips | Chips for the channels you watch most |
+| [#80](https://github.com/gutube/gutube/issues/80) | Glass player buttons are gone | Frosted player buttons setting |
+| [#81](https://github.com/gutube/gutube/issues/81) | Bottom bar names out of line | "Subs" fits on one line |
+| [#82](https://github.com/gutube/gutube/issues/82) | Videos as a list | Video layout: Cards or List |
+| [#83](https://github.com/gutube/gutube/issues/83) | Recent live streams only show Retry | They play from the start |
+| [#86](https://github.com/gutube/gutube/issues/86) | Back from a channel goes Home | Back goes to All first |
 
 ## 3.1.7 Clozone
 
 > **Your bars your way, live chat beside the video, share from the second**<br>
 > 📅 2026-10-26 · closes #31, #32, #33, #37, #42, #54, #63, #65, #66, #67 and #68
 
-### 💌 Love MeeTube? Your friends might too
+### 💌 Love GuTube? Your friends might too
 
-- **Know someone still sitting through ads?** If MeeTube spared you even one unskippable ad this week, there is probably a friend, a cousin or a mum out there still watching all of them like it is 2015. Send them [the download link](https://github.com/yashoncode/meetube/releases/latest). Or don't, and keep the ad free life to yourself. We will just be here, refreshing the download count every five minutes, totally fine about it.
+- **Know someone still sitting through ads?** If GuTube spared you even one unskippable ad this week, there is probably a friend, a cousin or a mum out there still watching all of them like it is 2015. Send them [the download link](https://github.com/gutube/gutube/releases/latest). Or don't, and keep the ad free life to yourself. We will just be here, refreshing the download count every five minutes, totally fine about it.
 
 ### ✨ New
 
 - **Arrange your bars by dragging.** Settings > Customization > Tabs now shows your bars as a stack of tiles with a small preview above them. Hold a tile, or grab its grip, and slide it: Search and your two tabs move between Home and You, and the preview follows along. Drag Search up and it moves to the top bar next to Cast, like on YouTube. Tap a tab to change what it shows (#31).
 - **Live chat beside the video.** Upright, the chat sits under the video instead of covering it. Sideways, a chat button on the fullscreen pill opens it as a card on the right, and the video slides over to make room. Comments in landscape open in the same card (#32).
 - **Share from the second you are on.** A tap on Share sends the link as before. Hold it to send the link from where you are now, so your friend lands right on the good part (#68).
-- **Tap the time to see what is left.** The time on the player flips to the time remaining and back, and MeeTube remembers your pick (#67).
+- **Tap the time to see what is left.** The time on the player flips to the time remaining and back, and GuTube remembers your pick (#67).
 - **Hold a video in Up next for its menu.** The same menu as on Home: queue, save to a playlist, share and the rest (#66).
 - **Swipe a video out of your own playlists.** Watch later too. Changed your mind? Undo puts it back (#65).
 - **Mute, search and download on Shorts,** small at the top right like YouTube's. Mute stays on from short to short until you tap it again.
@@ -631,24 +631,24 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 - **Your History shows the Shorts you watched.** If you mostly watched Shorts lately, History looked empty.
 - **A tab you put on the bar shows up.** Turning it off under You used to hide it from the bar too. Putting it on the bar now turns it back on (#54).
-- **One decoder hiccup no longer lowers your quality for good.** When the phone could not start a video, MeeTube dropped to 1080p and kept it for every video after. Now only that one video falls back. Thanks to NewTube for this fix.
+- **One decoder hiccup no longer lowers your quality for good.** When the phone could not start a video, GuTube dropped to 1080p and kept it for every video after. Now only that one video falls back. Thanks to NewTube for this fix.
 - **Swiping the player down from Search** no longer slips under the bottom bar and jumps.
 
 ### ✅ Issues resolved
 
 | Issue | Asked for | In 3.1.7 |
 | :-- | :-- | :-- |
-| [#31](https://github.com/yashoncode/meetube/issues/31) | Search button in the top bar | Drag Search up into the top bar |
-| [#32](https://github.com/yashoncode/meetube/issues/32) | Live chat is hard to see, and missing in landscape | Chat under the video, or a card beside it |
-| [#33](https://github.com/yashoncode/meetube/issues/33) | A description for Shorts | Tap a short's title |
-| [#37](https://github.com/yashoncode/meetube/issues/37) | A bottom bar that hides like YouTube's | It hides as you scroll down |
-| [#42](https://github.com/yashoncode/meetube/issues/42) | Shorts don't match the YouTube app | Your account's Shorts come first |
-| [#54](https://github.com/yashoncode/meetube/issues/54) | Subscriptions missing from the bar | A tab on the bar always shows |
-| [#63](https://github.com/yashoncode/meetube/issues/63) | HDR next to the quality | HDR streams say HDR |
-| [#65](https://github.com/yashoncode/meetube/issues/65) | Swipe to remove from a playlist | Swipe it out, with Undo |
-| [#66](https://github.com/yashoncode/meetube/issues/66) | Hold a video for its menu | Hold any video in Up next |
-| [#67](https://github.com/yashoncode/meetube/issues/67) | Show the time left | Tap the time to flip it |
-| [#68](https://github.com/yashoncode/meetube/issues/68) | Share with a timestamp | Hold Share |
+| [#31](https://github.com/gutube/gutube/issues/31) | Search button in the top bar | Drag Search up into the top bar |
+| [#32](https://github.com/gutube/gutube/issues/32) | Live chat is hard to see, and missing in landscape | Chat under the video, or a card beside it |
+| [#33](https://github.com/gutube/gutube/issues/33) | A description for Shorts | Tap a short's title |
+| [#37](https://github.com/gutube/gutube/issues/37) | A bottom bar that hides like YouTube's | It hides as you scroll down |
+| [#42](https://github.com/gutube/gutube/issues/42) | Shorts don't match the YouTube app | Your account's Shorts come first |
+| [#54](https://github.com/gutube/gutube/issues/54) | Subscriptions missing from the bar | A tab on the bar always shows |
+| [#63](https://github.com/gutube/gutube/issues/63) | HDR next to the quality | HDR streams say HDR |
+| [#65](https://github.com/gutube/gutube/issues/65) | Swipe to remove from a playlist | Swipe it out, with Undo |
+| [#66](https://github.com/gutube/gutube/issues/66) | Hold a video for its menu | Hold any video in Up next |
+| [#67](https://github.com/gutube/gutube/issues/67) | Show the time left | Tap the time to flip it |
+| [#68](https://github.com/gutube/gutube/issues/68) | Share with a timestamp | Hold Share |
 
 ## 3.1.5 Orizon
 
@@ -657,7 +657,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ### 📣 A new name is coming
 
-- **MeTube will get a new name soon.** The app, its features and your settings stay the same, and updates keep arriving as they do now. We want to pick the name with you: share your ideas and vote in [GitHub Discussions](https://github.com/yashoncode/meetube/discussions).
+- **MeTube will get a new name soon.** The app, its features and your settings stay the same, and updates keep arriving as they do now. We want to pick the name with you: share your ideas and vote in [GitHub Discussions](https://github.com/gutube/gutube/discussions).
 
 ### ✨ New
 
@@ -686,26 +686,26 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 | Issue | Asked for | In 3.1.5 |
 | :-- | :-- | :-- |
-| [#24](https://github.com/yashoncode/meetube/issues/24) | A swipe-up More videos panel in fullscreen | Swipe up in landscape for a row of Up next videos |
-| [#34](https://github.com/yashoncode/meetube/issues/34) | Fix the mini player | One tap opens it, its buttons fade away |
-| [#35](https://github.com/yashoncode/meetube/issues/35) | HDR video | An HDR video switch in Settings > Player |
-| [#36](https://github.com/yashoncode/meetube/issues/36) | Swipe up to see a tall video's details | The box shrinks first, then the page scrolls |
-| [#38](https://github.com/yashoncode/meetube/issues/38) | Picture-in-picture shows the whole app | Only the video floats, and leaving it no longer crashes |
-| [#41](https://github.com/yashoncode/meetube/issues/41) | Video titles sometimes missing | Missing titles fill themselves in |
-| [#45](https://github.com/yashoncode/meetube/issues/45) | Liking Shorts doesn't update the like | The like count moves with your like |
-| [#50](https://github.com/yashoncode/meetube/issues/50) | Channel tabs jump back to the top | Each tab keeps its scroll position |
-| [#56](https://github.com/yashoncode/meetube/issues/56) | Home stuck on loading | The placeholders always make way for the videos |
-| [#57](https://github.com/yashoncode/meetube/issues/57) | Shorts turn into a normal video in landscape | Shorts mode holds in any orientation |
-| [#58](https://github.com/yashoncode/meetube/issues/58) | 1080p picked, 240p played | The nearest quality to your pick plays |
+| [#24](https://github.com/gutube/gutube/issues/24) | A swipe-up More videos panel in fullscreen | Swipe up in landscape for a row of Up next videos |
+| [#34](https://github.com/gutube/gutube/issues/34) | Fix the mini player | One tap opens it, its buttons fade away |
+| [#35](https://github.com/gutube/gutube/issues/35) | HDR video | An HDR video switch in Settings > Player |
+| [#36](https://github.com/gutube/gutube/issues/36) | Swipe up to see a tall video's details | The box shrinks first, then the page scrolls |
+| [#38](https://github.com/gutube/gutube/issues/38) | Picture-in-picture shows the whole app | Only the video floats, and leaving it no longer crashes |
+| [#41](https://github.com/gutube/gutube/issues/41) | Video titles sometimes missing | Missing titles fill themselves in |
+| [#45](https://github.com/gutube/gutube/issues/45) | Liking Shorts doesn't update the like | The like count moves with your like |
+| [#50](https://github.com/gutube/gutube/issues/50) | Channel tabs jump back to the top | Each tab keeps its scroll position |
+| [#56](https://github.com/gutube/gutube/issues/56) | Home stuck on loading | The placeholders always make way for the videos |
+| [#57](https://github.com/gutube/gutube/issues/57) | Shorts turn into a normal video in landscape | Shorts mode holds in any orientation |
+| [#58](https://github.com/gutube/gutube/issues/58) | 1080p picked, 240p played | The nearest quality to your pick plays |
 
 ## 3.1.1 Spectre
 
-> **MeeTube on Android TV, Shorts quality, tablet fixes**<br>
+> **GuTube on Android TV, Shorts quality, tablet fixes**<br>
 > 📅 2026-10-22 · closes #21, #25, #26, #27, #28, #29 and #30
 
 ### ✨ New
 
-- **MeeTube on Android TV and TV boxes.** Install it on a TV, open it from the TV home screen and use it with just the remote. A white ring shows what you are on, everywhere. On Home, press Up from the first row for the topic chips and Back for the bottom bar. In the player, OK plays or pauses, Left and Right seek, Up and Down bring up the controls, and Back hides them before it leaves the video. In Shorts, Up and Down move between shorts. It is the same MeeTube you know from your phone, not SmartTube's TV look (#21).
+- **GuTube on Android TV and TV boxes.** Install it on a TV, open it from the TV home screen and use it with just the remote. A white ring shows what you are on, everywhere. On Home, press Up from the first row for the topic chips and Back for the bottom bar. In the player, OK plays or pauses, Left and Right seek, Up and Down bring up the controls, and Back hides them before it leaves the video. In Shorts, Up and Down move between shorts. It is the same GuTube you know from your phone, not SmartTube's TV look (#21).
 - **Shorts have their own default quality.** Settings > Video quality has a Shorts row next to Wi-Fi and mobile data, so you can save data on Shorts and keep other videos sharp, or the other way round (#26).
 
 ### 🛠️ Changed
@@ -724,13 +724,13 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 | Issue | Asked for | In 3.1.1 |
 | :-- | :-- | :-- |
-| [#21](https://github.com/yashoncode/meetube/issues/21) | Use MeeTube with a TV remote | A TV home screen entry and remote control on every screen |
-| [#25](https://github.com/yashoncode/meetube/issues/25) | Shorts stretched on tablets | Tablets show the whole short when zoom is Default |
-| [#26](https://github.com/yashoncode/meetube/issues/26) | A separate quality for Shorts | A Shorts row in Settings > Video quality |
-| [#27](https://github.com/yashoncode/meetube/issues/27) | Shorts comments don't open fully | Comments take two thirds of the screen |
-| [#28](https://github.com/yashoncode/meetube/issues/28) | Stutter when opening the video options | The video keeps playing smoothly |
-| [#29](https://github.com/yashoncode/meetube/issues/29) | A lighter fullscreen button | A see-through button with a dark ring |
-| [#30](https://github.com/yashoncode/meetube/issues/30) | Lyrics panel over the mini player | Open panels close when the player shrinks |
+| [#21](https://github.com/gutube/gutube/issues/21) | Use GuTube with a TV remote | A TV home screen entry and remote control on every screen |
+| [#25](https://github.com/gutube/gutube/issues/25) | Shorts stretched on tablets | Tablets show the whole short when zoom is Default |
+| [#26](https://github.com/gutube/gutube/issues/26) | A separate quality for Shorts | A Shorts row in Settings > Video quality |
+| [#27](https://github.com/gutube/gutube/issues/27) | Shorts comments don't open fully | Comments take two thirds of the screen |
+| [#28](https://github.com/gutube/gutube/issues/28) | Stutter when opening the video options | The video keeps playing smoothly |
+| [#29](https://github.com/gutube/gutube/issues/29) | A lighter fullscreen button | A see-through button with a dark ring |
+| [#30](https://github.com/gutube/gutube/issues/30) | Lyrics panel over the mini player | Open panels close when the player shrinks |
 
 ## 3.1.0 DoomsSlay
 
@@ -739,7 +739,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ### ✨ New
 
-- **Like, comment and share in fullscreen.** A small frosted pill under the seek bar, in landscape and vertical fullscreen, has like, dislike, comments, download and share, with the same state as the watch page. The arrow beside the fullscreen button hides it, and MeeTube remembers your choice (#9).
+- **Like, comment and share in fullscreen.** A small frosted pill under the seek bar, in landscape and vertical fullscreen, has like, dislike, comments, download and share, with the same state as the watch page. The arrow beside the fullscreen button hides it, and GuTube remembers your choice (#9).
 - **The video box takes the video's shape.** A square or vertical video no longer sits in a 16:9 box with black bars at its sides. The box follows the video, up to two thirds of the screen, so the title and buttons stay in sight (#13).
 - **Live frosted glass over the player.** The settings sheet and the pickers opened over a video (download quality, repeat, zoom, save to playlist) blur the video as it keeps playing, instead of a frozen copy of it. Android 12 and newer (#17).
 - **Shorts swipe faster.** The next short starts opening while the old one slides away, and stays preloaded while the current one loops. A swipe now plays the next short about a third sooner, with no red spinner over it and no jump from its picture to its video.
@@ -759,34 +759,34 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 ### 🐛 Fixed
 
 - **Home's grey placeholder stayed over the loaded videos** for seconds on slower phones, and could flash back when leaving Shorts. It now fades once (#20).
-- **My videos looked broken with private or unlisted uploads.** YouTube never lists those to MeeTube's sign-in, only public ones; an empty My videos now says so instead of "Nothing to show here yet" (#19).
-- **No pause and rewind at the one minute mark.** When YouTube refuses a session at 60 seconds, the buffered video keeps playing while MeeTube fetches a working link for the same stream.
+- **My videos looked broken with private or unlisted uploads.** YouTube never lists those to GuTube's sign-in, only public ones; an empty My videos now says so instead of "Nothing to show here yet" (#19).
+- **No pause and rewind at the one minute mark.** When YouTube refuses a session at 60 seconds, the buffered video keeps playing while GuTube fetches a working link for the same stream.
 - **Previous goes back even with SponsorBlock.** A second tap returns to the previous video even when SponsorBlock skipped an intro, and that video resumes where you left it.
 - **The app opens on Android 7.0 again.**
 - **Fullscreen on Android 11:** the gesture bar no longer stays on screen.
 - Audio tracks are labelled better: original, dubbed and audio description tracks are told apart.
 - Home no longer looks like it is loading again after you leave the fullscreen player.
-- The app icon you picked shows on every launch screen and in recent apps, also after Android restarted MeeTube in the background.
+- The app icon you picked shows on every launch screen and in recent apps, also after Android restarted GuTube in the background.
 - Videos open a little lighter: the remote control service is built only when it is used.
 
 ### ✅ Issues resolved
 
 | Issue | Asked for | In 3.1.0 |
 | :-- | :-- | :-- |
-| [#9](https://github.com/yashoncode/meetube/issues/9) | Like, comment and share buttons in the player | A frosted action pill under the fullscreen seek bar |
-| [#13](https://github.com/yashoncode/meetube/issues/13) | Fit the video frame to the video | The video box takes the video's own shape |
-| [#17](https://github.com/yashoncode/meetube/issues/17) | Frosted glass on the player's settings pop-up | Live frosted glass on every sheet over the player |
-| [#19](https://github.com/yashoncode/meetube/issues/19) | My videos doesn't show my uploads | My videos explains why private and unlisted uploads are missing |
-| [#20](https://github.com/yashoncode/meetube/issues/20) | Placeholder stuck over Home on open | The placeholder fades once the videos load |
+| [#9](https://github.com/gutube/gutube/issues/9) | Like, comment and share buttons in the player | A frosted action pill under the fullscreen seek bar |
+| [#13](https://github.com/gutube/gutube/issues/13) | Fit the video frame to the video | The video box takes the video's own shape |
+| [#17](https://github.com/gutube/gutube/issues/17) | Frosted glass on the player's settings pop-up | Live frosted glass on every sheet over the player |
+| [#19](https://github.com/gutube/gutube/issues/19) | My videos doesn't show my uploads | My videos explains why private and unlisted uploads are missing |
+| [#20](https://github.com/gutube/gutube/issues/20) | Placeholder stuck over Home on open | The placeholder fades once the videos load |
 
 ## 3.0.5
 
-> **MeeTube in Traditional Chinese, Shorts on channels, search chips**<br>
+> **GuTube in Traditional Chinese, Shorts on channels, search chips**<br>
 > 📅 2026-10-21
 
 ### ✨ New
 
-- **MeeTube in Traditional Chinese (繁體中文).** Every phone screen is translated for Taiwan, thanks to [@Capricornus007](https://github.com/Capricornus007) (#14). Channel pages now also show their stats in your language's own script.
+- **GuTube in Traditional Chinese (繁體中文).** Every phone screen is translated for Taiwan, thanks to [@Capricornus007](https://github.com/Capricornus007) (#14). Channel pages now also show their stats in your language's own script.
 - **A Shorts tab on channel pages.** Like YouTube's: tall tiles three to a row with the view count on each. Tap one to open the Shorts player and swipe through the channel's Shorts. Channels that only post Shorts no longer show an empty page.
 - **Subscribe on the channel page.** Signed in, the channel header has a Subscribe button with the same splash as the watch page, and Undo.
 - **Search chips.** All, Videos, Shorts, Live and Recently uploaded sit under the search bar, like YouTube's. One tap filters the results.
@@ -825,7 +825,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 ### ✨ New
 
 - **Choose your bottom bar.** Home, Search and You always stay; the tab before Search and the tab after it are yours: Shorts, Subscriptions, Downloads, History or none. Settings › Customization › Tabs. Picking what the other tab shows swaps the two. Subscriptions can be on the bar again (#7).
-- **A third icon: MeeTube (Fantasy).** The red heart with a white play button on a white tile, beside MeeTube (default) and MeeTube (Classic). The icon list shows each one.
+- **A third icon: GuTube (Fantasy).** The red heart with a white play button on a white tile, beside GuTube (default) and GuTube (Classic). The icon list shows each one.
 - **The icon is everywhere.** The icon you pick now also shows in the Home pill, the launch screen and the update sheet, not only on the home screen. Picking one offers Restart to switch right away.
 
 ### 🛠️ Changed
@@ -853,13 +853,13 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 - **Choose your double-tap.** Settings › Playback › Double-tap to seek: 3, 5, 10, 15 or 30 seconds.
 - **A new icon.** A glossy heart with a play button, on the home screen, the launch animation and the Home pill. Prefer the old one? Settings › Customization › App icon › Classic.
 - **Customization page.** Settings › Customization holds the theme, app icon, glass, interface size, start screen, Home layout, tabs, video menu, thumbnails and playlist style. General keeps language, country, voice search and number formats.
-- **Update pop-up.** When a new version is out, MeeTube asks once with Update now or Later. Later asks again a day later; Don't ask again turns it off (Settings › About › Update pop-up).
+- **Update pop-up.** When a new version is out, GuTube asks once with Update now or Later. Later asks again a day later; Don't ask again turns it off (Settings › About › Update pop-up).
 
 ### 🛠️ Changed
 
 - Group titles in Settings and pop-ups are smaller and red, so they no longer look like options.
 - The account and Buy me a coffee rows left the top of Settings. Switch accounts from the You tab; the thank-you stays at the bottom of About.
-- Updating to 2.9.9 removes MeeTube from your home screen once (the launcher entry was renamed for the icon choice). It is still in the app drawer; pin it again from there.
+- Updating to 2.9.9 removes GuTube from your home screen once (the launcher entry was renamed for the icon choice). It is still in the app drawer; pin it again from there.
 
 ### 🐛 Fixed
 
@@ -876,7 +876,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ### ✨ New
 
-- **Filters on Home.** Liquid-glass chips at the top of Home: All, Music, Gaming, News, Sports and Live. They slide away as you scroll down; scrolling back up shows a small arrow beside the MeeTube pill that brings them back.
+- **Filters on Home.** Liquid-glass chips at the top of Home: All, Music, Gaming, News, Sports and Live. They slide away as you scroll down; scrolling back up shows a small arrow beside the GuTube pill that brings them back.
 - **Home as rows.** Settings › General › Home layout › Rows shows Home like SmartTube: one titled row per topic that you swipe sideways. Feed stays the default.
 - **Channels on Subscriptions.** A row of your subscribed channels heads Subscriptions. Tap one to see only that channel's videos; tap All for everything again.
 - **Sleep timer.** In the player's settings: pause after 10 to 90 minutes, or at the end of the video.
@@ -885,7 +885,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 
 ### 🐛 Fixed
 
-- **Music stopped, and the app was closed, with the screen off.** MeeTube now keeps the phone awake and connected while it plays, and asks once to be allowed to run in the background, which battery savers on phones like realme respect. Settings › Playback › "Keep playing with the screen off" shows whether it's allowed.
+- **Music stopped, and the app was closed, with the screen off.** GuTube now keeps the phone awake and connected while it plays, and asks once to be allowed to run in the background, which battery savers on phones like realme respect. Settings › Playback › "Keep playing with the screen off" shows whether it's allowed.
 
 ## 2.9.6
 
@@ -906,7 +906,7 @@ Thanks to everyone who reports issues, and in this release to @sushi1579, @AshUc
 - **Headphones on the mini player.** The in-app mini player has a headphones button to switch to audio only, and so does its floating picture-in-picture window.
 - **iOS-style switches.** Settings switches are compact capsules with a white pill knob that turns into clear glass as it slides.
 - **Frosted search in Settings.** The "Search settings" bar is liquid glass, and the list scrolls under it. It follows the Liquid glass setting.
-- **Buy me a coffee.** If you love MeeTube and want to support it, there's a link in Settings and a small thank-you at the bottom of About.
+- **Buy me a coffee.** If you love GuTube and want to support it, there's a link in Settings and a small thank-you at the bottom of About.
 
 ### 🛠️ Changed
 
@@ -1014,7 +1014,7 @@ The last seven fixes come from NewTube 1.15.1.
 
 ### 🐛 Fixed
 
-- **Smoother picture-in-picture.** MeeTube no longer resends the window's buttons every time the video buffers, which stalled the window's animation.
+- **Smoother picture-in-picture.** GuTube no longer resends the window's buttons every time the video buffers, which stalled the window's animation.
 
 ## 2.5.1
 
@@ -1028,9 +1028,9 @@ The last seven fixes come from NewTube 1.15.1.
 
 ### 🐛 Fixed
 
-- **No more crash after picture-in-picture at high quality.** At 1440p and above, MeeTube kept up to two minutes of already-watched video in memory, and coming back from picture-in-picture could run out of memory. Video memory now has a hard limit tied to what the app may use; seeking back more than 20 seconds reloads from the disk cache.
+- **No more crash after picture-in-picture at high quality.** At 1440p and above, GuTube kept up to two minutes of already-watched video in memory, and coming back from picture-in-picture could run out of memory. Video memory now has a hard limit tied to what the app may use; seeking back more than 20 seconds reloads from the disk cache.
 - **Settings in fullscreen.** The settings and More menus no longer bring back the status and navigation bars, and no longer show a second plain panel beside the frosted one.
-- **Diagnostic logs are named meetube-diagnostics.**
+- **Diagnostic logs are named gutube-diagnostics.**
 
 ## 2.5.0
 
@@ -1041,19 +1041,19 @@ The last seven fixes come from NewTube 1.15.1.
 
 - **Up next countdown.** When a video ends, a small card in the player counts down ten seconds to the next one. Tap Play now to go at once, Replay to watch it again, or Cancel to stay put. Seeking back cancels it too.
 - **A splash when you like or subscribe.** A ring and a burst of colour come off the button.
-- **Floating glass top bar.** The full-width bar is gone: the MeeTube logo and the cast and search buttons float as two liquid glass pills, like the navigation bar.
-- **A quote when you tap the MeeTube logo.** It shows for three seconds, and every tap brings a new one: no quote comes back until you have seen them all.
+- **Floating glass top bar.** The full-width bar is gone: the GuTube logo and the cast and search buttons float as two liquid glass pills, like the navigation bar.
+- **A quote when you tap the GuTube logo.** It shows for three seconds, and every tap brings a new one: no quote comes back until you have seen them all.
 - **Frosted menus.** The player's settings, More and card menus are frosted glass over a blurred copy of what's behind them, while the page around them stays sharp.
 - **Liquid glass setting.** Turn it off in Settings → General for a plain frosted blur that is easier on the battery.
 - **Counts in K and M.** Views and likes read 250K and 12M even when your phone is set to English (India). Prefer lakh and crore? Turn on Lakh and crore counts in Settings → General.
 
 ### 🛠️ Changed
 
-- **Shorts swipe faster.** MeeTube now looks up the short after the next one in advance, and a short that was still preloading when you swiped to it plays from what it already has instead of starting over. Neighbouring thumbnails load at once.
+- **Shorts swipe faster.** GuTube now looks up the short after the next one in advance, and a short that was still preloading when you swiped to it plays from what it already has instead of starting over. Neighbouring thumbnails load at once.
 - **Subscribed is a glass pill**, like the buttons above it.
 - **The title and view count of a video are one button** that opens the description.
 - **A small bounce on the navigation bar** when you switch tabs.
-- **Downloads go to Movies/MeeTube and Music/MeeTube.** Earlier downloads stay where they are.
+- **Downloads go to Movies/GuTube and Music/GuTube.** Earlier downloads stay where they are.
 
 ## 2.0.2
 
@@ -1069,10 +1069,10 @@ The last seven fixes come from NewTube 1.15.1.
 
 ### 🛠️ Changed
 
-- **Shorts start faster.** While you watch a short, MeeTube now preloads the first seconds of the next one: it asks for the next short 0.3 seconds in (it used to wait 5 seconds) and loads it once the current one has 3 seconds buffered. In testing, a short you swipe to after about 3 seconds started in about half a second.
+- **Shorts start faster.** While you watch a short, GuTube now preloads the first seconds of the next one: it asks for the next short 0.3 seconds in (it used to wait 5 seconds) and loads it once the current one has 3 seconds buffered. In testing, a short you swipe to after about 3 seconds started in about half a second.
 - **A fatter seek bar while you drag it**, with a bigger dot, like YouTube's.
 - **The minimize button in fullscreen** is a small round button, easy to spot over any picture.
-- **No page titles in the top bar.** Just the MeeTube logo, cast and search.
+- **No page titles in the top bar.** Just the GuTube logo, cast and search.
 - **Shorts comments:** dragging them down no longer shows the short as an ordinary video underneath, and the short grows back to full screen as the comments slide away.
 
 ## 2.0.1
@@ -1090,7 +1090,7 @@ The last seven fixes come from NewTube 1.15.1.
 
 ### 🛠️ Changed
 
-- **Shorts you've seen stay seen.** MeeTube remembers the last 3,000 shorts for 7 days, across restarts, so the Shorts tab keeps serving new ones. If a feed has nothing new for three pages, it plays what it has instead of loading forever.
+- **Shorts you've seen stay seen.** GuTube remembers the last 3,000 shorts for 7 days, across restarts, so the Shorts tab keeps serving new ones. If a feed has nothing new for three pages, it plays what it has instead of loading forever.
 - **The Shorts progress line moves now.** In 2.0.0 it stayed empty while a short played.
 
 ## 2.0.0
@@ -1122,7 +1122,7 @@ The last seven fixes come from NewTube 1.15.1.
 
 - **Shorts.** A Shorts tab with a grid of tall cards. Tap one and it plays full screen; swipe up for the next short and down for the previous one. Each short loops until you swipe, and the next one loads while you watch. Like, dislike and share sit on the right.
 - **Ambient glow.** On the watch page the colours of the playing video spread softly under the player and fade into the page, and follow the scene as it changes.
-- **A new MeeTube icon.** A rounded M on a coral-to-magenta tile, with a little glass bubble.
+- **A new GuTube icon.** A rounded M on a coral-to-magenta tile, with a little glass bubble.
 
 ### 🛠️ Changed
 
@@ -1139,7 +1139,7 @@ The last seven fixes come from NewTube 1.15.1.
 
 - **Floating glass.** The bottom navigation is now a frosted glass capsule floating over the page, with a live blur of what scrolls underneath. On Android 13 and later its edge bends the content like a lens.
 - **A new look.** A darker page, a red accent, large tab titles, rounded thumbnails, and glass buttons and cards on the watch page.
-- **MeeTube.** A new name and app id, so it installs alongside NewTube. Updates come from github.com/yashoncode/meetube.
+- **GuTube.** A new name and app id, so it installs alongside NewTube. Updates come from github.com/gutube/gutube.
 
 ### 🛠️ Changed
 

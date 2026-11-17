@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * MEETUBE(ambient): YouTube's ambient mode. Every couple of seconds a tiny frame is read off the
+ * GUTUBE(ambient): YouTube's ambient mode. Every couple of seconds a tiny frame is read off the
  * playing video, box-blurred, saturated, and painted as the watch page's background behind the
  * title - a soft glow that spreads down from the player and fades into the page colour. New frames
  * cross-fade in so the glow drifts with the scene instead of jumping.
@@ -41,7 +41,7 @@ public final class AmbientGlow implements Runnable {
     private static final long FADE_MS = 1200;
     private static final int GLOW_ALPHA = 210; // ~0.8: YouTube's glow reads strong right under the video
 
-    private static final String PREFS = "meetube_player";
+    private static final String PREFS = "gutube_player";
     private static final String KEY_ON = "ambient_mode";
 
     private final View mHost;
@@ -135,7 +135,7 @@ public final class AmbientGlow implements Runnable {
         mHost.postDelayed(this, INTERVAL_MS);
     }
 
-    /** MEETUBE(playlist page): shared tiny-bitmap box blur for ambient video frames and playlist covers. */
+    /** GUTUBE(playlist page): shared tiny-bitmap box blur for ambient video frames and playlist covers. */
     public static void blur(Bitmap bitmap) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();

@@ -17,11 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * MEETUBE(stats): how long MeeTube is on screen, how long videos play and how many open, per day.
- * Kept on this phone only (prefs "meetube_usage", the last 60 days); the greeting shows it.
+ * GUTUBE(stats): how long GuTube is on screen, how long videos play and how many open, per day.
+ * Kept on this phone only (prefs "gutube_usage", the last 60 days); the greeting shows it.
  */
 public final class UsageStats {
-    private static final String PREFS = "meetube_usage";
+    private static final String PREFS = "gutube_usage";
     private static final String APP = "a";
     private static final String WATCH = "w";
     private static final String VIDEOS = "v";

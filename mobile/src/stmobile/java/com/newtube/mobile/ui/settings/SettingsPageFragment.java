@@ -87,7 +87,7 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
         View view = inflater.inflate(R.layout.fragment_mobile_settings_page, container, false);
         mTitle = view.findViewById(R.id.settings_title);
         mList = view.findViewById(R.id.settings_list);
-        // MEETUBE(settings back): a beat for the button's press (animator/press_3d) to show before the page goes.
+        // GUTUBE(settings back): a beat for the button's press (animator/press_3d) to show before the page goes.
         view.findViewById(R.id.settings_back).setOnClickListener(v -> v.postDelayed(() -> {
             if (isResumed()) {
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -96,7 +96,7 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
 
         mAdapter = new SettingsAdapter(this);
         mList.setLayoutManager(new LinearLayoutManager(requireContext()));
-        mList.addItemDecoration(new SettingsCards(requireContext())); // MEETUBE(settings cards)
+        mList.addItemDecoration(new SettingsCards(requireContext())); // GUTUBE(settings cards)
         mList.setAdapter(mAdapter);
         // Rows are rebound in place when a value changes: no cross-fade on every tap.
         mList.setItemAnimator(null);
@@ -115,7 +115,7 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
     }
 
     /**
-     * MEETUBE(status bar): the activity no longer pads for the status bar, so the page grows its top
+     * GUTUBE(status bar): the activity no longer pads for the status bar, so the page grows its top
      * bar by that height (the frost runs up through it, the title stays where it was) and pushes
      * the rows and the search pill down the same amount.
      */
@@ -149,13 +149,13 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // MEETUBE(glass): the top bar frosts the rows scrolling under it.
+        // GUTUBE(glass): the top bar frosts the rows scrolling under it.
         com.newtube.mobile.ui.common.Glass.blur(view.findViewById(R.id.settings_bar), view.findViewById(R.id.settings_blur_target));
         blendIntoStatusBar(view);
         if (SettingsPages.ROOT.equals(mPageId)) {
             View search = view.findViewById(R.id.settings_search_field);
             search.setVisibility(View.VISIBLE);
-            // MEETUBE(glass): frosted over the page; the rows start below it and scroll under it.
+            // GUTUBE(glass): frosted over the page; the rows start below it and scroll under it.
             com.newtube.mobile.ui.common.Glass.blur(search, view.findViewById(R.id.settings_blur_target));
             ((ViewGroup.MarginLayoutParams) search.getLayoutParams()).topMargin += Math.round(4 * getResources().getDisplayMetrics().density);
             mList.setPadding(mList.getPaddingLeft(),
@@ -276,7 +276,7 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
     }
 
     /**
-     * The choice sheet (MEETUBE: was a centred dialog): the options as a radio list, the current one
+     * The choice sheet (GUTUBE: was a centred dialog): the options as a radio list, the current one
      * marked, in the app's frosted bottom sheet; a tap applies that option and closes the sheet.
      */
     private void showChoiceDialog(SettingsRow row) {
@@ -286,7 +286,7 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
         List<SettingsRow.Option> options = row.options;
         int current = row.currentIndex();
 
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(requireContext())); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(requireContext())); // GUTUBE(glass): frosted
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View content = inflater.inflate(R.layout.sheet_mobile_speed, null);
         ((TextView) content.findViewById(R.id.speed_sheet_title)).setText(row.title);
@@ -311,10 +311,11 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
                     applied(row);
                 }
             });
+            com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(view, 12f);
             list.addView(view);
         }
         sheet.setContentView(content);
-        com.newtube.mobile.ui.common.FocusRing.install(sheet.getWindow()); // MEETUBE(tv)
+        com.newtube.mobile.ui.common.FocusRing.install(sheet.getWindow()); // GUTUBE(tv)
         com.newtube.mobile.ui.common.FocusRing.focusFirstRow(sheet.getWindow());
         // A long list (UI scale, quality) opens whole rather than half-peeked.
         sheet.getBehavior().setSkipCollapsed(true);

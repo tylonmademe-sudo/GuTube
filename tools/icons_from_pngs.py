@@ -3,7 +3,7 @@
 Usage: python tools/icons_from_pngs.py <folder with the PNGs below>
 
 Per icon: drawable-nodpi/ic_launcher_<name>.png (adaptive-icon foreground),
-drawable-nodpi/ic_meetube_mark_<name>.png (the brand pill, full bleed) and the pre-26 mipmaps. The
+drawable-nodpi/ic_gutube_mark_<name>.png (the brand pill, full bleed) and the pre-26 mipmaps. The
 default one is also the README icon. The launch animation is one vector for all (avd_splash_glass).
 The themed-icon (monochrome) layer still comes from tools/render_icon.py.
 """
@@ -71,7 +71,7 @@ def main(src):
     for file, name, legacy, fill in ICONS:
         shape = load(src / file)
         square(shape, LAYER, fill).save(out / f"ic_launcher_{name}.png", optimize=True)
-        square(shape, 192, 1.0).save(out / f"ic_meetube_mark_{name}.png", optimize=True)
+        square(shape, 192, 1.0).save(out / f"ic_gutube_mark_{name}.png", optimize=True)
         for density, px in DENSITIES.items():
             icon = square(shape, px, 0.92)
             for mipmap in legacy:

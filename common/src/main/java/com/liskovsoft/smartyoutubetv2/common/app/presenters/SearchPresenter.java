@@ -256,6 +256,11 @@ public class SearchPresenter extends BasePresenter<SearchView> implements VideoG
         startSearch(searchText, false, false);
     }
 
+    /** Directly open standard text search with input field and keyboard ready (no voice overlay). */
+    public void startTextSearch() {
+        startSearch("", false, false);
+    }
+
     public void startPlay(String searchText) {
         startSearch(searchText, false, true);
     }

@@ -26,7 +26,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
- * MEETUBE(seek preview): YouTube's seek-bar drag. The frame under the finger fills the video (soft:
+ * GUTUBE(seek preview): YouTube's seek-bar drag. The frame under the finger fills the video (soft:
  * it is the storyboard's small picture scaled up); the time shows in the double-tap seek's glass
  * pill (MobilePlaybackActivity.showSeekTime). Frames come from the video's storyboard sprite
  * sheets; until a sheet is in, or without one (live, or none sent), the paused picture stays.

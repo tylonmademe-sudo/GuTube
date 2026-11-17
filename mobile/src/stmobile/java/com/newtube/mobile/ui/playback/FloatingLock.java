@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 /**
- * MEETUBE(lock, issue #124): the fullscreen lock and its Locked pill float - a drag puts them
+ * GUTUBE(lock, issue #124): the fullscreen lock and its Locked pill float - a drag puts them
  * anywhere over the video, a tap is still a tap. Both sit at one spot, kept in the player's UI
  * prefs as fractions of the room the video leaves them, so a rotation keeps the same corner.
  * The lock never covers a shown control: a drag slides along one, and a kept spot that a

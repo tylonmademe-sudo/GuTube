@@ -54,11 +54,7 @@ public class AboutSettingsPresenter extends BasePresenter<Void> {
 
         appendInstallBridge(settingsPresenter);
 
-        if (!Helpers.equalsAny(country, "RU", "UA")) {
-            appendDonation(settingsPresenter);
-            appendFeedback(settingsPresenter);
-            appendLinks(settingsPresenter);
-        }
+
 
         settingsPresenter.showDialog(mainTitle);
     }

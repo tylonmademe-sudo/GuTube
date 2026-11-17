@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * MEETUBE(playlist page): Download > Select videos. A tap ticks a card (a check circle in its corner)
+ * GUTUBE(playlist page): Download > Select videos. A tap ticks a card (a check circle in its corner)
  * instead of playing it; a glass bar at the bottom counts them and downloads the ticked ones.
  * Back or the bar's X leaves the mode.
  */
@@ -62,7 +62,7 @@ final class PlaylistSelection extends RecyclerView.ItemDecoration {
         mCheck = ContextCompat.getDrawable(context, R.drawable.ic_mobile_check).mutate();
         mCheck.setTint(Color.BLACK);
 
-        // MEETUBE(glass): a frosted liquid-glass pill over the page, like the nav bar.
+        // GUTUBE(glass): a frosted liquid-glass pill over the page, like the nav bar.
         mBar = (com.newtube.mobile.ui.common.GlassView) android.view.LayoutInflater.from(context)
                 .inflate(R.layout.mobile_playlist_select_bar, root, false);
         com.newtube.mobile.ui.common.Glass.blur(mBar, root.findViewById(R.id.mobile_channel_uploads_glass));

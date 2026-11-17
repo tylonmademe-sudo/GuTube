@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(lyrics-panel): shared lyrics content for the panel and dialog. -->
+<!-- GUTUBE(lyrics-panel): shared lyrics content for the panel and dialog. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lyrics_sheet_body"
@@ -9,7 +9,7 @@
     android:minHeight="160dp">
 
     <ProgressBar
-        style="@style/Widget.MeeTube.GlassSpinner"
+        style="@style/Widget.GuTube.GlassSpinner"
         android:id="@+id/lyrics_sheet_loading"
         android:layout_gravity="center" />
 

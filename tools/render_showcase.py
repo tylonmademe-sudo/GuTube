@@ -1,8 +1,8 @@
-"""Renders the README showcase (bento, the one in use) from the app screenshots in .github/assets/meetube/.
+"""Renders the README showcase (bento, the one in use) from the app screenshots in .github/assets/gutube/.
 
     python tools/render_showcase.py [bento|coverflow|tv] [out path]
 
-Writes .github/assets/meetube/showcase.webp by default (tv: MeeTube TV's poster, tv.webp). Re-run after
+Writes .github/assets/gutube/showcase.webp by default (tv: GuTube TV's poster, tv.webp). Re-run after
 retaking a screenshot.
 """
 import os
@@ -11,7 +11,7 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-ASSETS = os.path.join(os.path.dirname(__file__), '..', '.github', 'assets', 'meetube')
+ASSETS = os.path.join(os.path.dirname(__file__), '..', '.github', 'assets', 'gutube')
 FONTS = 'C:/Windows/Fonts/'
 RED = (255, 69, 58)
 
@@ -181,7 +181,7 @@ def coverflow():
 
 
 # ---------------------------------------------------------------------------------------------
-# TV: MeeTube TV's poster (tv.webp). A title card with the logo over four TV screens, from the
+# TV: GuTube TV's poster (tv.webp). A title card with the logo over four TV screens, from the
 # TV's own screenshots (tv_*.jpg, 1280x720 screencaps).
 
 TV_W, TV_GAP, TV_HEAD_H = 2400, 30, 400
@@ -202,8 +202,8 @@ def tv_header(w, h):
     img.alpha_composite(logo, (90, (h - 230) // 2))
     d = ImageDraw.Draw(img)
     x, title_f = 370, font('seguibl.ttf', 136)
-    d.text((x, 178), 'MeeTube', font=title_f, fill=(255, 255, 255), anchor='ls')
-    d.text((x + d.textlength('MeeTube ', font=title_f), 178), 'TV', font=title_f, fill=RED, anchor='ls')
+    d.text((x, 178), 'GuTube', font=title_f, fill=(255, 255, 255), anchor='ls')
+    d.text((x + d.textlength('GuTube ', font=title_f), 178), 'TV', font=title_f, fill=RED, anchor='ls')
     d.text((x + 4, 252), 'YouTube, reimagined for the big screen.', font=font('seguisb.ttf', 50),
            fill=(225, 225, 232), anchor='ls')
     pills = Image.new('RGBA', (w, h), (0, 0, 0, 0))   # glass pills blend over the glow on their own layer

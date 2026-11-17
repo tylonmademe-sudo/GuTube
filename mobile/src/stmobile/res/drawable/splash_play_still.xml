@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(launch): the system splash's icon, invisible on purpose: the launch animation
+<!-- GUTUBE(launch): the system splash's icon, invisible on purpose: the launch animation
      (avd_splash_glass, LaunchSplash) is the only play symbol. A fully empty drawable makes the
      system fall back to the app icon, so this holds one transparent path. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"

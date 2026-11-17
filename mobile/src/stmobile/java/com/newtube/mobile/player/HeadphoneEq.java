@@ -16,14 +16,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * MEETUBE(autoeq): headphone correction from AutoEq (github.com/jaakkopasanen/AutoEq, MIT) - its
+ * GUTUBE(autoeq): headphone correction from AutoEq (github.com/jaakkopasanen/AutoEq, MIT) - its
  * ParametricEQ.txt for one headphone model (a preamp and ~10 peaking / shelf filters) run as
  * biquads inside the player's audio sink. Exact, unlike the device {@code Equalizer}'s 5 fixed
  * bands, and the same on every phone. Independent of the equalizer switch: a chosen headphone is on.
  * Audio offload is disabled player-wide (Media3PlayerInitializer), so the sink always gets PCM.
  */
 public final class HeadphoneEq {
-    private static final String PREFS = "meetube_audio";
+    private static final String PREFS = "gutube_audio";
     private static final String KEY_NAME = "autoeq_name";
     private static final String KEY_PROFILE = "autoeq_profile";
 

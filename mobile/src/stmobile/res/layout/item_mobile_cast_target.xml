@@ -6,9 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@android:color/transparent"
     android:clickable="true"
     android:focusable="true"
+    android:foreground="@null"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="20dp"
@@ -52,7 +53,7 @@
     </LinearLayout>
 
     <ProgressBar
-        style="@style/Widget.MeeTube.GlassSpinner.Small"
+        style="@style/Widget.GuTube.GlassSpinner.Small"
         android:id="@+id/cast_target_progress"
         android:layout_marginStart="8dp"
         android:visibility="gone" />
@@ -63,7 +64,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/mobile_cast_choose_method"
         android:padding="8dp"
         android:src="@drawable/ic_mobile_more_vert"

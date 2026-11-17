@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 
-/** MEETUBE(issue #177): phone-only audio settings, separate from the shared player prefs. */
+/** GUTUBE(issue #177): phone-only audio settings, separate from the shared player prefs. */
 public final class AudioPreferences {
     public static final int CUSTOM = -1;
-    private static final String PREFS = "meetube_audio";
+    private static final String PREFS = "gutube_audio";
 
     private AudioPreferences() {
     }
@@ -26,7 +26,7 @@ public final class AudioPreferences {
     }
 
     /**
-     * MEETUBE(dolby): prefer YouTube's Dolby track (E-AC-3 / AC-3, itags 328 and 380, 5.1, Atmos
+     * GUTUBE(dolby): prefer YouTube's Dolby track (E-AC-3 / AC-3, itags 328 and 380, 5.1, Atmos
      * when JOC) where a video has one. On by default; only takes effect where this phone has a
      * Dolby decoder ({@link #decodesDolby}). Applies to the next video opened.
      */

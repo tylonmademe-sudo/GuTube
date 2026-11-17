@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #107): the loader - a white neon ring. A faint track, and an arc that spins,
+<!-- GUTUBE(issue #107): the loader - a white neon ring. A faint track, and an arc that spins,
      stretches and catches up (neon_arc), drawn as a neon tube: two wide soft strokes for the glow,
      a white core and a brighter centre. An AnimatedVectorDrawable runs on the render thread, so it
      keeps turning smoothly while the main thread lays out a page. -->

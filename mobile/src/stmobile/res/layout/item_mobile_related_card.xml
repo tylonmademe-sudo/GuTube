@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  MEETUBE(list layout): Up next as cards, when Customization > Video layout is Cards - the full-width
+  GUTUBE(list layout): Up next as cards, when Customization > Video layout is Cards - the full-width
   thumbnail with the title and "Channel • views • date" under it, like the feeds' cards. Same ids
   as item_mobile_related_video, so RelatedVideoAdapter binds either.
 -->
@@ -26,14 +26,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:cardBackgroundColor="@color/mobile_color_placeholder"
-            app:cardCornerRadius="?attr/meetubeCardCorner"
+            app:cardCornerRadius="?attr/gutubeCardCorner"
             app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- MEETUBE(glass): what the badge frosts. -->
+            <!-- GUTUBE(glass): what the badge frosts. -->
             <com.newtube.mobile.ui.common.GlassSource
                 android:id="@+id/related_thumbnail_glass"
                 android:layout_width="match_parent"

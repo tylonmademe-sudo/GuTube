@@ -23,14 +23,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- MEETUBE(glass): the page is a GlassSource; the top bar (and Select videos' bar) frost it. -->
+    <!-- GUTUBE(glass): the page is a GlassSource; the top bar (and Select videos' bar) frost it. -->
     <com.newtube.mobile.ui.common.GlassSource
         android:id="@+id/mobile_channel_uploads_glass"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mobile_color_background">
 
-    <!-- MEETUBE(playlist page): follows the scrolling header, full bleed behind the toolbar and cards. -->
+    <!-- GUTUBE(playlist page): follows the scrolling header, full bleed behind the toolbar and cards. -->
     <FrameLayout
         android:id="@+id/mobile_channel_uploads_ambient"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
         <include layout="@layout/mobile_page_load_state" />
 
         <ProgressBar
-            style="@style/Widget.MeeTube.GlassSpinner"
+            style="@style/Widget.GuTube.GlassSpinner"
             android:id="@+id/mobile_channel_uploads_progress"
             android:layout_gravity="center"
             android:visibility="gone" />
@@ -101,7 +101,7 @@
         app:glassCornerRadius="0dp"
         app:glassFadeBottom="@dimen/mobile_settings_bar_fade"
         app:glassLiquid="false"
-        app:glassTint="@color/meetube_glass_tint">
+        app:glassTint="@color/gutube_glass_tint">
 
     <LinearLayout
         android:id="@+id/mobile_channel_uploads_toolbar"

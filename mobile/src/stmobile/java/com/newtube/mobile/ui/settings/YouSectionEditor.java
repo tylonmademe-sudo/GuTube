@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** MEETUBE(you order): Library and Explore use BarEditor's drag cards, with their existing toggles. */
+/** GUTUBE(you order): Library and Explore use BarEditor's drag cards, with their existing toggles. */
 final class YouSectionEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context mContext;
     private final boolean mLibrary;
@@ -137,7 +137,7 @@ final class YouSectionEditor extends RecyclerView.Adapter<RecyclerView.ViewHolde
             row.toggle.set(!row.checked.getAsBoolean());
             toggle.setChecked(row.checked.getAsBoolean());
             if (!mLibrary) {
-                save(); // MEETUBE(you order): a newly enabled section takes its place in this list.
+                save(); // GUTUBE(you order): a newly enabled section takes its place in this list.
             }
         });
         view.findViewById(R.id.you_section_grip).setOnTouchListener((v, event) -> {
@@ -168,7 +168,7 @@ final class YouSectionEditor extends RecyclerView.Adapter<RecyclerView.ViewHolde
             order.add(Integer.parseInt(key));
         }
         sidebar.setSectionOrder(order);
-        // MEETUBE(you order): the section menu uses the same sidebar moves followed by this live refresh.
+        // GUTUBE(you order): the section menu uses the same sidebar moves followed by this live refresh.
         BrowsePresenter.instance(mContext).updateSections();
     }
 

@@ -218,7 +218,7 @@ public class ViewManager {
         if (mDefaultTop != null && PlaybackPresenter.instance(mContext).isRunningInBackground()) {
             lastActivity = mDefaultTop;
         } else {
-            // MEETUBE(issue #148): Home, as YouTube does. The TV app reopened the screen on top of
+            // GUTUBE(issue #148): Home, as YouTube does. The TV app reopened the screen on top of
             // this stack, which outlives the task: swiped out of recents while the process lived on
             // (a service, or a vendor keeping it warm), the next launch came back on that channel
             // or playlist. A live task never gets here: the launcher just brings it forward.
@@ -243,7 +243,7 @@ public class ViewManager {
         // an in-task launch only reuses instances within the caller's own task.
         Activity foreground = sForegroundActivity.get();
         boolean playerTarget = activityClass == mViewMapping.get(PlaybackView.class);
-        // MEETUBE(issue #34): a live player in the caller's own task (the in-app mini player) is
+        // GUTUBE(issue #34): a live player in the caller's own task (the in-app mini player) is
         // reordered in-task too. Android 8 ignores REORDER_TO_FRONT on the NEW_TASK launch below
         // and stacked a second player that restarted the video.
         Object player = PlaybackPresenter.instance(mContext).getView();

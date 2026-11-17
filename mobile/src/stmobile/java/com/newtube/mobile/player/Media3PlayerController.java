@@ -112,7 +112,7 @@ public class Media3PlayerController implements Player.Listener {
     /** Whether the active SABR source is the automatic fallback rather than the opt-in preference. */
     private boolean mSabrWasFallback;
     /**
-     * MEETUBE(issue #109): the video whose preferred SABR source failed; its reloads play DASH.
+     * GUTUBE(issue #109): the video whose preferred SABR source failed; its reloads play DASH.
      * One slot: only another SABR failure overwrites it, and that video is then the one to spare.
      */
     @Nullable private String mSabrDeclinedVideoId;
@@ -400,7 +400,7 @@ public class Media3PlayerController implements Player.Listener {
                         () -> mSourceStash.offerIfAbsent(stashKey, result));
                 // Manager/player interactions belong to main. Recorded live/OTF keeps only the
                 // existing XML prebuild; its normalized manifest must not start speculative loads.
-                // MEETUBE(shorts): media itself only for a swiped-to short (or with the debug prop);
+                // GUTUBE(shorts): media itself only for a swiped-to short (or with the debug prop);
                 // ordinary autoplay keeps NewTube's source-only stash.
                 if ((preloadMedia || Media3PlayerInitializer.preloadEveryNextMedia())
                         && !formatInfo.isLiveContent() && !formatInfo.isUnplayable()) {
@@ -426,7 +426,7 @@ public class Media3PlayerController implements Player.Listener {
     }
 
     /**
-     * MEETUBE(shorts peek): a fresh DASH source for {@code formatInfo}, built on the prebuild
+     * GUTUBE(shorts peek): a fresh DASH source for {@code formatInfo}, built on the prebuild
      * executor like {@link #prebuildNextSource}, handed to {@code onMain} on main (null when SABR
      * would play it instead, or the build failed). Not stashed: the caller owns it.
      */
@@ -480,7 +480,7 @@ public class Media3PlayerController implements Player.Listener {
         mSourceStash.clear();
     }
 
-    /** MEETUBE(issue #177): a preload made under the old audio setting cannot serve the next open. */
+    /** GUTUBE(issue #177): a preload made under the old audio setting cannot serve the next open. */
     private static String sourceStashKey(@Nullable String videoId, boolean stableVolume) {
         return videoId != null ? videoId + ":stable=" + stableVolume : null;
     }
@@ -692,7 +692,7 @@ public class Media3PlayerController implements Player.Listener {
                 || !session.videoId.equals(formatInfo.getVideoId())) {
             return false;
         }
-        // MEETUBE(issue #177): recovery keeps this open's audio policy even if Settings changed.
+        // GUTUBE(issue #177): recovery keeps this open's audio policy even if Settings changed.
         boolean stableVolume = mReadinessAnswer instanceof PlaybackAudioFormats
                 && ((PlaybackAudioFormats) mReadinessAnswer).stableVolume;
         MediaItemFormatInfo playbackInfo = PlaybackAudioFormats.select(formatInfo, stableVolume);
@@ -1020,7 +1020,7 @@ public class Media3PlayerController implements Player.Listener {
         player.addAnalyticsListener(mResumeListener);
         player.addAnalyticsListener(mFirstFrameListener);
         player.addAnalyticsListener(mLoudnessListener);
-        // MEETUBE(issue #177): the main session owns its effects; preloading has no effects owner.
+        // GUTUBE(issue #177): the main session owns its effects; preloading has no effects owner.
         if (mAudioEffects != null) {
             mAudioEffects.release();
         }
@@ -1179,12 +1179,12 @@ public class Media3PlayerController implements Player.Listener {
         return mTrackAdapter != null ? mTrackAdapter.getFormats(TrackSelectorManager.RENDERER_INDEX_VIDEO) : null;
     }
 
-    /** MEETUBE(issue #85): the video rungs the decoder reports beyond it (Media3TrackAdapter). */
+    /** GUTUBE(issue #85): the video rungs the decoder reports beyond it (Media3TrackAdapter). */
     public List<FormatItem> getVideoFormatsBeyondDecoder() {
         return mTrackAdapter != null ? mTrackAdapter.getVideoFormatsBeyondDecoder() : null;
     }
 
-    /** MEETUBE(issue #85): lets the next {@link #selectFormat} of {@code item} pin a rung beyond the decoder. */
+    /** GUTUBE(issue #85): lets the next {@link #selectFormat} of {@code item} pin a rung beyond the decoder. */
     public void allowBeyondDecoder(FormatItem item) {
         Media3TrackAdapter.allowBeyondDecoder(item);
     }
@@ -1260,7 +1260,7 @@ public class Media3PlayerController implements Player.Listener {
     }
 
     /**
-     * MEETUBE(issue #35): the HDR setting, on a screen that can show HDR, puts YouTube's HDR streams
+     * GUTUBE(issue #35): the HDR setting, on a screen that can show HDR, puts YouTube's HDR streams
      * in the manifest (YouTubeMPDBuilder). Applies from the next video opened.
      */
     public static void applyHdrSetting(android.content.Context context) {
@@ -1393,7 +1393,7 @@ public class Media3PlayerController implements Player.Listener {
     public void setVolume(float volume) {
         if (mPlayer != null && volume >= 0 && !Float.isInfinite(volume)) {
             mUserVolume = volume;
-            // MEETUBE(issue #177): media3 stays at <= 1; the session effect supplies the boost.
+            // GUTUBE(issue #177): media3 stays at <= 1; the session effect supplies the boost.
             mPlayer.setVolume(Math.min(volume, 1f) * mLoudnessGain);
             if (mAudioEffects != null) {
                 mAudioEffects.setVolume(volume);
@@ -1452,7 +1452,7 @@ public class Media3PlayerController implements Player.Listener {
             mOnSourceChanged = false;
 
             mEventListener.onVideoLoaded(getVideo());
-            com.newtube.mobile.ui.common.UsageStats.videoOpened(); // MEETUBE(stats)
+            com.newtube.mobile.ui.common.UsageStats.videoOpened(); // GUTUBE(stats)
 
             if (mOnVideoLoaded != null) {
                 mOnVideoLoaded.run();
@@ -1486,7 +1486,7 @@ public class Media3PlayerController implements Player.Listener {
 
     @Override
     public void onIsPlayingChanged(boolean isPlaying) {
-        com.newtube.mobile.ui.common.UsageStats.playing(isPlaying); // MEETUBE(stats): watch time
+        com.newtube.mobile.ui.common.UsageStats.playing(isPlaying); // GUTUBE(stats): watch time
     }
 
     @Override
@@ -1630,7 +1630,7 @@ public class Media3PlayerController implements Player.Listener {
         }
         if (mSabrSourceActive) {
             if (!mSabrWasFallback) {
-                // MEETUBE(issue #109): the opt-in preference failing used to stop the video ("SABR
+                // GUTUBE(issue #109): the opt-in preference failing used to stop the video ("SABR
                 // playback stopped"). Now the reload below plays this video over DASH (openDash
                 // skips SABR for it), from where it was.
                 mSabrDeclinedVideoId = getVideoId();

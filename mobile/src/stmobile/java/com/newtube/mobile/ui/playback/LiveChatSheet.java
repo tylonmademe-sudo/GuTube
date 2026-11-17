@@ -84,7 +84,7 @@ public class LiveChatSheet extends BottomSheetDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        return Haptics.watch(super.onCreateDialog(savedInstanceState)); // MEETUBE(haptics)
+        return Haptics.watch(super.onCreateDialog(savedInstanceState)); // GUTUBE(haptics)
     }
 
     private LiveChatAdapter mAdapter;
@@ -152,10 +152,13 @@ public class LiveChatSheet extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.chat_sheet_close).setOnClickListener(v -> dismissAllowingStateLoss());
+        View closeBtn = view.findViewById(R.id.chat_sheet_close);
+        closeBtn.setOnClickListener(v -> dismissAllowingStateLoss());
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(closeBtn);
 
         mEmpty = view.findViewById(R.id.chat_sheet_empty);
         mList = view.findViewById(R.id.chat_sheet_list);
+        mList.setBackgroundColor(android.graphics.Color.TRANSPARENT);
 
         mAdapter = new LiveChatAdapter();
         LinearLayoutManager lm = new LinearLayoutManager(getContext());
@@ -360,7 +363,7 @@ public class LiveChatSheet extends BottomSheetDialogFragment {
     private final android.view.ViewTreeObserver.OnGlobalLayoutListener mPageLayout = this::placeBesideVideo;
 
     /**
-     * MEETUBE(live chat, issue #32): never over the video. Upright the window is only the room under
+     * GUTUBE(live chat, issue #32): never over the video. Upright the window is only the room under
      * the video; sideways it is a column on the right of it, YouTube's. Taps beside the window reach
      * the player (FLAG_NOT_TOUCH_MODAL), so the video stays playable while the chat runs.
      */
@@ -422,7 +425,7 @@ public class LiveChatSheet extends BottomSheetDialogFragment {
     }
 
     /**
-     * MEETUBE(description): {@code dialog} (just shown) as the landscape side card the chat is: a
+     * GUTUBE(description): {@code dialog} (just shown) as the landscape side card the chat is: a
      * column on the right, the video still playing and touchable beside it. Returns the room in px
      * the video steps aside for (the host's {@link Host#setChatColumn}).
      * ponytail: the chat's own placeBesideVideo keeps its copy, as it also follows rotations.
@@ -476,7 +479,7 @@ public class LiveChatSheet extends BottomSheetDialogFragment {
     private static final float CARD_CORNER_DP = 24f;
 
     /**
-     * MEETUBE(live chat, issue #32): a landscape side panel as a card, every corner rounded (the
+     * GUTUBE(live chat, issue #32): a landscape side panel as a card, every corner rounded (the
      * live chat here, a video's comments in MobilePlaybackActivity); {@code false} undoes it.
      */
     static void roundCard(View view, boolean card) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(transcript-panel): shared search and transcript content for the panel and dialog. -->
+<!-- GUTUBE(transcript-panel): shared search and transcript content for the panel and dialog. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/transcript_sheet_body"
     android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:minHeight="160dp">
 
         <ProgressBar
-            style="@style/Widget.MeeTube.GlassSpinner"
+            style="@style/Widget.GuTube.GlassSpinner"
             android:id="@+id/transcript_sheet_loading"
             android:layout_gravity="center" />
 

@@ -40,9 +40,9 @@ public class MobileThemeTest {
     @Config(qualifiers = "night")
     public void darkSideKeepsTheDarkPaletteAndLightControls() {
         Context context = themed(R.style.Theme_NewTube);
-        assertEquals(0xFF0F0F0F, color(context, R.color.mobile_color_background));
-        assertEquals(0xFFFFFFFF, color(context, R.color.mobile_color_on_surface));
-        assertEquals(0xFF1E1E1E, color(context, R.color.mobile_color_surface));
+        assertEquals(0xFF000000, color(context, R.color.mobile_color_background));
+        assertEquals(0xFFF5F5F7, color(context, R.color.mobile_color_on_surface));
+        assertEquals(0xFF1C1C21, color(context, R.color.mobile_color_surface));
         assertTrue(lightControls(context));
     }
 
@@ -70,8 +70,8 @@ public class MobileThemeTest {
     public void playerColoursAreTheSameOnTheDarkSide() {
         Context context = themed(R.style.Theme_NewTube_Player);
         assertEquals(0xFFFFFFFF, color(context, R.color.mobile_player_on_video));
-        assertEquals(0xFF4FC3F7, color(context, R.color.mobile_player_cast_active));
-        assertEquals(0x26FFFFFF, color(context, R.color.mobile_player_pill));
+        assertEquals(0xFF64D2FF, color(context, R.color.mobile_player_cast_active));
+        assertEquals(0x6B18181C, color(context, R.color.mobile_player_pill));
     }
 
     @Test

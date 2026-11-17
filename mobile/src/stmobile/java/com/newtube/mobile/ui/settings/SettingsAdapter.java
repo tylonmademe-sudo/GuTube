@@ -105,7 +105,7 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ViewGroup host = (ViewGroup) holder.itemView;
             host.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
-            // MEETUBE(tv install): an interactive factory can keep its view across onResume.
+            // GUTUBE(tv install): an interactive factory can keep its view across onResume.
             View content = row.custom.create(host, mListener);
             if (host.getChildCount() != 1 || host.getChildAt(0) != content) {
                 host.removeAllViews();
@@ -144,6 +144,7 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             summary = itemView.findViewById(R.id.settings_row_summary);
             toggle = itemView.findViewById(R.id.settings_row_switch);
             chevron = itemView.findViewById(R.id.settings_row_chevron);
+            com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(itemView, 12f);
         }
 
         void bind(SettingsRow row, Listener listener) {

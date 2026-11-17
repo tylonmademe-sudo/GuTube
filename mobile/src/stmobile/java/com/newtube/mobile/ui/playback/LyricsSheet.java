@@ -33,7 +33,7 @@ import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 
 /**
- * MEETUBE(lyrics): the playing song's lyrics (found by {@link Lyrics}) in a panel under the video, like
+ * GUTUBE(lyrics): the playing song's lyrics (found by {@link Lyrics}) in a panel under the video, like
  * YouTube Music's Lyrics tab. Timed lyrics light up line by line and keep the sung line in view;
  * plain ones are one selectable text, so any of it can be copied. Same frosted sheet and sizing as
  * the Description panel (DescriptionSheet), shown by the player (showPlayerSheet). The header names
@@ -78,7 +78,7 @@ final class LyricsSheet {
         return dialog;
     }
 
-    // MEETUBE(lyrics-panel): fresh content resets the scroll and releases the previous follow loop.
+    // GUTUBE(lyrics-panel): fresh content resets the scroll and releases the previous follow loop.
     static Runnable bindPanel(@NonNull Activity activity, @NonNull CommentsPanelLayout panel, @NonNull String videoId,
                               String title, String channel, @NonNull LongSupplier position,
                               @NonNull Consumer<BottomSheetDialog> showSheet, @Nullable Predicate<Boolean> transcript) {
@@ -102,6 +102,12 @@ final class LyricsSheet {
         View close = content.findViewById(R.id.lyrics_sheet_close);
         View provider = content.findViewById(R.id.lyrics_sheet_provider);
         close.setOnClickListener(v -> dismiss.run());
+        if (close != null) {
+            com.newtube.mobile.ui.common.SpotlightHelper.attach(close);
+        }
+        if (provider != null) {
+            com.newtube.mobile.ui.common.SpotlightHelper.attach(provider);
+        }
         provider.setVisibility(View.GONE);
         provider.setOnClickListener(null);
         Runnable release = releaseOnDetach(content.findViewById(R.id.lyrics_sheet_body), () -> {
@@ -120,7 +126,7 @@ final class LyricsSheet {
         });
         Lyrics.fetch(videoId, title != null ? title : "", channel != null ? channel : "", song -> {
             if (!bound[0]) {
-                return; // MEETUBE(lyrics-panel): an answer for a closed or rebound panel
+                return; // GUTUBE(lyrics-panel): an answer for a closed or rebound panel
             }
             content.findViewById(R.id.lyrics_sheet_loading).setVisibility(View.GONE);
             if (song == null) {
@@ -153,7 +159,7 @@ final class LyricsSheet {
         return release;
     }
 
-    // MEETUBE(lyrics-panel): dialogs detach on dismiss; panels also release explicitly on close.
+    // GUTUBE(lyrics-panel): dialogs detach on dismiss; panels also release explicitly on close.
     static Runnable releaseOnDetach(View body, Runnable release) {
         View.OnAttachStateChangeListener listener = new View.OnAttachStateChangeListener() {
             @Override
@@ -174,7 +180,7 @@ final class LyricsSheet {
     }
 
     /**
-     * MEETUBE(lyrics): the minimize drag fades the lyrics out with the watch page, and back in if it is
+     * GUTUBE(lyrics): the minimize drag fades the lyrics out with the watch page, and back in if it is
      * let go, as it does the comments panel (MobilePlaybackActivity.applyMorph / resetMorph).
      */
     static void setMorphAlpha(@Nullable BottomSheetDialog sheet, float alpha) {
@@ -314,7 +320,7 @@ final class LyricsSheet {
     }
 
     /**
-     * MEETUBE(lyrics): BitChord's provider chooser (LyricsProviderSheet), in the player's single-choice
+     * GUTUBE(lyrics): BitChord's provider chooser (LyricsProviderSheet), in the player's single-choice
      * sheet: every provider with what it has for this song - the current one, lyrics found (tap to
      * use), none, being fetched, or not asked yet (tap to fetch). A pick with lyrics in hand switches
      * at once and closes the list; one not asked yet is fetched, and switched to when it answers with
@@ -368,7 +374,7 @@ final class LyricsSheet {
             mShowSheet.accept(list);
         }
 
-        // MEETUBE(lyrics-panel): the chooser belongs to this binding, including late provider answers.
+        // GUTUBE(lyrics-panel): the chooser belongs to this binding, including late provider answers.
         void close() {
             mWanted = -1;
             if (mList != null) {

@@ -2,9 +2,9 @@ package com.newtube.mobile.ui.common;
 
 import android.content.Context;
 
-/** MEETUBE(seek pill): double-tap seek shows the count pill (default) or the original ripple. */
+/** GUTUBE(seek pill): double-tap seek shows the count pill (default) or the original ripple. */
 public final class SeekStyle {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_PILL = "seek_pill";
 
     private SeekStyle() {

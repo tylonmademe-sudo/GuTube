@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * MEETUBE(issues #202, #203): Settings > Downloads. The quality a Download tap takes without asking
+ * GUTUBE(issues #202, #203): Settings > Downloads. The quality a Download tap takes without asking
  * (Ask each time by default), and auto download: new uploads of the picked channels and what the
  * picked playlists hold (Watch later too) download by themselves, up to a quality, on Wi-Fi only
  * unless that is turned off. {@link AutoDownloadWorker} checks every few hours.
@@ -37,14 +37,14 @@ public final class AutoDownload {
     public static final String CHANNEL = "c";
     public static final String PLAYLIST = "p";
     private static final String SEP = "\u001F";
-    private static final String PREFS = "meetube_downloads"; // DownloadFolder's file
+    private static final String PREFS = "gutube_downloads"; // DownloadFolder's file
     private static final String KEY_QUALITY = "default_quality";
     private static final String KEY_AUTO_QUALITY = "auto_quality";
     private static final String KEY_WIFI = "auto_wifi_only";
     private static final String KEY_SOURCES = "auto_sources";
     private static final String KEY_SEEN = "auto_seen";
     private static final String KEY_PRIMED = "auto_primed";
-    private static final String WORK = "meetube_auto_download";
+    private static final String WORK = "gutube_auto_download";
     private static final int SEEN_MAX = 2000;
 
     private AutoDownload() {

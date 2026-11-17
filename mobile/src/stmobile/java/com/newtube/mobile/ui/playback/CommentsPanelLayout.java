@@ -48,11 +48,11 @@ public class CommentsPanelLayout extends FrameLayout implements NestedScrollingP
         /** The sheet has left the screen: a drag, the close button or back finished closing it. */
         void onPanelClosed();
 
-        /** MEETUBE(shorts): the sheet has started leaving (it is gone {@code durationMs} from now). */
+        /** GUTUBE(shorts): the sheet has started leaving (it is gone {@code durationMs} from now). */
         default void onPanelClosing(long durationMs) {
         }
 
-        /** MEETUBE(shorts): the sheet moved; {@code gone} is how far off the screen it is (0 open, 1 gone). */
+        /** GUTUBE(shorts): the sheet moved; {@code gone} is how far off the screen it is (0 open, 1 gone). */
         default void onPanelMoved(float gone) {
         }
     }
@@ -139,7 +139,7 @@ public class CommentsPanelLayout extends FrameLayout implements NestedScrollingP
         return mOpen;
     }
 
-    // MEETUBE(lyrics-panel): a fresh binding waits until Material has finished the previous Back.
+    // GUTUBE(lyrics-panel): a fresh binding waits until Material has finished the previous Back.
     boolean isBackFinishing() {
         return mBackFinishing;
     }
@@ -356,7 +356,7 @@ public class CommentsPanelLayout extends FrameLayout implements NestedScrollingP
     // ---------------------------------------------------------------------------------
 
     private boolean isInHeader(MotionEvent ev) {
-        // MEETUBE(issue #218): from the sheet's top edge, so the drag handle above the header counts.
+        // GUTUBE(issue #218): from the sheet's top edge, so the drag handle above the header counts.
         float top = mSheet.getTop() + mSheet.getTranslationY();
         return ev.getY() >= top && ev.getY() <= top + mHeader.getBottom();
     }

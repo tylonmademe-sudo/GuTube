@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Shared -->
-    <string name="mobile_settings_restart_needed">Reinicia MeeTube para aplicar este cambio</string>
+    <string name="mobile_settings_restart_needed">Reinicia GuTube para aplicar este cambio</string>
     <string name="mobile_settings_restart">Reiniciar</string>
     <string name="mobile_settings_off">Desactivado</string>
     <string name="mobile_settings_more">Más</string>
@@ -47,7 +47,7 @@
     <string name="mobile_loader_glass_orb">Orbe de cristal</string>
     <string name="mobile_loader_morphing_blob">Gota líquida</string>
     <string name="mobile_loader_glass_orbit">Órbita de cristal</string>
-    <string name="mobile_app_icon_pending">Reinicia MeeTube para usar el nuevo icono en todas partes, o cambiará cuando salgas de la app</string>
+    <string name="mobile_app_icon_pending">Reinicia GuTube para usar el nuevo icono en todas partes, o cambiará cuando salgas de la app</string>
     <string name="mobile_settings_customize_summary">Tema, pestañas, diseño de inicio, menú de vídeo</string>
     <string name="mobile_settings_customize_summary_value">Tema %1$s, pestañas, diseño de inicio, menú de vídeo</string>
     <string name="mobile_settings_theme_system_short">del sistema</string>
@@ -95,7 +95,7 @@
     <string name="mobile_settings_nav_labels">Nombres de las pestañas</string>
     <string name="mobile_settings_nav_labels_summary">Mostrar el nombre de cada pestaña bajo su icono en la barra inferior</string>
     <string name="mobile_settings_brand_name">Nombre de la app en la barra superior</string>
-    <string name="mobile_settings_brand_name_summary">Muestra MeeTube junto a su icono arriba. Desactivado, solo el icono</string>
+    <string name="mobile_settings_brand_name_summary">Muestra GuTube junto a su icono arriba. Desactivado, solo el icono</string>
     <string name="mobile_settings_top_bar">Mostrar siempre la barra superior</string>
     <string name="mobile_settings_top_bar_summary">Mantener la barra superior en pantalla al desplazar un feed, en lugar de ocultarla</string>
     <string name="mobile_settings_search_fab">Botón de búsqueda al ocultarse la barra</string>
@@ -162,9 +162,9 @@
     <string name="mobile_settings_watch_history_auto">Seguir mi ajuste de YouTube</string>
     <string name="mobile_settings_watch_history_auto_desc">Se guarda si tu cuenta de YouTube guarda el historial</string>
     <string name="mobile_settings_watch_history_on">Guardar siempre</string>
-    <string name="mobile_settings_watch_history_on_desc">Vuelve a activar tu historial de YouTube cada vez que abres MeeTube</string>
+    <string name="mobile_settings_watch_history_on_desc">Vuelve a activar tu historial de YouTube cada vez que abres GuTube</string>
     <string name="mobile_settings_watch_history_off">No guardar</string>
-    <string name="mobile_settings_watch_history_off_desc">MeeTube deja de contarle a YouTube lo que ves</string>
+    <string name="mobile_settings_watch_history_off_desc">GuTube deja de contarle a YouTube lo que ves</string>
     <string name="mobile_settings_clear_watch_history">Borrar historial de reproducciones</string>
     <string name="mobile_settings_clear_watch_history_summary">Borra de tu historial de YouTube los vídeos que has visto</string>
     <string name="mobile_settings_clear_watch_history_confirm">¿Borrar el historial de reproducciones?</string>
@@ -174,7 +174,7 @@
     <string name="mobile_settings_clear_search_history">Borrar historial de búsqueda</string>
     <string name="mobile_settings_clear_search_history_summary">Borra las búsquedas guardadas en este teléfono</string>
     <string name="mobile_settings_clear_search_history_confirm">¿Borrar el historial de búsqueda?</string>
-    <string name="mobile_settings_clear_search_history_body">Se borran las búsquedas que MeeTube guardó en este teléfono. No se puede deshacer.</string>
+    <string name="mobile_settings_clear_search_history_body">Se borran las búsquedas que GuTube guardó en este teléfono. No se puede deshacer.</string>
 
     <!-- Backup -->
     <string name="mobile_settings_backup_now">Hacer copia ahora</string>
@@ -184,7 +184,7 @@
     <string name="mobile_settings_restore_summary">Desde una copia en %1$s</string>
     <string name="mobile_settings_auto_backup">Copia automática</string>
     <string name="mobile_settings_auto_backup_off">Nunca</string>
-    <string name="mobile_settings_backup_note">Una copia guarda todo lo que has configurado en MeeTube. Lo que es de tu cuenta de YouTube, como suscripciones e historial, se queda allí.</string>
+    <string name="mobile_settings_backup_note">Una copia guarda todo lo que has configurado en GuTube. Lo que es de tu cuenta de YouTube, como suscripciones e historial, se queda allí.</string>
 
     <!-- Playback -->
     <string name="mobile_settings_video_ends">Al terminar un vídeo</string>
@@ -203,7 +203,7 @@
     <string name="mobile_settings_remember_speed_video">Por vídeo</string>
     <string name="mobile_settings_remember_speed_all">La misma para todos los vídeos</string>
     <string name="mobile_settings_remember_speed_none">No recordar</string>
-    <string name="mobile_settings_remember_speed_none_desc">Vuelve a 1x cada vez que se inicia MeeTube</string>
+    <string name="mobile_settings_remember_speed_none_desc">Vuelve a 1x cada vez que se inicia GuTube</string>
     <string name="mobile_settings_speed_list">Velocidades en Más velocidades</string>
     <string name="mobile_settings_speed_list_basic">Una lista corta</string>
     <string name="mobile_settings_speed_list_fine">Pasos finos</string>
@@ -245,7 +245,7 @@
     <string name="mobile_settings_loudness">Igualar el volumen</string>
     <string name="mobile_settings_loudness_summary">Baja los vídeos muy altos al nivel normal de YouTube</string>
     <string name="mobile_settings_player_volume">Volumen del reproductor</string>
-    <string name="mobile_settings_quality_data_saver_note">Con el Ahorro de datos de Android activado, MeeTube carga menos por adelantado con datos móviles.</string>
+    <string name="mobile_settings_quality_data_saver_note">Con el Ahorro de datos de Android activado, GuTube carga menos por adelantado con datos móviles.</string>
 
     <!-- Captions -->
     <string name="mobile_settings_caption_style">Estilo</string>
@@ -275,7 +275,7 @@
     <string name="mobile_settings_dearrow_note">DeArrow recibe los ID de los vídeos que ves en las listas.</string>
 
     <!-- Advanced -->
-    <string name="mobile_settings_advanced_note">La mayoría nunca los necesita. Cambian cómo MeeTube reproduce y se conecta.</string>
+    <string name="mobile_settings_advanced_note">La mayoría nunca los necesita. Cambian cómo GuTube reproduce y se conecta.</string>
     <string name="mobile_settings_streaming">Streaming</string>
     <string name="mobile_settings_buffer">Búfer</string>
     <string name="mobile_settings_buffer_low_desc">Unos 25 segundos por adelantado. Usa la menor memoria</string>
@@ -306,7 +306,7 @@
     <string name="mobile_settings_chapter_popup_summary">Muestra el nombre de cada capítulo al empezar. Tócalo para pasar al siguiente</string>
     <string name="mobile_settings_network">Red</string>
     <string name="mobile_settings_proxy">Proxy web</string>
-    <string name="mobile_settings_proxy_summary">Envía el tráfico de MeeTube a través de un proxy HTTP o SOCKS</string>
+    <string name="mobile_settings_proxy_summary">Envía el tráfico de GuTube a través de un proxy HTTP o SOCKS</string>
     <string name="mobile_settings_dns">Cómo encontrar los servidores de YouTube</string>
     <string name="mobile_settings_dns_ipv4">IPv4 primero</string>
     <string name="mobile_settings_dns_ipv4_desc">La opción predeterminada. Arregla redes con IPv6 roto</string>
@@ -331,7 +331,7 @@
     <string name="mobile_settings_tab_glow_tabs">Colores por pestaña</string>
     <string name="mobile_settings_tab_glow_tabs_desc">Cada pestaña brilla en su propio color</string>
     <string name="mobile_settings_tab_glow_accent">Acento</string>
-    <string name="mobile_settings_tab_glow_accent_desc">Todas las pestañas brillan en el rojo de MeeTube</string>
+    <string name="mobile_settings_tab_glow_accent_desc">Todas las pestañas brillan en el rojo de GuTube</string>
     <string name="mobile_settings_tab_glow_off">Desactivado</string>
     <string name="mobile_settings_progress_glow">Brillo del progreso</string>
     <string name="mobile_settings_progress_glow_summary">Una luz suave al final de la barra de reproducción y de la línea de visto en los videos</string>
@@ -351,16 +351,16 @@
     <string name="mobile_settings_transfer_export_summary">Guárdalos para más tarde o pásalos a otro teléfono</string>
     <string name="mobile_settings_transfer_share">Compartir ajustes con un amigo</string>
     <string name="mobile_settings_transfer_share_summary">Envía tu archivo de ajustes por chat o correo</string>
-    <string name="mobile_settings_transfer_share_text">Mis ajustes de MeeTube. En MeeTube: Ajustes &gt; Copia de seguridad &gt; Importar ajustes desde un archivo</string>
+    <string name="mobile_settings_transfer_share_text">Mis ajustes de GuTube. En GuTube: Ajustes &gt; Copia de seguridad &gt; Importar ajustes desde un archivo</string>
     <string name="mobile_settings_transfer_import">Importar ajustes desde un archivo</string>
     <string name="mobile_settings_transfer_import_summary">Carga un archivo de ajustes que guardaste o que te envió un amigo</string>
-    <string name="mobile_settings_transfer_import_confirm">Tus ajustes se sustituyen por los del archivo y MeeTube se reinicia. Tus cuentas, historial, descargas y contraseñas no cambian.</string>
+    <string name="mobile_settings_transfer_import_confirm">Tus ajustes se sustituyen por los del archivo y GuTube se reinicia. Tus cuentas, historial, descargas y contraseñas no cambian.</string>
     <string name="mobile_settings_transfer_import_button">Importar</string>
     <string name="mobile_settings_transfer_saved">Ajustes guardados</string>
-    <string name="mobile_settings_transfer_imported">Ajustes importados. MeeTube se está reiniciando</string>
+    <string name="mobile_settings_transfer_imported">Ajustes importados. GuTube se está reiniciando</string>
     <string name="mobile_settings_transfer_failed">No se pudo guardar el archivo de ajustes</string>
-    <string name="mobile_settings_transfer_not_settings">Ese no es un archivo de ajustes de MeeTube</string>
-    <!-- MEETUBE(issue #177): phone player audio. -->
+    <string name="mobile_settings_transfer_not_settings">Ese no es un archivo de ajustes de GuTube</string>
+    <!-- GUTUBE(issue #177): phone player audio. -->
     <string name="mobile_settings_stable_volume">Volumen estable</string>
     <string name="mobile_settings_stable_volume_summary">Permite el audio comprimido de YouTube para suavizar las partes fuertes y suaves. Se aplica al próximo vídeo que abras</string>
     <string name="mobile_settings_equalizer">Ecualizador</string>

@@ -8,7 +8,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <View
@@ -37,6 +37,7 @@
         android:id="@+id/chapters_sheet_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:clipToPadding="false"
         android:paddingVertical="6dp" />
 

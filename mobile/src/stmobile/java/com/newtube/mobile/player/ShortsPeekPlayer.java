@@ -18,7 +18,7 @@ import com.liskovsoft.mediaserviceinterfaces.data.MediaItemFormatInfo;
 import com.liskovsoft.smartyoutubetv2.common.misc.NetPath;
 
 /**
- * MEETUBE(shorts peek): the next short, decoded and paused on its first frame in the swipe peek -
+ * GUTUBE(shorts peek): the next short, decoded and paused on its first frame in the swipe peek -
  * a swipe pulls in the real video under the finger (Instagram's way), not a thumbnail, and it
  * covers the paged-to short until the main player's own first frame of it lands (the same picture,
  * so the hand-off does not show). A second player, video only, a small buffer, its source built

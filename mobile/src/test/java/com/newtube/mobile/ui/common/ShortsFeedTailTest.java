@@ -15,7 +15,7 @@ import org.robolectric.annotation.ConscryptMode;
 import java.util.Arrays;
 import java.util.Collections;
 
-/** MEETUBE(issue #227): what a Shorts feed page adds to a Home shelf's queue. */
+/** GUTUBE(issue #227): what a Shorts feed page adds to a Home shelf's queue. */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28, manifest = Config.NONE, application = Application.class)
 @ConscryptMode(ConscryptMode.Mode.OFF)

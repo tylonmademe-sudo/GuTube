@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(tv install): one scrolling Settings row, with a glass card for each step. -->
+<!-- GUTUBE(tv install): one scrolling Settings row, with a glass card for each step. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -154,7 +154,7 @@
             android:textAllCaps="false"
             android:textColor="@color/mobile_color_on_surface"
             app:cornerRadius="28dp"
-            app:strokeColor="@color/meetube_glass_rim" />
+            app:strokeColor="@color/gutube_glass_rim" />
         <TextView
             android:id="@+id/tv_search_status"
             android:layout_width="match_parent"

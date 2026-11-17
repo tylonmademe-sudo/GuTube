@@ -77,7 +77,7 @@ public final class AppUpdates implements AppUpdateCheckerListener {
      */
     private static final long AUTO_CHECK_MS = 60 * 60 * 1_000L;
     /**
-     * MEETUBE(update pop-up): a found update opens its sheet by itself on Home. "Later" brings it back
+     * GUTUBE(update pop-up): a found update opens its sheet by itself on Home. "Later" brings it back
      * after this long for the same version (a newer version asks at once); "Don't ask again" turns
      * the pop-up off - the You tab's row and dot and Settings > About still offer the update.
      */
@@ -85,7 +85,7 @@ public final class AppUpdates implements AppUpdateCheckerListener {
     private static final String KEY_PROMPT_OFF = "prompt_off";
     private static final String KEY_PROMPTED_CODE = "prompted_version_code";
     private static final String KEY_PROMPTED_AT = "prompted_at_ms";
-    /** MEETUBE(update notify): the version the background check last posted a notification for. */
+    /** GUTUBE(update notify): the version the background check last posted a notification for. */
     private static final String KEY_NOTIFIED_CODE = "notified_version_code";
     /** An automatic check that got no answer is not retried sooner than this in one run. */
     private static final long AUTO_RETRY_MS = 5 * 60 * 1_000L;
@@ -476,7 +476,7 @@ public final class AppUpdates implements AppUpdateCheckerListener {
         return mChecker.isUpdateCheckEnabled() && mPrefs.getInt(KEY_KNOWN_CODE, 0) > mInstalledCode;
     }
 
-    /** MEETUBE(update pop-up): a freshly found update the user hasn't been asked about lately. */
+    /** GUTUBE(update pop-up): a freshly found update the user hasn't been asked about lately. */
     public boolean shouldPrompt() {
         if (!BuildConfig.IN_APP_UPDATES || isPromptOff() || mPhase != Phase.AVAILABLE || !hasUpdate()) {
             return false;
@@ -499,7 +499,7 @@ public final class AppUpdates implements AppUpdateCheckerListener {
     }
 
     /**
-     * MEETUBE(update notify): a found update the user hasn't opened and hasn't been notified of.
+     * GUTUBE(update notify): a found update the user hasn't opened and hasn't been notified of.
      * One notification per version: "Notify about updates" off means no checks, so none at all.
      */
     boolean shouldNotify() {

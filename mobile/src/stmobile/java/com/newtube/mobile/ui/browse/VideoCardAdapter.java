@@ -38,11 +38,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_VIDEO = 0;
     /** Channel result row (round avatar + name + subs) — e.g. channels in search results. */
     private static final int VIEW_TYPE_CHANNEL = 1;
-    /** MEETUBE(shorts): a channel Shorts tab's tile (item_mobile_shorts_tile), see {@link #shortsTiles}. */
+    /** GUTUBE(shorts): a channel Shorts tab's tile (item_mobile_shorts_tile), see {@link #shortsTiles}. */
     private static final int VIEW_TYPE_SHORT_TILE = 2;
-    /** MEETUBE(list layout, issue #82): a video as a compact row (item_video_row), see {@link #setListRows}. */
+    /** GUTUBE(list layout, issue #82): a video as a compact row (item_video_row), see {@link #setListRows}. */
     private static final int VIEW_TYPE_VIDEO_ROW = 3;
-    /** MEETUBE(issue #43): Home's Shorts row, one card of sideways tiles ({@link Video#shortsShelf}). */
+    /** GUTUBE(issue #43): Home's Shorts row, one card of sideways tiles ({@link Video#shortsShelf}). */
     private static final int VIEW_TYPE_SHORTS_SHELF = 4;
     /** A shelf tile's width: two and a bit show on a phone, so the row reads as one to swipe. */
     static final int SHELF_TILE_WIDTH_DP = 156;
@@ -65,7 +65,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private boolean mShowAvatars;
 
     /**
-     * MEETUBE(card avatars, issue #6): a round channel avatar beside each card's title, and the
+     * GUTUBE(card avatars, issue #6): a round channel avatar beside each card's title, and the
      * avatar or the channel name in the meta line opens the channel. Off on a channel's own page.
      */
     public boolean showsAvatars() {
@@ -79,7 +79,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     private boolean mShortsTiles;
 
-    /** MEETUBE(shorts): Shorts as YouTube's channel Shorts tab draws them, not as search's cards. */
+    /** GUTUBE(shorts): Shorts as YouTube's channel Shorts tab draws them, not as search's cards. */
     public VideoCardAdapter shortsTiles() {
         mShortsTiles = true;
         return this;
@@ -87,7 +87,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     private boolean mStrip;
 
-    /** MEETUBE(issue #43): cards in one sideways row - a Short spaced evenly, not as half of a two-up row. */
+    /** GUTUBE(issue #43): cards in one sideways row - a Short spaced evenly, not as half of a two-up row. */
     public VideoCardAdapter strip() {
         mStrip = true;
         return this;
@@ -95,7 +95,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     private boolean mListRows;
 
-    /** MEETUBE(list layout, issue #82): videos as rows, not cards (Settings > Video layout); Shorts stay tiles. */
+    /** GUTUBE(list layout, issue #82): videos as rows, not cards (Settings > Video layout); Shorts stay tiles. */
     public VideoCardAdapter setListRows(boolean listRows) {
         if (mListRows != listRows) {
             mListRows = listRows;
@@ -142,7 +142,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (mShortsTiles && item.belongsToShorts()) {
             return VIEW_TYPE_SHORT_TILE;
         }
-        // MEETUBE(channels): the Channels section's entries (no video behind them) are channel cards too.
+        // GUTUBE(channels): the Channels section's entries (no video behind them) are channel cards too.
         if ((item.isChannel() && !item.isPlaylistAsChannel()) || (item.belongsToChannelUploads() && item.videoId == null)) {
             return VIEW_TYPE_CHANNEL;
         }
@@ -159,7 +159,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     }
 
     /**
-     * MEETUBE(shorts): which of a two-up Shorts row this card is in (0 left, 1 right), counted along
+     * GUTUBE(shorts): which of a two-up Shorts row this card is in (0 left, 1 right), counted along
      * its run of shorts, or -1 for any other card.
      * ponytail: assumes two shorts per row (portrait phone); a wider grid gets the same margins.
      */
@@ -177,7 +177,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         return run % 2;
     }
 
-    /** MEETUBE(shorts): a tall Shorts card, half a column wide in the search grid. */
+    /** GUTUBE(shorts): a tall Shorts card, half a column wide in the search grid. */
     public boolean isShort(int position) {
         return position >= 0 && position < getItemCount() && getItem(position).belongsToShorts();
     }
@@ -229,7 +229,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
     }
 
-    /** MEETUBE(issue #43): the shelf's title over a sideways strip of Shorts tiles. */
+    /** GUTUBE(issue #43): the shelf's title over a sideways strip of Shorts tiles. */
     static class ShortsShelfHolder extends RecyclerView.ViewHolder {
         private final TextView mTitle;
         private final VideoCardAdapter mTiles;
@@ -251,7 +251,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mTitle.setSingleLine();
             int side = Math.round(16 * density);
             mTitle.setPadding(side, 0, side, Math.round(8 * density));
-            // MEETUBE(shorts): the red Shorts mark before the title, as on YouTube.
+            // GUTUBE(shorts): the red Shorts mark before the title, as on YouTube.
             mTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_shorts_logo, 0, 0, 0);
             mTitle.setCompoundDrawablePadding(Math.round(10 * density));
             root.addView(mTitle);
@@ -285,7 +285,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
     }
 
-    /** MEETUBE(shorts): see item_mobile_shorts_tile. Tap plays, the corner menu is the long-press menu. */
+    /** GUTUBE(shorts): see item_mobile_shorts_tile. Tap plays, the corner menu is the long-press menu. */
     static class ShortTileHolder extends RecyclerView.ViewHolder {
         private final ImageView mThumbnail;
         private final TextView mViews;
@@ -386,11 +386,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     /** Marker payload for in-place item mutations (watch progress, DeArrow overrides). */
     private static final Object PAYLOAD_SYNC = new Object();
-    /** MEETUBE(hyped): only the rank moved (a list change shifted the cards). */
+    /** GUTUBE(hyped): only the rank moved (a list change shifted the cards). */
     private static final Object PAYLOAD_RANK = new Object();
     private boolean mRanked;
 
-    /** MEETUBE(hyped): a chart: each card wears its place (1, 2, 3...) on the thumbnail. */
+    /** GUTUBE(hyped): a chart: each card wears its place (1, 2, 3...) on the thumbnail. */
     public void setRanked(boolean ranked) {
         if (ranked != mRanked) {
             mRanked = ranked;
@@ -452,7 +452,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mThumbnailFrame = itemView.findViewById(R.id.video_thumbnail_frame);
             mBadge = itemView.findViewById(R.id.video_badge);
             mRank = itemView.findViewById(R.id.video_rank);
-            // MEETUBE(glass): the duration pill frosts the thumbnail, as the Home chips frost the feed.
+            // GUTUBE(glass): the duration pill frosts the thumbnail, as the Home chips frost the feed.
             com.newtube.mobile.ui.common.GlassDrawable.apply(mBadge, itemView.findViewById(R.id.video_thumbnail_glass), 0);
             mBadgeGlass = mBadge.getBackground();
             mWatchProgress = itemView.findViewById(R.id.video_watch_progress);
@@ -467,7 +467,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             if (mAvatar != null) {
                 mAvatar.setOnClickListener(v -> openChannel());
             }
-            // MEETUBE(issue #6): the channel name at the start of the meta line opens the channel;
+            // GUTUBE(issue #6): the channel name at the start of the meta line opens the channel;
             // the rest of the line (views, age) still opens the video.
             mMeta.setOnTouchListener((v, event) -> {
                 if (event.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) {
@@ -523,7 +523,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mAvatar.setVisibility(show ? View.VISIBLE : View.GONE);
             String[] collab = show ? collabNames(video.getAuthor()) : null;
             bindCollab(collab != null);
-            // MEETUBE(issue #73): live now - the glowing red ring around the channel.
+            // GUTUBE(issue #73): live now - the glowing red ring around the channel.
             if (video.isLive) {
                 com.newtube.mobile.ui.common.LiveRingView.markLive(video.channelId);
             }
@@ -561,7 +561,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
 
         /**
-         * MEETUBE(card avatars): look up and decode the avatar(s) of a card about to scroll in, so
+         * GUTUBE(card avatars): look up and decode the avatar(s) of a card about to scroll in, so
          * it arrives with them (FeedThumbnailPreloader). Same request shape as the bind's.
          */
         public static void prefetchAvatars(Context context, Video video) {
@@ -589,7 +589,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             }
         }
 
-        /** MEETUBE(collab avatars): two overlapping circles, the first shrunk to the top-left. */
+        /** GUTUBE(collab avatars): two overlapping circles, the first shrunk to the top-left. */
         private void bindCollab(boolean collab) {
             if (mAvatar2 == null) {
                 return;
@@ -606,7 +606,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
 
         /**
-         * MEETUBE(collab avatars): a two-channel collab's byline, "A and B" (YouTube's form), split
+         * GUTUBE(collab avatars): a two-channel collab's byline, "A and B" (YouTube's form), split
          * into the two names, or null for one channel (or for "A and 2 more").
          * ponytail: English "and" only, and a channel whose own name has " and " in it reads as a
          * collab - its second "avatar" then stays a placeholder unless a channel has that exact name.
@@ -620,7 +620,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             return new String[] {author.substring(0, at), author.substring(at + 5)};
         }
 
-        /** MEETUBE(hyped): the card's place in a chart; 0 = none. */
+        /** GUTUBE(hyped): the card's place in a chart; 0 = none. */
         void bindRank(int rank) {
             if (mRank != null) {
                 mRank.setVisibility(rank > 0 ? View.VISIBLE : View.GONE);
@@ -632,7 +632,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mVideo = video;
             Context context = itemView.getContext();
             if (android.text.TextUtils.isEmpty(video.getTitle())) {
-                // MEETUBE(issue #41): a bare video id from the feed - its title and channel are asked for.
+                // GUTUBE(issue #41): a bare video id from the feed - its title and channel are asked for.
                 com.newtube.mobile.ui.common.MissingTitles.fill(video, () -> {
                     if (mVideo == video) {
                         bindAvatar(itemView.getContext(), video);
@@ -675,7 +675,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
 
         /**
-         * MEETUBE(shorts): a Short in the search grid is compact like YouTube's - title on the
+         * GUTUBE(shorts): a Short in the search grid is compact like YouTube's - title on the
          * thumbnail, one meta line under it, narrow gutters (column 0/1; -1 = a normal card).
          * The ⋮ menu stays on long-press.
          */
@@ -701,12 +701,12 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             }
         }
 
-        /** MEETUBE(shorts): Shorts-tab cards are tall (9:16), everything else 16:9. */
+        /** GUTUBE(shorts): Shorts-tab cards are tall (9:16), everything else 16:9. */
         private void bindShape(Video video) {
             androidx.constraintlayout.widget.ConstraintLayout.LayoutParams lp =
                     (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams) mThumbnailFrame.getLayoutParams();
             String ratio = video.belongsToShorts() ? "9:16" : "16:9";
-            // MEETUBE(mix stack): a Mix or playlist shows two cards behind it; the thumbnail drops below them.
+            // GUTUBE(mix stack): a Mix or playlist shows two cards behind it; the thumbnail drops below them.
             View back = itemView.findViewById(R.id.video_stack_back);
             boolean stack = back != null && !video.belongsToShorts() && (video.isMix() || video.isPlaylistCard());
             int top = stack ? Math.round(10 * itemView.getResources().getDisplayMetrics().density) : 0;
@@ -745,7 +745,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             }
         }
 
-        /** MEETUBE(badge icons): radio waves before "Mix", a note before a music video's time. */
+        /** GUTUBE(badge icons): radio waves before "Mix", a note before a music video's time. */
         public static void badgeIcon(android.widget.TextView badge, Video video) {
             int icon = video == null || video.isLive
                     || !com.newtube.mobile.ui.common.BadgeIcons.isShown(badge.getContext()) ? 0 : video.isMix() ? R.drawable.ic_badge_mix
@@ -847,7 +847,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             // NEWTUBE(ux): entries saved without an image (local history, link opens) get the
             // i.ytimg.com fallback here, so the preloader and the bind ask for the same URL.
             com.newtube.mobile.ui.common.LocalThumbnails.fill(video);
-            // MEETUBE(shorts): the feed's own Shorts images are tiny; oar2 is the 720x1280 portrait.
+            // GUTUBE(shorts): the feed's own Shorts images are tiny; oar2 is the 720x1280 portrait.
             if (video.belongsToShorts() && video.videoId != null) {
                 return "https://i.ytimg.com/vi/" + video.videoId + "/oar2.jpg";
             }
@@ -966,7 +966,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mMeta.setVisibility(meta.length() == 0 ? View.GONE : View.VISIBLE);
 
             com.newtube.mobile.ui.common.ChannelAvatars.put(itemView.getContext(), video.channelId,
-                    video.getTitle(), video.getCardImageUrl()); // MEETUBE(card avatars)
+                    video.getTitle(), video.getCardImageUrl()); // GUTUBE(card avatars)
             Glide.with(itemView.getContext())
                     .load(video.getCardImageUrl())
                     .circleCrop()
@@ -974,7 +974,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     .error(R.drawable.ic_watch_channel_placeholder)
                     .into(mAvatar);
             com.newtube.mobile.ui.common.LiveRingView.bind(mLiveRing, mAvatar,
-                    com.newtube.mobile.ui.common.LiveRingView.isLive(video.channelId), 0); // MEETUBE(issue #73)
+                    com.newtube.mobile.ui.common.LiveRingView.isLive(video.channelId), 0); // GUTUBE(issue #73)
         }
 
         void unbind() {

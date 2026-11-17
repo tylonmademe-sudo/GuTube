@@ -285,7 +285,7 @@ public class SponsorBlockController extends BasePlayerController {
             return;
         }
 
-        // MEETUBE(sponsorblock): the phone offers it on a pill, the video playing on under it.
+        // GUTUBE(sponsorblock): the phone offers it on a pill, the video playing on under it.
         long leftMs = (long) ((skipPosMs - getPlayer().getPositionMs()) / getPlayer().getEffectiveSpeed());
         if (getPlayer().showSkipSegment(category, () -> {
             getPlayer().hideSkipSegment();

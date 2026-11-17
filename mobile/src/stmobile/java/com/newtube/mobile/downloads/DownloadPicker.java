@@ -100,7 +100,7 @@ public final class DownloadPicker {
         String thumb = cardImage != null && cardImage.startsWith("http") ? cardImage
                 : "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
 
-        // MEETUBE(download quality): Settings > Downloads can set one, then a tap downloads at once.
+        // GUTUBE(download quality): Settings > Downloads can set one, then a tap downloads at once.
         DownloadOption preset = AutoDownload.defaultQuality(context) == AutoDownload.ASK ? null
                 : AutoDownload.pick(options, AutoDownload.defaultQuality(context));
         if (preset != null) {

@@ -1,7 +1,7 @@
-# Builds the signed MeeTube APKs.
+# Builds the signed GuTube APKs.
 # - Push a tag vX.Y.Z (matching build.gradle's stmobile versionName "X.Y.Z Name" and the top
-#   CHANGELOG.md entry): publishes the GitHub release "MeeTube X.Y.Z Name" with the APKs and
-#   meetube.json for the in-app updater. Its notes are a download table, then the changelog entry.
+#   CHANGELOG.md entry): publishes the GitHub release "GuTube X.Y.Z Name" with the APKs and
+#   gutube.json for the in-app updater. Its notes are a download table, then the changelog entry.
 # - Run it by hand (Actions > Release > Run workflow): builds and keeps the APKs as artifacts only.
 # Secrets: SIGNING_KEY (the .jks, base64), KEY_STORE_PASSWORD, ALIAS, KEY_PASSWORD. Every release
 # must use the same key or installed apps refuse the update.
@@ -65,7 +65,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: MeeTube ${{ steps.meta.outputs.name }}
+          name: GuTube ${{ steps.meta.outputs.name }}
           path: dist/*.apk
           if-no-files-found: error
 
@@ -77,13 +77,13 @@ jobs:
           NAME: ${{ steps.meta.outputs.name }}
         run: |
           # Fails unless the tag, build.gradle and CHANGELOG.md agree on the version.
-          python3 tools/update_manifest.py --tag "$TAG" --dist dist --out dist/meetube.json
+          python3 tools/update_manifest.py --tag "$TAG" --dist dist --out dist/gutube.json
           # Release notes: which APK to pick, then this version's CHANGELOG.md section without its heading.
           awk -v h="## $NAME" '$0 == h {on=1; next} on && /^## / {exit} on' CHANGELOG.md > changes.md
           test -s changes.md
-          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$TAG/MeeTube_${TAG#v}"
-          # MeeTube TV ships from yashoncode/meetube-tv under tv-vX.Y.Z tags: the newest non-beta one's universal APK.
-          tv_repo=yashoncode/meetube-tv
+          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$TAG/GuTube_${TAG#v}"
+          # GuTube TV ships from gutube/gutube-tv under tv-vX.Y.Z tags: the newest non-beta one's universal APK.
+          tv_repo=gutube/gutube-tv
           tv=$(gh release list --repo "$tv_repo" --exclude-pre-releases --limit 100 --json tagName \
             --jq '[.[].tagName | select(startswith("tv-v"))][0] // empty')
           {
@@ -95,9 +95,9 @@ jobs:
             echo "| **Low end phones** (older or 32-bit) | [armeabi-v7a](${url}_armeabi-v7a.apk) |"
             echo "| **Universal** (not sure? this one works on all) | [universal](${url}_universal.apk) |"
             if [ -n "$tv" ]; then
-              echo "| **TV** (Android TV, Google TV, Fire TV) | [universal](https://github.com/$tv_repo/releases/download/$tv/MeeTubeTV_${tv#tv-v}_universal.apk) |"
+              echo "| **TV** (Android TV, Google TV, Fire TV) | [universal](https://github.com/$tv_repo/releases/download/$tv/GuTubeTV_${tv#tv-v}_universal.apk) |"
             fi
             echo
             cat changes.md
           } > notes.md
-          gh release create "$TAG" dist/* --title "MeeTube $NAME" --notes-file notes.md --target "$GITHUB_SHA"
+          gh release create "$TAG" dist/* --title "GuTube $NAME" --notes-file notes.md --target "$GITHUB_SHA"

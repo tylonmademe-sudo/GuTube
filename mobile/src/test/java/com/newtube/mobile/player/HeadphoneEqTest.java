@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-/** MEETUBE(autoeq): the ParametricEQ.txt parser and the biquads hit the gains AutoEq asks for. */
+/** GUTUBE(autoeq): the ParametricEQ.txt parser and the biquads hit the gains AutoEq asks for. */
 public class HeadphoneEqTest {
     private static final int RATE = 48_000;
 

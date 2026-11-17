@@ -12,7 +12,7 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
  * NEWTUBE(you-subscreen): Browse's top bar. On a bottom-nav tab it is the brand; a section opened
  * from a You row (Sports, Playlists, ...) is a sub-screen of You, so it gets a back arrow and the
  * section's name - like YouTube's You sub-pages - instead of a brand that gave no hint where the
- * user was or that back returns to You. MEETUBE(glass): both live in the floating brand pill.
+ * user was or that back returns to You. GUTUBE(glass): both live in the floating brand pill.
  */
 final class BrowseTopBar {
     private final TextView mTitle;
@@ -26,29 +26,35 @@ final class BrowseTopBar {
         mBack = activity.findViewById(R.id.mobile_title_back);
         mMark = activity.findViewById(R.id.mobile_brand_mark);
         syncMark(activity);
-        mBack.setOnClickListener(v -> onBack.run());
-        // MEETUBE(quotes): on a tab the brand pill shows a quote; on a sub-screen it goes back.
+        if (mBack != null) {
+            mBack.setOnClickListener(v -> onBack.run());
+            com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(mBack, 18f);
+        }
+        // GUTUBE(quotes): on a tab the brand pill shows a quote; on a sub-screen it goes back.
         QuoteCard quote = new QuoteCard(activity);
-        activity.findViewById(R.id.mobile_brand_glass).setOnClickListener(v -> {
-            if (mBack.getVisibility() == View.VISIBLE) {
-                onBack.run();
-            } else {
-                com.newtube.mobile.ui.common.Motion.nudge(v);
-                quote.show();
-            }
-        });
-        // MEETUBE(greeting): held, on a tab or a sub-screen, it greets with three shortcuts.
-        com.newtube.mobile.ui.common.Glass.blur(activity.findViewById(R.id.mobile_greet_overlay),
-                activity.findViewById(R.id.mobile_blur_target));
-        GreetingOverlay greeting = new GreetingOverlay((androidx.activity.ComponentActivity) activity);
-        activity.findViewById(R.id.mobile_brand_glass).setOnLongClickListener(v -> {
-            greeting.show();
-            return true;
-        });
+        View brandBar = activity.findViewById(R.id.mobile_brand_glass);
+        if (brandBar != null) {
+            brandBar.setOnClickListener(v -> {
+                if (mBack.getVisibility() == View.VISIBLE) {
+                    onBack.run();
+                } else {
+                    com.newtube.mobile.ui.common.Motion.nudge(v);
+                    quote.show();
+                }
+            });
+            // GUTUBE(greeting): held, on a tab or a sub-screen, it greets with three shortcuts.
+            com.newtube.mobile.ui.common.Glass.blur(activity.findViewById(R.id.mobile_greet_overlay),
+                    activity.findViewById(R.id.mobile_blur_target));
+            GreetingOverlay greeting = new GreetingOverlay((androidx.activity.ComponentActivity) activity);
+            brandBar.setOnLongClickListener(v -> {
+                greeting.show();
+                return true;
+            });
+        }
     }
 
     /**
-     * MEETUBE(app icon): the brand follows the picked icon, and shows or drops the app's name
+     * GUTUBE(app icon): the brand follows the picked icon, and shows or drops the app's name
      * (on resume: Settings may have changed either).
      */
     void syncMark(Activity activity) {
@@ -68,7 +74,7 @@ final class BrowseTopBar {
         mTitle.setText(subScreen && title != null && title.length() > 0
                 ? title : mTitle.getContext().getString(R.string.app_name));
 
-        // MEETUBE(brand name): without the name, the icon sits alone in a round pill.
+        // GUTUBE(brand name): without the name, the icon sits alone in a round pill.
         boolean named = subScreen || NavTabs.showBrandName(mTitle.getContext());
         mTitle.setVisibility(named ? View.VISIBLE : View.GONE);
         float density = mMark.getResources().getDisplayMetrics().density;

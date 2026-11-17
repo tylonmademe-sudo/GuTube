@@ -36,7 +36,7 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import java.lang.ref.WeakReference;
 
 /**
- * MEETUBE(glass): frosted sheets. A sheet lives in its own window, so it cannot sample the page live
+ * GUTUBE(glass): frosted sheets. A sheet lives in its own window, so it cannot sample the page live
  * the way {@link GlassView} does; instead the page's window is copied once as the sheet opens
  * (PixelCopy, video frame included), blurred small, and painted only inside the sheet - lined up
  * with the screen, so it stays put under the sheet while it is dragged. The page itself stays sharp.
@@ -47,7 +47,7 @@ public final class SheetGlass {
     /** The copy is this many times smaller than the page; scaling it back up adds to the blur. */
     private static final int SCALE = 8;
     private static final int BLUR_RADIUS = 3;
-    private static final float CORNER_DP = 28f;
+    private static final float CORNER_DP = 22f;
     /** A live sheet's copies: about the frame rate of most videos. */
     private static final long LIVE_FRAME_MS = 33;
     /**
@@ -62,7 +62,7 @@ public final class SheetGlass {
     private static Class<? extends Activity> sLivePage;
 
     /**
-     * MEETUBE(glass): sheets over {@code page} (the player) keep copying it while they show, so the
+     * GUTUBE(glass): sheets over {@code page} (the player) keep copying it while they show, so the
      * video plays on under the frost instead of freezing on the frame it had when the sheet opened.
      * A live copy is not blurred on the CPU (16 ms a copy on a 2024 phone): the GPU blurs it as the
      * sheet draws (RenderEffect, API 31), so the main thread only asks for a 1/8 copy each frame.
@@ -136,13 +136,14 @@ public final class SheetGlass {
             // blur the sheet into itself.
             boolean live = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
                     && sLivePage != null && sLivePage.isInstance(activity);
-            frost(sheet.getChildAt(0), activity.getWindow(), sheet,
+            View content = sheet.getChildAt(0);
+            frost(content, activity.getWindow(), sheet,
                     rounded ? CORNER_DP * sheet.getResources().getDisplayMetrics().density : 0f, live);
         }
     }
 
     /**
-     * MEETUBE(glass): an alert dialog on the sheets' glass instead of its flat surface: the window
+     * GUTUBE(glass): an alert dialog on the sheets' glass instead of its flat surface: the window
      * keeps the Material background's insets (where the card sits) but paints nothing, and the
      * card itself (parentPanel) takes the blurred page, rounded like the Material shape (28dp).
      */
@@ -168,7 +169,9 @@ public final class SheetGlass {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), corner);
             }
         });
-        panel.post(() -> frost(panel, activity.getWindow(), panel, corner, false, 0));
+        panel.post(() -> {
+            frost(panel, activity.getWindow(), panel, corner, false, 0);
+        });
     }
 
     /** Paints {@code target}'s background with {@code page}, blurred, behind the sheet's tint. */
@@ -177,7 +180,7 @@ public final class SheetGlass {
     }
 
     /**
-     * MEETUBE(glass): a sheet in its own activity over {@code page} (the picker screen) - live over
+     * GUTUBE(glass): a sheet in its own activity over {@code page} (the picker screen) - live over
      * the player like the player's own sheets: a copy of another window never holds the sheet.
      */
     public static void frost(@NonNull View target, @Nullable Activity page) {
@@ -231,12 +234,12 @@ public final class SheetGlass {
         float density = context.getResources().getDisplayMetrics().density;
         android.graphics.drawable.GradientDrawable sheen = new android.graphics.drawable.GradientDrawable(
                 android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {ContextCompat.getColor(context, R.color.meetube_glass_sheen), 0});
+                new int[] {ContextCompat.getColor(context, R.color.gutube_glass_sheen), 0});
         sheen.setCornerRadii(new float[] {cornerPx, cornerPx, cornerPx, cornerPx, 0, 0, 0, 0});
         android.graphics.drawable.GradientDrawable line = new android.graphics.drawable.GradientDrawable();
         line.setCornerRadius(cornerPx);
         // the message pill: the player pills' white hairline (GlassDrawable), dark in both themes
-        int lineColor = ContextCompat.getColor(context, sheenToo ? R.color.meetube_glass_rim : R.color.meetube_toast_rim);
+        int lineColor = ContextCompat.getColor(context, sheenToo ? R.color.gutube_glass_rim : R.color.gutube_toast_rim);
         line.setStroke(Math.max(1, Math.round(density)), lineColor);
         android.graphics.drawable.LayerDrawable rim = new android.graphics.drawable.LayerDrawable(
                 sheenToo ? new Drawable[] {sheen, line} : new Drawable[] {line});
@@ -423,7 +426,7 @@ public final class SheetGlass {
             mTarget = target;
             mCover = cover;
             if (live && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                mBlurNode = new android.graphics.RenderNode("MeeTube sheet glass");
+                mBlurNode = new android.graphics.RenderNode("GuTube sheet glass");
                 mBlurNode.setRenderEffect(android.graphics.RenderEffect.createBlurEffect(
                         LIVE_BLUR_PX / SCALE, LIVE_BLUR_PX / SCALE, Shader.TileMode.CLAMP));
             } else {
@@ -432,7 +435,7 @@ public final class SheetGlass {
             ColorMatrix saturate = new ColorMatrix();
             saturate.setSaturation(1.4f);
             mPage.setColorFilter(new ColorMatrixColorFilter(saturate));
-            mTint.setColor(tint != 0 ? tint : ContextCompat.getColor(target.getContext(), R.color.meetube_sheet_glass));
+            mTint.setColor(tint != 0 ? tint : ContextCompat.getColor(target.getContext(), R.color.gutube_sheet_glass));
             mCorner = corner;
             // A drag moves the sheet without redrawing it: redraw so the page stays put underneath.
             target.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {

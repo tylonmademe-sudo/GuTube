@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
- * MEETUBE(issues #202, #203): Settings > Downloads - the folder, the quality a Download tap takes
+ * GUTUBE(issues #202, #203): Settings > Downloads - the folder, the quality a Download tap takes
  * (Ask each time by default), and auto download from picked channels and playlists.
  */
 final class DownloadPages {
@@ -30,7 +30,7 @@ final class DownloadPages {
     static SettingsPages.Page downloads(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
 
-        if (DownloadFolder.isSupported()) { // MEETUBE(download-folder): also a long press on any Download button
+        if (DownloadFolder.isSupported()) { // GUTUBE(download-folder): also a long press on any Download button
             rows.add(SettingsRow.action(0, context.getString(R.string.mobile_download_folder_video),
                     () -> DownloadFolder.label(context, false),
                     page -> page.showDialog(DownloadFolder.showOptions(page.requireActivity(), false))));

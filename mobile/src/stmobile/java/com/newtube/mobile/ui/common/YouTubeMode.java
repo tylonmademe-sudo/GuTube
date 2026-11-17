@@ -12,14 +12,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(youtube mode): Settings > Customization > YouTube mode. Video cards lose their rounded
+ * GUTUBE(youtube mode): Settings > Customization > YouTube mode. Video cards lose their rounded
  * corners and the bottom bar docks to the screen's bottom edge, full width and flat, its frosted
  * glass running under the gesture area like YouTube's bar. The shapes are theme attributes
- * (ThemeOverlay.MeeTube.YouTubeMode); the screens with the bar let their content reach the bottom
+ * (ThemeOverlay.GuTube.YouTubeMode); the screens with the bar let their content reach the bottom
  * edge ({@link MobileActivity#shouldInsetContentForNavigationBar}) and call {@link #dockBar}.
  */
 public final class YouTubeMode {
-    private static final String PREFS = "meetube_youtube_mode";
+    private static final String PREFS = "gutube_youtube_mode";
 
     private YouTubeMode() {
     }
@@ -36,7 +36,7 @@ public final class YouTubeMode {
 
     static void applyTo(Context context, Resources.Theme theme) {
         if (isOn(context)) {
-            theme.applyStyle(R.style.ThemeOverlay_MeeTube_YouTubeMode, true);
+            theme.applyStyle(R.style.ThemeOverlay_GuTube_YouTubeMode, true);
         }
     }
 

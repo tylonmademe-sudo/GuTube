@@ -34,7 +34,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
 /**
- * MEETUBE(home autoplay): the muted preview that plays on the centred Home card, as YouTube's does.
+ * GUTUBE(home autoplay): the muted preview that plays on the centred Home card, as YouTube's does.
  * One small ExoPlayer on a TextureView: it resolves the video's /player answer, builds the same DASH
  * source the main player would (same transports and media cache), and plays it capped to 480p.
  * Muted by default; captions off by default, drawn by the caller from {@link Callback#onCues}.

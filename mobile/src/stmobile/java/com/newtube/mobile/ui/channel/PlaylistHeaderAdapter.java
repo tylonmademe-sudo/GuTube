@@ -38,7 +38,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         void onSave();
     }
 
-    /** MEETUBE(playlist page): the All | Videos | Shorts pills. */
+    /** GUTUBE(playlist page): the All | Videos | Shorts pills. */
     static final int FILTER_ALL = 0;
     static final int FILTER_VIDEOS = 1;
     static final int FILTER_SHORTS = 2;
@@ -92,7 +92,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         return mPlaylist != null;
     }
 
-    /** MEETUBE(playlist page): count and cover can arrive with the first page after the opener. */
+    /** GUTUBE(playlist page): count and cover can arrive with the first page after the opener. */
     void setContents(Video first, int count) {
         String cover = first != null ? first.getCardImageUrl() : null;
         if (mVideoCount != count || !TextUtils.equals(mFirstCover, cover)) {
@@ -114,7 +114,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         }
     }
 
-    /** MEETUBE(playlist page): the pills show only while the playlist holds Shorts. */
+    /** GUTUBE(playlist page): the pills show only while the playlist holds Shorts. */
     void setFilter(int filter, boolean hasShorts) {
         if (mFilter != filter || mHasShorts != hasShorts) {
             mFilter = filter;
@@ -134,7 +134,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         }
     }
 
-    /** MEETUBE(issue #242): the bookmark, on playlists that are not the user's own. */
+    /** GUTUBE(issue #242): the bookmark, on playlists that are not the user's own. */
     void setSaveState(boolean canSave, boolean saved) {
         if (mCanSave != canSave || mSaved != saved) {
             mCanSave = canSave;
@@ -146,7 +146,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
     }
 
     static boolean canDownload(Video playlist) {
-        // MEETUBE(playlist page): radio mixes are unbounded; isMix also matches some finite playlist cards.
+        // GUTUBE(playlist page): radio mixes are unbounded; isMix also matches some finite playlist cards.
         String id = playlist != null ? playlist.getPlaylistId() : null;
         return playlist != null && id != null && !playlist.isLive && !playlist.isUpcoming
                 && !id.startsWith("RD") && !(playlist.isMix() && playlist.hasVideo() && !playlist.isPlaylistCard());
@@ -234,7 +234,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
 
             mTitle.setText(playlist.getTitle());
 
-            // MEETUBE(playlist page): getAuthor() can infer the playlist title when no owner was supplied.
+            // GUTUBE(playlist page): getAuthor() can infer the playlist title when no owner was supplied.
             CharSequence owner = playlist.author;
             if (TextUtils.isEmpty(owner) && playlist.mediaItem != null) {
                 owner = playlist.mediaItem.getAuthor();

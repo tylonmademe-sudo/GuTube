@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mobile_settings_restart_needed">أعِد تشغيل MeeTube لتطبيق هذا التغيير</string>
+    <string name="mobile_settings_restart_needed">أعِد تشغيل GuTube لتطبيق هذا التغيير</string>
     <string name="mobile_settings_restart">إعادة التشغيل</string>
     <string name="mobile_settings_off">غير مفعّل</string>
     <string name="mobile_settings_more">المزيد</string>
@@ -60,7 +60,7 @@
     <string name="mobile_settings_advanced_summary">البث والشبكة وحلول المشاكل</string>
     <string name="mobile_settings_about">حول</string>
     <string name="mobile_settings_coffee">ادعمني بفنجان قهوة</string>
-    <string name="mobile_settings_coffee_summary">إذا أعجبك MeeTube وأردت دعمه</string>
+    <string name="mobile_settings_coffee_summary">إذا أعجبك GuTube وأردت دعمه</string>
     <string name="mobile_settings_language">اللغة</string>
     <string name="mobile_settings_country">الموقع الجغرافي</string>
     <string name="mobile_settings_start_screen">شاشة البدء</string>
@@ -79,7 +79,7 @@
     <string name="mobile_settings_nav_labels">أسماء علامات التبويب</string>
     <string name="mobile_settings_nav_labels_summary">إظهار اسم كل علامة تبويب أسفل رمزها في الشريط السفلي</string>
     <string name="mobile_settings_brand_name">اسم التطبيق في الشريط العلوي</string>
-    <string name="mobile_settings_brand_name_summary">إظهار MeeTube بجانب رمزه في الأعلى. عند الإيقاف، يظهر الرمز فقط</string>
+    <string name="mobile_settings_brand_name_summary">إظهار GuTube بجانب رمزه في الأعلى. عند الإيقاف، يظهر الرمز فقط</string>
     <string name="mobile_settings_top_bar">إظهار الشريط العلوي دائمًا</string>
     <string name="mobile_settings_top_bar_summary">إبقاء الشريط العلوي ظاهرًا أثناء تمرير خلاصة الفيديوهات بدلًا من إخفائه</string>
     <string name="mobile_settings_search_fab">زر البحث عند إخفاء الشريط</string>
@@ -161,9 +161,9 @@
     <string name="mobile_settings_watch_history_auto">اتّباع إعداد YouTube</string>
     <string name="mobile_settings_watch_history_auto_desc">يُحفظ إذا كان حسابك على YouTube يحتفظ بالسجلّ</string>
     <string name="mobile_settings_watch_history_on">الحفظ دائمًا</string>
-    <string name="mobile_settings_watch_history_on_desc">إعادة تفعيل سجلّ المشاهدة على YouTube في كل مرة تفتح فيها MeeTube</string>
+    <string name="mobile_settings_watch_history_on_desc">إعادة تفعيل سجلّ المشاهدة على YouTube في كل مرة تفتح فيها GuTube</string>
     <string name="mobile_settings_watch_history_off">عدم الحفظ</string>
-    <string name="mobile_settings_watch_history_off_desc">يتوقّف MeeTube عن إبلاغ YouTube بما تشاهده</string>
+    <string name="mobile_settings_watch_history_off_desc">يتوقّف GuTube عن إبلاغ YouTube بما تشاهده</string>
     <string name="mobile_settings_clear_watch_history">محو سجلّ المشاهدة</string>
     <string name="mobile_settings_clear_watch_history_summary">حذف الفيديوهات التي شاهدتها من سجلّك على YouTube</string>
     <string name="mobile_settings_clear_watch_history_confirm">هل تريد محو سجلّ المشاهدة؟</string>
@@ -173,7 +173,7 @@
     <string name="mobile_settings_clear_search_history">محو سجلّ البحث</string>
     <string name="mobile_settings_clear_search_history_summary">حذف عمليات البحث المحفوظة على هذا الهاتف</string>
     <string name="mobile_settings_clear_search_history_confirm">هل تريد محو سجلّ البحث؟</string>
-    <string name="mobile_settings_clear_search_history_body">سيتم حذف عمليات البحث التي حفظها MeeTube على هذا الهاتف. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="mobile_settings_clear_search_history_body">سيتم حذف عمليات البحث التي حفظها GuTube على هذا الهاتف. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="mobile_settings_backup_now">النسخ الاحتياطي الآن</string>
     <string name="mobile_settings_backup_now_summary">حفظ إعداداتك في %1$s</string>
     <string name="mobile_settings_backup_done">تم حفظ النسخة الاحتياطية</string>
@@ -181,7 +181,7 @@
     <string name="mobile_settings_restore_summary">من نسخة احتياطية في %1$s</string>
     <string name="mobile_settings_auto_backup">النسخ الاحتياطي التلقائي</string>
     <string name="mobile_settings_auto_backup_off">أبدًا</string>
-    <string name="mobile_settings_backup_note">تتضمّن النسخة الاحتياطية كل إعداداتك في MeeTube. أمّا بيانات حسابك على YouTube، مثل الاشتراكات والسجلّ، فتبقى في حسابك.</string>
+    <string name="mobile_settings_backup_note">تتضمّن النسخة الاحتياطية كل إعداداتك في GuTube. أمّا بيانات حسابك على YouTube، مثل الاشتراكات والسجلّ، فتبقى في حسابك.</string>
     <string name="mobile_settings_home_layout">تنسيق الصفحة الرئيسية</string>
     <string name="mobile_settings_app_icon">رمز التطبيق</string>
     <string name="mobile_app_icon_default">كلاسيكي (الافتراضي)</string>
@@ -201,7 +201,7 @@
     <string name="mobile_loader_glass_orb">كرة زجاجية</string>
     <string name="mobile_loader_morphing_blob">كتلة سائلة</string>
     <string name="mobile_loader_glass_orbit">مدار زجاجي</string>
-    <string name="mobile_app_icon_pending">أعِد تشغيل MeeTube لاستخدام الرمز الجديد في كل مكان، أو انتظر حتى يتغيّر عند مغادرة التطبيق</string>
+    <string name="mobile_app_icon_pending">أعِد تشغيل GuTube لاستخدام الرمز الجديد في كل مكان، أو انتظر حتى يتغيّر عند مغادرة التطبيق</string>
     <string name="mobile_settings_home_layout_feed">خلاصة</string>
     <string name="mobile_settings_home_layout_feed_desc">قائمة واحدة من الفيديوهات، مثل YouTube</string>
     <string name="mobile_settings_home_layout_rows">صفوف</string>
@@ -229,7 +229,7 @@
     <string name="mobile_settings_video_layout_list_desc">صورة مصغّرة صغيرة بجانب العنوان لعرض فيديوهات أكثر على الشاشة</string>
     <string name="mobile_settings_screen_off">متابعة التشغيل عند إطفاء الشاشة</string>
     <string name="mobile_settings_screen_off_on">مسموح: لن يوقف وضع توفير البطارية الصوت</string>
-    <string name="mobile_settings_screen_off_off">قد يوقف وضع توفير البطارية الصوت. انقر للسماح لـ MeeTube بالعمل في الخلفية</string>
+    <string name="mobile_settings_screen_off_off">قد يوقف وضع توفير البطارية الصوت. انقر للسماح لـ GuTube بالعمل في الخلفية</string>
     <string name="mobile_settings_auto_pip">نافذة ضمن النافذة</string>
     <string name="mobile_settings_auto_pip_summary">عند مغادرة التطبيق أثناء تشغيل فيديو، يظهر الفيديو في نافذة صغيرة. عند الإيقاف، يستمر الصوت فقط</string>
     <string name="mobile_settings_video_ends">عند انتهاء الفيديو</string>
@@ -248,7 +248,7 @@
     <string name="mobile_settings_remember_speed_video">لكل فيديو</string>
     <string name="mobile_settings_remember_speed_all">السرعة نفسها لكل الفيديوهات</string>
     <string name="mobile_settings_remember_speed_none">عدم التذكّر</string>
-    <string name="mobile_settings_remember_speed_none_desc">العودة إلى 1x عند كل تشغيل لـ MeeTube</string>
+    <string name="mobile_settings_remember_speed_none_desc">العودة إلى 1x عند كل تشغيل لـ GuTube</string>
     <string name="mobile_settings_speed_list">السرعات ضمن «المزيد من السرعات»</string>
     <string name="mobile_settings_speed_list_basic">قائمة مختصرة</string>
     <string name="mobile_settings_speed_list_fine">فواصل صغيرة</string>
@@ -291,7 +291,7 @@
     <string name="mobile_settings_loudness">توحيد مستوى الصوت</string>
     <string name="mobile_settings_loudness_summary">خفض صوت الفيديوهات المرتفعة إلى المستوى المعتاد في YouTube</string>
     <string name="mobile_settings_player_volume">مستوى صوت المشغّل</string>
-    <string name="mobile_settings_quality_data_saver_note">عند تفعيل «توفير البيانات» في Android، يقلّل MeeTube التخزين المؤقت عبر بيانات الجوّال.</string>
+    <string name="mobile_settings_quality_data_saver_note">عند تفعيل «توفير البيانات» في Android، يقلّل GuTube التخزين المؤقت عبر بيانات الجوّال.</string>
     <string name="mobile_settings_caption_style">النمط</string>
     <string name="mobile_settings_caption_size">الحجم</string>
     <string name="mobile_settings_caption_position">المسافة من أسفل الشاشة</string>
@@ -313,7 +313,7 @@
     <string name="mobile_settings_dearrow_thumbnails">صور مصغّرة أفضل</string>
     <string name="mobile_settings_dearrow_thumbnails_summary">استبدال الصور المصغّرة بلقطات اختارها المجتمع</string>
     <string name="mobile_settings_dearrow_note">تتلقّى DeArrow معرّفات الفيديوهات التي تراها في القوائم.</string>
-    <string name="mobile_settings_advanced_note">لا يحتاج معظم المستخدمين إلى هذه الإعدادات. تغيّر طريقة البث والاتصال في MeeTube.</string>
+    <string name="mobile_settings_advanced_note">لا يحتاج معظم المستخدمين إلى هذه الإعدادات. تغيّر طريقة البث والاتصال في GuTube.</string>
     <string name="mobile_settings_streaming">البث</string>
     <string name="mobile_settings_buffer">التخزين المؤقت</string>
     <string name="mobile_settings_buffer_low_desc">نحو 25 ثانية مسبقًا. الأقل استهلاكًا للذاكرة</string>
@@ -344,7 +344,7 @@
     <string name="mobile_settings_chapter_popup_summary">عرض اسم كل فصل عند بدايته. انقر عليه للانتقال إلى الفصل التالي</string>
     <string name="mobile_settings_network">الشبكة</string>
     <string name="mobile_settings_proxy">الخادم الوكيل للويب</string>
-    <string name="mobile_settings_proxy_summary">تمرير اتصالات MeeTube عبر خادم وكيل HTTP أو SOCKS</string>
+    <string name="mobile_settings_proxy_summary">تمرير اتصالات GuTube عبر خادم وكيل HTTP أو SOCKS</string>
     <string name="mobile_settings_dns">العثور على خوادم YouTube</string>
     <string name="mobile_settings_dns_ipv4">IPv4 أولًا</string>
     <string name="mobile_settings_dns_ipv4_desc">الافتراضي. يعالج مشاكل الشبكات التي لا يعمل فيها IPv6</string>
@@ -370,7 +370,7 @@
     <string name="mobile_settings_playlists_style_grid_short">قوائم التشغيل</string>
     <string name="mobile_settings_playlists_style_rows_short">الفيديوهات</string>
     <string name="mobile_settings_interface_size_sample">هكذا يظهر عنوان الفيديو بهذا الحجم</string>
-    <string name="mobile_settings_interface_size_sample_meta">MeeTube · 1.2 مليون مشاهدة · قبل يومين</string>
+    <string name="mobile_settings_interface_size_sample_meta">GuTube · 1.2 مليون مشاهدة · قبل يومين</string>
     <string name="mobile_settings_tab_glow">توهّج علامات التبويب</string>
     <string name="mobile_settings_tab_glow_white">أبيض</string>
     <string name="mobile_settings_tab_glow_white_desc">توهّج أبيض بسيط (رمادي في المظهر الفاتح)</string>
@@ -379,7 +379,7 @@
     <string name="mobile_settings_tab_glow_tabs">ألوان علامات التبويب</string>
     <string name="mobile_settings_tab_glow_tabs_desc">تتوهّج كل علامة تبويب بلونها الخاص</string>
     <string name="mobile_settings_tab_glow_accent">اللون المميّز</string>
-    <string name="mobile_settings_tab_glow_accent_desc">تتوهّج كل علامات التبويب بلون MeeTube الأحمر</string>
+    <string name="mobile_settings_tab_glow_accent_desc">تتوهّج كل علامات التبويب بلون GuTube الأحمر</string>
     <string name="mobile_settings_tab_glow_off">غير مفعّل</string>
     <string name="mobile_settings_progress_glow">توهّج التقدّم</string>
     <string name="mobile_settings_progress_glow_summary">ضوء خفيف عند نهاية شريط التقدّم والخطّ الذي يبيّن ما شاهدته من الفيديوهات</string>
@@ -399,15 +399,15 @@
     <string name="mobile_settings_transfer_export_summary">الاحتفاظ بها لوقت لاحق أو نقلها إلى هاتف آخر</string>
     <string name="mobile_settings_transfer_share">مشاركة الإعدادات مع صديق</string>
     <string name="mobile_settings_transfer_share_summary">إرسال ملف إعداداتك في محادثة أو عبر البريد الإلكتروني</string>
-    <string name="mobile_settings_transfer_share_text">إعداداتي في MeeTube. في MeeTube: الإعدادات &gt; النسخ الاحتياطي &gt; استيراد الإعدادات من ملف</string>
+    <string name="mobile_settings_transfer_share_text">إعداداتي في GuTube. في GuTube: الإعدادات &gt; النسخ الاحتياطي &gt; استيراد الإعدادات من ملف</string>
     <string name="mobile_settings_transfer_import">استيراد الإعدادات من ملف</string>
     <string name="mobile_settings_transfer_import_summary">تحميل ملف إعدادات حفظته أو أرسله صديق</string>
-    <string name="mobile_settings_transfer_import_confirm">ستُستبدل إعداداتك بإعدادات الملف ويُعاد تشغيل MeeTube. تبقى حساباتك وسجلّ المشاهدة والتنزيلات وكلمات المرور كما هي.</string>
+    <string name="mobile_settings_transfer_import_confirm">ستُستبدل إعداداتك بإعدادات الملف ويُعاد تشغيل GuTube. تبقى حساباتك وسجلّ المشاهدة والتنزيلات وكلمات المرور كما هي.</string>
     <string name="mobile_settings_transfer_import_button">استيراد</string>
     <string name="mobile_settings_transfer_saved">تم حفظ الإعدادات</string>
-    <string name="mobile_settings_transfer_imported">تم استيراد الإعدادات. جارٍ إعادة تشغيل MeeTube</string>
+    <string name="mobile_settings_transfer_imported">تم استيراد الإعدادات. جارٍ إعادة تشغيل GuTube</string>
     <string name="mobile_settings_transfer_failed">تعذّر حفظ ملف الإعدادات</string>
-    <string name="mobile_settings_transfer_not_settings">هذا ليس ملف إعدادات MeeTube</string>
+    <string name="mobile_settings_transfer_not_settings">هذا ليس ملف إعدادات GuTube</string>
     <string name="mobile_settings_stable_volume">مستوى صوت ثابت</string>
     <string name="mobile_settings_stable_volume_summary">السماح باستخدام الصوت المضغوط من YouTube لتقليل الفارق بين الأجزاء المرتفعة والمنخفضة الصوت. يسري على الفيديو التالي الذي تفتحه</string>
     <string name="mobile_settings_equalizer">معادل الصوت</string>

@@ -22,7 +22,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
- * MEETUBE(seek pill): the double-tap seek count, "⏩ +10", a dark capsule that springs in, then
+ * GUTUBE(seek pill): the double-tap seek count, "⏩ +10", a dark capsule that springs in, then
  * on every tap squishes, dashes its arrows ahead, rolls its number up and throws eight sparks.
  * Timings follow YTXTube's SeekBurstPill.
  */

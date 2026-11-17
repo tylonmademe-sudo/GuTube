@@ -86,7 +86,7 @@ final class SwipeLevels {
     /** This swipe already let the system's panel ask about the hearing-safety limit (volume thread). */
     private boolean mSafeVolumeAsked;
     /**
-     * MEETUBE(volume swipe): setStreamVolume and the reads after it went to the audio service on the
+     * GUTUBE(volume swipe): setStreamVolume and the reads after it went to the audio service on the
      * main thread, step after step - on a vivo T3 Pro that held frames and the video stuttered for the
      * whole swipe (brightness, a window attribute, never did). One thread, so the steps stay in order.
      */
@@ -262,7 +262,7 @@ final class SwipeLevels {
     // ---------------------------------------------------------------------------------
 
     /**
-     * MEETUBE(issue #64): pushed on past the darkest, the window lets go of its brightness and the
+     * GUTUBE(issue #64): pushed on past the darkest, the window lets go of its brightness and the
      * phone's own (adaptive, if that is on) takes over, now and on the next fullscreen. Below the
      * bottom rather than at it, so the darkest level stays one stroke away for watching at night.
      */

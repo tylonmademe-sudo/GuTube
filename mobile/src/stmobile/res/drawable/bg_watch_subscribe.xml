@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(glass): the watch page's Subscribe pill, 40dp tall inside its 48dp touch target. Not
+<!-- GUTUBE(glass): the watch page's Subscribe pill, 40dp tall inside its 48dp touch target. Not
      subscribed: the solid main-action pill. Subscribed (selected): a glass pill like the action row's
      (tint + hairline). Each ripple has the pill as its mask: without one, a press flashed a square
      ripple over the pill's rounded ends. -->
@@ -9,8 +9,8 @@
             <ripple android:color="?android:attr/colorControlHighlight">
                 <item>
                     <shape android:shape="rectangle">
-                        <solid android:color="@color/meetube_glass_fill" />
-                        <stroke android:width="0.5dp" android:color="@color/meetube_glass_stroke" />
+                        <solid android:color="@color/gutube_glass_fill" />
+                        <stroke android:width="0.5dp" android:color="@color/gutube_glass_stroke" />
                         <corners android:radius="20dp" />
                     </shape>
                 </item>

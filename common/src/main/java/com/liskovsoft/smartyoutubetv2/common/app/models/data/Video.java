@@ -125,7 +125,7 @@ public final class Video {
     private long durationMs = -1;
     private WeakReference<VideoGroup> group; // Memory leak fix. Used to get next page when scrolling.
     public List<NotificationState> notificationStates;
-    /** MEETUBE(issue #43): Home's Shorts row folded into one card - the shorts it holds; null on any other card. */
+    /** GUTUBE(issue #43): Home's Shorts row folded into one card - the shorts it holds; null on any other card. */
     public List<Video> shortsShelf;
 
     public Video() {
@@ -713,7 +713,7 @@ public final class Video {
     }
 
     /**
-     * MEETUBE(shorts): latched - the group is held weakly, and a Shorts feed refetch lets the queued
+     * GUTUBE(shorts): latched - the group is held weakly, and a Shorts feed refetch lets the queued
      * shorts' old group be collected; they then played as normal videos at random (after a GC).
      */
     private transient boolean mInShortsTab;
@@ -722,7 +722,7 @@ public final class Video {
         return mInShortsTab || (mInShortsTab = belongsToGroup(MediaGroup.TYPE_SHORTS));
     }
 
-    /** MEETUBE(shorts): a short listed outside the Shorts tab (search results) that plays as one. */
+    /** GUTUBE(shorts): a short listed outside the Shorts tab (search results) that plays as one. */
     public void markShorts() {
         mInShortsTab = true;
     }

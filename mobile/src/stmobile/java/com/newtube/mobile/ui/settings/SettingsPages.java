@@ -148,7 +148,7 @@ public final class SettingsPages {
     private static Page root(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
 
-        // MEETUBE: no account or coffee rows here - the You tab switches accounts, About thanks.
+        // GUTUBE: no account or coffee rows here - the You tab switches accounts, About thanks.
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_app)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_general, context.getString(R.string.mobile_settings_general),
                 context.getString(R.string.mobile_settings_general_summary), GENERAL));
@@ -199,7 +199,7 @@ public final class SettingsPages {
         return new Page(context.getString(R.string.header_settings), rows);
     }
 
-    /** MEETUBE(issue #93): what Battery Saver does to the effects. */
+    /** GUTUBE(issue #93): what Battery Saver does to the effects. */
     private static Page battery(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_battery_manual),
@@ -229,7 +229,7 @@ public final class SettingsPages {
 
     private static Page about(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
-        rows.add(SettingsRow.header(context.getString(R.string.mobile_about_creator)));
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_about)));
         rows.add(SettingsRow.custom(context.getString(R.string.mobile_about_dev_name), SettingsPages::aboutCard));
 
         if (AppUpdatePresenter.isInAppUpdatesDisabled()) {
@@ -244,10 +244,10 @@ public final class SettingsPages {
                     context.getString(R.string.mobile_settings_update_notify_summary),
                     checker::isUpdateCheckEnabled, on -> {
                         checker.setUpdateCheckEnabled(on);
-                        // MEETUBE(update notify): the background check follows this switch
+                        // GUTUBE(update notify): the background check follows this switch
                         com.newtube.mobile.update.UpdateNotifyWorker.schedule(context);
                     })));
-            // MEETUBE(update pop-up): "Don't ask again" on the pop-up turns this off.
+            // GUTUBE(update pop-up): "Don't ask again" on the pop-up turns this off.
             com.newtube.mobile.update.AppUpdates updates = com.newtube.mobile.update.AppUpdates.instance(context);
             rows.add(icon(R.drawable.ic_about_campaign, SettingsRow.toggle(context.getString(R.string.mobile_settings_update_prompt),
                     context.getString(R.string.mobile_settings_update_prompt_summary),
@@ -255,23 +255,19 @@ public final class SettingsPages {
         }
 
         rows.add(SettingsRow.divider());
-        rows.add(SettingsRow.page(R.drawable.ic_about_groups, context.getString(R.string.mobile_about_reporters),
-                context.getString(R.string.mobile_about_reporters_summary), ABOUT_REPORTERS));
-        rows.add(SettingsRow.page(R.drawable.ic_about_handshake, context.getString(R.string.mobile_about_contributors),
-                context.getString(R.string.mobile_about_contributors_summary), ABOUT_CONTRIBUTORS));
         rows.add(icon(R.drawable.ic_about_code, SettingsRow.action(context.getString(R.string.about_source_code),
-                context.getString(R.string.about_source_code_url).replace("https://", ""),
-                page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_source_code_url)))));
+                context.getString(R.string.app_name),
+                page -> { })));
         rows.add(icon(R.drawable.ic_about_gavel, SettingsRow.action(context.getString(R.string.about_license),
                 context.getString(R.string.about_license_name),
-                page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_license_url)))));
+                page -> { })));
         rows.add(SettingsRow.custom(context.getString(R.string.mobile_about_tv_title), SettingsPages::tvTeaser));
 
         return new Page(context.getString(R.string.about_app, context.getString(R.string.app_name)), rows);
     }
 
     /**
-     * MEETUBE(about): a look at MeeTube TV at the bottom of About. The card leans with the phone and the
+     * GUTUBE(about): a look at GuTube TV at the bottom of About. The card leans with the phone and the
      * screenshot, a little zoomed, pans inside its rounded window. The button opens Install on TV.
      */
     private static android.view.View tvTeaser(@NonNull android.view.ViewGroup parent, @NonNull SettingsAdapter.Listener page) {
@@ -281,38 +277,31 @@ public final class SettingsPages {
         card.findViewById(R.id.about_tv_install).setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= 26 && page instanceof SettingsPageFragment) {
                 ((SettingsPageFragment) page).openPage(TV_INSTALL);
-            } else {
-                Utils.openLinkExt(context, "https://github.com/yashoncode/meetube-tv");
             }
         });
-        card.findViewById(R.id.about_tv_repo).setOnClickListener(v ->
-                Utils.openLinkExt(context, "https://github.com/yashoncode/meetube-tv"));
+        card.findViewById(R.id.about_tv_repo).setVisibility(android.view.View.GONE);
         TiltParallax.attach((android.view.ViewGroup) card, 0.6f, card.findViewById(R.id.about_tv_shot));
         return card;
     }
 
-    /** MEETUBE(about): an About row's icon, in the same glass bead as the top level's. */
+    /** GUTUBE(about): an About row's icon, in the same glass bead as the top level's. */
     private static SettingsRow icon(@androidx.annotation.DrawableRes int icon, SettingsRow row) {
         row.icon = icon;
         return row;
     }
 
     /**
-     * MEETUBE(about): who makes MeeTube - the GitHub photo, name and handle (each opens the profile),
-     * the coffee pill, and Star, Share and Send log as glass buttons.
+     * GUTUBE(about): static app card - mark, app name, status info and quick actions.
      */
     private static android.view.View aboutCard(@NonNull android.view.ViewGroup parent, @NonNull SettingsAdapter.Listener page) {
         Context context = parent.getContext();
         android.view.View card = android.view.LayoutInflater.from(context)
                 .inflate(R.layout.item_mobile_about_header, parent, false);
-        android.view.View.OnClickListener profile = v -> Utils.openLinkExt(context, context.getString(R.string.mobile_about_dev_url));
         for (int id : new int[] {R.id.about_avatar, R.id.about_name, R.id.about_handle}) {
-            card.findViewById(id).setOnClickListener(profile);
+            card.findViewById(id).setClickable(false);
+            card.findViewById(id).setFocusable(false);
         }
-        card.findViewById(R.id.about_avatar).setContentDescription(context.getString(R.string.mobile_about_made_by,
-                context.getString(R.string.mobile_about_dev_name)));
-        card.findViewById(R.id.about_coffee).setOnClickListener(v -> CoffeeSheet.show(context));
-        card.findViewById(R.id.about_star).setOnClickListener(v -> AboutShareRows.star(context));
+        card.findViewById(R.id.about_avatar).setContentDescription(context.getString(R.string.app_name));
         card.findViewById(R.id.about_share).setOnClickListener(v -> AboutShareRows.share(context));
         card.findViewById(R.id.about_log).setOnClickListener(v -> DiagnosticLog.share(context));
         ((android.widget.TextView) card.findViewById(R.id.about_terminal)).setText(androidx.core.text.HtmlCompat.fromHtml(
@@ -325,7 +314,7 @@ public final class SettingsPages {
         card.findViewById(R.id.about_cursor).startAnimation(blink);
         TiltParallax.attach((android.view.ViewGroup) card, card.findViewById(R.id.about_avatar), card.findViewById(R.id.about_name),
                 card.findViewById(R.id.about_handle), card.findViewById(R.id.about_terminal_box),
-                card.findViewById(R.id.about_coffee), card.findViewById(R.id.about_buttons));
+                card.findViewById(R.id.about_buttons));
         return card;
     }
 }

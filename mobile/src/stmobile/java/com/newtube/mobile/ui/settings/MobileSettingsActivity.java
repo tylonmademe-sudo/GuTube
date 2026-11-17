@@ -48,7 +48,7 @@ public class MobileSettingsActivity extends MobileActivity {
     }
 
     /**
-     * MEETUBE(status bar): the pages draw under the status bar, so their frosted top bar blends up
+     * GUTUBE(status bar): the pages draw under the status bar, so their frosted top bar blends up
      * through it instead of starting below a black strip; each page pads for the inset itself.
      */
     @Override

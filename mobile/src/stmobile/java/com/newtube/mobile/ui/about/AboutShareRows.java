@@ -27,31 +27,18 @@ public final class AboutShareRows {
     }
 
     public static List<OptionItem> create(Context context) {
-        List<OptionItem> rows = new ArrayList<>();
-
-        rows.add(UiOptionItem.from(
-                context.getString(R.string.mobile_about_star),
-                context.getString(R.string.mobile_about_star_desc),
-                option -> star(context)));
-
-        rows.add(UiOptionItem.from(
-                context.getString(R.string.mobile_about_share),
-                context.getString(R.string.mobile_about_share_desc),
-                option -> share(context)));
-
-        return rows;
+        return new ArrayList<>();
     }
 
     /** The repository on GitHub, where the star button is. */
     public static void star(Context context) {
-        Utils.openLinkExt(context, context.getString(R.string.mobile_about_repo_url));
+        // Static: no external developer redirect
     }
 
     public static void share(Context context) {
         Intent send = new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
-                .putExtra(Intent.EXTRA_TEXT, context.getString(R.string.mobile_about_share_text,
-                        context.getString(R.string.mobile_about_site_url)));
+                .putExtra(Intent.EXTRA_TEXT, context.getString(R.string.mobile_about_share_text));
 
         Intent chooser = Intent.createChooser(send, context.getString(R.string.mobile_about_share));
         chooser.putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, ownTextTargets(context, send));

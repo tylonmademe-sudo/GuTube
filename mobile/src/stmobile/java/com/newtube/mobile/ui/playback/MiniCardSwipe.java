@@ -19,7 +19,7 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.ui.common.Haptics;
 
 /**
- * MEETUBE(mini-float): the docked mini card floats free, like YouTube's Shorts mini player. Drag it
+ * GUTUBE(mini-float): the docked mini card floats free, like YouTube's Shorts mini player. Drag it
  * anywhere and it follows the finger; let go and it springs to the nearest corner of the screen,
  * the throw's direction counted. Flung hard sideways, or let go mostly past a side edge, it flies
  * off that side and the host closes the session (the old swipe to close). Taps are untouched: the
@@ -40,7 +40,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
         /** Committed: fly the card to {@code toTranslationX} over {@code durationMs}, then close. */
         void onSwipedAway(float toTranslationX, long durationMs);
 
-        /** A finger came down on the card (MEETUBE(mini-controls): its buttons come back). */
+        /** A finger came down on the card (GUTUBE(mini-controls): its buttons come back). */
         default void onTouched() {
         }
     }
@@ -55,7 +55,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     /** SystemUI's snap-back spring for a notification that did not go. */
     private static final float SNAP_STIFFNESS = 550f;
     private static final float SNAP_DAMPING = 0.75f;
-    /** MEETUBE(issue #125): riding the nav bar, a bouncier spring - a small overshoot, then rest. */
+    /** GUTUBE(issue #125): riding the nav bar, a bouncier spring - a small overshoot, then rest. */
     private static final float FOLLOW_STIFFNESS = 500f;
     private static final float FOLLOW_DAMPING = 0.55f;
     private static final long FLY_MIN_MS = 110;
@@ -72,11 +72,11 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     private float mStartX;
     private float mStartY;
     private boolean mDragging;
-    /** MEETUBE(issue #125): home's translation, below its laid-out place while the nav bar is away. */
+    /** GUTUBE(issue #125): home's translation, below its laid-out place while the nav bar is away. */
     private float mHomeY;
     /** The touch stopped being a drag (a second finger): consume it to the end. */
     private boolean mIgnoring;
-    /** MEETUBE(issue #233): transform while pinching, then commit a single layout. */
+    /** GUTUBE(issue #233): transform while pinching, then commit a single layout. */
     private final ScaleGestureDetector mPinch;
     private boolean mResizing;
     private ViewTreeObserver.OnPreDrawListener mResizeCommit;
@@ -144,7 +144,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     }
 
     /**
-     * MEETUBE(issue #125): home moves with the nav bar under it (slid off by a scroll, NavHider). A
+     * GUTUBE(issue #125): home moves with the nav bar under it (slid off by a scroll, NavHider). A
      * card resting at a bottom corner rides along; one at the top, held, or closing stays put.
      */
     public void setHomeY(float homeY) {
@@ -218,7 +218,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
         });
     }
 
-    /** MEETUBE(issue #233): the picture scales smoothly; the controls keep their 36dp boxes. */
+    /** GUTUBE(issue #233): the picture scales smoothly; the controls keep their 36dp boxes. */
     private void scaleCard(float scale) {
         mCard.setScaleX(scale);
         mCard.setScaleY(scale);
@@ -289,7 +289,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         boolean pinchable = MiniSize.type(mCard.getContext()) == MiniSize.DEFAULT;
         if (pinchable) {
-            // MEETUBE(issue #233): spans in screen pixels; scaling under the fingers must not feed
+            // GUTUBE(issue #233): spans in screen pixels; scaling under the fingers must not feed
             // the inverse, view-local span back into the detector on the next frame.
             MotionEvent screen = MotionEvent.obtain(event);
             screen.transform(mCard.getMatrix());
@@ -367,7 +367,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
                 return true;
             }
             case MotionEvent.ACTION_POINTER_DOWN:
-                // MEETUBE(issue #233): a second finger holds the dragged card in place for a pinch.
+                // GUTUBE(issue #233): a second finger holds the dragged card in place for a pinch.
                 if (mDragging) {
                     mDragging = false;
                     mIgnoring = true;
@@ -440,7 +440,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
         float centerX = homeLeft + mCard.getWidth() / 2f + mCard.getTranslationX() + velocityX * THROW_S;
         float homeCenterX = homeLeft + mCard.getWidth() / 2f;
         float x = Math.abs(centerX - homeCenterX) < Math.abs(centerX - (homeCenterX + otherSide)) ? 0f : otherSide;
-        // MEETUBE(issue #188): it rests where it is let go (thrown a little further), anywhere from
+        // GUTUBE(issue #188): it rests where it is let go (thrown a little further), anywhere from
         // the top spot down to home; near either end it snaps there.
         float y = Math.max(top, Math.min(mHomeY, mCard.getTranslationY() + velocityY * THROW_S));
         float snap = 48 * mDensity;
@@ -464,7 +464,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     }
 
     /**
-     * MEETUBE(issue #188): a card resting above home moves with Home's top bar: the top spot follows
+     * GUTUBE(issue #188): a card resting above home moves with Home's top bar: the top spot follows
      * it (under the chips, or under the status bar once it scrolls away), and one left higher than
      * the chips' bottom is pushed below them while they show.
      */
@@ -485,7 +485,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
     }
 
     /**
-     * MEETUBE(issue #188): the top spot sits under Home's chips when they show (a bar or a big card
+     * GUTUBE(issue #188): the top spot sits under Home's chips when they show (a bar or a big card
      * at a fixed 80dp landed on them), right under the status bar once Home's top bar has scrolled
      * away, and TOP_CLEARANCE_DP down on other screens.
      */

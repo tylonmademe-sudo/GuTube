@@ -22,7 +22,7 @@ import com.newtube.mobile.ui.playback.AmbientGlow;
 
 import java.security.MessageDigest;
 
-/** MEETUBE(playlist page): full-width cover wash follows the header, including under the toolbar. */
+/** GUTUBE(playlist page): full-width cover wash follows the header, including under the toolbar. */
 final class PlaylistBackdrop {
     private final View mHost;
     private final ImageView mImage;
@@ -88,7 +88,7 @@ final class PlaylistBackdrop {
         return context instanceof android.app.Activity && ((android.app.Activity) context).isDestroyed();
     }
 
-    /** MEETUBE(playlist page): blur on Glide's worker at 48x27, reusing the player's box blur. */
+    /** GUTUBE(playlist page): blur on Glide's worker at 48x27, reusing the player's box blur. */
     private static final class TinyBlur extends BitmapTransformation {
         @Override
         protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap source, int width, int height) {
@@ -100,7 +100,7 @@ final class PlaylistBackdrop {
 
         @Override
         public void updateDiskCacheKey(@NonNull MessageDigest digest) {
-            digest.update("meetube-playlist-cover-blur-v1".getBytes(CHARSET));
+            digest.update("gutube-playlist-cover-blur-v1".getBytes(CHARSET));
         }
 
         @Override

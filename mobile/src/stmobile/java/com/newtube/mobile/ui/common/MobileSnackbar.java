@@ -77,7 +77,7 @@ public final class MobileSnackbar {
             return;
         }
         sInstalled = true;
-        // MEETUBE(toasts): the shared code's messages too, as this pill rather than a system Toast.
+        // GUTUBE(toasts): the shared code's messages too, as this pill rather than a system Toast.
         MessageHelpers.setSink((context, message, isLong) ->
                 show(context, message, null, null, isLong ? ACTION_DURATION_MS : 0));
         // Card/section menu confirmations (pin to You, subscribe) come from the shared menu presenters.
@@ -246,7 +246,7 @@ public final class MobileSnackbar {
     /** A screen that is only a sheet over the one behind it: its message goes to that one. */
     private static boolean isOverlay(@Nullable Activity activity) {
         return activity instanceof MobileAppDialogActivity || activity instanceof MobileUpdateActivity
-                // MEETUBE(toasts): invisible screens that close at once (a folder or file picker's)
+                // GUTUBE(toasts): invisible screens that close at once (a folder or file picker's)
                 || activity instanceof com.newtube.mobile.downloads.DownloadFolderActivity
                 || activity instanceof com.newtube.mobile.ui.settings.SettingsTransferActivity
                 || activity instanceof com.newtube.mobile.ui.playback.SeekThumb;
@@ -279,7 +279,7 @@ public final class MobileSnackbar {
     }
 
     /**
-     * MEETUBE(toasts): the app's message pill - the page behind it frosted (the sheets' glass, with
+     * GUTUBE(toasts): the app's message pill - the page behind it frosted (the sheets' glass, with
      * their rim), fully rounded, no shadow (a see-through surface shows its own through itself);
      * held sideways, a compact pill on the right instead of a bar across the video.
      */
@@ -290,7 +290,7 @@ public final class MobileSnackbar {
         view.setBackgroundTintList(null);
         android.graphics.drawable.GradientDrawable tint = new android.graphics.drawable.GradientDrawable();
         tint.setCornerRadius(pill);
-        tint.setColor(ContextCompat.getColor(activity, R.color.meetube_toast_glass));
+        tint.setColor(ContextCompat.getColor(activity, R.color.gutube_toast_glass));
         view.setBackground(tint); // until the page's frosted copy lands
         view.setElevation(0f);
         view.setOutlineProvider(new android.view.ViewOutlineProvider() {
@@ -313,7 +313,7 @@ public final class MobileSnackbar {
             lp.gravity = Gravity.BOTTOM | Gravity.END;
             view.setLayoutParams(lp);
         }
-        SheetGlass.frost(view, activity.getWindow(), pill, ContextCompat.getColor(activity, R.color.meetube_toast_glass));
+        SheetGlass.frost(view, activity.getWindow(), pill, ContextCompat.getColor(activity, R.color.gutube_toast_glass));
     }
 
     private static final int PILL_RADIUS_DP = 64;

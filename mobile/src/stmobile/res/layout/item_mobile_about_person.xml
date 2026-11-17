@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(about): one person on the Contributors or Issue reporters page - GitHub photo in a
+<!-- GUTUBE(about): one person on the Contributors or Issue reporters page - GitHub photo in a
      glass bead, the GitHub name, and what they did. A tap opens their GitHub profile. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

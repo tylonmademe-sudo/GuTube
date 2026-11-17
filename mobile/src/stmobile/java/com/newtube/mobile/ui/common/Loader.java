@@ -9,8 +9,8 @@ import androidx.annotation.DrawableRes;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(loader): the loading spinner picked in Settings > Customization. Every spinner reads the
- * theme's {@code meetubeLoader} (Widget.MeeTube.GlassSpinner, Widget.MeeTube.Loader), so a pick is
+ * GUTUBE(loader): the loading spinner picked in Settings > Customization. Every spinner reads the
+ * theme's {@code gutubeLoader} (Widget.GuTube.GlassSpinner, Widget.GuTube.Loader), so a pick is
  * a theme overlay applied to each screen as it is created ({@link MobileActivity}); screens open
  * at the time are rebuilt on their next resume, the player keeps its spinner until it reopens.
  */
@@ -24,7 +24,7 @@ public final class Loader {
     public static final String GLASS_ORB = "glass_orb";
     public static final String MORPHING_BLOB = "morphing_blob";
     public static final String GLASS_ORBIT = "glass_orbit";
-    private static final String PREFS = "meetube_loader";
+    private static final String PREFS = "gutube_loader";
     private static final String KEY = "loader";
 
     private Loader() {
@@ -42,7 +42,7 @@ public final class Loader {
     @DrawableRes
     public static int drawable(String loader) {
         return FROSTED.equals(loader) ? R.drawable.avd_frosted_ring
-                : COOKIE.equals(loader) ? R.drawable.meetube_loader
+                : COOKIE.equals(loader) ? R.drawable.gutube_loader
                 : FROSTED_COOKIE.equals(loader) ? R.drawable.avd_frosted_cookie
                 : LIQUID_RING.equals(loader) ? R.drawable.avd_liquid_ring
                 : GLASS_ORB.equals(loader) ? R.drawable.avd_glass_orb
@@ -53,18 +53,18 @@ public final class Loader {
     /** Puts the picked loader into {@code theme}; the neon ring is the base theme's own. */
     static void applyTo(Context context, Resources.Theme theme) {
         String loader = current(context);
-        int overlay = FROSTED.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_Frosted
-                : COOKIE.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_Cookie
-                : FROSTED_COOKIE.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_FrostedCookie
-                : LIQUID_RING.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_LiquidRing
-                : GLASS_ORB.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_GlassOrb
-                : MORPHING_BLOB.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_MorphingBlob
-                : GLASS_ORBIT.equals(loader) ? R.style.ThemeOverlay_MeeTube_Loader_GlassOrbit : 0;
+        int overlay = FROSTED.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_Frosted
+                : COOKIE.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_Cookie
+                : FROSTED_COOKIE.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_FrostedCookie
+                : LIQUID_RING.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_LiquidRing
+                : GLASS_ORB.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_GlassOrb
+                : MORPHING_BLOB.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_MorphingBlob
+                : GLASS_ORBIT.equals(loader) ? R.style.ThemeOverlay_GuTube_Loader_GlassOrbit : 0;
         if (overlay != 0) {
             theme.applyStyle(overlay, true);
         }
-        Accent.applyTo(context, theme); // MEETUBE(accent): the same two call sites
-        YouTubeMode.applyTo(context, theme); // MEETUBE(youtube mode): and here
+        Accent.applyTo(context, theme); // GUTUBE(accent): the same two call sites
+        YouTubeMode.applyTo(context, theme); // GUTUBE(youtube mode): and here
     }
 
     private static SharedPreferences prefs(Context context) {

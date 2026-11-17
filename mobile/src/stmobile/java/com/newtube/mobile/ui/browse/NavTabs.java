@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * MEETUBE(nav tabs, issue #7): the bottom bar is Home | tab | tab | You with Search before, between
+ * GUTUBE(nav tabs, issue #7): the bottom bar is Home | tab | tab | You with Search before, between
  * or after the two tabs ({@link #searchPosition}), or up in the top bar ({@link #searchOnTop}).
  * Home and You are fixed; the tabs are picked and the order dragged in Settings > Customization >
  * Tabs (BarEditor), each tab one of {@link #CHOICES} or {@link #NONE}. Picking the tab the other
@@ -22,10 +22,29 @@ public final class NavTabs {
     public static final int NONE = -1;
     public static final int FIRST = 0;
     public static final int SECOND = 1;
+    public static final int ITEM_SEARCH = -102;
+    public static final int ITEM_YOU = -103;
+    public static final int ITEM_CAST = -104;
     /** What a slot can hold, in the order Settings lists them. */
     public static final int[] CHOICES = {MediaGroup.TYPE_SHORTS, MediaGroup.TYPE_SUBSCRIPTIONS,
-            VideoDownloads.SECTION_ID, MediaGroup.TYPE_HISTORY, MediaGroup.TYPE_TRENDING};
-    private static final String PREFS = "meetube_nav_tabs";
+            VideoDownloads.SECTION_ID, MediaGroup.TYPE_HISTORY, MediaGroup.TYPE_TRENDING,
+            MediaGroup.TYPE_USER_PLAYLISTS};
+    /** All available buttons and tabs that can be freely placed and customized in top or bottom bars. */
+    public static final int[] ALL_BUTTON_CHOICES = {
+            MediaGroup.TYPE_HOME,
+            ITEM_SEARCH,
+            ITEM_CAST,
+            ITEM_YOU,
+            MediaGroup.TYPE_SHORTS,
+            MediaGroup.TYPE_SUBSCRIPTIONS,
+            VideoDownloads.SECTION_ID,
+            MediaGroup.TYPE_HISTORY,
+            MediaGroup.TYPE_TRENDING,
+            MediaGroup.TYPE_USER_PLAYLISTS
+    };
+    private static final String PREFS = "gutube_nav_tabs";
+    private static final String KEY_TOP_ITEMS = "top_bar_items_v2";
+    private static final String KEY_BOTTOM_ITEMS = "bottom_bar_items_v2";
     private static final String[] KEYS = {"before_search", "after_search"}; // the names from when Search sat between
     private static final String KEY_LABELS = "labels";
     private static final String KEY_HOME = "home";
@@ -35,7 +54,7 @@ public final class NavTabs {
     private static final String KEY_SEARCH_FAB_LEFT = "search_fab_left";
     private static final String KEY_TOP_BAR_PINNED = "top_bar_pinned";
     private static final String KEY_LIBRARY_ORDER = "library_order";
-    // MEETUBE(you order): section ids and account playlists share one Library order.
+    // GUTUBE(you order): section ids and account playlists share one Library order.
     private static final List<String> DEFAULT_LIBRARY_ORDER = Arrays.asList(
             String.valueOf(MediaGroup.TYPE_SUBSCRIPTIONS), String.valueOf(VideoDownloads.SECTION_ID), "WL", "LL",
             String.valueOf(MediaGroup.TYPE_USER_PLAYLISTS), String.valueOf(MediaGroup.TYPE_MY_VIDEOS),
@@ -61,7 +80,7 @@ public final class NavTabs {
         editor.apply();
     }
 
-    /** MEETUBE(you order): discard stale keys and append new defaults after the saved order. */
+    /** GUTUBE(you order): discard stale keys and append new defaults after the saved order. */
     public static List<String> libraryOrder(Context context) {
         return normalizeLibraryOrder(Arrays.asList(prefs(context).getString(KEY_LIBRARY_ORDER, "").split(",")));
     }
@@ -85,7 +104,7 @@ public final class NavTabs {
         return order;
     }
 
-    /** MEETUBE(you page): the You page's Liked videos ("LL") and Watch later ("WL") rows, on by default. */
+    /** GUTUBE(you page): the You page's Liked videos ("LL") and Watch later ("WL") rows, on by default. */
     public static boolean showLibraryPlaylist(Context context, String playlistId) {
         return prefs(context).getBoolean("you_" + playlistId, true);
     }
@@ -95,7 +114,7 @@ public final class NavTabs {
     }
 
     /**
-     * MEETUBE(issue #213): Settings > Customization > Tabs, a tap on Home - off, the bar has no Home
+     * GUTUBE(issue #213): Settings > Customization > Tabs, a tap on Home - off, the bar has no Home
      * and the app opens on its first tab that is a feed (else You), for a feed-free app.
      */
     public static boolean showHome(Context context) {
@@ -114,6 +133,12 @@ public final class NavTabs {
         if (showHome(context)) {
             return MediaGroup.TYPE_HOME;
         }
+        List<Integer> bottomItems = getBottomBarItems(context);
+        for (int id : bottomItems) {
+            if (id != NONE && id != ITEM_SEARCH && id != ITEM_CAST && id != ITEM_YOU && id != MediaGroup.TYPE_SHORTS) {
+                return id;
+            }
+        }
         for (int slot : new int[] {FIRST, SECOND}) {
             int id = get(context, slot);
             if (id != NONE && id != MediaGroup.TYPE_SHORTS) {
@@ -123,7 +148,7 @@ public final class NavTabs {
         return NONE;
     }
 
-    /** MEETUBE(nav labels): Settings > Customization > Tab names - the names under the bar's icons. */
+    /** GUTUBE(nav labels): Settings > Customization > Tab names - the names under the bar's icons. */
     public static boolean showLabels(Context context) {
         return prefs(context).getBoolean(KEY_LABELS, true);
     }
@@ -132,7 +157,7 @@ public final class NavTabs {
         prefs(context).edit().putBoolean(KEY_LABELS, show).apply();
     }
 
-    /** MEETUBE(brand name): Settings > Customization > App name in the top bar - off, the brand pill is only the icon. */
+    /** GUTUBE(brand name): Settings > Customization > App name in the top bar - off, the brand pill is only the icon. */
     public static boolean showBrandName(Context context) {
         return prefs(context).getBoolean(KEY_BRAND_NAME, true);
     }
@@ -141,13 +166,139 @@ public final class NavTabs {
         prefs(context).edit().putBoolean(KEY_BRAND_NAME, show).apply();
     }
 
-    /** MEETUBE(search place): Settings > Customization > Tabs - Search in the top bar instead of the bottom one. */
+    /** Whether Search is placed in the top bar. */
     public static boolean searchOnTop(Context context) {
-        // MEETUBE(youtube mode): Search sits in the top bar, as on YouTube.
-        return com.newtube.mobile.ui.common.YouTubeMode.isOn(context) || prefs(context).getBoolean(KEY_SEARCH_ON_TOP, false);
+        String savedTop = prefs(context).getString(KEY_TOP_ITEMS, null);
+        if (savedTop != null) {
+            return parseItemList(savedTop).contains(ITEM_SEARCH);
+        }
+        return prefs(context).getBoolean(KEY_SEARCH_ON_TOP, false);
     }
 
-    /** MEETUBE(search fab): the floating Search, out while the bar is slid away, at the left corner (else the right). */
+    /** Top bar customizable items. */
+    public static List<Integer> getTopBarItems(Context context) {
+        String saved = prefs(context).getString(KEY_TOP_ITEMS, null);
+        if (saved != null) {
+            return parseItemList(saved);
+        }
+        List<Integer> list = new ArrayList<>();
+        if (com.newtube.mobile.ui.common.HomeBar.castShown(context)) {
+            list.add(ITEM_CAST);
+        }
+        if (prefs(context).getBoolean(KEY_SEARCH_ON_TOP, false)) {
+            list.add(ITEM_SEARCH);
+        }
+        return list;
+    }
+
+    /** Bottom bar customizable items. */
+    public static List<Integer> getBottomBarItems(Context context) {
+        String saved = prefs(context).getString(KEY_BOTTOM_ITEMS, null);
+        if (saved != null) {
+            return parseItemList(saved);
+        }
+        List<Integer> list = new ArrayList<>();
+        if (showHome(context)) {
+            list.add(MediaGroup.TYPE_HOME);
+        }
+        list.add(get(context, FIRST));
+        if (!searchOnTop(context)) {
+            list.add(ITEM_SEARCH);
+        }
+        int second = get(context, SECOND);
+        if (!list.contains(second)) {
+            list.add(second);
+        }
+        list.add(ITEM_YOU);
+        return list;
+    }
+
+    /** Saves full customizable bar order from drag-and-drop editor. */
+    public static void saveBarItems(Context context, List<Integer> topItems, List<Integer> bottomItems) {
+        boolean searchOnTop = topItems.contains(ITEM_SEARCH);
+        boolean castShown = topItems.contains(ITEM_CAST) || bottomItems.contains(ITEM_CAST);
+        com.newtube.mobile.ui.common.HomeBar.setCastShown(context, castShown);
+
+        List<Integer> cleanTop = new ArrayList<>();
+        for (int item : topItems) {
+            if (item != NONE && !cleanTop.contains(item)) {
+                cleanTop.add(item);
+            }
+        }
+        List<Integer> cleanBottom = new ArrayList<>();
+        for (int item : bottomItems) {
+            if (item != NONE && !cleanTop.contains(item) && !cleanBottom.contains(item)) {
+                cleanBottom.add(item);
+            }
+        }
+
+        int first = -1;
+        int second = -1;
+        int searchPos = 0;
+        int tabCount = 0;
+        for (int item : cleanBottom) {
+            if (item == ITEM_SEARCH) {
+                searchPos = tabCount;
+            } else if (item != MediaGroup.TYPE_HOME && item != ITEM_YOU && item != ITEM_CAST) {
+                if (first == -1) {
+                    first = item;
+                } else if (second == -1) {
+                    second = item;
+                }
+                tabCount++;
+            }
+        }
+        if (first == -1) first = DEFAULTS[FIRST];
+        if (second == -1) second = DEFAULTS[SECOND];
+
+        prefs(context).edit()
+                .putString(KEY_TOP_ITEMS, serializeItemList(cleanTop))
+                .putString(KEY_BOTTOM_ITEMS, serializeItemList(cleanBottom))
+                .putInt(KEYS[FIRST], first)
+                .putInt(KEYS[SECOND], second)
+                .putInt(KEY_SEARCH_POSITION, searchPos)
+                .putBoolean(KEY_SEARCH_ON_TOP, searchOnTop)
+                .putBoolean(KEY_HOME, cleanBottom.contains(MediaGroup.TYPE_HOME) || cleanTop.contains(MediaGroup.TYPE_HOME))
+                .apply();
+    }
+
+    public static void resetLayout(Context context) {
+        prefs(context).edit()
+                .remove(KEY_TOP_ITEMS)
+                .remove(KEY_BOTTOM_ITEMS)
+                .putInt(KEYS[FIRST], DEFAULTS[FIRST])
+                .putInt(KEYS[SECOND], DEFAULTS[SECOND])
+                .putInt(KEY_SEARCH_POSITION, 1)
+                .putBoolean(KEY_SEARCH_ON_TOP, false)
+                .putBoolean(KEY_HOME, true)
+                .apply();
+        com.newtube.mobile.ui.common.HomeBar.setCastShown(context, true);
+    }
+
+    private static List<Integer> parseItemList(String s) {
+        List<Integer> list = new ArrayList<>();
+        if (TextUtils.isEmpty(s)) {
+            return list;
+        }
+        for (String part : s.split(",")) {
+            try {
+                list.add(Integer.parseInt(part.trim()));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return list;
+    }
+
+    private static String serializeItemList(List<Integer> list) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            if (i > 0) sb.append(',');
+            sb.append(list.get(i));
+        }
+        return sb.toString();
+    }
+
+    /** GUTUBE(search fab): the floating Search, out while the bar is slid away, at the left corner (else the right). */
     public static boolean searchFabLeft(Context context) {
         return prefs(context).getBoolean(KEY_SEARCH_FAB_LEFT, false);
     }
@@ -156,7 +307,7 @@ public final class NavTabs {
         prefs(context).edit().putBoolean(KEY_SEARCH_FAB_LEFT, left).apply();
     }
 
-    /** MEETUBE(issue #181): the top pills stay while a feed scrolls; off (default) they slide away like the bottom bar. */
+    /** GUTUBE(issue #181): the top pills stay while a feed scrolls; off (default) they slide away like the bottom bar. */
     public static boolean topBarAlwaysShown(Context context) {
         return prefs(context).getBoolean(KEY_TOP_BAR_PINNED, false);
     }

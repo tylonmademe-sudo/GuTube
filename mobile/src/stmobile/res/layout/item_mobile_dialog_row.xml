@@ -5,7 +5,7 @@
   which trailing control (if any) is visible and whether the row is clickable per row type,
   instead of maintaining five near-identical layouts.
 
-  MEETUBE(menu-sheet): an action leads with its icon (DialogRowAdapter.iconFor), and a press lights
+  GUTUBE(menu-sheet): an action leads with its icon (DialogRowAdapter.iconFor), and a press lights
   a rounded highlight inset from the sheet's edges, as in YouTube's own menus.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +14,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
-    android:background="@drawable/bg_mobile_menu_row"
+    android:background="@android:color/transparent"
+    android:foreground="@null"
     android:gravity="center_vertical"
     android:minHeight="52dp"
     android:orientation="horizontal"

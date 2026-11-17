@@ -28,6 +28,7 @@ Thumbs.db
 # Android Studio
 .idea
 *.iml
+.kotlin/
 
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
@@ -82,5 +83,5 @@ dist/
 # Python bytecode from tools/*.py
 __pycache__/
 
-# MeeTube TV: its own git repo (a SmartTube clone), never part of the phone app
-/meetubetv/
+# EUTube TV: its own git repo (a SmartTube clone), never part of the phone app
+/eutubetv/

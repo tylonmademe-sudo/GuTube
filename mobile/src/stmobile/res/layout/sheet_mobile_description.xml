@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  MEETUBE(description): YouTube's Description panel, opened from the watch page's title. A title +
+  GUTUBE(description): YouTube's Description panel, opened from the watch page's title. A title +
   close header, then the video title, a Likes / Views / date row (DescriptionSheet fills it) and the
   description. Title and description are selectable: long-press to copy; links still open on a tap.
   The frame is the frosted sheet glass; its height is capped from code so it stops under the video.
@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <View
@@ -43,7 +43,8 @@
             android:id="@+id/description_sheet_close"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
+            android:foreground="@null"
             android:contentDescription="@string/mobile_sheet_close"
             android:src="@drawable/ic_sheet_close" />
 

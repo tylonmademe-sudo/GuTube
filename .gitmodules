@@ -1,6 +1,6 @@
 [submodule "SharedModules"]
 	path = SharedModules
-	url = https://github.com/yashoncode/SharedModules
+	url = https://github.com/gutube/SharedModules
 [submodule "MediaServiceCore"]
 	path = MediaServiceCore
-	url = https://github.com/yashoncode/MediaServiceCore
+	url = https://github.com/gutube/MediaServiceCore

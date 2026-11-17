@@ -1,37 +1,37 @@
-<p align="center"><img src=".github/assets/meetube/icon.png" width="112" alt="MeeTube logo"></p>
+<p align="center"><img src=".github/assets/gutube/icon.png" width="112" alt="GuTube logo"></p>
 
-<h1 align="center">MeeTube</h1>
+<h1 align="center">GuTube</h1>
 
 <p align="center">
-<a href="https://github.com/yashoncode/meetube/releases/latest"><img src="https://img.shields.io/github/v/release/yashoncode/meetube?style=for-the-badge&label=Release&color=0e75b6" alt="Release"></a>
-<a href="LICENSE"><img src="https://img.shields.io/github/license/yashoncode/meetube?style=for-the-badge&label=License&color=e8743b" alt="License"></a>
-<a href="https://github.com/yashoncode/meetube/releases"><img src="https://img.shields.io/github/downloads/yashoncode/meetube/total?style=for-the-badge&label=Downloads&color=4c1" alt="Downloads"></a>
+<a href="https://github.com/gutube/gutube/releases/latest"><img src="https://img.shields.io/github/v/release/gutube/gutube?style=for-the-badge&label=Release&color=0e75b6" alt="Release"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/gutube/gutube?style=for-the-badge&label=License&color=e8743b" alt="License"></a>
+<a href="https://github.com/gutube/gutube/releases"><img src="https://img.shields.io/github/downloads/gutube/gutube/total?style=for-the-badge&label=Downloads&color=4c1" alt="Downloads"></a>
 </p>
 
 **YouTube, reimagined. Different by design. Smooth by nature.** <br><br> No ads. No interruptions. Just a gorgeous liquid glass interface, synced lyrics, background playback, and one-tap downloads.<br><br> **A fresh way to experience YouTube.**<br><br>
 
-<p align="center"><img src=".github/assets/meetube/showcase.webp" width="100%" alt="MeeTube in seven cards: Watch (no ads, real dislikes), Synced lyrics (every line, right on time), Home (videos play as you scroll), Channels (posts, Shorts and live chat), YouTube mode (the look you know), Equalizer (tune how it sounds) and Offline (4K, smart and auto downloads)"></p>
+<p align="center"><img src=".github/assets/gutube/showcase.webp" width="100%" alt="GuTube in seven cards: Watch (no ads, real dislikes), Synced lyrics (every line, right on time), Home (videos play as you scroll), Channels (posts, Shorts and live chat), YouTube mode (the look you know), Equalizer (tune how it sounds) and Offline (4K, smart and auto downloads)"></p>
 
 <p align="center">
-<img src=".github/assets/meetube/screens/home.jpg" width="24%" alt="Home, the top video playing as you scroll">
-<img src=".github/assets/meetube/screens/compact_player.jpg" width="24%" alt="The compact watch page">
-<img src=".github/assets/meetube/lyrics.jpg" width="24%" alt="Synced lyrics under the video">
-<img src=".github/assets/meetube/screens/youtube_mode.jpg" width="24%" alt="YouTube mode: a flat bottom bar and text tabs">
+<img src=".github/assets/gutube/screens/home.jpg" width="24%" alt="Home, the top video playing as you scroll">
+<img src=".github/assets/gutube/screens/compact_player.jpg" width="24%" alt="The compact watch page">
+<img src=".github/assets/gutube/lyrics.jpg" width="24%" alt="Synced lyrics under the video">
+<img src=".github/assets/gutube/screens/youtube_mode.jpg" width="24%" alt="YouTube mode: a flat bottom bar and text tabs">
 </p>
 
-<p align="center"><a href="https://github.com/yashoncode/meetube/releases/latest"><b>⬇ Download the latest MeeTube</b></a></p>
+<p align="center"><a href="https://github.com/gutube/gutube/releases/latest"><b>⬇ Download the latest GuTube</b></a></p>
 
-<p align="center"><a href="#meetube-tv"><b>📺 On a TV? Get MeeTube TV</b></a></p>
+<p align="center"><a href="#gutube-tv"><b>📺 On a TV? Get GuTube TV</b></a></p>
 
 > [!IMPORTANT]
-> MeeTube is not affiliated with, endorsed by, or connected to YouTube or Google in any way. Use it at your own discretion.
+> GuTube is not affiliated with, endorsed by, or connected to YouTube or Google in any way. Use it at your own discretion.
 
 ## Features
 
 <table>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/screens/home.jpg" alt="Home with autoplay"></td>
-<td width="25%"><img src=".github/assets/meetube/screens/youtube_mode.jpg" alt="YouTube mode"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/home.jpg" alt="Home with autoplay"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/youtube_mode.jpg" alt="YouTube mode"></td>
 <td width="50%">
 
 ### Liquid glass, or YouTube mode
@@ -40,8 +40,8 @@ Frosted glass on the tab bar, the player and Shorts, lit by a glow that follows 
 </td>
 </tr>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/screens/compact_player.jpg" alt="Compact watch page"></td>
-<td width="25%"><img src=".github/assets/meetube/screens/most_replayed.jpg" alt="Most replayed graph"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/compact_player.jpg" alt="Compact watch page"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/most_replayed.jpg" alt="Most replayed graph"></td>
 <td width="50%">
 
 ### A player that shows more
@@ -50,8 +50,8 @@ The compact watch page puts the actions beside Subscribe and the top comments ri
 </td>
 </tr>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/lyrics.jpg" alt="Synced lyrics"></td>
-<td width="25%"><img src=".github/assets/meetube/screens/equalizer.jpg" alt="Equalizer in the player"></td>
+<td width="25%"><img src=".github/assets/gutube/lyrics.jpg" alt="Synced lyrics"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/equalizer.jpg" alt="Equalizer in the player"></td>
 <td width="50%">
 
 ### Synced lyrics and an equalizer
@@ -60,8 +60,8 @@ Music videos get live, line-by-line lyrics from the provider you pick. The **equ
 </td>
 </tr>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/screens/channel.jpg" alt="A channel page"></td>
-<td width="25%"><img src=".github/assets/meetube/screens/posts.jpg" alt="Community posts"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/channel.jpg" alt="A channel page"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/posts.jpg" alt="Community posts"></td>
 <td width="50%">
 
 ### Channels, posts and live chat
@@ -70,8 +70,8 @@ Channel pages with the banner, Subscribe and every tab. Like and reply to **comm
 </td>
 </tr>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/screens/search.jpg" alt="Search with filters"></td>
-<td width="25%"><img src=".github/assets/meetube/screens/subscriptions.jpg" alt="Subscriptions"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/search.jpg" alt="Search with filters"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/subscriptions.jpg" alt="Subscriptions"></td>
 <td width="50%">
 
 ### Search and Subscriptions
@@ -80,7 +80,7 @@ YouTube's one-tap chips for Videos, Shorts, Live and Recently uploaded, plus the
 </td>
 </tr>
 <tr>
-<td width="25%"><img src=".github/assets/meetube/screens/you.jpg" alt="The You page with Downloads"></td>
+<td width="25%"><img src=".github/assets/gutube/screens/you.jpg" alt="The You page with Downloads"></td>
 <td colspan="2">
 
 ### Downloads in 4K, smart and automatic
@@ -104,71 +104,56 @@ Save videos up to **4K** in any folder you pick. **Smart downloads** remember yo
 
 ## Download
 
-Get the APK for your phone from [Releases](https://github.com/yashoncode/meetube/releases/latest):
+Get the APK for your phone from [Releases](https://github.com/gutube/gutube/releases/latest):
 
 | Your device | File |
 |:--|:--|
-| Most phones (64-bit) | `MeeTube_<version>_arm64-v8a.apk` |
-| Older phones (32-bit) | `MeeTube_<version>_armeabi-v7a.apk` |
-| Not sure | `MeeTube_<version>_universal.apk` |
+| Most phones (64-bit) | `GuTube_<version>_arm64-v8a.apk` |
+| Older phones (32-bit) | `GuTube_<version>_armeabi-v7a.apk` |
+| Not sure | `GuTube_<version>_universal.apk` |
 
 Android 7.0 or later.
 
-Every release is built and signed in public by [GitHub Actions](https://github.com/yashoncode/meetube/actions/workflows/release.yml) from this repository's source, so you can see exactly how each APK was made.
+Every release is built and signed in public by [GitHub Actions](https://github.com/gutube/gutube/actions/workflows/release.yml) from this repository's source, so you can see exactly how each APK was made.
 
-## MeeTube TV
+## GuTube TV
 
-MeeTube's glass design on Android TV and Google TV, tuned its own way. It installs as its own app and updates itself.
+GuTube's glass design on Android TV and Google TV, tuned its own way. It installs as its own app and updates itself.
 
-- **Glass Home.** A frosted sidebar with a focus pill that glides between MeeTube's icons.
+- **Glass Home.** A frosted sidebar with a focus pill that glides between GuTube's icons.
 - **Glass player.** One frosted panel at the bottom: a seek bar with a glowing knob, and every button in a single row.
 - **Search that glows.** The screen's edges light up when Search opens, and your words glow as you type.
 
 <p align="center">
-<a href="https://github.com/yashoncode/meetube-tv"><img src="https://raw.githubusercontent.com/yashoncode/meetube-tv/main/.github/assets/meetube/tv_home.jpg" width="49%" alt="MeeTube TV: Home with the glass sidebar open"></a>
-<a href="https://github.com/yashoncode/meetube-tv"><img src="https://raw.githubusercontent.com/yashoncode/meetube-tv/main/.github/assets/meetube/tv_player.jpg" width="49%" alt="MeeTube TV: the glass player, every button in one row"></a>
-<a href="https://github.com/yashoncode/meetube-tv"><img src="https://raw.githubusercontent.com/yashoncode/meetube-tv/main/.github/assets/meetube/tv_shorts_player.jpg" width="49%" alt="MeeTube TV: a short in a rounded 9:16 card, its colors glowing around it"></a>
-<a href="https://github.com/yashoncode/meetube-tv"><img src="https://raw.githubusercontent.com/yashoncode/meetube-tv/main/.github/assets/meetube/tv_search.jpg" width="49%" alt="MeeTube TV: search results with suggestions on top"></a>
+<a href="https://github.com/gutube/gutube-tv"><img src="https://raw.githubusercontent.com/gutube/gutube-tv/main/.github/assets/gutube/tv_home.jpg" width="49%" alt="GuTube TV: Home with the glass sidebar open"></a>
+<a href="https://github.com/gutube/gutube-tv"><img src="https://raw.githubusercontent.com/gutube/gutube-tv/main/.github/assets/gutube/tv_player.jpg" width="49%" alt="GuTube TV: the glass player, every button in one row"></a>
+<a href="https://github.com/gutube/gutube-tv"><img src="https://raw.githubusercontent.com/gutube/gutube-tv/main/.github/assets/gutube/tv_shorts_player.jpg" width="49%" alt="GuTube TV: a short in a rounded 9:16 card, its colors glowing around it"></a>
+<a href="https://github.com/gutube/gutube-tv"><img src="https://raw.githubusercontent.com/gutube/gutube-tv/main/.github/assets/gutube/tv_search.jpg" width="49%" alt="GuTube TV: search results with suggestions on top"></a>
 </p>
 
-<p align="center"><a href="https://github.com/yashoncode/meetube-tv"><b>📺 Get MeeTube TV for your Android TV</b></a></p>
+<p align="center"><a href="https://github.com/gutube/gutube-tv"><b>📺 Get GuTube TV for your Android TV</b></a></p>
 
-Downloads, the changelog and the code all live in [meetube-tv](https://github.com/yashoncode/meetube-tv). Get the newest APK from its [latest release](https://github.com/yashoncode/meetube-tv/releases/latest), and report TV bugs in its [issues](https://github.com/yashoncode/meetube-tv/issues).
+Downloads, the changelog and the code all live in [gutube-tv](https://github.com/gutube/gutube-tv). Get the newest APK from its [latest release](https://github.com/gutube/gutube-tv/releases/latest), and report TV bugs in its [issues](https://github.com/gutube/gutube-tv/issues).
 
 ## Build
 
 ```
 ./gradlew :mobile:assembleStmobileDebug     # debug, for testing
 ./gradlew :mobile:assembleStmobileRelease   # release, signed with keystore.properties if present
-# APKs: mobile/build/outputs/renamed_apks/stmobile<Type>/MeeTube_<version>_<abi>.apk
+# APKs: mobile/build/outputs/renamed_apks/stmobile<Type>/GuTube_<version>_<abi>.apk
 ```
 
-Releases are made by pushing a `vX.Y.Z` tag: [release.yml](.github/workflows/release.yml) builds the signed APKs and publishes the GitHub release with its changelog. The glass is `mobile/src/stmobile/java/com/newtube/mobile/ui/common/GlassView.java`; the README showcase comes from `python tools/render_showcase.py`. Clone with `--recurse-submodules`. The backend lives in the `MediaServiceCore` and `SharedModules` submodules (MeeTube's own forks). Add `-PemulatorAbi` to run on an x86_64 emulator. Developer notes are in [CLAUDE.md](CLAUDE.md).
+Releases are made by pushing a `vX.Y.Z` tag: [release.yml](.github/workflows/release.yml) builds the signed APKs and publishes the GitHub release with its changelog. The glass is `mobile/src/stmobile/java/com/newtube/mobile/ui/common/GlassView.java`; the README showcase comes from `python tools/render_showcase.py`. Clone with `--recurse-submodules`. The backend lives in the `MediaServiceCore` and `SharedModules` submodules (GuTube's own forks). Add `-PemulatorAbi` to run on an x86_64 emulator. Developer notes are in [CLAUDE.md](CLAUDE.md).
 
-## Support MeeTube
-
-Behind every little feature are hours of my life, a few sleepless nights, and a lot of hope that someone out there finds it useful.
-
-❤️ If you love my work, buy me a coffee. ☕<br>
-If you don't, maybe buy me a tea? 🍵
-
-No pressure, though. I built this with love, not expectations. ❤️
-
-<p align="center"><a href="https://buymeacoffee.com/yashwynth"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="Buy me a coffee"></a></p>
-
-In India? Scan to send a coffee (or a chai) over UPI (`yashwynth@slc`):
-
-<p align="center"><img src=".github/assets/meetube/upi-qr.jpeg" width="240" alt="UPI QR code for yashwynth@slc"></p>
-
-A star on GitHub or sharing MeeTube with a friend helps just as much. Thank you for using it! ❤️
+## Support GuTube
 
 ## Credits
 
-Big thanks to [SmartTube](https://github.com/yuliskov/SmartTube) by [@yuliskov](https://github.com/yuliskov) and [NewTube](https://github.com/aleixrodriala/newtube) by [@aleixrodriala](https://github.com/aleixrodriala). Their open source work made MeeTube and MeeTube TV possible.
+Big thanks to [SmartTube](https://github.com/yuliskov/SmartTube) by [@yuliskov](https://github.com/yuliskov) and [NewTube](https://github.com/aleixrodriala/newtube) by [@aleixrodriala](https://github.com/aleixrodriala). Their open source work made GuTube and GuTube TV possible.
 
 Headphone correction uses the profiles from [AutoEq](https://github.com/jaakkopasanen/AutoEq) by [@jaakkopasanen](https://github.com/jaakkopasanen).
 
-And thank you to everyone who sent a fix, reported a bug or suggested an idea. MeeTube is better because of you:
+And thank you to everyone who sent a fix, reported a bug or suggested an idea. GuTube is better because of you:
 
 <p align="center">
 <a href="https://github.com/KrishnakantShedge" title="KrishnakantShedge"><img src="https://github.com/KrishnakantShedge.png?size=96" width="48" height="48" alt="KrishnakantShedge"></a>

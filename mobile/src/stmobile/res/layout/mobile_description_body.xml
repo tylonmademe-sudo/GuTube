@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(description-panel): shared description content for the panel and dialog. -->
+<!-- GUTUBE(description-panel): shared description content for the panel and dialog. -->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/description_sheet_body"
@@ -47,7 +47,7 @@
             android:textSize="14sp"
             tools:text="The official video for Never Gonna Give You Up by Rick Astley." />
 
-        <!-- MEETUBE(transcript): YouTube's Transcript section; only for a video with captions. -->
+        <!-- GUTUBE(transcript): YouTube's Transcript section; only for a video with captions. -->
         <LinearLayout
             android:id="@+id/description_sheet_transcript"
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
 
         </LinearLayout>
 
-        <!-- MEETUBE(description): the channel - Subscribe mirrors the watch page's; the picture or the
+        <!-- GUTUBE(description): the channel - Subscribe mirrors the watch page's; the picture or the
              name opens the channel. -->
         <LinearLayout
             android:id="@+id/description_sheet_channel"
@@ -162,7 +162,7 @@
 
         </LinearLayout>
 
-        <!-- MEETUBE(description): Date / Views / Likes in full, on one glass card (DescriptionSheet). -->
+        <!-- GUTUBE(description): Date / Views / Likes in full, on one glass card (DescriptionSheet). -->
         <LinearLayout
             android:id="@+id/description_sheet_details"
             android:layout_width="match_parent"

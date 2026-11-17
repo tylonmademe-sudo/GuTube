@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mobile_settings_restart_needed">Uruchom ponownie MeeTube, aby zastosować tę zmianę</string>
+    <string name="mobile_settings_restart_needed">Uruchom ponownie GuTube, aby zastosować tę zmianę</string>
     <string name="mobile_settings_restart">Uruchom ponownie</string>
     <string name="mobile_settings_off">Wył.</string>
     <string name="mobile_settings_more">Więcej</string>
@@ -80,13 +80,13 @@
     <string name="mobile_settings_battery_light_desc">Bez animacji i zwykłe szkło zamiast matowego rozmycia</string>
     <string name="mobile_settings_battery_keep">Zostaw efekty</string>
     <string name="mobile_settings_battery_keep_desc">Wszystko wygląda i porusza się jak zwykle</string>
-    <string name="mobile_settings_battery_note">Animacje, matowe szkło i płynna soczewka odświeżają ekran wiele razy na sekundę. Gdy w ustawieniach telefonu włączone jest oszczędzanie baterii, MeeTube może je pominąć, by oszczędzać energię. Wracają, gdy oszczędzanie baterii się wyłączy.</string>
+    <string name="mobile_settings_battery_note">Animacje, matowe szkło i płynna soczewka odświeżają ekran wiele razy na sekundę. Gdy w ustawieniach telefonu włączone jest oszczędzanie baterii, GuTube może je pominąć, by oszczędzać energię. Wracają, gdy oszczędzanie baterii się wyłączy.</string>
     <string name="mobile_battery_saver_ask">Oszczędzanie baterii jest włączone. Wyłączyć animacje i matowe szkło na ten czas?</string>
     <string name="mobile_battery_saver_ask_action">Wyłącz</string>
     <string name="mobile_settings_storage_device">Pamięć urządzenia</string>
     <string name="mobile_settings_storage_used">Zajęte: %1$s z %2$s</string>
     <string name="mobile_settings_storage_free">Wolne: %1$s</string>
-    <string name="mobile_settings_storage_app">Używane przez MeeTube</string>
+    <string name="mobile_settings_storage_app">Używane przez GuTube</string>
     <string name="mobile_settings_storage_total">Łącznie: %1$s</string>
     <string name="mobile_settings_storage_app_size">Aplikacja</string>
     <string name="mobile_settings_storage_cache">Pamięć podręczna filmów i obrazów</string>
@@ -99,7 +99,7 @@
     <string name="mobile_settings_advanced_summary">Strumieniowanie, sieć i poprawki</string>
     <string name="mobile_settings_about">O aplikacji</string>
     <string name="mobile_settings_coffee">Postaw mi kawę</string>
-    <string name="mobile_settings_coffee_summary">Jeśli lubisz MeeTube i chcesz wesprzeć projekt</string>
+    <string name="mobile_settings_coffee_summary">Jeśli lubisz GuTube i chcesz wesprzeć projekt</string>
     <string name="mobile_settings_language">Język</string>
     <string name="mobile_settings_country">Lokalizacja</string>
     <string name="mobile_settings_start_screen">Ekran startowy</string>
@@ -120,7 +120,7 @@
     <string name="mobile_settings_nav_labels">Nazwy kart</string>
     <string name="mobile_settings_nav_labels_summary">Pokazuj nazwę każdej karty pod jej ikoną na dolnym pasku</string>
     <string name="mobile_settings_brand_name">Nazwa aplikacji na górnym pasku</string>
-    <string name="mobile_settings_brand_name_summary">Pokazuj napis MeeTube obok ikony u góry. Wyłączone: tylko ikona</string>
+    <string name="mobile_settings_brand_name_summary">Pokazuj napis GuTube obok ikony u góry. Wyłączone: tylko ikona</string>
     <string name="mobile_settings_top_bar">Zawsze pokazuj górny pasek</string>
     <string name="mobile_settings_top_bar_summary">Górny pasek zostaje na ekranie podczas przewijania, zamiast się chować</string>
     <string name="mobile_settings_search_fab">Przycisk wyszukiwania, gdy pasek się chowa</string>
@@ -204,9 +204,9 @@
     <string name="mobile_settings_watch_history_auto">Według ustawienia YouTube</string>
     <string name="mobile_settings_watch_history_auto_desc">Zapisywana, jeśli konto YouTube przechowuje historię</string>
     <string name="mobile_settings_watch_history_on">Zawsze zapisuj</string>
-    <string name="mobile_settings_watch_history_on_desc">Włącza historię oglądania YouTube przy każdym uruchomieniu MeeTube</string>
+    <string name="mobile_settings_watch_history_on_desc">Włącza historię oglądania YouTube przy każdym uruchomieniu GuTube</string>
     <string name="mobile_settings_watch_history_off">Nie zapisuj</string>
-    <string name="mobile_settings_watch_history_off_desc">MeeTube przestaje informować YouTube, co oglądasz</string>
+    <string name="mobile_settings_watch_history_off_desc">GuTube przestaje informować YouTube, co oglądasz</string>
     <string name="mobile_settings_clear_watch_history">Wyczyść historię oglądania</string>
     <string name="mobile_settings_clear_watch_history_summary">Usuwa obejrzane filmy z historii YouTube</string>
     <string name="mobile_settings_clear_watch_history_confirm">Wyczyścić historię oglądania?</string>
@@ -216,7 +216,7 @@
     <string name="mobile_settings_clear_search_history">Wyczyść historię wyszukiwania</string>
     <string name="mobile_settings_clear_search_history_summary">Usuwa wyszukiwania zapisane na tym telefonie</string>
     <string name="mobile_settings_clear_search_history_confirm">Wyczyścić historię wyszukiwania?</string>
-    <string name="mobile_settings_clear_search_history_body">Wyszukiwania zapisane przez MeeTube na tym telefonie zostaną usunięte. Tego nie można cofnąć.</string>
+    <string name="mobile_settings_clear_search_history_body">Wyszukiwania zapisane przez GuTube na tym telefonie zostaną usunięte. Tego nie można cofnąć.</string>
     <string name="mobile_settings_backup_now">Utwórz kopię teraz</string>
     <string name="mobile_settings_backup_now_summary">Zapisuje ustawienia w: %1$s</string>
     <string name="mobile_settings_backup_done">Kopia zapisana</string>
@@ -224,7 +224,7 @@
     <string name="mobile_settings_restore_summary">Z kopii w: %1$s</string>
     <string name="mobile_settings_auto_backup">Automatyczna kopia zapasowa</string>
     <string name="mobile_settings_auto_backup_off">Nigdy</string>
-    <string name="mobile_settings_backup_note">Kopia zawiera wszystko, co ustawisz w MeeTube. To, co należy do konta YouTube, np. subskrypcje i historia, zostaje na koncie.</string>
+    <string name="mobile_settings_backup_note">Kopia zawiera wszystko, co ustawisz w GuTube. To, co należy do konta YouTube, np. subskrypcje i historia, zostaje na koncie.</string>
     <string name="mobile_settings_home_layout">Układ strony głównej</string>
     <string name="mobile_settings_app_icon">Ikona aplikacji</string>
     <string name="mobile_app_icon_default">Klasyczna (domyślna)</string>
@@ -249,7 +249,7 @@
     <string name="mobile_loader_glass_orb">Szklana kula</string>
     <string name="mobile_loader_morphing_blob">Płynna kropla</string>
     <string name="mobile_loader_glass_orbit">Szklana orbita</string>
-    <string name="mobile_app_icon_pending">Uruchom ponownie MeeTube, aby wszędzie użyć nowej ikony, lub zmieni się po wyjściu z aplikacji</string>
+    <string name="mobile_app_icon_pending">Uruchom ponownie GuTube, aby wszędzie użyć nowej ikony, lub zmieni się po wyjściu z aplikacji</string>
     <string name="mobile_settings_home_layout_feed">Kanał</string>
     <string name="mobile_settings_home_layout_feed_desc">Jedna lista filmów, jak w YouTube</string>
     <string name="mobile_settings_home_layout_rows">Wiersze</string>
@@ -282,7 +282,7 @@
     <string name="mobile_settings_video_layout_list_desc">Mała miniatura obok tytułu, więcej filmów na ekranie</string>
     <string name="mobile_settings_screen_off">Odtwarzaj przy wyłączonym ekranie</string>
     <string name="mobile_settings_screen_off_on">Zezwolono: oszczędzanie baterii nie zatrzyma dźwięku</string>
-    <string name="mobile_settings_screen_off_off">Oszczędzanie baterii może zatrzymać dźwięk. Dotknij, aby zezwolić MeeTube na działanie w tle</string>
+    <string name="mobile_settings_screen_off_off">Oszczędzanie baterii może zatrzymać dźwięk. Dotknij, aby zezwolić GuTube na działanie w tle</string>
     <string name="mobile_settings_seek_thumb">Uchwyt paska przewijania</string>
     <string name="mobile_settings_seek_thumb_dot">Kropka</string>
     <string name="mobile_settings_seek_thumb_picture">Twój obraz</string>
@@ -313,7 +313,7 @@
     <string name="mobile_settings_remember_speed_video">Dla każdego filmu</string>
     <string name="mobile_settings_remember_speed_all">Taka sama dla wszystkich filmów</string>
     <string name="mobile_settings_remember_speed_none">Nie zapamiętuj</string>
-    <string name="mobile_settings_remember_speed_none_desc">Powrót do 1x przy każdym uruchomieniu MeeTube</string>
+    <string name="mobile_settings_remember_speed_none_desc">Powrót do 1x przy każdym uruchomieniu GuTube</string>
     <string name="mobile_settings_speed_list">Prędkości w „Więcej prędkości”</string>
     <string name="mobile_settings_speed_list_basic">Krótka lista</string>
     <string name="mobile_settings_speed_list_fine">Drobne kroki</string>
@@ -356,7 +356,7 @@
     <string name="mobile_settings_loudness">Wyrównuj głośność</string>
     <string name="mobile_settings_loudness_summary">Ścisza głośne filmy do normalnego poziomu YouTube</string>
     <string name="mobile_settings_player_volume">Głośność odtwarzacza</string>
-    <string name="mobile_settings_quality_data_saver_note">Gdy Oszczędzanie danych w Androidzie jest włączone, MeeTube buforuje mniej na danych komórkowych.</string>
+    <string name="mobile_settings_quality_data_saver_note">Gdy Oszczędzanie danych w Androidzie jest włączone, GuTube buforuje mniej na danych komórkowych.</string>
     <string name="mobile_settings_caption_style">Styl</string>
     <string name="mobile_settings_caption_size">Rozmiar</string>
     <string name="mobile_settings_caption_position">Odległość od dołu</string>
@@ -381,7 +381,7 @@
     <string name="mobile_settings_dearrow_thumbnails">Lepsze miniatury</string>
     <string name="mobile_settings_dearrow_thumbnails_summary">Zastępuje miniatury klatkami wybranymi przez społeczność</string>
     <string name="mobile_settings_dearrow_note">DeArrow otrzymuje identyfikatory filmów widocznych na listach.</string>
-    <string name="mobile_settings_advanced_note">Większość osób nigdy ich nie potrzebuje. Zmieniają sposób strumieniowania i łączenia MeeTube.</string>
+    <string name="mobile_settings_advanced_note">Większość osób nigdy ich nie potrzebuje. Zmieniają sposób strumieniowania i łączenia GuTube.</string>
     <string name="mobile_settings_streaming">Strumieniowanie</string>
     <string name="mobile_settings_buffer">Bufor</string>
     <string name="mobile_settings_buffer_low_desc">Około 25 sekund naprzód. Zużywa najmniej pamięci</string>
@@ -412,7 +412,7 @@
     <string name="mobile_settings_chapter_popup_summary">Pokazuje nazwę każdego rozdziału na jego początku. Dotknij, aby przejść do następnego</string>
     <string name="mobile_settings_network">Sieć</string>
     <string name="mobile_settings_proxy">Serwer proxy</string>
-    <string name="mobile_settings_proxy_summary">Przesyła ruch MeeTube przez serwer proxy HTTP lub SOCKS</string>
+    <string name="mobile_settings_proxy_summary">Przesyła ruch GuTube przez serwer proxy HTTP lub SOCKS</string>
     <string name="mobile_settings_dns">Wyszukiwanie serwerów YouTube</string>
     <string name="mobile_settings_dns_ipv4">Najpierw IPv4</string>
     <string name="mobile_settings_dns_ipv4_desc">Domyślne. Naprawia sieci z niedziałającym IPv6</string>
@@ -438,7 +438,7 @@
     <string name="mobile_settings_playlists_style_grid_short">Playlisty</string>
     <string name="mobile_settings_playlists_style_rows_short">Filmy</string>
     <string name="mobile_settings_interface_size_sample">Tak wygląda tytuł filmu w tym rozmiarze</string>
-    <string name="mobile_settings_interface_size_sample_meta">MeeTube · 1,2 mln wyświetleń · 2 dni temu</string>
+    <string name="mobile_settings_interface_size_sample_meta">GuTube · 1,2 mln wyświetleń · 2 dni temu</string>
     <string name="mobile_settings_tab_glow">Poświata kart</string>
     <string name="mobile_settings_tab_glow_white">Biała</string>
     <string name="mobile_settings_tab_glow_white_desc">Zwykła biała poświata (szara w jasnym motywie)</string>
@@ -447,7 +447,7 @@
     <string name="mobile_settings_tab_glow_tabs">Kolory kart</string>
     <string name="mobile_settings_tab_glow_tabs_desc">Każda karta świeci własnym kolorem</string>
     <string name="mobile_settings_tab_glow_accent">Akcent</string>
-    <string name="mobile_settings_tab_glow_accent_desc">Każda karta świeci czerwienią MeeTube</string>
+    <string name="mobile_settings_tab_glow_accent_desc">Każda karta świeci czerwienią GuTube</string>
     <string name="mobile_settings_tab_glow_off">Wył.</string>
     <string name="mobile_settings_you_glow">Poświata strony Mój profil</string>
     <string name="mobile_settings_you_glow_accent_desc">Światło w górnym rogu strony Mój profil przyjmuje kolor akcentu</string>
@@ -481,15 +481,15 @@
     <string name="mobile_settings_transfer_export_summary">Zachowaj je na później lub przenieś na inny telefon</string>
     <string name="mobile_settings_transfer_share">Udostępnij ustawienia znajomemu</string>
     <string name="mobile_settings_transfer_share_summary">Wyślij plik ustawień na czacie lub e-mailem</string>
-    <string name="mobile_settings_transfer_share_text">Moje ustawienia MeeTube. W MeeTube: Ustawienia &gt; Kopia zapasowa &gt; Importuj ustawienia z pliku</string>
+    <string name="mobile_settings_transfer_share_text">Moje ustawienia GuTube. W GuTube: Ustawienia &gt; Kopia zapasowa &gt; Importuj ustawienia z pliku</string>
     <string name="mobile_settings_transfer_import">Importuj ustawienia z pliku</string>
     <string name="mobile_settings_transfer_import_summary">Wczytaj zapisany plik ustawień lub plik od znajomego</string>
-    <string name="mobile_settings_transfer_import_confirm">Ustawienia zostaną zastąpione ustawieniami z pliku, a MeeTube uruchomi się ponownie. Konta, historia oglądania, pobrane pliki i hasła pozostaną bez zmian.</string>
+    <string name="mobile_settings_transfer_import_confirm">Ustawienia zostaną zastąpione ustawieniami z pliku, a GuTube uruchomi się ponownie. Konta, historia oglądania, pobrane pliki i hasła pozostaną bez zmian.</string>
     <string name="mobile_settings_transfer_import_button">Importuj</string>
     <string name="mobile_settings_transfer_saved">Ustawienia zapisane</string>
-    <string name="mobile_settings_transfer_imported">Ustawienia zaimportowane. MeeTube uruchamia się ponownie</string>
+    <string name="mobile_settings_transfer_imported">Ustawienia zaimportowane. GuTube uruchamia się ponownie</string>
     <string name="mobile_settings_transfer_failed">Nie udało się zapisać pliku ustawień</string>
-    <string name="mobile_settings_transfer_not_settings">To nie jest plik ustawień MeeTube</string>
+    <string name="mobile_settings_transfer_not_settings">To nie jest plik ustawień GuTube</string>
     <string name="mobile_settings_stable_volume">Stabilna głośność</string>
     <string name="mobile_settings_stable_volume_summary">Pozwól, by skompresowany dźwięk YouTube łagodził głośne i ciche fragmenty. Dotyczy następnego otwartego filmu</string>
     <string name="mobile_settings_dolby">Dolby Atmos</string>
@@ -530,7 +530,7 @@
     <string name="mobile_settings_coffee_scan">Lub zeskanuj innym telefonem</string>
     <string name="mobile_settings_coffee_footer">Całkowicie opcjonalne. ⭐ na GitHubie pomaga tak samo ❤️</string>
     <string name="mobile_settings_tv_title">Zainstaluj na TV</string>
-    <string name="mobile_settings_tv_summary">Zainstaluj MeeTube TV na Android TV z tego telefonu</string>
+    <string name="mobile_settings_tv_summary">Zainstaluj GuTube TV na Android TV z tego telefonu</string>
     <string name="mobile_settings_tv_android">Google TV / Android TV</string>
     <string name="mobile_settings_tv_fire">Fire TV</string>
     <string name="mobile_settings_tv_developer">Włącz tryb programisty</string>
@@ -548,19 +548,19 @@
     <string name="mobile_settings_tv_ip">Adres IP telewizora</string>
     <string name="mobile_settings_tv_ip_invalid">Wpisz adres IPv4 telewizora, np. %1$s</string>
     <string name="mobile_settings_tv_install">Zainstaluj</string>
-    <string name="mobile_settings_tv_install_button">Zainstaluj MeeTube TV</string>
+    <string name="mobile_settings_tv_install_button">Zainstaluj GuTube TV</string>
     <string name="mobile_settings_tv_connecting">Łączenie z %1$s…  Spójrz na telewizor i wybierz Zezwól (zaznacz Zawsze zezwalaj).</string>
-    <string name="mobile_settings_tv_finding_release">Szukanie najnowszego MeeTube TV…</string>
-    <string name="mobile_settings_tv_downloading">Pobieranie MeeTube TV %1$s… %2$s%%</string>
-    <string name="mobile_settings_tv_downloading_unknown">Pobieranie MeeTube TV %1$s…</string>
+    <string name="mobile_settings_tv_finding_release">Szukanie najnowszego GuTube TV…</string>
+    <string name="mobile_settings_tv_downloading">Pobieranie GuTube TV %1$s… %2$s%%</string>
+    <string name="mobile_settings_tv_downloading_unknown">Pobieranie GuTube TV %1$s…</string>
     <string name="mobile_settings_tv_installing">Instalowanie na telewizorze…</string>
-    <string name="mobile_settings_tv_done">Gotowe! MeeTube TV jest otwarte na telewizorze 🎉</string>
+    <string name="mobile_settings_tv_done">Gotowe! GuTube TV jest otwarte na telewizorze 🎉</string>
     <string name="mobile_settings_tv_unreachable">Nie można połączyć się z telewizorem. Czy debugowanie jest włączone (krok 2), a IP poprawne?</string>
     <string name="mobile_settings_tv_auth_failed">Telewizor nie zezwolił temu telefonowi. Spróbuj ponownie i wybierz Zezwól na telewizorze.</string>
-    <string name="mobile_settings_tv_download_failed">Nie udało się pobrać MeeTube TV. Sprawdź połączenie z internetem.</string>
+    <string name="mobile_settings_tv_download_failed">Nie udało się pobrać GuTube TV. Sprawdź połączenie z internetem.</string>
     <string name="mobile_settings_tv_install_failed">Telewizor odrzucił instalację: %1$s</string>
     <string name="mobile_settings_tv_unknown_error">Nieznany błąd</string>
-    <string name="mobile_settings_tv_launch_failed">MeeTube TV jest zainstalowane. Otwórz je z listy aplikacji telewizora.</string>
+    <string name="mobile_settings_tv_launch_failed">GuTube TV jest zainstalowane. Otwórz je z listy aplikacji telewizora.</string>
     <string name="mobile_settings_tv_busy">Instalacja już trwa. Poczekaj chwilę.</string>
     <string name="mobile_settings_tv_permission">Zezwól na dostęp do sieci lokalnej, aby znaleźć telewizor i się z nim połączyć.</string>
     <string name="mobile_settings_tv_footer">Potem możesz wyłączyć debugowanie na telewizorze.</string>

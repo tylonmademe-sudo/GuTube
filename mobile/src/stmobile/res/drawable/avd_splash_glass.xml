@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(launch): the launch animation (LaunchSplash), the same for every app icon - a play symbol
+<!-- GUTUBE(launch): the launch animation (LaunchSplash), the same for every app icon - a play symbol
      pops in and turns to frosted glass, in black and white (splash_* colours: black on the light theme,
      white on the dark): the solid symbol gives way to see-through glass, a milky frost, a rim and a top
      gloss, and a light sheen sweeps across it. 800 ms in all, eased so the still splash flows into it. -->

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(loader): the Frosted cookie: the morphing cookie (meetube_loader) in white on the Frosted loader's glass disc (avd_frosted_ring). Picked in Settings > Customization (Loader). VectorDrawable has no
+<!-- GUTUBE(loader): the Frosted cookie: the morphing cookie (gutube_loader) in white on the Frosted loader's glass disc (avd_frosted_ring). Picked in Settings > Customization (Loader). VectorDrawable has no
      blur, so a glow is a faint wider stroke underneath. -->
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt">

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(bounce): iOS-style overscroll on every list in the app, in place of Android 12's stretch.
+ * GUTUBE(bounce): iOS-style overscroll on every list in the app, in place of Android 12's stretch.
  * Pulled past its start or end a list follows the finger with growing resistance and stretches a
  * little from the pulled edge; let go, it springs back with a bounce, and a fling into the end
  * bounces off it. A list set to never overscroll keeps that (RecyclerView asks for no effect).
@@ -50,7 +50,7 @@ public final class BounceOverscroll extends RecyclerView.EdgeEffectFactory {
     }
 
     private static void applyTo(View view) {
-        // MEETUBE(scrollbars): no scroll indicator anywhere either - the same pass, every view.
+        // GUTUBE(scrollbars): no scroll indicator anywhere either - the same pass, every view.
         view.setVerticalScrollBarEnabled(false);
         view.setHorizontalScrollBarEnabled(false);
         if (view instanceof RecyclerView && view.getTag(R.id.bounce_overscroll) == null) {

@@ -17,12 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 
 /**
- * MEETUBE(you page, settings cards): the card a group of You tiles or Settings rows sits on, in the
+ * GUTUBE(you page, settings cards): the card a group of You tiles or Settings rows sits on, in the
  * style Settings > Customization > Card style picks (plain Minimal by default). Every style is faint glass
  * under a hairline; they differ in where the accent lights it.
  */
 public final class AccentCard extends Drawable {
-    /** "MeeTube minimal": a soft accent glow top right, the hairline warming to the accent bottom right. */
+    /** "GuTube minimal": a soft accent glow top right, the hairline warming to the accent bottom right. */
     public static final int MINIMAL = 0;
     /** Near black, one accent light pooled in the bottom right, the rim lit there only. */
     public static final int CORNER_EMBER = 1;
@@ -59,14 +59,14 @@ public final class AccentCard extends Drawable {
 
     public static int style(Context context) {
         if (sStyle < 0) {
-            sStyle = context.getSharedPreferences("meetube_app", Context.MODE_PRIVATE).getInt(KEY, PLAIN);
+            sStyle = context.getSharedPreferences("gutube_app", Context.MODE_PRIVATE).getInt(KEY, PLAIN);
         }
         return sStyle;
     }
 
     public static void setStyle(Context context, int style) {
         sStyle = style;
-        context.getSharedPreferences("meetube_app", Context.MODE_PRIVATE).edit().putInt(KEY, style).apply();
+        context.getSharedPreferences("gutube_app", Context.MODE_PRIVATE).edit().putInt(KEY, style).apply();
     }
 
     public AccentCard(Context context) {

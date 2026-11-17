@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * MEETUBE(rgb glow): a soft light in the top left corner whose colour walks the hue wheel, behind
+ * GUTUBE(rgb glow): a soft light in the top left corner whose colour walks the hue wheel, behind
  * the You page's header. Done the way Gemini lights its pure black page: one
  * saturated colour at about a third of its strength at most, faded out on a long eased curve, so
  * the black stays true black past it. Two lights a third of the wheel apart make it multi colour.
@@ -101,7 +101,7 @@ public final class RgbGlow extends View {
     }
 
     private static android.content.SharedPreferences prefs(Context context) {
-        return context.getApplicationContext().getSharedPreferences("meetube_app", Context.MODE_PRIVATE);
+        return context.getApplicationContext().getSharedPreferences("gutube_app", Context.MODE_PRIVATE);
     }
 
     public RgbGlow(Context context, @Nullable AttributeSet attrs) {

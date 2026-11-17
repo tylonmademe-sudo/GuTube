@@ -9,12 +9,12 @@ import android.view.View;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(refresh): a pull-to-refresh lets go with a light tick and a soft two-note pop
+ * GUTUBE(refresh): a pull-to-refresh lets go with a light tick and a soft two-note pop
  * (res/raw/refresh_pop.wav). The pop stays quiet while the phone is on silent or vibrate, and
  * is off unless switched on in Settings > Customization (issue #120).
  */
 public final class RefreshFeedback {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_SOUND = "refresh_sound";
     private static SoundPool sPool;
     /** raw resource to its loaded sound id. */
@@ -40,7 +40,7 @@ public final class RefreshFeedback {
     }
 
     /**
-     * A short UI sound from res/raw, quiet while the phone is on silent or vibrate. MEETUBE(issue
+     * A short UI sound from res/raw, quiet while the phone is on silent or vibrate. GUTUBE(issue
      * #239): also the channel bell's chime.
      */
     public static void sound(Context context, int rawRes, float volume) {

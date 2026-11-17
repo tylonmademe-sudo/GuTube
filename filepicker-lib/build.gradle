@@ -1,11 +1,6 @@
 apply from: gradle.ext.sharedModulesConstants
 apply plugin: 'com.android.library'
 
-task sourceJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier = 'sources' // Gradle 8: 'classifier' is gone
-}
-
 android {
     namespace = 'arte.programar.materialfile'
 

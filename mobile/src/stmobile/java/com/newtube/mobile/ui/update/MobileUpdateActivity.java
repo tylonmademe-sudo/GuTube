@@ -57,8 +57,8 @@ import java.util.List;
  */
 public class MobileUpdateActivity extends MobileActivity implements AppUpdates.Listener {
     private static final String EXTRA_MODE = "newtube:update_mode";
-    /** MEETUBE(update pop-up): opened by itself, so it offers "Don't ask again". */
-    private static final String EXTRA_PROMPT = "meetube:update_prompt";
+    /** GUTUBE(update pop-up): opened by itself, so it offers "Don't ask again". */
+    private static final String EXTRA_PROMPT = "gutube:update_prompt";
     /** The You tab's update row: what is known (checks only when that is old). */
     private static final int MODE_UPDATE = 0;
     /** Check for updates: always asks the server. */
@@ -113,7 +113,7 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         start(context, MODE_UPDATE);
     }
 
-    /** MEETUBE(update pop-up): Home found an update by itself (AppUpdates.shouldPrompt). */
+    /** GUTUBE(update pop-up): Home found an update by itself (AppUpdates.shouldPrompt). */
     public static void startPrompt(Context context) {
         context.startActivity(intent(context, MODE_UPDATE).putExtra(EXTRA_PROMPT, true));
     }
@@ -187,6 +187,10 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         });
         mScroll = content.findViewById(R.id.update_sheet_scroll);
         mScroll.setMaxHeight(Math.round(screenHeightPx() * NOTES_MAX_HEIGHT_FRACTION));
+
+        if (mPrimary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mPrimary);
+        if (mSecondary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mSecondary);
+        if (mDontAsk != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mDontAsk);
 
         mSheet = Haptics.watch(new BottomSheetDialog(this));
         mSheet.setContentView(content);

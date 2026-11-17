@@ -289,8 +289,8 @@
     <string name="mobile_signin_step1_title">點一下「使用 Google 繼續」</string>
     <string name="mobile_signin_step1_caption">Google 的登入頁面會直接在這裡開啟。</string>
     <string name="mobile_signin_step2_title">選擇你的帳號並允許存取</string>
-    <string name="mobile_signin_step2_caption">頁面可能提到電視或其他裝置，這是正常的：MeeTube 的登入方式跟電視一樣，你的密碼不會經過這個應用程式。</string>
-    <string name="mobile_signin_step3_title">回到 MeeTube</string>
+    <string name="mobile_signin_step2_caption">頁面可能提到電視或其他裝置，這是正常的：GuTube 的登入方式跟電視一樣，你的密碼不會經過這個應用程式。</string>
+    <string name="mobile_signin_step3_title">回到 GuTube</string>
     <string name="mobile_signin_step3_caption">登入會自己完成，不需要再做其他事。</string>
     <string name="mobile_signin_code_label">Google 會顯示這組代碼，請確認內容相符：</string>
     <string name="mobile_signin_copy_hint">點一下代碼即可複製</string>
@@ -358,30 +358,30 @@
     <string name="mobile_cast_searching">正在尋找裝置…</string>
     <string name="mobile_cast_empty">在這個 Wi-Fi 網路中找不到裝置</string>
     <string name="mobile_cast_subtitle_no_ads">用手機控制畫質</string>
-    <string name="mobile_cast_subtitle_youtube_app">電視上的 YouTube 或 MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_subtitle_youtube_app">電視上的 YouTube 或 GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_chooser_title">傳送到%1$s</string>
     <string name="mobile_cast_option_direct_title">直接投放</string>
     <string name="mobile_cast_option_direct_subtitle">用手機控制畫質・不支援字幕</string>
     <string name="mobile_cast_option_app_title">透過電視應用程式播放</string>
     <string name="mobile_cast_option_app_subtitle">直播與字幕需要它・畫質用遙控器控制</string>
     <string name="mobile_cast_connecting_youtube_app">正在連線到電視上的 YouTube 應用程式…</string>
-    <string name="mobile_cast_direct_live_unsupported">直播內容需要電視上的 YouTube 或 MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_direct_live_unsupported">直播內容需要電視上的 YouTube 或 GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_direct_incompatible">這支影片無法直接投放（沒有電視能播放的格式）</string>
     <string name="mobile_cast_direct_load_failed">無法為直接投放準備這支影片</string>
     <string name="mobile_cast_direct_no_wifi">直接投放需要手機與電視連同一個 Wi-Fi</string>
     <string name="mobile_cast_link_code">用電視代碼連結</string>
-    <string name="mobile_cast_link_code_subtitle">適用於 YouTube 與 MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_link_code_subtitle">適用於 YouTube 與 GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_code_hint">12 位數代碼</string>
     <string name="mobile_cast_code_title">連結電視</string>
     <string name="mobile_cast_code_app_label">電視應用程式</string>
     <string name="mobile_cast_code_choose_app">選擇電視上開啟的應用程式。</string>
-    <string name="mobile_cast_code_open_smarttube">在電視的 MeeTube TV / SmartTube TV 中開啟：</string>
+    <string name="mobile_cast_code_open_smarttube">在電視的 GuTube TV / SmartTube TV 中開啟：</string>
     <string name="mobile_cast_code_open_youtube">在電視的 YouTube 中開啟：</string>
     <string name="mobile_cast_code_find">在任一電視應用程式中找到代碼：</string>
     <string name="mobile_cast_code_youtube_path">設定 → 用電視代碼連結</string>
     <string name="mobile_cast_code_smarttube_path">設定 → 遙控器</string>
     <string name="mobile_cast_code_helper">可以包含破折號和空格</string>
-    <string name="mobile_cast_code_smarttube_benefit">提示：用 MeeTube TV / SmartTube TV 就能在電視上控制畫質與字幕。</string>
+    <string name="mobile_cast_code_smarttube_benefit">提示：用 GuTube TV / SmartTube TV 就能在電視上控制畫質與字幕。</string>
     <string name="mobile_cast_code_positive">連結</string>
     <string name="mobile_cast_code_invalid">代碼應為 12 位數</string>
     <string name="mobile_cast_pairing">正在與電視連結…</string>
@@ -394,20 +394,20 @@
     <string name="mobile_cast_channel_name">投放</string>
     <string name="mobile_cast_channel_desc">電視投放工作階段控制</string>
     <string name="mobile_cast_fallback_switching">正在改用電視上的 YouTube…</string>
-    <string name="mobile_cast_trying_smarttube">正在改用電視上的 MeeTube TV / SmartTube TV…</string>
+    <string name="mobile_cast_trying_smarttube">正在改用電視上的 GuTube TV / SmartTube TV…</string>
     <string name="mobile_cast_trying_direct">正在改用直接投放…</string>
     <string name="mobile_cast_trying_saved">正在改用已儲存的電視應用程式…</string>
     <string name="mobile_cast_checking_ad_free">正在檢查電視…</string>
-    <string name="mobile_cast_smarttube_title">MeeTube TV / SmartTube TV</string>
-    <string name="mobile_cast_smarttube_subtitle">MeeTube TV / SmartTube TV・手機可以離開</string>
+    <string name="mobile_cast_smarttube_title">GuTube TV / SmartTube TV</string>
+    <string name="mobile_cast_smarttube_subtitle">GuTube TV / SmartTube TV・手機可以離開</string>
     <string name="mobile_cast_youtube_title">YouTube</string>
     <string name="mobile_cast_youtube_subtitle">YouTube・備援方式</string>
     <string name="mobile_cast_unknown_title">已儲存的電視應用程式</string>
     <string name="mobile_cast_unknown_subtitle">未能辨識電視應用程式・點 ⋮ 設定</string>
     <string name="mobile_cast_identify_app">這組代碼來自哪個電視應用程式？</string>
-    <string name="mobile_cast_onboarding_title">你的電視有 MeeTube TV / SmartTube TV？</string>
-    <string name="mobile_cast_onboarding_body">配對一次之後，你投放的影片會在 MeeTube TV / SmartTube TV 中開啟。</string>
-    <string name="mobile_cast_pair_smarttube">配對 MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_onboarding_title">你的電視有 GuTube TV / SmartTube TV？</string>
+    <string name="mobile_cast_onboarding_body">配對一次之後，你投放的影片會在 GuTube TV / SmartTube TV 中開啟。</string>
+    <string name="mobile_cast_pair_smarttube">配對 GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_receiver_no_playback">電視應用程式沒有開始播放</string>
     <string name="mobile_cast_switching_tv_app">正在電視上開啟 YouTube 控制介面…</string>
     <string name="mobile_cast_choose_method">選擇投放方式</string>
@@ -423,7 +423,7 @@
     <string name="mobile_cast_subtitles_sent">已將字幕選擇送到電視</string>
     <string name="mobile_cast_subtitles_failed">無法在這台接收裝置上變更字幕</string>
     <string name="mobile_cast_switch_subtitles_title">要用電視應用程式看字幕嗎？</string>
-    <string name="mobile_cast_switch_subtitles_message">電視應用程式支援字幕，畫質則由遙控器控制。我們會先試已配對的 MeeTube TV / SmartTube TV，再試 YouTube。</string>
+    <string name="mobile_cast_switch_subtitles_message">電視應用程式支援字幕，畫質則由遙控器控制。我們會先試已配對的 GuTube TV / SmartTube TV，再試 YouTube。</string>
     <string name="mobile_cast_switch_subtitles_positive">切換</string>
     <string name="mobile_cast_tv_volume_label">電視音量</string>
     <string name="mobile_sign_in_to_rate">登入後才能為影片按讚或倒讚</string>
@@ -476,7 +476,7 @@
         正在檢查更新…
     </string>
     <string name="mobile_update_up_to_date">
-        MeeTube 已是最新版本
+        GuTube 已是最新版本
     </string>
     <string name="mobile_update_version">
         版本 %1$s
@@ -491,10 +491,10 @@
         有可用的更新
     </string>
     <string name="mobile_update_app_version">
-        MeeTube %1$s
+        GuTube %1$s
     </string>
     <string name="mobile_update_app_version_size">
-        MeeTube %1$s · %2$s
+        GuTube %1$s · %2$s
     </string>
     <string name="mobile_update_metered">
         你正在使用行動數據。
@@ -524,7 +524,7 @@
         下載未完成
     </string>
     <string name="mobile_update_download_failed_body">
-        請再試一次，或改從 GitHub 取得 MeeTube %1$s。
+        請再試一次，或改從 GitHub 取得 GuTube %1$s。
     </string>
     <string name="mobile_update_install_failed_title">
         無法開啟安裝程式
@@ -542,7 +542,7 @@
         安裝
     </string>
     <string name="mobile_update_permission_title">
-        允許 MeeTube 安裝更新
+        允許 GuTube 安裝更新
     </string>
     <string name="mobile_update_permission_body">
         Android 只會問這一次。在下一個畫面開啟「允許來自這個來源」，然後回到這裡：更新會立即安裝。
@@ -560,7 +560,7 @@
         新功能
     </string>
     <string name="mobile_update_updated">
-        已更新為 MeeTube %1$s
+        已更新為 GuTube %1$s
     </string>
     <string name="mobile_update_downloaded">
         更新已下載完成
@@ -572,7 +572,7 @@
         正在下載更新
     </string>
     <string name="mobile_update_row_downloading_percent">
-        MeeTube %1$s · %2$d%%
+        GuTube %1$s · %2$d%%
     </string>
     <string name="mobile_update_row_ready">
         更新可供安裝
@@ -581,23 +581,23 @@
         應用程式更新
     </string>
     <string name="mobile_update_channel_desc">
-        正在下載 MeeTube 更新
+        正在下載 GuTube 更新
     </string>
     <string name="mobile_theme">主題</string>
     <string name="mobile_theme_system">跟隨系統</string>
     <string name="mobile_theme_light">淺色</string>
     <string name="mobile_theme_dark">深色</string>
-    <string name="mobile_about_star">在 GitHub 上給 MeeTube 加星</string>
+    <string name="mobile_about_star">在 GitHub 上給 GuTube 加星</string>
     <string name="mobile_about_star_desc">免費且開放原始碼。加顆星能讓更多人找到它</string>
-    <string name="mobile_about_share">分享 MeeTube</string>
+    <string name="mobile_about_share">分享 GuTube</string>
     <string name="mobile_about_share_desc">把連結發給需要的人</string>
-    <string name="mobile_about_share_text">MeeTube — 建於 SmartTube 之上的手機 YouTube 客戶端：%1$s</string>
+    <string name="mobile_about_share_text">GuTube — 建於 SmartTube 之上的手機 YouTube 客戶端：%1$s</string>
     <string name="sabr_vod_option">即使連結可用也偏好 SABR（實驗功能；下一支點播影片生效）</string>
     <string name="sabr_vod_stopped">已停止實驗性 SABR 播放。點播放可重試，或在設定中關閉 SABR。</string>
     <string name="mobile_next_in">%1$d 秒後播放下一支</string>
     <string name="mobile_next_play">立即播放</string>
     <string name="mobile_next_cancel">取消</string>
-    <string name="app_name">MeeTube</string>
+    <string name="app_name">GuTube</string>
     <string name="mobile_player_time_default">0:00</string>
     <string name="mobile_player_live">直播</string>
     <string name="mobile_player_sleep_timer">睡眠計時器</string>
@@ -625,13 +625,13 @@
     <string name="mobile_search_filter_hdr">HDR</string>
     <string name="mobile_settings_double_tap_seek">輕觸兩下跳轉</string>
     <string name="mobile_cast_code_youtube">YouTube</string>
-    <string name="mobile_cast_code_smarttube">MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_code_smarttube">GuTube TV / SmartTube TV</string>
     <string name="mobile_update_dont_ask">不要再詢問</string>
     <string name="mobile_update_dont_ask_done">知道了。之後可從「你」分頁或「設定 › 關於」更新。</string>
     <string name="mobile_settings_update_prompt">更新提示</string>
     <string name="mobile_settings_update_prompt_summary">有新版本時詢問是否更新</string>
-    <string name="mobile_about_repo_url">https://github.com/yashoncode/meetube</string>
-    <string name="mobile_about_site_url">https://github.com/yashoncode/meetube</string>
+    <string name="mobile_about_repo_url"></string>
+    <string name="mobile_about_site_url"></string>
     <string name="mobile_shorts_mute">靜音</string>
     <string name="mobile_shorts_unmute">取消靜音</string>
 </resources>

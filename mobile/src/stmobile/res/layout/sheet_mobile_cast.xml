@@ -13,11 +13,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         android:paddingBottom="12dp">
 
@@ -33,6 +34,7 @@
             android:id="@+id/cast_sheet_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:orientation="vertical">
 
             <TextView
@@ -51,6 +53,7 @@
                 android:id="@+id/cast_sheet_targets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:orientation="vertical" />
 
             <!-- Discovery-in-progress state (visible while the SSDP collect window is open). -->
@@ -64,7 +67,7 @@
                 android:paddingVertical="12dp">
 
                 <ProgressBar
-                    style="@style/Widget.MeeTube.GlassSpinner.Small" />
+                    style="@style/Widget.GuTube.GlassSpinner.Small" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -143,6 +146,7 @@
             android:id="@+id/cast_sheet_chooser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
@@ -151,7 +155,7 @@
                 android:id="@+id/cast_chooser_back"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@android:color/transparent"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
@@ -186,6 +190,7 @@
                 android:id="@+id/cast_chooser_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:orientation="vertical" />
 
         </LinearLayout>

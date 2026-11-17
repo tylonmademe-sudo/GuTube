@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 
 /**
- * MEETUBE(watch actions): a row whose fading edge is its full length once a few dp are hidden on
+ * GUTUBE(watch actions): a row whose fading edge is its full length once a few dp are hidden on
  * that side, by a scroll or by the bounce that pulls the pills past the edge. The stock fade scales
  * with the distance scrolled and ignores the bounce, so the edge showed a hard cut, not a shade.
  */

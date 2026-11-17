@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(shorts): a channel's Shorts tab tile, as in YouTube's app - three to a row with small
+<!-- GUTUBE(shorts): a channel's Shorts tab tile, as in YouTube's app - three to a row with small
      gaps, the portrait thumbnail with its view count over it and the menu in the corner. Clipped to
      12dp corners like every other Short (ShortTileHolder clips to its background's outline). -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

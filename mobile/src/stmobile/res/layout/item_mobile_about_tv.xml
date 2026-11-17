@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(about): the last thing on About - a look at MeeTube TV on a glass card that leans with the
+<!-- GUTUBE(about): the last thing on About - a look at GuTube TV on a glass card that leans with the
      phone, its screenshot panning inside a rounded window, and a button to install it on a TV. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

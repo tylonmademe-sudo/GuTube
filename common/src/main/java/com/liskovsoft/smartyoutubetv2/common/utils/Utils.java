@@ -1017,7 +1017,7 @@ public class Utils {
     }
 
     /**
-     * MEETUBE(settings-transfer): restarts with the settings files as they are on disk now -
+     * GUTUBE(settings-transfer): restarts with the settings files as they are on disk now -
      * {@link #restartTheApp(Context)} first writes the in-memory settings back over them, which
      * would undo an import.
      */

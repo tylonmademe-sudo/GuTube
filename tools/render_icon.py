@@ -1,4 +1,4 @@
-"""Draw the themed-icon (Android 13+ monochrome) layer: the MeeTube heart with the play triangle cut out.
+"""Draw the themed-icon (Android 13+ monochrome) layer: the GuTube heart with the play triangle cut out.
 
 Every coloured icon is a PNG built by tools/icons_from_pngs.py. The heart is Material's "favorite"
 outline (24-unit grid, Apache 2.0); everything is placed on that grid and scaled into the 108-unit
@@ -92,6 +92,6 @@ def vector(comment, size_dp, transform, heart_color, triangle_color, cutout):
 
 if __name__ == "__main__":
     (RES / "drawable" / "ic_launcher_monochrome.xml").write_text(vector(
-        "MEETUBE: themed-icon (Android 13+) mark - the heart with the play triangle cut out.",
+        "GUTUBE: themed-icon (Android 13+) mark - the heart with the play triangle cut out.",
         108, LAUNCHER, "#FFFFFF", None, True), encoding="utf-8")
     print("ok")

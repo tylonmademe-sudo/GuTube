@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(glass): a multi-choice dialog row with a frosted tick box. Material's own row sets its box
+<!-- GUTUBE(glass): a multi-choice dialog row with a frosted tick box. Material's own row sets its box
      through app:drawableStartCompat, which this dialog's inflater ignores, so no box was drawn. -->
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"

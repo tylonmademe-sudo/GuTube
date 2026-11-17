@@ -729,7 +729,7 @@ public class SuggestionsController extends BasePlayerController {
             return null;
         }
 
-        // MEETUBE(shorts): in the Shorts player next/previous walk the Shorts tab's queue in order,
+        // GUTUBE(shorts): in the Shorts player next/previous walk the Shorts tab's queue in order,
         // by position (not the playlist's own cursor), and never fall back to a regular video.
         if (getVideo().belongsToShorts()) {
             return getShortNeighbour(getVideo(), 1);
@@ -750,7 +750,7 @@ public class SuggestionsController extends BasePlayerController {
         return result;
     }
 
-    /** MEETUBE(shorts): the short two swipes ahead in the Shorts queue, or null outside Shorts. */
+    /** GUTUBE(shorts): the short two swipes ahead in the Shorts queue, or null outside Shorts. */
     public Video getShortAfterNext() {
         if (getPlayer() == null || getVideo() == null || !getVideo().belongsToShorts()) {
             return null;
@@ -781,9 +781,9 @@ public class SuggestionsController extends BasePlayerController {
         return result;
     }
 
-    /** MEETUBE(shorts): queue size when the Shorts tab was last asked for its next page. */
+    /** GUTUBE(shorts): queue size when the Shorts tab was last asked for its next page. */
     private static int sShortsMoreAt = -1;
-    /** MEETUBE(shorts): a page that added nothing (all seen) may be asked again after this. */
+    /** GUTUBE(shorts): a page that added nothing (all seen) may be asked again after this. */
     private static long sShortsMoreAtMs;
     private static final long SHORTS_MORE_RETRY_MS = 3_000;
     private static final int SHORTS_AHEAD = 6;
@@ -1134,7 +1134,7 @@ public class SuggestionsController extends BasePlayerController {
         long positionMs = getPlayer().getPositionMs();
         ChapterItem currentChapter = null;
         ChapterItem nextChapter = null;
-        // MEETUBE(issue #151): notifications follow actual chapter starts, not the navigation lookahead.
+        // GUTUBE(issue #151): notifications follow actual chapter starts, not the navigation lookahead.
         for (ChapterItem chapter : mChapters) {
             if (chapter.getStartTimeMs() > positionMs) {
                 nextChapter = chapter;
@@ -1343,12 +1343,12 @@ public class SuggestionsController extends BasePlayerController {
     }
 
     private void showChapterDialog(ChapterItem chapter) {
-        // MEETUBE(issue #151): controls, seeks and stalled timers must not repeat the same chapter.
+        // GUTUBE(issue #151): controls, seeks and stalled timers must not repeat the same chapter.
         if (chapter != null && chapter.getStartTimeMs() == mLastShownChapterStartMs) {
             return;
         }
 
-        // MEETUBE(issue #223): the phone shows it as a pill that goes by itself, never the dialog.
+        // GUTUBE(issue #223): the phone shows it as a pill that goes by itself, never the dialog.
         if (chapter != null && getPlayer() != null && !getPlayer().isOverlayShown() && !Utils.isScreenOff(getContext())
                 && getPlayer().showChapterPill(chapter.getTitle(), () -> {
                     ChapterItem nextChapter = getNextChapter();

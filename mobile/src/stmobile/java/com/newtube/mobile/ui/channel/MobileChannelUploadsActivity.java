@@ -104,7 +104,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     private PageLoadState mLoadState;
 
     private final List<Video> mVideos = new ArrayList<>();
-    /** MEETUBE(playlist page): all entries in server order, including cards hidden by ShortsFilter. */
+    /** GUTUBE(playlist page): all entries in server order, including cards hidden by ShortsFilter. */
     private final List<Video> mPlaylistVideos = new ArrayList<>();
     private static final int BULK_NONE = 0;
     private static final int BULK_SORT = 1;
@@ -131,7 +131,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     private boolean mShortsEmptied;
     /** NEWTUBE(shorts): onDestroy has begun - the presenter's teardown must not page on. */
     private boolean mTornDown;
-    /** MEETUBE(#65): the playlist found to be the user's own (its cards swipe out of it), and its name. */
+    /** GUTUBE(#65): the playlist found to be the user's own (its cards swipe out of it), and its name. */
     @Nullable private String mOwnPlaylistId;
     @Nullable private String mOwnPlaylistTitle;
     /** The playlist already asked about, so each one is checked once. */
@@ -250,14 +250,14 @@ public class MobileChannelUploadsActivity extends MobileActivity
         mProgressBar = findViewById(R.id.mobile_channel_uploads_progress);
         mTitleView = findViewById(R.id.mobile_channel_uploads_title);
         mBackButton = findViewById(R.id.mobile_channel_uploads_back);
-        // MEETUBE(glass): the top bar frosts the cover and cards scrolling under it, like Settings'.
+        // GUTUBE(glass): the top bar frosts the cover and cards scrolling under it, like Settings'.
         com.newtube.mobile.ui.common.Glass.blur(findViewById(R.id.mobile_channel_uploads_bar),
                 findViewById(R.id.mobile_channel_uploads_glass));
         mBackdrop = new PlaylistBackdrop(findViewById(R.id.mobile_channel_uploads_ambient),
                 findViewById(R.id.mobile_channel_uploads_backdrop));
         mPlayAllButton = findViewById(R.id.mobile_channel_uploads_play_all);
         mSwipe = findViewById(R.id.mobile_channel_uploads_swipe);
-        // MEETUBE(playlist page): the list runs under the toolbar now; the refresh spinner starts below it.
+        // GUTUBE(playlist page): the list runs under the toolbar now; the refresh spinner starts below it.
         int bar = getResources().getDimensionPixelSize(R.dimen.mobile_title_bar_height);
         float dp = getResources().getDisplayMetrics().density;
         mSwipe.setProgressViewOffset(false, bar - Math.round(40 * dp), bar + Math.round(24 * dp));
@@ -348,11 +348,11 @@ public class MobileChannelUploadsActivity extends MobileActivity
                 applyToolbarTitleAlpha(dy);
             }
         });
-        // MEETUBE(#65): in the user's own playlist a card swiped sideways leaves it (Undo on the snackbar).
+        // GUTUBE(#65): in the user's own playlist a card swiped sideways leaves it (Undo on the snackbar).
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START | ItemTouchHelper.END) {
             @Override
             public int getDragDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder holder) {
-                // MEETUBE(playlist page): any ordering gesture belongs to Manual, outside a full-playlist load.
+                // GUTUBE(playlist page): any ordering gesture belongs to Manual, outside a full-playlist load.
                 return mSort == PlaylistSort.MANUAL && !playlistBusy()
                         ? super.getDragDirs(recyclerView, holder) : 0;
             }
@@ -382,17 +382,17 @@ public class MobileChannelUploadsActivity extends MobileActivity
         return opener != null ? opener.getPlaylistId() : null;
     }
 
-    /** MEETUBE(playlist page): + is for Watch later and your own playlists (Liked videos fills by liking). */
+    /** GUTUBE(playlist page): + is for Watch later and your own playlists (Liked videos fills by liking). */
     private void updateCanAdd() {
         String id = openerPlaylistId();
         mHeaderAdapter.setCanAdd(id != null && !"LL".equals(id) && ("WL".equals(id) || isOwnPlaylistShown()));
-        // MEETUBE(issue #242): Save on every playlist but the account's own ones and its Watch later
+        // GUTUBE(issue #242): Save on every playlist but the account's own ones and its Watch later
         // and Liked videos; radio mixes are endless, so they aren't kept either.
         mHeaderAdapter.setSaveState(id != null && id.length() > 4 && !id.startsWith("RD") && !isOwnPlaylistShown(),
                 savedPin(id) != null);
     }
 
-    /** MEETUBE(issue #242): this playlist's entry among the items saved (pinned) to You, if any. */
+    /** GUTUBE(issue #242): this playlist's entry among the items saved (pinned) to You, if any. */
     @Nullable
     private Video savedPin(@Nullable String playlistId) {
         if (playlistId == null) {
@@ -408,7 +408,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     }
 
     /**
-     * MEETUBE(issue #242): Save keeps the playlist on this phone, in You's Saved playlists, signed in
+     * GUTUBE(issue #242): Save keeps the playlist on this phone, in You's Saved playlists, signed in
      * or not. Signed in, it is also saved to the account's library, as YouTube's own Save does.
      * Removing only takes it out of You: removing from the account goes through YouTube's delete
      * call, which deletes the playlist outright when it is the user's own.
@@ -448,7 +448,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
         return mOwnPlaylistId != null && mOwnPlaylistId.equals(openerPlaylistId());
     }
 
-    /** MEETUBE(#65): once per playlist, with its first video: the menu's own-playlist test. */
+    /** GUTUBE(#65): once per playlist, with its first video: the menu's own-playlist test. */
     private void checkOwnPlaylist() {
         String playlistId = openerPlaylistId();
         if (playlistId == null || playlistId.equals(mOwnCheckedFor)) {
@@ -555,7 +555,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     }
 
     /**
-     * MEETUBE(playlist page): playlist items (Liked videos, Watch later) never say they are Shorts,
+     * GUTUBE(playlist page): playlist items (Liked videos, Watch later) never say they are Shorts,
      * but YouTube serves a Short's thumbnail as a vertical-crop sddefault with this sqp, which a
      * regular video's never carries. Up to 3 minutes, as a Short can run. Checked on a real
      * Liked videos list: every Short had it, no long video did.
@@ -580,7 +580,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     }
 
     /**
-     * MEETUBE(playlist page): a Short opens the Shorts player with the list's Shorts as its queue, in
+     * GUTUBE(playlist page): a Short opens the Shorts player with the list's Shorts as its queue, in
      * the order shown. Marked copies, so the cards here keep their look.
      */
     private Video queueShorts(Video tapped) {
@@ -781,9 +781,9 @@ public class MobileChannelUploadsActivity extends MobileActivity
         return true;
     }
 
-    /** MEETUBE(playlist page): keep the server order as the source for Manual and pagination. */
+    /** GUTUBE(playlist page): keep the server order as the source for Manual and pagination. */
     private void submitVideos() {
-        // MEETUBE(playlist page): All | Videos | Shorts, then the sort, over the kept entries.
+        // GUTUBE(playlist page): All | Videos | Shorts, then the sort, over the kept entries.
         boolean hasShorts = false;
         List<Video> filtered = new ArrayList<>();
         for (Video video : mVideos) {
@@ -883,12 +883,12 @@ public class MobileChannelUploadsActivity extends MobileActivity
         dialog.showDialog(getString(R.string.mobile_playlist_sort));
     }
 
-    /** MEETUBE(playlist page): confirm the full count, never just the currently visible page. */
+    /** GUTUBE(playlist page): confirm the full count, never just the currently visible page. */
     private void downloadAll() {
         if (playlistBusy() || !PlaylistHeaderAdapter.canDownload(mPresenter.getChannel())) {
             return;
         }
-        // MEETUBE(playlist page): the whole list, or pick the videos on the grid.
+        // GUTUBE(playlist page): the whole list, or pick the videos on the grid.
         AppDialogPresenter dialog = AppDialogPresenter.instance(this);
         dialog.appendSingleButton(UiOptionItem.from(getString(R.string.mobile_playlist_download_all), option -> {
             dialog.closeDialog();
@@ -923,7 +923,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
         if (count >= 0) {
             confirmDownloadAll(count);
         } else {
-            // MEETUBE(playlist page): some openers have no total; count every page before asking.
+            // GUTUBE(playlist page): some openers have no total; count every page before asking.
             loadPlaylist(BULK_CONFIRM_DOWNLOAD);
         }
     }
@@ -997,7 +997,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
                 failPlaylistLoad();
                 return;
             }
-            // MEETUBE(playlist page): use the presenter's continuation, anchored in server order.
+            // GUTUBE(playlist page): use the presenter's continuation, anchored in server order.
             mPresenter.onScrollEnd(anchor);
             return;
         }
@@ -1070,7 +1070,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
         if (mPresenter != null) {
             mPresenter.onViewResumed();
         }
-        // MEETUBE(playlist page): back from + search with videos added: show them.
+        // GUTUBE(playlist page): back from + search with videos added: show them.
         String playlistId = openerPlaylistId();
         if (playlistId != null && com.newtube.mobile.ui.search.MobileSearchActivity.consumeAdded(playlistId)
                 && mPresenter != null && !playlistBusy()) {
@@ -1267,7 +1267,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     public void showProgressBar(boolean show) {
         runOnUiThread(() -> {
             mPageLoading = show;
-            // MEETUBE(playlist page): bulk paging uses the chip spinner and continues after Rx completes.
+            // GUTUBE(playlist page): bulk paging uses the chip spinner and continues after Rx completes.
             if (mBulkAction != BULK_NONE) {
                 mProgressBar.setVisibility(View.GONE);
                 if (!show) {

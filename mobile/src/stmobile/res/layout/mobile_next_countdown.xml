@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(up-next): the small card over an ended video (NextCountdown) - "Up next in N", the next
+<!-- GUTUBE(up-next): the small card over an ended video (NextCountdown) - "Up next in N", the next
      title, Cancel / Replay / Play now, and a bar that drains over the ten seconds. Clickable so a
      tap on it never reaches the player's tap-to-toggle-controls. Fits the ~200dp portrait box.
      A vertical LinearLayout, not a FrameLayout: a match_parent bar in a wrap_content FrameLayout
@@ -56,20 +56,20 @@
 
             <TextView
                 android:id="@+id/mobile_next_cancel"
-                style="@style/MeeTubeNextButton"
+                style="@style/GuTubeNextButton"
                 android:background="@drawable/bg_next_button_glass"
                 android:text="@string/mobile_next_cancel" />
 
             <TextView
                 android:id="@+id/mobile_next_repeat"
-                style="@style/MeeTubeNextButton"
+                style="@style/GuTubeNextButton"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_next_button_glass"
                 android:text="@string/mobile_player_replay" />
 
             <TextView
                 android:id="@+id/mobile_next_play"
-                style="@style/MeeTubeNextButton"
+                style="@style/GuTubeNextButton"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_next_button_primary"
                 android:text="@string/mobile_next_play"

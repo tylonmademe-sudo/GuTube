@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  MEETUBE(list layout, issue #82): item_video_card as a compact row - a small 16:9 thumbnail on the
+  GUTUBE(list layout, issue #82): item_video_card as a compact row - a small 16:9 thumbnail on the
   left, title and meta on the right, YouTube's list. Same view ids as the card, so
   VideoCardAdapter.VideoViewHolder binds it unchanged; no avatar (the row has no room for one).
 -->
@@ -17,7 +17,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="?attr/meetubeRowCorner"
+    app:cardCornerRadius="?attr/gutubeRowCorner"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,13 +29,13 @@
             android:layout_width="@dimen/mobile_watch_related_thumb_width"
             android:layout_height="0dp"
             app:cardBackgroundColor="@color/mobile_color_placeholder"
-            app:cardCornerRadius="?attr/meetubeRowCorner"
+            app:cardCornerRadius="?attr/gutubeRowCorner"
             app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- MEETUBE(glass): what the badge frosts. -->
+            <!-- GUTUBE(glass): what the badge frosts. -->
             <com.newtube.mobile.ui.common.GlassSource
                 android:id="@+id/video_thumbnail_glass"
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <!-- MEETUBE(hyped): the card's place in a chart. -->
+            <!-- GUTUBE(hyped): the card's place in a chart. -->
             <TextView
                 android:id="@+id/video_rank"
                 android:layout_width="wrap_content"

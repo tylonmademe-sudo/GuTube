@@ -40,7 +40,7 @@ final class RatingUndo {
             java.util.regex.Pattern.compile("\\d{1,15}(?:[,.'\\s\u00a0\u202f]\\d{3})*");
 
     /**
-     * MEETUBE(issue #45): the like count after this account's like came or went, as YouTube's
+     * GUTUBE(issue #45): the like count after this account's like came or went, as YouTube's
      * count does. {@code raw} is YouTube's count, which held the like when {@code likedInRaw}.
      * A rounded count ("1.2K") stays as it is.
      */

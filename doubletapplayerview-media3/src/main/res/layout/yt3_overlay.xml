@@ -28,7 +28,7 @@
         app:layout_constraintWidth_percent="0.5"
         tools:visibility="visible" />
 
-    <!-- MEETUBE(seek pill): the count per tap, centred at 78% of the width (22% rewinding). -->
+    <!-- GUTUBE(seek pill): the count per tap, centred at 78% of the width (22% rewinding). -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/seek_pill_center"
         android:layout_width="wrap_content"

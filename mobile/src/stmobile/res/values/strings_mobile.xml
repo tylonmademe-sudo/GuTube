@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- MeeTube branding: override SmartTube's app_name for the mobile flavor only -->
-    <string name="app_name" translatable="false">MeeTube</string>
+    <!-- GuTube branding: override SmartTube's app_name for the mobile flavor only -->
+    <string name="app_name" translatable="false">GuTube</string>
     <string name="mobile_player_back">Back</string>
     <string name="mobile_player_minimize">Minimize</string>
     <string name="mobile_player_audio_only">Audio only</string>
@@ -19,12 +19,12 @@
     <string name="mobile_player_audio_track">Audio track</string>
     <string name="mobile_player_subtitles">Subtitles</string>
     <string name="mobile_player_speed">Playback speed</string>
-    <!-- MEETUBE(sleep-timer): gear-sheet row + sheet title, and its states. -->
+    <!-- GUTUBE(sleep-timer): gear-sheet row + sheet title, and its states. -->
     <string name="mobile_player_sleep_timer">Sleep timer</string>
-    <!-- MEETUBE(feed-strip): the first chip on Home and the first avatar on Subscriptions. -->
+    <!-- GUTUBE(feed-strip): the first chip on Home and the first avatar on Subscriptions. -->
     <string name="mobile_feed_all">All</string>
     <string name="mobile_feed_show_filters">Show filters</string>
-    <!-- MEETUBE(autoplay): gear-sheet switch over Settings > When a video ends (on = next, off = pause). -->
+    <!-- GUTUBE(autoplay): gear-sheet switch over Settings > When a video ends (on = next, off = pause). -->
     <string name="mobile_player_autoplay">Autoplay</string>
     <string name="mobile_sleep_end_of_video">End of video</string>
     <string name="mobile_sleep_left">%1$d min left</string>
@@ -84,7 +84,7 @@
     <string name="mobile_lyrics">Lyrics</string>
     <string name="mobile_lyrics_none">Lyrics aren\'t available for this song</string>
     <string name="mobile_lyrics_source">Source: %1$s</string>
-    <!-- MEETUBE(lyrics): the lyrics provider chooser (LyricsSheet), in BitChord's words -->
+    <!-- GUTUBE(lyrics): the lyrics provider chooser (LyricsSheet), in BitChord's words -->
     <string name="mobile_lyrics_provider_description">Lyrics provider: %1$s</string>
     <string name="mobile_lyrics_provider_choose">Choose lyrics provider</string>
     <string name="mobile_lyrics_provider_current">Current provider</string>
@@ -143,10 +143,10 @@
     <!-- Comments panel (under the video: CommentsPanel) -->
     <string name="mobile_comments_entry">Comments</string>
     <string name="mobile_settings_card_style">Card style</string>
-    <string name="mobile_you_about">About MeeTube  ›</string>
+    <string name="mobile_you_about">About GuTube  ›</string>
     <string name="mobile_card_style_plain">Minimal</string>
     <string name="mobile_card_style_plain_desc">Faint glass on black with a glass edge, no accent</string>
-    <string name="mobile_card_style_minimal">MeeTube minimal</string>
+    <string name="mobile_card_style_minimal">GuTube minimal</string>
     <string name="mobile_card_style_minimal_desc">A soft accent glow in the top right, the edge warming at the bottom right</string>
     <string name="mobile_card_style_ember">Corner ember</string>
     <string name="mobile_card_style_ember_desc">Almost black, with one accent light pooled in the bottom right</string>
@@ -277,7 +277,7 @@
 
     <!-- Bottom-nav "You" tab (account + extra sections + settings) -->
     <string name="mobile_nav_you">You</string>
-    <!-- MEETUBE(issue #130): a held tab's hint over the bottom bar, and its confirmation. -->
+    <!-- GUTUBE(issue #130): a held tab's hint over the bottom bar, and its confirmation. -->
     <string name="mobile_nav_hint_tabs">Tabs customization  ›</string>
     <string name="mobile_nav_hint_change">Change</string>
     <string name="mobile_nav_hint_confirm_title">Customize tabs?</string>
@@ -327,8 +327,8 @@
     <string name="mobile_signin_step1_title">Tap \u201cContinue with Google\u201d</string>
     <string name="mobile_signin_step1_caption">Google\'s sign-in page opens right here.</string>
     <string name="mobile_signin_step2_title">Choose your account and allow access</string>
-    <string name="mobile_signin_step2_caption">The page may mention a TV or another device \u2014 that\'s normal: MeeTube signs in the same way a TV does, so your password never touches the app.</string>
-    <string name="mobile_signin_step3_title">Come back to MeeTube</string>
+    <string name="mobile_signin_step2_caption">The page may mention a TV or another device \u2014 that\'s normal: GuTube signs in the same way a TV does, so your password never touches the app.</string>
+    <string name="mobile_signin_step3_title">Come back to GuTube</string>
     <string name="mobile_signin_step3_caption">Sign-in finishes by itself \u2014 nothing else to do.</string>
     <string name="mobile_signin_code_label">Google will show this code \u2014 check it matches:</string>
     <string name="mobile_signin_copy_hint">Tap the code to copy it</string>
@@ -367,7 +367,7 @@
     <string name="action_signin">Sign in</string>
     <string name="mobile_empty_generic">Nothing to show here yet</string>
     <string name="mobile_empty_subscriptions">Videos from channels you subscribe to show up here</string>
-    <string name="mobile_empty_my_videos">Your public uploads show up here. YouTube keeps private and unlisted videos out of the TV sign-in MeeTube uses.</string>
+    <string name="mobile_empty_my_videos">Your public uploads show up here. YouTube keeps private and unlisted videos out of the TV sign-in GuTube uses.</string>
     <!-- Same empty state, but the device has no working network: say so instead of blaming the feed. -->
     <string name="mobile_empty_no_connection">No connection. Check your network and try again.</string>
     <!-- Channel / uploads / playlist pages (MobileChannel*Activity): the first page failed with a
@@ -434,7 +434,7 @@
     <!-- Cast-device row: the default mode's promise, nothing else. -->
     <string name="mobile_cast_subtitle_no_ads">Quality controls on your phone</string>
     <!-- Lounge-only row (saved screen / DIAL TV): plain statement of what will play. -->
-    <string name="mobile_cast_subtitle_youtube_app">YouTube or MeeTube TV / SmartTube TV on the TV</string>
+    <string name="mobile_cast_subtitle_youtube_app">YouTube or GuTube TV / SmartTube TV on the TV</string>
     <!-- Chooser header for a Cast device offering both modes; tapping it goes back to the list. -->
     <string name="mobile_cast_chooser_title">Cast to %1$s</string>
     <!-- Chooser option 1 (default, listed first): Route A. Subtitle carries the one real cost. -->
@@ -446,25 +446,25 @@
     <!-- mdx shim in flight: launching the TV's YouTube app and reading its Lounge screenId. -->
     <string name="mobile_cast_connecting_youtube_app">Connecting to the YouTube app on the TV…</string>
     <!-- Route A load refusals: the session stays up, only this video can't be direct-cast. -->
-    <string name="mobile_cast_direct_live_unsupported">Live streams need YouTube or MeeTube TV / SmartTube TV on the TV</string>
+    <string name="mobile_cast_direct_live_unsupported">Live streams need YouTube or GuTube TV / SmartTube TV on the TV</string>
     <string name="mobile_cast_direct_incompatible">This video can\'t be direct-cast (no format the TV can play)</string>
     <string name="mobile_cast_direct_load_failed">Couldn\'t prepare this video for direct cast</string>
     <string name="mobile_cast_direct_no_wifi">Direct cast needs the phone and TV on the same Wi-Fi</string>
     <string name="mobile_cast_link_code">Link with TV code</string>
-    <string name="mobile_cast_link_code_subtitle">Works with YouTube and MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_link_code_subtitle">Works with YouTube and GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_code_hint">12-digit code</string>
     <string name="mobile_cast_code_title">Link TV</string>
     <string name="mobile_cast_code_app_label">TV app</string>
     <string name="mobile_cast_code_choose_app">Choose the app open on your TV.</string>
-    <string name="mobile_cast_code_open_smarttube">In MeeTube TV / SmartTube TV on your TV, open:</string>
+    <string name="mobile_cast_code_open_smarttube">In GuTube TV / SmartTube TV on your TV, open:</string>
     <string name="mobile_cast_code_open_youtube">In YouTube on your TV, open:</string>
     <string name="mobile_cast_code_find">Find the code in either TV app:</string>
     <string name="mobile_cast_code_youtube" translatable="false">YouTube</string>
     <string name="mobile_cast_code_youtube_path">Settings → Link with TV code</string>
-    <string name="mobile_cast_code_smarttube" translatable="false">MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_code_smarttube" translatable="false">GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_code_smarttube_path">Settings → Remote control</string>
     <string name="mobile_cast_code_helper">Dashes and spaces are okay</string>
-    <string name="mobile_cast_code_smarttube_benefit">Tip: with MeeTube TV / SmartTube TV you get quality and subtitle controls on the TV.</string>
+    <string name="mobile_cast_code_smarttube_benefit">Tip: with GuTube TV / SmartTube TV you get quality and subtitle controls on the TV.</string>
     <string name="mobile_cast_code_positive">Link</string>
     <string name="mobile_cast_code_invalid">The code should have 12 digits</string>
     <string name="mobile_cast_pairing">Linking with the TV…</string>
@@ -480,20 +480,20 @@
     <string name="mobile_cast_channel_desc">Controls for the TV casting session</string>
     <!-- Volume-key routing while a session is connected: lightweight toast indicator. -->
     <string name="mobile_cast_fallback_switching">Trying YouTube on the TV…</string>
-    <string name="mobile_cast_trying_smarttube">Trying MeeTube TV / SmartTube TV on the TV…</string>
+    <string name="mobile_cast_trying_smarttube">Trying GuTube TV / SmartTube TV on the TV…</string>
     <string name="mobile_cast_trying_direct">Trying direct cast…</string>
     <string name="mobile_cast_trying_saved">Trying the saved TV app…</string>
     <string name="mobile_cast_checking_ad_free">Checking the TV…</string>
-    <string name="mobile_cast_smarttube_title">MeeTube TV / SmartTube TV</string>
-    <string name="mobile_cast_smarttube_subtitle">MeeTube TV / SmartTube TV · your phone can leave</string>
+    <string name="mobile_cast_smarttube_title">GuTube TV / SmartTube TV</string>
+    <string name="mobile_cast_smarttube_subtitle">GuTube TV / SmartTube TV · your phone can leave</string>
     <string name="mobile_cast_youtube_title">YouTube</string>
     <string name="mobile_cast_youtube_subtitle">YouTube · fallback</string>
     <string name="mobile_cast_unknown_title">Saved TV app</string>
     <string name="mobile_cast_unknown_subtitle">TV app not identified · choose ⋮ to set it</string>
     <string name="mobile_cast_identify_app">Which TV app is this code from?</string>
-    <string name="mobile_cast_onboarding_title">MeeTube TV / SmartTube TV on your TV?</string>
-    <string name="mobile_cast_onboarding_body">Pair it once and the videos you cast open in MeeTube TV / SmartTube TV.</string>
-    <string name="mobile_cast_pair_smarttube">Pair MeeTube TV / SmartTube TV</string>
+    <string name="mobile_cast_onboarding_title">GuTube TV / SmartTube TV on your TV?</string>
+    <string name="mobile_cast_onboarding_body">Pair it once and the videos you cast open in GuTube TV / SmartTube TV.</string>
+    <string name="mobile_cast_pair_smarttube">Pair GuTube TV / SmartTube TV</string>
     <string name="mobile_cast_receiver_no_playback">The TV app did not start playback</string>
     <string name="mobile_cast_switching_tv_app">Opening YouTube controls on the TV…</string>
     <string name="mobile_cast_choose_method">Choose casting method</string>
@@ -509,7 +509,7 @@
     <string name="mobile_cast_subtitles_sent">Subtitle selection sent to the TV</string>
     <string name="mobile_cast_subtitles_failed">Couldn\'t change subtitles on this receiver</string>
     <string name="mobile_cast_switch_subtitles_title">Use the TV app for subtitles?</string>
-    <string name="mobile_cast_switch_subtitles_message">The TV app supports subtitles and controls quality with the TV remote. We try paired MeeTube TV / SmartTube TV first, then YouTube.</string>
+    <string name="mobile_cast_switch_subtitles_message">The TV app supports subtitles and controls quality with the TV remote. We try paired GuTube TV / SmartTube TV first, then YouTube.</string>
     <string name="mobile_cast_switch_subtitles_positive">Switch</string>
     <string name="mobile_cast_tv_volume_label">TV volume</string>
 
@@ -559,8 +559,8 @@
     <string name="mobile_download_folder">Download folder</string>
     <string name="mobile_download_folder_video">Video folder</string>
     <string name="mobile_download_folder_audio">Music folder</string>
-    <string name="mobile_download_folder_default_video" translatable="false">Movies/MeeTube</string>
-    <string name="mobile_download_folder_default_audio" translatable="false">Music/MeeTube</string>
+    <string name="mobile_download_folder_default_video" translatable="false">Movies/GuTube</string>
+    <string name="mobile_download_folder_default_audio" translatable="false">Music/GuTube</string>
     <string name="mobile_download_folder_title">Saving to: %1$s</string>
     <string name="mobile_download_folder_internal">Internal storage</string>
     <string name="mobile_download_folder_choose">Choose a folder</string>
@@ -586,13 +586,13 @@
     <!-- NEWTUBE(update-flow): the update sheet (Settings > About > Check for updates, the You tab's
          update row) and the notices around it. -->
     <string name="mobile_update_checking">Checking for updates…</string>
-    <string name="mobile_update_up_to_date">MeeTube is up to date</string>
+    <string name="mobile_update_up_to_date">GuTube is up to date</string>
     <string name="mobile_update_version">Version %1$s</string>
     <string name="mobile_update_check_failed_title">Couldn\'t check for updates</string>
     <string name="mobile_update_check_failed_body">Check your connection and try again.</string>
     <string name="mobile_update_available_title">Update available</string>
-    <string name="mobile_update_app_version">MeeTube %1$s</string>
-    <string name="mobile_update_app_version_size">MeeTube %1$s · %2$s</string>
+    <string name="mobile_update_app_version">GuTube %1$s</string>
+    <string name="mobile_update_app_version_size">GuTube %1$s · %2$s</string>
     <string name="mobile_update_metered">You\'re on mobile data.</string>
     <string name="mobile_update_whats_new_in">What\'s new in %1$s</string>
     <string name="mobile_update_release_notes">Full release notes</string>
@@ -606,29 +606,29 @@
     <string name="mobile_update_progress">%1$s of %2$s</string>
     <string name="mobile_update_cancel">Cancel</string>
     <string name="mobile_update_download_failed_title">The download didn\'t finish</string>
-    <string name="mobile_update_download_failed_body">Try again, or get MeeTube %1$s from GitHub.</string>
+    <string name="mobile_update_download_failed_body">Try again, or get GuTube %1$s from GitHub.</string>
     <string name="mobile_update_install_failed_title">Couldn\'t open the installer</string>
     <string name="mobile_update_github">Open GitHub</string>
     <string name="mobile_update_try_again">Try again</string>
     <string name="mobile_update_ready_title">Ready to install</string>
     <string name="mobile_update_install">Install</string>
-    <string name="mobile_update_permission_title">Allow MeeTube to install updates</string>
+    <string name="mobile_update_permission_title">Allow GuTube to install updates</string>
     <string name="mobile_update_permission_body">Android asks this once. On the next screen, turn on “Allow from this source”, then come back: the update installs right away.</string>
     <string name="mobile_update_open_settings">Open settings</string>
     <string name="mobile_update_not_now">Not now</string>
     <string name="mobile_update_done">Done</string>
     <string name="mobile_update_whats_new">What\'s new</string>
-    <string name="mobile_update_updated">Updated to MeeTube %1$s</string>
+    <string name="mobile_update_updated">Updated to GuTube %1$s</string>
     <string name="mobile_update_downloaded">Update downloaded</string>
     <string name="mobile_update_row_available">Update available</string>
     <string name="mobile_update_row_downloading">Downloading update</string>
-    <string name="mobile_update_row_downloading_percent">MeeTube %1$s · %2$d%%</string>
+    <string name="mobile_update_row_downloading_percent">GuTube %1$s · %2$d%%</string>
     <string name="mobile_update_row_ready">Update ready to install</string>
     <string name="mobile_update_channel_name">App updates</string>
-    <string name="mobile_update_channel_desc">Downloading a MeeTube update</string>
+    <string name="mobile_update_channel_desc">Downloading a GuTube update</string>
     <string name="mobile_new_uploads_channel">New uploads</string>
     <string name="mobile_new_uploads_channel_desc">New videos from the channels you subscribe to</string>
-    <!-- MEETUBE(issue #239): the bell beside Subscribed on a channel page -->
+    <!-- GUTUBE(issue #239): the bell beside Subscribed on a channel page -->
     <string name="mobile_channel_bell">Notifications for this channel</string>
     <string name="mobile_channel_bell_on">Notifications on for this channel</string>
     <string name="mobile_channel_bell_off">Notifications off for this channel</string>
@@ -637,10 +637,10 @@
     <string name="mobile_channel_bell_on_master_off">New-upload notifications are off in Settings</string>
     <string name="mobile_channel_bell_turn_on">Turn on</string>
     <string name="mobile_update_notify_channel">New versions</string>
-    <string name="mobile_update_notify_channel_desc">When a new MeeTube version is out</string>
+    <string name="mobile_update_notify_channel_desc">When a new GuTube version is out</string>
     <string name="mobile_update_notify_title">New update available ✨</string>
-    <string name="mobile_update_notify_text">MeeTube %1$s is here. Tap to see what\'s new</string>
-    <string name="mobile_update_notify_love">Built with love and a few sleepless nights. If MeeTube makes your day a little better, a coffee ☕ keeps it going. No pressure ❤️</string>
+    <string name="mobile_update_notify_text">GuTube %1$s is here. Tap to see what\'s new</string>
+    <string name="mobile_update_notify_love">Built with love and a few sleepless nights. If GuTube makes your day a little better, a coffee ☕ keeps it going. No pressure ❤️</string>
     <!-- NEWTUBE(theme): Settings > User interface > Theme. -->
     <string name="mobile_theme">Theme</string>
     <string name="mobile_theme_system">System default</string>
@@ -649,51 +649,51 @@
 
     <!-- NEWTUBE(about-growth): the last two rows of Settings > About. Tap-only: no prompt, badge
          or counter. Never "ad-free" wording. -->
-    <string name="mobile_about_star">Star MeeTube on GitHub</string>
-    <string name="mobile_about_star_desc">Free and open source. A star helps others find it</string>
-    <string name="mobile_about_share">Share MeeTube</string>
-    <string name="mobile_about_share_desc">Send the link to someone who\'d like it</string>
-    <string name="mobile_about_share_text">MeeTube — a YouTube client for phones, built on SmartTube: %1$s</string>
-    <string name="mobile_about_repo_url" translatable="false">https://github.com/yashoncode/meetube</string>
-    <!-- MEETUBE(about): the card at the top of About. -->
-    <string name="mobile_about_dev_name" translatable="false">Yashwanth</string>
-    <string name="mobile_about_dev_handle" translatable="false">github.com/yashoncode</string>
-    <string name="mobile_about_dev_url" translatable="false">https://github.com/yashoncode</string>
-    <string name="mobile_about_made_by">Made by %1$s</string>
-    <string name="mobile_about_star_short">Star</string>
+    <string name="mobile_about_star">GuTube</string>
+    <string name="mobile_about_star_desc">Free, private and open source</string>
+    <string name="mobile_about_share">Share GuTube</string>
+    <string name="mobile_about_share_desc">Send GuTube to a friend</string>
+    <string name="mobile_about_share_text">GuTube — a fast and private YouTube client for Android</string>
+    <string name="mobile_about_repo_url" translatable="false"></string>
+    <!-- GUTUBE(about): the card at the top of About. -->
+    <string name="mobile_about_dev_name" translatable="false">GuTube</string>
+    <string name="mobile_about_dev_handle" translatable="false">Fast, Private &amp; Open</string>
+    <string name="mobile_about_dev_url" translatable="false"></string>
+    <string name="mobile_about_made_by">GuTube</string>
+    <string name="mobile_about_star_short">GuTube</string>
     <string name="mobile_about_share_short">Share</string>
     <string name="mobile_about_log_short">Send log</string>
-    <string name="mobile_about_creator">Creator</string>
-    <string name="mobile_about_coffee_note"><![CDATA[<font color="#FF5F56">●</font> <font color="#FFBD2E">●</font> <font color="#27C93F">●</font><br><br><font color="#4ADE80">$</font> meetube --thank-you<br><font color="#E6EDF3">&#160;&#160;ads: 0 | sponsors: skipped</font><br><font color="#8B949E">// built at 3am on pure caffeine<br>// refill? totally optional :)</font>]]></string>
-    <string name="mobile_about_coffee_cta" translatable="false">sudo brew coffee</string>
+    <string name="mobile_about_creator">About</string>
+    <string name="mobile_about_coffee_note"><![CDATA[<font color="#FF5F56">●</font> <font color="#FFBD2E">●</font> <font color="#27C93F">●</font><br><br><font color="#4ADE80">$</font> gutube --status<br><font color="#E6EDF3">&#160;&#160;ads: 0 | sponsors: skipped</font><br><font color="#8B949E">// fast, private &amp; ad-free<br>// built for pure playback</font>]]></string>
+    <string name="mobile_about_coffee_cta" translatable="false">GuTube</string>
     <string name="mobile_stats_today">Today</string>
-    <string name="mobile_stats_hero_label">in MeeTube today</string>
+    <string name="mobile_stats_hero_label">in GuTube today</string>
     <string name="mobile_stats_videos">Videos</string>
     <string name="mobile_stats_week_title">Last 7 days · %1$s</string>
     <string name="mobile_stats_tap">Tap a bar to see that day</string>
     <string name="mobile_stats_avg">Daily average</string>
     <string name="mobile_stats_watched">Watched</string>
-    <string name="mobile_stats_day">%1$s: %2$s in MeeTube, %3$s watched, %4$s videos</string>
+    <string name="mobile_stats_day">%1$s: %2$s in GuTube, %3$s watched, %4$s videos</string>
     <string name="mobile_stats_storage_header">Your stats</string>
     <string name="mobile_stats_delete">Delete my stats</string>
     <string name="mobile_stats_delete_confirm">Delete your stats?</string>
     <string name="mobile_stats_delete_body">Time spent, watch time and videos counted, for every day. They start again from zero.</string>
-    <string name="mobile_stats_private">Your stats (time in MeeTube, watch time, videos started) are kept only on this phone. They are never uploaded or shared: no data leaves your device.</string>
+    <string name="mobile_stats_private">Your stats (time in GuTube, watch time, videos started) are kept only on this phone. They are never uploaded or shared: no data leaves your device.</string>
     <string name="mobile_stats_on_device">🔒 Only on this phone. Nothing leaves your device.</string>
     <plurals name="mobile_stats_delete_summary">
         <item quantity="one">%d day kept on this phone</item>
         <item quantity="other">%d days kept on this phone</item>
     </plurals>
     <string name="mobile_about_tv_badge">NEW</string>
-    <string name="mobile_about_tv_title">MeeTube TV is here 📺</string>
+    <string name="mobile_about_tv_title">GuTube TV is here 📺</string>
     <string name="mobile_about_tv_text">Everything you love here, now on the big screen. A glass sidebar, Shorts that glow in their own cards, and sign in with a code. Your couch is calling.</string>
     <string name="mobile_about_tv_button">Install on my TV</string>
-    <string name="mobile_about_tv_repo">⭐ Star it on GitHub, or download the APK yourself</string>
-    <string name="mobile_about_tv_repo_url" translatable="false">github.com/yashoncode/meetube-tv</string>
-    <string name="mobile_about_tv_shot">MeeTube TV’s Home on a TV</string>
+    <string name="mobile_about_tv_repo"></string>
+    <string name="mobile_about_tv_repo_url" translatable="false"></string>
+    <string name="mobile_about_tv_shot">GuTube TV’s Home on a TV</string>
     <string name="mobile_about_reporters">Issue reporters</string>
     <string name="mobile_about_reporters_summary">Thanks to all issue reporters</string>
-    <string name="mobile_about_reporters_note">Thank you to everyone who opened an issue. Every report and idea made MeeTube better.</string>
+    <string name="mobile_about_reporters_note">Thank you to everyone who opened an issue. Every report and idea made GuTube better.</string>
     <string name="mobile_about_reporters_loading">Loading from GitHub…</string>
     <string name="mobile_about_reporters_failed">Couldn\'t load the list from GitHub. Check your connection and open this page again.</string>
     <plurals name="mobile_about_reporters_count">
@@ -701,27 +701,27 @@
         <item quantity="other">%d issues</item>
     </plurals>
     <string name="mobile_about_contributors">Contributors</string>
-    <string name="mobile_about_contributors_summary">Who helped build MeeTube, and what they did</string>
+    <string name="mobile_about_contributors_summary">Who helped build GuTube, and what they did</string>
     <string name="mobile_about_contributors_code">Code and translations</string>
     <string name="mobile_about_contributors_built_on">Built on</string>
     <string name="mobile_about_credit_zh_tw">Traditional Chinese translation (#14)</string>
     <string name="mobile_about_credit_ru">Russian translation (#194)</string>
     <string name="mobile_about_credit_icons">Red CRT, Chrome Play, Pixel Play, Starry Night and GTA VI app icons (#193)</string>
-    <string name="mobile_about_credit_smarttube">SmartTube: the player and the YouTube backend MeeTube runs on</string>
-    <string name="mobile_about_credit_newtube">NewTube: the phone app MeeTube grew from</string>
+    <string name="mobile_about_credit_smarttube">SmartTube: the player and the YouTube backend GuTube runs on</string>
+    <string name="mobile_about_credit_newtube">NewTube: the phone app GuTube grew from</string>
     <string name="mobile_about_credit_backdrop">Backdrop: the liquid glass lens on the bars</string>
     <string name="mobile_about_credit_autoeq">AutoEq: the headphone correction profiles</string>
-    <string name="mobile_about_site_url" translatable="false">https://github.com/yashoncode/meetube</string>
+    <string name="mobile_about_site_url" translatable="false"></string>
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>
-    <!-- MEETUBE(up-next): the countdown card over an ended video. %1$d = seconds left. -->
+    <!-- GUTUBE(up-next): the countdown card over an ended video. %1$d = seconds left. -->
     <string name="mobile_next_in">Up next in %1$d</string>
     <string name="mobile_next_play">Play now</string>
     <string name="mobile_next_cancel">Cancel</string>
     <string name="mobile_shorts_mute">Mute</string>
     <string name="mobile_shorts_unmute">Unmute</string>
-    <!-- MEETUBE(greeting): the held brand pill's greeting, by the time of day. -->
+    <!-- GUTUBE(greeting): the held brand pill's greeting, by the time of day. -->
     <string name="mobile_greet_morning">Good morning</string>
     <string name="mobile_greet_afternoon">Good afternoon</string>
     <string name="mobile_greet_evening">Good evening</string>

@@ -59,13 +59,13 @@ import dadb.AdbShellResponse;
 import dadb.Dadb;
 import dadb.InstallResult;
 
-// MEETUBE(tv install): a phone guide and background ADB installer, with no desktop needed.
+// GUTUBE(tv install): a phone guide and background ADB installer, with no desktop needed.
 @RequiresApi(26)
 final class TvInstall {
     private static final String TAG = "TvInstall";
     private static final String LOCAL_NETWORK = "android.permission.ACCESS_LOCAL_NETWORK";
-    // MeeTube TV has its own repo since 1.1.1; its tv-vX.Y.Z tags and MeeTubeTV_X.Y.Z_<abi>.apk names stayed.
-    private static final String RELEASES = "https://api.github.com/repos/yashoncode/meetube-tv/releases?per_page=30";
+    // GuTube TV has its own repo since 1.1.1; its tv-vX.Y.Z tags and GuTubeTV_X.Y.Z_<abi>.apk names stayed.
+    private static final String RELEASES = "";
     private static final AtomicBoolean INSTALLING = new AtomicBoolean();
     private final Context mContext;
     private final View mRoot;
@@ -211,7 +211,7 @@ final class TvInstall {
                             : mContext.getString(R.string.mobile_settings_tv_found, String.valueOf(mFound.getChildCount())));
                 });
             }
-        }, "meetube-tv-scan");
+        }, "gutube-tv-scan");
         mScanThread.start();
     }
 
@@ -245,11 +245,11 @@ final class TvInstall {
         }
         mInstall.setEnabled(false);
         showStatus(mContext.getString(R.string.mobile_settings_tv_connecting, ip), -1);
-        new Thread(() -> install(ip), "meetube-tv-install").start();
+        new Thread(() -> install(ip), "gutube-tv-install").start();
     }
 
     private void install(String ip) {
-        File apk = new File(mContext.getCacheDir(), "meetube_tv.apk");
+        File apk = new File(mContext.getCacheDir(), "gutube_tv.apk");
         int phase = 0;
         try {
             File privateKey = new File(mContext.getFilesDir(), "adb/adbkey");
@@ -274,7 +274,7 @@ final class TvInstall {
                     throw new IOException(((InstallResult.Failure) result).getReason());
                 }
                 phase = 3;
-                AdbShellResponse launch = dadb.shell("monkey -p io.yash.meetube.tv -c android.intent.category.LAUNCHER 1");
+                AdbShellResponse launch = dadb.shell("monkey -p io.gutube.tv -c android.intent.category.LAUNCHER 1");
                 if (launch.getExitCode() != 0) throw new IOException(launch.getOutput());
                 status(R.string.mobile_settings_tv_done, 100);
             }
@@ -362,7 +362,7 @@ final class TvInstall {
         connection.setConnectTimeout(15000);
         connection.setReadTimeout(30000);
         connection.setInstanceFollowRedirects(true);
-        connection.setRequestProperty("User-Agent", "MeeTube");
+        connection.setRequestProperty("User-Agent", "GuTube");
         return connection;
     }
 

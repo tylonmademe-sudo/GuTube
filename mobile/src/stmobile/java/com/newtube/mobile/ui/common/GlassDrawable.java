@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * MEETUBE(glass): {@link GlassView}'s frost as a background drawable, for controls whose visibility,
+ * GUTUBE(glass): {@link GlassView}'s frost as a background drawable, for controls whose visibility,
  * alpha and size the code already drives (the player's buttons) - it follows them with no wrapper
  * view. A disc (a pill, on a wide view) inset into the bounds: the {@link GlassSource} under it
  * (the video) saturated and blurred, a dark tint, grain and a light rim, with a ripple on press.
@@ -37,9 +37,9 @@ import androidx.annotation.Nullable;
 public final class GlassDrawable extends Drawable {
     private static final float BLUR_DP = 12f;
     private static final float PILL_BLUR_DP = 28f;
-    /** MEETUBE(issue #250): a page pill frosts what scrolls under it to colour, as the search bar. */
+    /** GUTUBE(issue #250): a page pill frosts what scrolls under it to colour, as the search bar. */
     private static final float PAGE_BLUR_DP = 24f;
-    /** A dark-theme page pill's tint: the app's glass (meetube_glass_tint), as the search bar. */
+    /** A dark-theme page pill's tint: the app's glass (gutube_glass_tint), as the search bar. */
     private static final int PAGE_TINT = 0x66000000;
     private static final float SATURATION = 1.5f;
     private static final int TINT = 0x47000000;
@@ -54,6 +54,7 @@ public final class GlassDrawable extends Drawable {
     private final Paint mTint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mNoise = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mRim = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Spotlight mSpotlight;
     private final RectF mShape = new RectF();
     private final int[] mLoc = new int[2];
     private final int[] mSourceLoc = new int[2];
@@ -91,7 +92,7 @@ public final class GlassDrawable extends Drawable {
     }
 
     /**
-     * MEETUBE(minimal buttons): a player, Shorts or mini player control - its disc as {@link #apply},
+     * GUTUBE(minimal buttons): a player, Shorts or mini player control - its disc as {@link #apply},
      * or with Player buttons on Minimal no disc: a round ripple under a press, and over the video
      * ({@code shadow}) a soft dark halo around the icon so it reads on a bright frame, YouTube's look.
      * The halo is a RenderEffect: API 31+, the bare icon below.
@@ -121,7 +122,7 @@ public final class GlassDrawable extends Drawable {
         }
     }
 
-    /** MEETUBE(light mode): a page's milky light glass, its hairline dark; the video's glass stays dark. */
+    /** GUTUBE(light mode): a page's milky light glass, its hairline dark; the video's glass stays dark. */
     public static final int LIGHT_TINT = 0xD9F2F2F4;
 
     /**
@@ -159,9 +160,11 @@ public final class GlassDrawable extends Drawable {
         int top = host.getPaddingTop();
         int end = host.getPaddingEnd();
         int bottom = host.getPaddingBottom();
+        GlassDrawable glass = new GlassDrawable(host, source, insetPx, tint, page);
         host.setBackground(new RippleDrawable(ColorStateList.valueOf(0x33FFFFFF),
-                new GlassDrawable(host, source, insetPx, tint, page), new InsetDrawable(mask, insetPx)));
+                glass, new InsetDrawable(mask, insetPx)));
         host.setPaddingRelative(start, top, end, bottom); // the inset is not padding: the icon stays its size
+        Spotlight.link(host, glass.mSpotlight);
     }
 
     private GlassDrawable(View host, @Nullable GlassSource source, int insetPx, int tint, boolean page) {
@@ -172,8 +175,10 @@ public final class GlassDrawable extends Drawable {
         mInset = insetPx;
         mDensity = host.getResources().getDisplayMetrics().density;
         mLiquid = Glass.isLiquid(host.getContext());
+        mSpotlight = new Spotlight(mDensity);
+        mSpotlight.setSizeDp(140f);
         boolean live = GlassSource.HARDWARE && source != null;
-        mNode = live ? new RenderNode("MeeTube glass button") : null;
+        mNode = live ? new RenderNode("GuTube glass button") : null;
         mNoise.setShader(new BitmapShader(GlassView.noise(), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
         mNoise.setAlpha(NOISE_ALPHA);
         mRim.setStyle(Paint.Style.STROKE);
@@ -203,7 +208,7 @@ public final class GlassDrawable extends Drawable {
         if (mTintColor != 0) {
             // a message pill: the app message pill's flat hairline (SheetGlass), not the buttons' light
             mRim.setColor(mTintColor == LIGHT_TINT ? 0x1A000000 // a light page pill: a dark hairline
-                    : androidx.core.content.ContextCompat.getColor(mHost.getContext(), com.liskovsoft.smartyoutubetv2.tv.R.color.meetube_toast_rim));
+                    : androidx.core.content.ContextCompat.getColor(mHost.getContext(), com.liskovsoft.smartyoutubetv2.tv.R.color.gutube_toast_rim));
             mRecordedX = Integer.MIN_VALUE;
             return;
         }
@@ -220,7 +225,7 @@ public final class GlassDrawable extends Drawable {
             return;
         }
         float r = Math.min(mShape.width(), mShape.height()) / 2f;
-        mSampled = mSource != null && mSource.sampling && !BatterySaver.lite(); // MEETUBE(issue #93)
+        mSampled = mSource != null && mSource.sampling && !BatterySaver.lite(); // GUTUBE(issue #93)
         boolean live = mNode != null && !mPaused && mSampled && canvas.isHardwareAccelerated()
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
         mTint.setColor(live || mSource == null || mPaused || !mSampled
@@ -237,7 +242,7 @@ public final class GlassDrawable extends Drawable {
             mNode.setOutline(outline);
             Canvas recording = mNode.beginRecording();
             recording.translate(-mRecordedX, -mRecordedY);
-            // MEETUBE(issue #250): the source's own ground first, as GlassView does: text on a bare
+            // GUTUBE(issue #250): the source's own ground first, as GlassView does: text on a bare
             // background blurs to near-transparent and the sharp page showed through the pill.
             Drawable ground = mSource.getBackground();
             if (ground != null) {
@@ -251,12 +256,20 @@ public final class GlassDrawable extends Drawable {
             canvas.restoreToCount(save);
         }
         canvas.drawRoundRect(mShape, r, r, mTint);
+        if (mSpotlight != null && mSpotlight.isVisible()) {
+            mSpotlight.draw(canvas, mShape, r);
+        }
         if (mTintColor != 0) {
             canvas.drawRoundRect(mShape, r, r, mRim); // a message pill: as the app's, Liquid glass or not
         } else if (mLiquid) {
             canvas.drawRoundRect(mShape, r, r, mNoise);
             canvas.drawRoundRect(mShape, r, r, mRim);
         }
+    }
+
+    @NonNull
+    public Spotlight getSpotlight() {
+        return mSpotlight;
     }
 
     /** Refreshes where the glass sits on the source; true when that differs from the last recording. */

@@ -49,7 +49,7 @@ class Media3TrackAdapter {
     /** NEWTUBE(mobile): default multi-audio videos to the untranslated ("original") track. */
     private boolean mPreferOriginalAudio;
     /**
-     * MEETUBE(issue #85): the quality sheet's pick of a rung this phone's decoder reports it can't
+     * GUTUBE(issue #85): the quality sheet's pick of a rung this phone's decoder reports it can't
      * play ({@link #getVideoFormatsBeyondDecoder}); only this exact item may pin such a track, so
      * Auto, Settings and every other pick still see supported tracks only. Static: it outlives an
      * engine restart, like the per-video pick it is (PlayerData.setVideoVideoFormat).
@@ -163,7 +163,7 @@ class Media3TrackAdapter {
     }
 
     /**
-     * MEETUBE(issue #85): the video tracks {@link #getFormats} leaves out because the decoder
+     * GUTUBE(issue #85): the video tracks {@link #getFormats} leaves out because the decoder
      * reports their size or frame rate beyond it (a 2160p60 on a 2K30 decoder) - not those of a
      * codec it has no decoder for. YouTube offers these anyway, and many decoders understate
      * themselves; a pick of one goes through {@link #allowBeyondDecoder}. Same order as getFormats.
@@ -372,7 +372,7 @@ class Media3TrackAdapter {
     }
 
     /**
-     * MEETUBE(issue #35): HDR streams are in the manifest only with the HDR setting on, so Auto plays
+     * GUTUBE(issue #35): HDR streams are in the manifest only with the HDR setting on, so Auto plays
      * them when this device can: the HDR set with the tallest playable rung within the preset's
      * size ceiling (VP9 on a tie), adapting inside it. The preset's frame rate and codec are left
      * out - YouTube's HDR is 60 fps VP9.2 or AV1, so a "30fps avc" preset would always rule it out -
@@ -466,7 +466,7 @@ class Media3TrackAdapter {
                 continue;
             }
             for (int i = 0; i < group.length; i++) {
-                // MEETUBE(issue #85): a track beyond the decoder only for the sheet's pick of it,
+                // GUTUBE(issue #85): a track beyond the decoder only for the sheet's pick of it,
                 // and only by its exact id - never as a fallback or nearest rung.
                 boolean beyond = !group.isTrackSupported(i);
                 if (beyond && !(video && item == sBeyondDecoderPick
@@ -497,7 +497,7 @@ class Media3TrackAdapter {
             }
         }
 
-        // MEETUBE(issue #58): a pick carried to a video without that stream (another codec or
+        // GUTUBE(issue #58): a pick carried to a video without that stream (another codec or
         // frame rate, or no such rung) plays the nearest rung at or below it. Leaving Auto in
         // place opened at 240p while the Quality row kept reading the pick.
         return fallback != null ? fallback : nearest;

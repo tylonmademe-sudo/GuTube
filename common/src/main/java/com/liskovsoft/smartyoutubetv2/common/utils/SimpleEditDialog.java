@@ -16,7 +16,7 @@ public class SimpleEditDialog {
         boolean onChange(String newValue);
     }
 
-    /** MEETUBE(glass): how the phone builds these dialogs (its frosted, rounded card); null keeps AppDialog. */
+    /** GUTUBE(glass): how the phone builds these dialogs (its frosted, rounded card); null keeps AppDialog. */
     public interface Style {
         AlertDialog.Builder builder(Context context);
         AlertDialog create(AlertDialog.Builder builder);

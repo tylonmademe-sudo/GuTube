@@ -11,7 +11,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical"
     android:paddingBottom="12dp">
 
@@ -130,7 +130,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@android:color/transparent"
+                android:foreground="@null"
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
                 android:paddingHorizontal="12dp"
@@ -152,7 +153,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="12dp">
 
-        <!-- MEETUBE(update pop-up): only on a sheet that opened by itself. -->
+        <!-- GUTUBE(update pop-up): only on a sheet that opened by itself. -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/update_sheet_dont_ask"
             style="@style/Widget.MaterialComponents.Button.TextButton"

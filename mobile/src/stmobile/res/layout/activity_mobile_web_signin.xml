@@ -58,7 +58,7 @@
             android:padding="24dp">
             <ProgressBar
                 android:id="@+id/web_signin_progress"
-                style="@style/Widget.MeeTube.GlassSpinner" />
+                style="@style/Widget.GuTube.GlassSpinner" />
             <TextView
                 android:id="@+id/web_signin_message"
                 android:layout_width="match_parent"

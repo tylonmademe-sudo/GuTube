@@ -18,7 +18,7 @@ import androidx.dynamicanimation.animation.SpringForce;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(glass slider): liquidglass.theatom.lk's slider on a SeekBar (its touch handling, listener
+ * GUTUBE(glass slider): liquidglass.theatom.lk's slider on a SeekBar (its touch handling, listener
  * and accessibility stay the platform's). A 6dp rail with the accent filling it up to a wide white
  * pill knob; held, the knob swells into the same clear glass lens as {@link GlassSwitch}'s, on a
  * spring, and stretches with its speed. The knob trails the finger on a spring rather than
@@ -57,8 +57,8 @@ public class GlassSlider extends SeekBar {
         super(context, attrs);
         mDp = getResources().getDisplayMetrics().density;
         mSimple = NavLens.lowEnd(context);
-        mRail = ContextCompat.getColor(context, R.color.meetube_switch_off);
-        mFill = ContextCompat.getColor(context, R.color.meetube_accent);
+        mRail = ContextCompat.getColor(context, R.color.gutube_switch_off);
+        mFill = ContextCompat.getColor(context, R.color.gutube_accent);
         setBackground(null);
         setThumb(new ColorDrawable(Color.TRANSPARENT));
         setProgressDrawable(new ColorDrawable(Color.TRANSPARENT));

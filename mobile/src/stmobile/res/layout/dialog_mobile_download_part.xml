@@ -63,10 +63,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/download_part_start_card"
         app:minSeparation="0dp"
-        app:thumbColor="@color/meetube_accent"
+        app:thumbColor="@color/gutube_accent"
         app:tickVisible="false"
-        app:trackColorActive="@color/meetube_accent"
-        app:trackColorInactive="@color/meetube_switch_off" />
+        app:trackColorActive="@color/gutube_accent"
+        app:trackColorInactive="@color/gutube_switch_off" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/download_part_start_layout"

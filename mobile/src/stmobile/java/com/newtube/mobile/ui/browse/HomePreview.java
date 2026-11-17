@@ -27,7 +27,7 @@ import com.newtube.mobile.player.HomePreviewPlayer;
 import java.util.function.BooleanSupplier;
 
 /**
- * MEETUBE(home autoplay): YouTube's Home preview. When the feed settles, the card nearest the
+ * GUTUBE(home autoplay): YouTube's Home preview. When the feed settles, the card nearest the
  * middle of the screen plays muted right in its thumbnail, with a mute and a captions button on
  * it and a thin progress line, which a drag scrubs; scroll it away and it stops, the next centred card takes over.
  * Tapping the card still opens the video (the overlay only swallows its two buttons).
@@ -38,7 +38,7 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
     public static final int WIFI = 1;
     public static final int ALWAYS = 2;
 
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final long SETTLE_MS = 400;
     private static final float MIN_VISIBLE = 0.65f;
 

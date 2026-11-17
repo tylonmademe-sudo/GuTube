@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * MEETUBE(seek thumb): the player seek bar's dot can be a picture the user picks (a GIF or an
+ * GUTUBE(seek thumb): the player seek bar's dot can be a picture the user picks (a GIF or an
  * animated WebP moves). The picked file is copied to the app's files dir; no file = the dot.
  * Also the invisible host for the system image picker, like {@code DownloadFolderActivity}.
  */

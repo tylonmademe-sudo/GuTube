@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * MEETUBE(issues #202, #203): one auto download check. A channel's uploads from before it was
+ * GUTUBE(issues #202, #203): one auto download check. A channel's uploads from before it was
  * picked are only marked seen; after that each new one is queued. A playlist is kept offline:
  * whatever it holds that is not here yet is queued, a few per check. Then the queue drains.
  */

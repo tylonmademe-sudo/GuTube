@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in MeeTube doesn't work
+description: Something in GuTube doesn't work
 title: "[Bug]: "
 labels: [bug]
 
@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting a MeeTube bug. This tracker is for the MeeTube phone app and MeeTube TV.
+        Thanks for reporting a GuTube bug. This tracker is for the GuTube phone app and GuTube TV.
         Bugs in SmartTube itself belong in [SmartTube's tracker](https://github.com/yuliskov/SmartTube/issues).
 
   - type: checkboxes
@@ -15,7 +15,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: "I searched the [open and closed issues](https://github.com/yashoncode/meetube/issues?q=is%3Aissue) and this isn't there yet."
+        - label: "I searched the [open and closed issues](https://github.com/gutube/gutube/issues?q=is%3Aissue) and this isn't there yet."
           required: true
         - label: "This issue is about one bug."
           required: true
@@ -25,15 +25,15 @@ body:
     attributes:
       label: Which app?
       options:
-        - "MeeTube (phone or tablet)"
-        - "MeeTube TV"
+        - "GuTube (phone or tablet)"
+        - "GuTube TV"
     validations:
       required: true
 
   - type: input
     id: app-version
     attributes:
-      label: MeeTube version
+      label: GuTube version
       description: Settings → About.
       placeholder: "1.10.2"
     validations:

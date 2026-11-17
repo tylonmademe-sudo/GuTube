@@ -111,7 +111,7 @@
             android:visibility="gone">
 
             <ProgressBar
-                style="@style/Widget.MeeTube.GlassSpinner.Small" />
+                style="@style/Widget.GuTube.GlassSpinner.Small" />
 
             <TextView
                 android:layout_width="wrap_content"

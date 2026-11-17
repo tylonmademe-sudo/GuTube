@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(launch): the launch animation (avd_splash_glass, a play symbol turning to frosted glass),
+ * GUTUBE(launch): the launch animation (avd_splash_glass, a play symbol turning to frosted glass),
  * played over Home's first frame once per process. Not the system splash's animated icon: vivo's
  * launcher shows its own starting window and never plays it (YouTube animates in-app the same way).
  */

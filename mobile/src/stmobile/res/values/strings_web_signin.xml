@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mobile_web_signin_title">Sign in to YouTube</string>
-    <string name="mobile_web_signin_privacy">This is Google\'s own page. MeeTube never sees your password.</string>
+    <string name="mobile_web_signin_privacy">This is Google\'s own page. GuTube never sees your password.</string>
     <string name="mobile_web_signin_loading">Opening Google</string>
     <string name="mobile_web_signin_finishing">Finishing sign-in</string>
     <string name="mobile_web_signin_failed">Could not finish signing in to YouTube. Check your connection and try again.</string>
@@ -13,7 +13,7 @@
     <string name="mobile_web_signin_google">Sign in with Google</string>
     <string name="mobile_web_signin_not_now">Not now</string>
     <string name="mobile_web_signin_sign_out">Sign out of YouTube web sign-in?</string>
-    <string name="mobile_web_signin_sign_out_confirm">You will need to sign in again to send live chat messages. Your current MeeTube sign-in stays as it is.</string>
+    <string name="mobile_web_signin_sign_out_confirm">You will need to sign in again to send live chat messages. Your current GuTube sign-in stays as it is.</string>
     <string name="mobile_web_signin_sign_out_failed">Could not sign out. Try again.</string>
     <string name="mobile_web_signin_signed_out">Signed out of YouTube web sign-in</string>
     <string name="mobile_web_signin_add">Add web account</string>

@@ -17,14 +17,14 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="?attr/meetubeCardCorner"
+    app:cardCornerRadius="?attr/gutubeCardCorner"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- MEETUBE(mix stack): a Mix or playlist is a stack of cards, two peeking above its
+        <!-- GUTUBE(mix stack): a Mix or playlist is a stack of cards, two peeking above its
              thumbnail, as on YouTube. Before the thumbnail so it draws over them. -->
         <View
             android:id="@+id/video_stack_back"
@@ -57,14 +57,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:cardBackgroundColor="@color/mobile_color_placeholder"
-            app:cardCornerRadius="?attr/meetubeCardCorner"
+            app:cardCornerRadius="?attr/gutubeCardCorner"
             app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- MEETUBE(glass): what the badge frosts. -->
+            <!-- GUTUBE(glass): what the badge frosts. -->
             <com.newtube.mobile.ui.common.GlassSource
                 android:id="@+id/video_thumbnail_glass"
                 android:layout_width="match_parent"
@@ -79,7 +79,7 @@
 
             </com.newtube.mobile.ui.common.GlassSource>
 
-            <!-- MEETUBE(shorts): a search Short's title sits on its thumbnail, as on YouTube. -->
+            <!-- GUTUBE(shorts): a search Short's title sits on its thumbnail, as on YouTube. -->
             <TextView
                 android:id="@+id/video_short_title"
                 android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
 
-            <!-- MEETUBE(hyped): the card's place in a chart. -->
+            <!-- GUTUBE(hyped): the card's place in a chart. -->
             <TextView
                 android:id="@+id/video_rank"
                 android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- MEETUBE(card avatars, issue #6): the channel, like YouTube; a tap opens it. Shown only
+        <!-- GUTUBE(card avatars, issue #6): the channel, like YouTube; a tap opens it. Shown only
              where the adapter asks for it (feeds and search, not a channel's own page). -->
         <ImageView
             android:id="@+id/video_avatar"
@@ -157,7 +157,7 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/video_thumbnail_frame" />
-        <!-- MEETUBE(collab avatars): a collab's second channel, overlapping the first (shrunk). -->
+        <!-- GUTUBE(collab avatars): a collab's second channel, overlapping the first (shrunk). -->
         <ImageView
             android:id="@+id/video_avatar_2"
             android:layout_width="26dp"
@@ -169,7 +169,7 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/video_avatar"
             app:layout_constraintTop_toTopOf="@id/video_avatar" />
-        <!-- MEETUBE(issue #73): a live video's channel avatar gets the glowing red ring. -->
+        <!-- GUTUBE(issue #73): a live video's channel avatar gets the glowing red ring. -->
         <com.newtube.mobile.ui.common.LiveRingView
             android:id="@+id/video_avatar_live"
             android:layout_width="36dp"

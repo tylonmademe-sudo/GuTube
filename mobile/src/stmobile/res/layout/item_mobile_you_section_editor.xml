@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(you order): a bar-editor card with a leading grip and the existing settings switch. -->
+<!-- GUTUBE(you order): a bar-editor card with a leading grip and the existing settings switch. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

@@ -997,7 +997,7 @@ public class Media3SourceFactory {
         return sources.size() == 1 ? source : new MergingMediaSource(sources.toArray(new MediaSource[0]));
     }
 
-    /** MEETUBE(issue #177): capture once per source, shared by direct MPD, XML fallback and SABR. */
+    /** GUTUBE(issue #177): capture once per source, shared by direct MPD, XML fallback and SABR. */
     PlaybackAudioFormats playbackFormats(MediaItemFormatInfo info) {
         return info instanceof PlaybackAudioFormats ? (PlaybackAudioFormats) info
                 : PlaybackAudioFormats.select(info, AudioPreferences.isStableVolumeEnabled(mContext));

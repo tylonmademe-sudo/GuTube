@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #177): band frequencies and levels come from the device equalizer. -->
+<!-- GUTUBE(issue #177): band frequencies and levels come from the device equalizer. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

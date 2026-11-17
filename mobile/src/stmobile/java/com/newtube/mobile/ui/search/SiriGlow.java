@@ -19,12 +19,12 @@ import android.view.WindowInsets;
 import android.view.animation.LinearInterpolator;
 
 /**
- * MEETUBE(search glow): opening Search lights the screen's edges in Siri's colours - a glow that
+ * GUTUBE(search glow): opening Search lights the screen's edges in Siri's colours - a glow that
  * turns once around the display and fades, the way Apple Intelligence's Siri wakes. Drawn over the
  * whole window (the decor, not the inset content) and removed when it is done.
  */
 public final class SiriGlow extends View {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_ON = "search_glow";
     private static final int[] SIRI = {0xFFFF6A88, 0xFFFFB86B, 0xFFB45CFF, 0xFF5E9BFF, 0xFF4FD8FF, 0xFFFF6A88};
     private static final long DURATION_MS = 1400;

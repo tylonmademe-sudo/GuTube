@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * MEETUBE(mini-pip): leaving the app (Home, Recents) while a screen's mini card plays floats that
+ * GUTUBE(mini-pip): leaving the app (Home, Recents) while a screen's mini card plays floats that
  * card in a PiP window, like leaving the full player does. The player Activity sits stopped behind
  * the card's screen and cannot enter PiP itself, so the HOST does: its window becomes the video
  * (the card blown up to fill it, its buttons hidden) until the window expands back or closes.
@@ -75,7 +75,7 @@ public final class MiniPip {
     private static final String KEY_AUTO = "auto_pip";
 
     /**
-     * MEETUBE(issue #103): leaving the app with a video playing floats it in a PiP window (on, the
+     * GUTUBE(issue #103): leaving the app with a video playing floats it in a PiP window (on, the
      * default); off, it goes on as audio like Background playback says. The player's menu still
      * opens PiP on purpose.
      */
@@ -235,7 +235,7 @@ public final class MiniPip {
         mCard.setTranslationY(0f);
         mCard.setTranslationZ(1000f); // over the screen's other floating layers
         mCard.animate().cancel();
-        // MEETUBE(issue #233): OEM PiP composition can put Home's glass above even a raised card.
+        // GUTUBE(issue #233): OEM PiP composition can put Home's glass above even a raised card.
         ViewGroup parent = (ViewGroup) mCard.getParent();
         for (int i = 0; i < parent.getChildCount(); i++) {
             View sibling = parent.getChildAt(i);

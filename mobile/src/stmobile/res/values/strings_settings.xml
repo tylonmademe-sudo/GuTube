@@ -3,7 +3,7 @@
      (com.newtube.mobile.ui.settings). Spanish in values-es. -->
 <resources>
     <!-- Shared -->
-    <string name="mobile_settings_restart_needed">Restart MeeTube to apply this change</string>
+    <string name="mobile_settings_restart_needed">Restart GuTube to apply this change</string>
     <string name="mobile_settings_restart">Restart</string>
     <string name="mobile_settings_off">Off</string>
     <string name="mobile_settings_more">More</string>
@@ -72,7 +72,7 @@
     <string name="mobile_settings_advanced">Advanced</string>
     <string name="mobile_settings_storage">Storage</string>
     <string name="mobile_settings_storage_summary">Phone space and the cache</string>
-    <!-- MEETUBE(issue #93) -->
+    <!-- GUTUBE(issue #93) -->
     <string name="mobile_settings_battery">Battery Saver</string>
     <string name="mobile_settings_battery_manual">Battery saving mode</string>
     <string name="mobile_settings_battery_manual_summary">Effects off now, whether the phone\'s Battery Saver is on or not</string>
@@ -82,13 +82,13 @@
     <string name="mobile_settings_battery_light_desc">No animations, and plain glass instead of the frosted blur</string>
     <string name="mobile_settings_battery_keep">Keep effects</string>
     <string name="mobile_settings_battery_keep_desc">Everything looks and moves as usual</string>
-    <string name="mobile_settings_battery_note">Animations, the frosted glass and the liquid lens redraw the screen many times a second. With Battery Saver on in the phone settings, MeeTube can skip them to save power. They come back when Battery Saver goes off.</string>
+    <string name="mobile_settings_battery_note">Animations, the frosted glass and the liquid lens redraw the screen many times a second. With Battery Saver on in the phone settings, GuTube can skip them to save power. They come back when Battery Saver goes off.</string>
     <string name="mobile_battery_saver_ask">Battery Saver is on. Turn off animations and frosted glass while it is?</string>
     <string name="mobile_battery_saver_ask_action">Turn off</string>
     <string name="mobile_settings_storage_device">Device storage</string>
     <string name="mobile_settings_storage_used">%1$s used of %2$s</string>
     <string name="mobile_settings_storage_free">%1$s free</string>
-    <string name="mobile_settings_storage_app">Used by MeeTube</string>
+    <string name="mobile_settings_storage_app">Used by GuTube</string>
     <string name="mobile_settings_storage_total">Total: %1$s</string>
     <string name="mobile_settings_storage_app_size">App</string>
     <string name="mobile_settings_storage_cache">Video and image cache</string>
@@ -101,8 +101,8 @@
     <string name="mobile_settings_advanced_summary">Streaming, network and fixes</string>
     <string name="mobile_settings_about">About</string>
     <string name="mobile_settings_coffee">Buy me a coffee</string>
-    <string name="mobile_settings_coffee_summary">If you love MeeTube and want to support it</string>
-    <string name="mobile_settings_coffee_url" translatable="false">https://buymeacoffee.com/yashwynth</string>
+    <string name="mobile_settings_coffee_summary">If you love GuTube and want to support it</string>
+    <string name="mobile_settings_coffee_url" translatable="false"></string>
 
     <!-- General -->
     <string name="mobile_settings_language">Language</string>
@@ -113,7 +113,7 @@
     <string name="mobile_settings_voice_search_summary">Opening Search starts listening</string>
     <string name="mobile_settings_new_uploads">Notify about new uploads</string>
     <string name="mobile_settings_new_uploads_summary">New videos from your subscriptions show up in the notification shade</string>
-    <!-- MEETUBE(issue #239): Settings > Notifications -->
+    <!-- GUTUBE(issue #239): Settings > Notifications -->
     <string name="mobile_settings_notifications">Notifications</string>
     <string name="mobile_settings_notify_on">New uploads, checked every %1$s</string>
     <string name="mobile_settings_notify_off">Off</string>
@@ -133,13 +133,13 @@
         <item quantity="other">Every subscribed channel but %d</item>
     </plurals>
     <string name="mobile_settings_notify_no_channels">Sign in or subscribe to a channel first</string>
-    <string name="mobile_settings_notify_reliable">With MeeTube closed</string>
+    <string name="mobile_settings_notify_reliable">With GuTube closed</string>
     <string name="mobile_settings_notify_background">Run in the background</string>
-    <string name="mobile_settings_notify_background_on">Allowed: checks keep running with MeeTube closed</string>
-    <string name="mobile_settings_notify_background_off">Not allowed: your phone may stop the checks while MeeTube is closed. Tap to allow</string>
+    <string name="mobile_settings_notify_background_on">Allowed: checks keep running with GuTube closed</string>
+    <string name="mobile_settings_notify_background_off">Not allowed: your phone may stop the checks while GuTube is closed. Tap to allow</string>
     <string name="mobile_settings_notify_system">Sound and style</string>
-    <string name="mobile_settings_notify_system_summary">Notification settings for MeeTube on this phone</string>
-    <string name="mobile_settings_notify_note">New videos are checked on a schedule, not pushed: Android lets an app check every 15 minutes at most. Some phones (Infinix, Xiaomi, Oppo, Vivo and others) also stop background checks unless MeeTube may run in the background, so allow it above.</string>
+    <string name="mobile_settings_notify_system_summary">Notification settings for GuTube on this phone</string>
+    <string name="mobile_settings_notify_note">New videos are checked on a schedule, not pushed: Android lets an app check every 15 minutes at most. Some phones (Infinix, Xiaomi, Oppo, Vivo and others) also stop background checks unless GuTube may run in the background, so allow it above.</string>
     <string name="mobile_settings_24_hour">Use 24-hour time</string>
     <string name="mobile_settings_24_hour_summary">For the start times of premieres and live streams</string>
     <string name="mobile_settings_liquid_glass">Liquid glass</string>
@@ -154,7 +154,7 @@
     <string name="mobile_settings_nav_labels">Tab names</string>
     <string name="mobile_settings_nav_labels_summary">Show each tab\'s name under its icon in the bottom bar</string>
     <string name="mobile_settings_brand_name">App name in the top bar</string>
-    <string name="mobile_settings_brand_name_summary">Show MeeTube next to its icon at the top. Off, only the icon</string>
+    <string name="mobile_settings_brand_name_summary">Show GuTube next to its icon at the top. Off, only the icon</string>
     <string name="mobile_settings_top_bar">Always show the top bar</string>
     <string name="mobile_settings_top_bar_summary">Keep the top bar on screen while a feed scrolls, instead of sliding it away</string>
     <string name="mobile_settings_search_fab">Search button when the bar hides</string>
@@ -162,7 +162,7 @@
     <string name="mobile_settings_search_fab_left">Bottom left</string>
     <string name="mobile_settings_tabs_you">You</string>
     <string name="mobile_settings_tabs_none">None</string>
-    <string name="mobile_settings_tabs_bar_note">Drag a tile by its grip, or hold it, to reorder the bar. Drag Search up to move it to the top bar. Tap a tab to change what it shows.</string>
+    <string name="mobile_settings_tabs_bar_note">Drag a tile by its grip, or hold it, to reorder. Drag any button anywhere between top and bottom bars. Tap any button to customize it.</string>
     <string name="mobile_settings_bar_top">Top bar</string>
     <string name="mobile_settings_bar_tab">Tab</string>
     <string name="mobile_settings_bar_tab_summary">Tap to change</string>
@@ -176,6 +176,16 @@
     <string name="mobile_settings_bar_last">Always last</string>
     <string name="mobile_settings_bar_search_up">Drag up to move it to the top bar</string>
     <string name="mobile_settings_bar_search_down">Drag down to move it back to the bottom bar</string>
+    <string name="mobile_settings_bar_add_button">Add button / tab</string>
+    <string name="mobile_settings_bar_add_summary">Tap to add an extra button to your bars</string>
+    <string name="mobile_settings_bar_all_added">All buttons added</string>
+    <string name="mobile_settings_bar_all_added_summary">All available tabs and buttons are currently on your bars</string>
+    <string name="mobile_settings_bar_remove">Remove from bar</string>
+    <string name="mobile_settings_bar_move_top">Move to top bar</string>
+    <string name="mobile_settings_bar_move_bottom">Move to bottom bar</string>
+    <string name="mobile_settings_bar_in_top">Top bar · Tap to customize or move</string>
+    <string name="mobile_settings_bar_in_bottom">Bottom bar · Tap to customize or move</string>
+    <string name="mobile_settings_bar_bottom_overflow">Hidden (max 5 in bottom bar) · Drag to top bar</string>
     <string name="mobile_settings_search_place">Search</string>
     <string name="mobile_settings_search_place_bottom">In the bottom bar</string>
     <string name="mobile_settings_search_place_top">In the top bar</string>
@@ -238,9 +248,9 @@
     <string name="mobile_settings_watch_history_auto">Follow my YouTube setting</string>
     <string name="mobile_settings_watch_history_auto_desc">Saved if your YouTube account keeps history</string>
     <string name="mobile_settings_watch_history_on">Always save</string>
-    <string name="mobile_settings_watch_history_on_desc">Turns your YouTube watch history back on each time MeeTube opens</string>
+    <string name="mobile_settings_watch_history_on_desc">Turns your YouTube watch history back on each time GuTube opens</string>
     <string name="mobile_settings_watch_history_off">Don\'t save</string>
-    <string name="mobile_settings_watch_history_off_desc">MeeTube stops telling YouTube what you watch</string>
+    <string name="mobile_settings_watch_history_off_desc">GuTube stops telling YouTube what you watch</string>
     <string name="mobile_settings_clear_watch_history">Clear watch history</string>
     <string name="mobile_settings_clear_watch_history_summary">Deletes the videos you watched from your YouTube history</string>
     <string name="mobile_settings_clear_watch_history_confirm">Clear watch history?</string>
@@ -250,7 +260,7 @@
     <string name="mobile_settings_clear_search_history">Clear search history</string>
     <string name="mobile_settings_clear_search_history_summary">Deletes the searches saved on this phone</string>
     <string name="mobile_settings_clear_search_history_confirm">Clear search history?</string>
-    <string name="mobile_settings_clear_search_history_body">The searches MeeTube saved on this phone are deleted. This can\'t be undone.</string>
+    <string name="mobile_settings_clear_search_history_body">The searches GuTube saved on this phone are deleted. This can\'t be undone.</string>
 
     <!-- Backup -->
     <string name="mobile_settings_backup_now">Back up now</string>
@@ -260,9 +270,9 @@
     <string name="mobile_settings_restore_summary">From a backup in %1$s</string>
     <string name="mobile_settings_auto_backup">Automatic backup</string>
     <string name="mobile_settings_auto_backup_off">Never</string>
-    <string name="mobile_settings_backup_note">A backup holds everything you set up in MeeTube. What belongs to your YouTube account, like subscriptions and history, stays there.</string>
+    <string name="mobile_settings_backup_note">A backup holds everything you set up in GuTube. What belongs to your YouTube account, like subscriptions and history, stays there.</string>
 
-    <!-- MEETUBE(home-rows): General > Home layout (issue #4). -->
+    <!-- GUTUBE(home-rows): General > Home layout (issue #4). -->
     <string name="mobile_settings_home_layout">Home layout</string>
     <string name="mobile_settings_app_icon">App icon</string>
     <string name="mobile_app_icon_default">Classic (Default)</string>
@@ -287,14 +297,14 @@
     <string name="mobile_loader_glass_orb">Glass orb</string>
     <string name="mobile_loader_morphing_blob">Liquid blob</string>
     <string name="mobile_loader_glass_orbit">Glass orbit</string>
-    <string name="mobile_app_icon_pending">Restart MeeTube to use the new icon everywhere, or it switches once you leave the app</string>
+    <string name="mobile_app_icon_pending">Restart GuTube to use the new icon everywhere, or it switches once you leave the app</string>
     <string name="mobile_settings_home_layout_feed">Feed</string>
     <string name="mobile_settings_home_layout_feed_desc">One list of videos, like YouTube</string>
     <string name="mobile_settings_home_layout_rows">Rows</string>
     <string name="mobile_settings_home_layout_rows_desc">A row you swipe sideways for each topic, like SmartTube</string>
     <string name="mobile_settings_home_shorts">Shorts on Home</string>
     <string name="mobile_settings_home_shorts_summary">A row of Shorts you swipe sideways, where YouTube puts one</string>
-    <!-- MEETUBE(glass, issue #80; minimal buttons) -->
+    <!-- GUTUBE(glass, issue #80; minimal buttons) -->
     <string name="mobile_settings_chip_style">Chips style</string>
     <string name="mobile_settings_chip_style_segment">Segment bubble</string>
     <string name="mobile_settings_chip_style_segment_desc">Home topic chips and the search filters sit in one glass bar; press the pick and drag it like a lens</string>
@@ -307,17 +317,17 @@
     <string name="mobile_settings_player_buttons_frosted_desc">The discs blur the picture under them. Uses more battery, and can stutter on slower phones</string>
     <string name="mobile_settings_player_buttons_minimal">Minimal</string>
     <string name="mobile_settings_player_buttons_minimal_desc">No discs, just the icons with a soft shadow, like YouTube</string>
-    <!-- MEETUBE(performance) -->
+    <!-- GUTUBE(performance) -->
     <string name="mobile_settings_performance">Performance</string>
     <string name="mobile_settings_high_refresh">High performance mode</string>
     <string name="mobile_settings_high_refresh_summary">Keeps the app at %1$d Hz for the smoothest motion. Uses more battery; Android may lower it when the phone is hot or the battery saver is on</string>
-    <!-- MEETUBE(nav lens, issue #46) -->
+    <!-- GUTUBE(nav lens, issue #46) -->
     <string name="mobile_settings_tab_motion">Tab switch animation</string>
     <string name="mobile_settings_tab_motion_summary">A glass lens glides to the tab and the bar wiggles. Off on slower phones until you turn it on</string>
-    <!-- MEETUBE(bar reset) -->
+    <!-- GUTUBE(bar reset) -->
     <string name="mobile_settings_tabs_reset">Reset bar to default</string>
     <string name="mobile_settings_tabs_reset_summary">Home, Shorts, Search, Subs, You</string>
-    <!-- MEETUBE(list layout, issue #82) -->
+    <!-- GUTUBE(list layout, issue #82) -->
     <string name="mobile_settings_video_layout">Video layout</string>
     <string name="mobile_settings_video_layout_cards">Cards</string>
     <string name="mobile_settings_video_layout_cards_desc">A big thumbnail for each video</string>
@@ -325,10 +335,10 @@
     <string name="mobile_settings_video_layout_list_desc">A small thumbnail beside the title, more videos on screen</string>
 
     <!-- Playback -->
-    <!-- MEETUBE(background): the battery-optimization exemption row (Playback). -->
+    <!-- GUTUBE(background): the battery-optimization exemption row (Playback). -->
     <string name="mobile_settings_screen_off">Keep playing with the screen off</string>
     <string name="mobile_settings_screen_off_on">Allowed: battery saver won\'t stop the audio</string>
-    <string name="mobile_settings_screen_off_off">Battery saver may stop the audio. Tap to allow MeeTube in the background</string>
+    <string name="mobile_settings_screen_off_off">Battery saver may stop the audio. Tap to allow GuTube in the background</string>
     <string name="mobile_settings_seek_thumb">Seek bar thumb</string>
     <string name="mobile_settings_seek_thumb_dot">Dot</string>
     <string name="mobile_settings_seek_thumb_picture">Your picture</string>
@@ -359,7 +369,7 @@
     <string name="mobile_settings_remember_speed_video">For each video</string>
     <string name="mobile_settings_remember_speed_all">The same for every video</string>
     <string name="mobile_settings_remember_speed_none">Don\'t remember</string>
-    <string name="mobile_settings_remember_speed_none_desc">Back to 1x each time MeeTube starts</string>
+    <string name="mobile_settings_remember_speed_none_desc">Back to 1x each time GuTube starts</string>
     <string name="mobile_settings_speed_list">Speeds under More speeds</string>
     <string name="mobile_settings_speed_list_basic">A short list</string>
     <string name="mobile_settings_speed_list_fine">Fine steps</string>
@@ -388,11 +398,11 @@
     <!-- Video quality -->
     <string name="mobile_settings_quality_intro">The quality videos start in. You can change it for one video from the player\'s settings.</string>
     <string name="mobile_settings_default_quality">Default quality</string>
-    <!-- MEETUBE(quality-network): one default per network; "%1$s" are the two picks' labels. -->
+    <!-- GUTUBE(quality-network): one default per network; "%1$s" are the two picks' labels. -->
     <string name="mobile_settings_quality_wifi">On Wi-Fi</string>
     <string name="mobile_settings_quality_mobile">On mobile data</string>
     <string name="mobile_settings_quality_same">Same as Wi-Fi</string>
-    <!-- MEETUBE(shorts-quality): issue #26. -->
+    <!-- GUTUBE(shorts-quality): issue #26. -->
     <string name="mobile_settings_quality_shorts">Shorts</string>
     <string name="mobile_settings_quality_both">Wi-Fi: %1$s · Mobile data: %2$s</string>
     <string name="mobile_settings_quality_auto">Auto (up to %1$dp)</string>
@@ -406,7 +416,7 @@
     <string name="mobile_settings_loudness">Even out loudness</string>
     <string name="mobile_settings_loudness_summary">Turns loud videos down to YouTube\'s normal level</string>
     <string name="mobile_settings_player_volume">Player volume</string>
-    <string name="mobile_settings_quality_data_saver_note">With Android\'s Data Saver on, MeeTube buffers less on mobile data.</string>
+    <string name="mobile_settings_quality_data_saver_note">With Android\'s Data Saver on, GuTube buffers less on mobile data.</string>
 
     <!-- Captions -->
     <string name="mobile_settings_caption_style">Style</string>
@@ -439,7 +449,7 @@
     <string name="mobile_settings_dearrow_note">DeArrow receives the IDs of the videos you see in lists.</string>
 
     <!-- Advanced -->
-    <string name="mobile_settings_advanced_note">Most people never need these. They change how MeeTube streams and connects.</string>
+    <string name="mobile_settings_advanced_note">Most people never need these. They change how GuTube streams and connects.</string>
     <string name="mobile_settings_streaming">Streaming</string>
     <string name="mobile_settings_buffer">Buffer</string>
     <string name="mobile_settings_buffer_low_desc">About 25 seconds ahead. Uses the least memory</string>
@@ -470,7 +480,7 @@
     <string name="mobile_settings_chapter_popup_summary">Shows each chapter\'s name as it starts. Tap it to go to the next one</string>
     <string name="mobile_settings_network">Network</string>
     <string name="mobile_settings_proxy">Web proxy</string>
-    <string name="mobile_settings_proxy_summary">Sends MeeTube\'s traffic through an HTTP or SOCKS proxy</string>
+    <string name="mobile_settings_proxy_summary">Sends GuTube\'s traffic through an HTTP or SOCKS proxy</string>
     <string name="mobile_settings_dns">Finding YouTube\'s servers</string>
     <string name="mobile_settings_dns_ipv4">IPv4 first</string>
     <string name="mobile_settings_dns_ipv4_desc">The default. Fixes networks with broken IPv6</string>
@@ -487,7 +497,7 @@
     <!-- About -->
     <string name="mobile_settings_version">Version</string>
     <string name="mobile_settings_update_notify_summary">Tells you when a new version is out, even with the app closed</string>
-    <!-- MEETUBE(customize): the Customization page's groups and its tiles' short names -->
+    <!-- GUTUBE(customize): the Customization page's groups and its tiles' short names -->
     <string name="mobile_settings_customize_look">Look</string>
     <string name="mobile_settings_customize_layout">Layout</string>
     <string name="mobile_settings_customize_effects">Effects and feedback</string>
@@ -517,7 +527,7 @@
     <string name="mobile_settings_playlists_style_grid_short">Playlists</string>
     <string name="mobile_settings_playlists_style_rows_short">Videos</string>
     <string name="mobile_settings_interface_size_sample">How a video title looks at this size</string>
-    <string name="mobile_settings_interface_size_sample_meta">MeeTube · 1.2M views · 2 days ago</string>
+    <string name="mobile_settings_interface_size_sample_meta">GuTube · 1.2M views · 2 days ago</string>
     <string name="mobile_settings_tab_glow">Tab glow</string>
     <string name="mobile_settings_tab_glow_white">White</string>
     <string name="mobile_settings_tab_glow_white_desc">A plain white glow (grey in the light theme)</string>
@@ -526,7 +536,7 @@
     <string name="mobile_settings_tab_glow_tabs">Tab colors</string>
     <string name="mobile_settings_tab_glow_tabs_desc">Each tab glows in its own color</string>
     <string name="mobile_settings_tab_glow_accent">Accent</string>
-    <string name="mobile_settings_tab_glow_accent_desc">Every tab glows in MeeTube red</string>
+    <string name="mobile_settings_tab_glow_accent_desc">Every tab glows in GuTube red</string>
     <string name="mobile_settings_tab_glow_off">Off</string>
     <string name="mobile_settings_you_glow">You page glow</string>
     <string name="mobile_settings_you_glow_accent_desc">The light in the top corner of the You page takes your accent colour</string>
@@ -555,22 +565,22 @@
     <string name="mobile_settings_haptics_summary">A small vibration on taps, drags and long presses</string>
     <string name="mobile_settings_refresh_sound">Refresh sound</string>
     <string name="mobile_settings_refresh_sound_summary">A soft pop when you pull a page to refresh it</string>
-    <!-- MEETUBE(settings-transfer): Backup > Share or move your settings. -->
+    <!-- GUTUBE(settings-transfer): Backup > Share or move your settings. -->
     <string name="mobile_settings_transfer">Share or move your settings</string>
     <string name="mobile_settings_transfer_export">Save settings to a file</string>
     <string name="mobile_settings_transfer_export_summary">Keep them for later or move them to another phone</string>
     <string name="mobile_settings_transfer_share">Share settings with a friend</string>
     <string name="mobile_settings_transfer_share_summary">Send your settings file in a chat or mail</string>
-    <string name="mobile_settings_transfer_share_text">My MeeTube settings. In MeeTube: Settings &gt; Backup &gt; Import settings from a file</string>
+    <string name="mobile_settings_transfer_share_text">My GuTube settings. In GuTube: Settings &gt; Backup &gt; Import settings from a file</string>
     <string name="mobile_settings_transfer_import">Import settings from a file</string>
     <string name="mobile_settings_transfer_import_summary">Load a settings file you saved or a friend sent</string>
-    <string name="mobile_settings_transfer_import_confirm">Your settings are replaced by the file\'s and MeeTube restarts. Your accounts, watch history, downloads and passwords stay as they are.</string>
+    <string name="mobile_settings_transfer_import_confirm">Your settings are replaced by the file\'s and GuTube restarts. Your accounts, watch history, downloads and passwords stay as they are.</string>
     <string name="mobile_settings_transfer_import_button">Import</string>
     <string name="mobile_settings_transfer_saved">Settings saved</string>
-    <string name="mobile_settings_transfer_imported">Settings imported. MeeTube is restarting</string>
+    <string name="mobile_settings_transfer_imported">Settings imported. GuTube is restarting</string>
     <string name="mobile_settings_transfer_failed">Couldn\'t save the settings file</string>
-    <string name="mobile_settings_transfer_not_settings">That isn\'t a MeeTube settings file</string>
-    <!-- MEETUBE(issue #177): phone player audio. -->
+    <string name="mobile_settings_transfer_not_settings">That isn\'t a GuTube settings file</string>
+    <!-- GUTUBE(issue #177): phone player audio. -->
     <string name="mobile_settings_stable_volume">Stable volume</string>
     <string name="mobile_settings_stable_volume_summary">Allow YouTube\'s compressed audio to soften loud and quiet parts. Applies to the next video you open</string>
     <string name="mobile_settings_dolby">Dolby Atmos</string>
@@ -598,7 +608,7 @@
     <string name="mobile_settings_home_autoplay_always_desc">Plays muted on mobile data too</string>
     <string name="mobile_settings_home_autoplay_off">Off</string>
     <string name="mobile_settings_home_autoplay_off_desc">Home shows thumbnails only</string>
-    <!-- MEETUBE(coffee): a small thank-you, wherever you are sipping. -->
+    <!-- GUTUBE(coffee): a small thank-you, wherever you are sipping. -->
     <string name="mobile_settings_coffee_title">Brew one for the dev ☕</string>
     <string name="mobile_settings_coffee_subtitle">Where are you sipping from?</string>
     <string name="mobile_settings_coffee_india_emoji">🇮🇳</string>
@@ -608,16 +618,16 @@
     <string name="mobile_settings_coffee_elsewhere">Elsewhere</string>
     <string name="mobile_settings_coffee_elsewhere_summary">Buy Me a Coffee · $</string>
     <string name="mobile_settings_coffee_upi_label">UPI ID</string>
-    <string name="mobile_settings_coffee_upi_id" translatable="false">yashwynth@slc</string>
+    <string name="mobile_settings_coffee_upi_id" translatable="false"></string>
     <string name="mobile_settings_coffee_copy">Copy</string>
     <string name="mobile_settings_coffee_copied">UPI ID copied</string>
     <string name="mobile_settings_coffee_qr">UPI QR code</string>
     <string name="mobile_settings_coffee_scan">Or scan from another phone</string>
     <string name="mobile_settings_coffee_footer">Totally optional. A ⭐ on GitHub helps just as much ❤️</string>
 
-    <!-- MEETUBE(tv install): the phone walks through an ADB install on the TV. -->
+    <!-- GUTUBE(tv install): the phone walks through an ADB install on the TV. -->
     <string name="mobile_settings_tv_title">Install on TV</string>
-    <string name="mobile_settings_tv_summary">Put MeeTube TV on your Android TV from this phone</string>
+    <string name="mobile_settings_tv_summary">Put GuTube TV on your Android TV from this phone</string>
     <string name="mobile_settings_tv_android">Google TV / Android TV</string>
     <string name="mobile_settings_tv_fire">Fire TV</string>
     <string name="mobile_settings_tv_step_one">1</string>
@@ -640,19 +650,19 @@
     <string name="mobile_settings_tv_ip_hint" translatable="false">192.168.1.20</string>
     <string name="mobile_settings_tv_ip_invalid">Enter the TV’s IPv4 address, like %1$s</string>
     <string name="mobile_settings_tv_install">Install</string>
-    <string name="mobile_settings_tv_install_button">Install MeeTube TV</string>
+    <string name="mobile_settings_tv_install_button">Install GuTube TV</string>
     <string name="mobile_settings_tv_connecting">Connecting to %1$s…  Look at your TV and choose Allow (tick Always allow).</string>
-    <string name="mobile_settings_tv_finding_release">Finding the latest MeeTube TV…</string>
-    <string name="mobile_settings_tv_downloading">Downloading MeeTube TV %1$s… %2$s%%</string>
-    <string name="mobile_settings_tv_downloading_unknown">Downloading MeeTube TV %1$s…</string>
+    <string name="mobile_settings_tv_finding_release">Finding the latest GuTube TV…</string>
+    <string name="mobile_settings_tv_downloading">Downloading GuTube TV %1$s… %2$s%%</string>
+    <string name="mobile_settings_tv_downloading_unknown">Downloading GuTube TV %1$s…</string>
     <string name="mobile_settings_tv_installing">Installing on your TV…</string>
-    <string name="mobile_settings_tv_done">Done! MeeTube TV is open on your TV 🎉</string>
+    <string name="mobile_settings_tv_done">Done! GuTube TV is open on your TV 🎉</string>
     <string name="mobile_settings_tv_unreachable">Couldn’t reach the TV. Is debugging on (step 2) and the IP right?</string>
     <string name="mobile_settings_tv_auth_failed">The TV didn’t allow this phone. Try again and choose Allow on the TV.</string>
-    <string name="mobile_settings_tv_download_failed">Couldn’t download MeeTube TV. Check your internet.</string>
+    <string name="mobile_settings_tv_download_failed">Couldn’t download GuTube TV. Check your internet.</string>
     <string name="mobile_settings_tv_install_failed">The TV refused the install: %1$s</string>
     <string name="mobile_settings_tv_unknown_error">Unknown error</string>
-    <string name="mobile_settings_tv_launch_failed">MeeTube TV is installed. Open it from your TV’s apps.</string>
+    <string name="mobile_settings_tv_launch_failed">GuTube TV is installed. Open it from your TV’s apps.</string>
     <string name="mobile_settings_tv_busy">An install is already running. Give it a moment.</string>
     <string name="mobile_settings_tv_permission">Allow local network access to find and connect to your TV.</string>
     <string name="mobile_settings_tv_footer">You can turn debugging off on the TV afterwards.</string>

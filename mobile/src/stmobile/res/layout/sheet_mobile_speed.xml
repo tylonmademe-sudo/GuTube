@@ -13,7 +13,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical"
     android:paddingBottom="12dp">
 
@@ -44,11 +44,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
         android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -56,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:background="@android:color/transparent"
                 android:orientation="vertical" />
 
         </LinearLayout>
@@ -72,7 +75,7 @@
         android:id="@+id/speed_sheet_more"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
+        android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"

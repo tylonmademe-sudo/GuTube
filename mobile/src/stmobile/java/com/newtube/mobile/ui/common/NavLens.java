@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 /**
- * MEETUBE(nav lens, issue #46): a tab switch as iOS 26's liquid glass tab bar plays it - the lit pill
+ * GUTUBE(nav lens, issue #46): a tab switch as iOS 26's liquid glass tab bar plays it - the lit pill
  * swells into a clear lens taller than the bar, glides to the picked tab (stretching with its speed,
  * landing with a little overshoot) magnifying and bending the bar under it through
  * {@link GlassView}'s lens shader, unblurred, and settles back down into the pill.
@@ -31,7 +31,7 @@ import androidx.annotation.RequiresApi;
  * ({@link #jiggle}), and with the setting off ({@link #enabled}) it just nudges.
  */
 public final class NavLens extends View {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_MOTION = "tab_switch_motion";
     /** The lens swells in place this long before it glides (a switch's page swap lands then, not mid-glide). */
     private static final long GLIDE_DELAY_MS = 16;
@@ -104,34 +104,15 @@ public final class NavLens extends View {
      * 1 right) and wobbles - wider and flatter, then narrower and taller - settling in ~0.7 s.
      */
     public static void jiggle(View bar, int direction) {
-        Object running = bar.getTag(com.liskovsoft.smartyoutubetv2.tv.R.id.mobile_jiggle_animator);
-        if (running instanceof Animator) {
-            ((Animator) running).cancel();
-        }
-        float fromX = bar.getScaleX(); // a dragged bar's pop (#90) settles into the wiggle
-        float fromY = bar.getScaleY();
-        float lean = JIGGLE_LEAN_DP * bar.getResources().getDisplayMetrics().density * direction;
-        ValueAnimator jiggle = ValueAnimator.ofFloat(0f, 1f);
-        jiggle.setDuration(JIGGLE_MS);
-        jiggle.setInterpolator(new LinearInterpolator());
-        jiggle.addUpdateListener(a -> {
-            float t = (float) a.getAnimatedValue();
-            float wobble = (float) (Math.exp(-4.2 * t) * Math.sin(2 * Math.PI * 2.25 * t));
-            float popped = (float) Math.exp(-6 * t);
-            bar.setScaleX((1f + (fromX - 1f) * popped) * (1f + 0.028f * wobble));
-            bar.setScaleY((1f + (fromY - 1f) * popped) * (1f - 0.04f * wobble));
-            bar.setTranslationX(lean * (float) (Math.exp(-3.5 * t) * Math.sin(2 * Math.PI * 1.4 * t)));
-        });
-        jiggle.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) { // also after cancel()
-                bar.setScaleX(1f);
-                bar.setScaleY(1f);
-                bar.setTranslationX(0f);
+        if (bar != null) {
+            Object running = bar.getTag(com.liskovsoft.smartyoutubetv2.tv.R.id.mobile_jiggle_animator);
+            if (running instanceof Animator) {
+                ((Animator) running).cancel();
             }
-        });
-        bar.setTag(com.liskovsoft.smartyoutubetv2.tv.R.id.mobile_jiggle_animator, jiggle);
-        jiggle.start();
+            bar.setScaleX(1f);
+            bar.setScaleY(1f);
+            bar.setTranslationX(0f);
+        }
     }
 
     /**
@@ -145,7 +126,7 @@ public final class NavLens extends View {
     }
 
     /**
-     * MEETUBE(#90): the lens under a finger dragging the lit pill along the bar, centred at {@code x}
+     * GUTUBE(#90): the lens under a finger dragging the lit pill along the bar, centred at {@code x}
      * (bar coordinates); {@link #play} with {@code grown} glides it on from there when it is let go.
      */
     public void drag(GlassView bar, View tab, float x) {
@@ -201,7 +182,7 @@ public final class NavLens extends View {
             peakSpeed = Math.max(peakSpeed, speed(glide, i / 40f));
         }
         float topSpeed = peakSpeed;
-        // MEETUBE(nav drag): stretched by the distance covered too. A drag let go on its tab glides
+        // GUTUBE(nav drag): stretched by the distance covered too. A drag let go on its tab glides
         // nowhere; stretched in full it poked past the bar's rounded end on Home or You.
         float reach = Math.min(1f, Math.abs(toX - fromX) / Math.max(1, to.getWidth()));
         long settleAt = GLIDE_DELAY_MS + Math.round(glideMs * 0.7f);
@@ -314,7 +295,7 @@ public final class NavLens extends View {
         int w = getWidth();
         int h = getHeight();
         if (mNode == null) {
-            mNode = new RenderNode("MeeTube nav lens");
+            mNode = new RenderNode("GuTube nav lens");
         }
         mNode.setPosition(0, 0, w, h);
         if (w != mEffectW || h != mEffectH) {

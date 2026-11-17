@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  MEETUBE(transcript): the video's transcript under it, like YouTube's panel: a search field, then a
+  GUTUBE(transcript): the video's transcript under it, like YouTube's panel: a search field, then a
   line per caption with its time. The line being said lights up and stays in view; a tap plays from
   it (TranscriptSheet). The frosted sheet glass, sized to stop under the video like Lyrics.
 -->
@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <View
@@ -61,7 +61,8 @@
             android:id="@+id/transcript_sheet_close"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
+            android:foreground="@null"
             android:contentDescription="@string/mobile_sheet_close"
             android:src="@drawable/ic_sheet_close" />
 

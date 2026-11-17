@@ -64,13 +64,17 @@ final class ChaptersSheet {
     }
 
     /**
-     * MEETUBE(issue #238): upright, the list in the panel under the video (as the transcript), so
+     * GUTUBE(issue #238): upright, the list in the panel under the video (as the transcript), so
      * the video above takes taps and its seek dot draws over the edge. Returns what clears the rows.
      */
     static Runnable bindPanel(@NonNull CommentsPanelLayout panel, @NonNull List<Video> chapters, int currentIndex,
                               @NonNull Listener listener) {
         View sheet = panel.getSheet();
-        sheet.findViewById(R.id.chapters_panel_close).setOnClickListener(v -> panel.close());
+        View close = sheet.findViewById(R.id.chapters_panel_close);
+        if (close != null) {
+            close.setOnClickListener(v -> panel.close());
+            com.newtube.mobile.ui.common.SpotlightHelper.attach(close);
+        }
         RecyclerView list = bindList(sheet, chapters, currentIndex, listener, panel::close);
         return () -> list.setAdapter(null); // its rows' frames go with it
     }
@@ -78,6 +82,7 @@ final class ChaptersSheet {
     private static RecyclerView bindList(View content, List<Video> chapters, int currentIndex,
                                          Listener listener, Runnable close) {
         RecyclerView list = content.findViewById(R.id.chapters_sheet_list);
+        list.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         LinearLayoutManager layoutManager = new LinearLayoutManager(content.getContext());
         list.setLayoutManager(layoutManager);
         list.setAdapter(new ChapterAdapter(new ArrayList<>(chapters), currentIndex, chapter -> {
@@ -132,6 +137,8 @@ final class ChaptersSheet {
 
         ChapterHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setBackground(null);
+            itemView.setForeground(null);
             mThumbnail = itemView.findViewById(R.id.chapter_thumbnail);
             mTitle = itemView.findViewById(R.id.chapter_title);
             mTime = itemView.findViewById(R.id.chapter_time);

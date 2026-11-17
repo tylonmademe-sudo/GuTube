@@ -21,7 +21,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(glass switch): the iOS 26 switch, moving as liquidglass.theatom.lk's does. A 64x28dp
+ * GUTUBE(glass switch): the iOS 26 switch, moving as liquidglass.theatom.lk's does. A 64x28dp
  * capsule (accent on, grey off) and a wide white pill knob with a soft shadow. Held, the knob
  * swells (a spring, with a wobble as it lets go) into a clear lens with a bright ring and the track
  * opens a see-through gap behind it. Position, swell, track colour and the lens's stretch are each
@@ -95,8 +95,8 @@ public class GlassSwitch extends SwitchMaterial {
         mDp = getResources().getDisplayMetrics().density;
         mSimple = NavLens.lowEnd(context);
         mSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mOn = ContextCompat.getColor(context, R.color.meetube_accent);
-        mOff = ContextCompat.getColor(context, R.color.meetube_switch_off);
+        mOn = ContextCompat.getColor(context, R.color.gutube_accent);
+        mOff = ContextCompat.getColor(context, R.color.gutube_switch_off);
         setThumbDrawable(new ColorDrawable(Color.TRANSPARENT));
         setTrackDrawable(new ColorDrawable(Color.TRANSPARENT));
         setBackground(null);
@@ -133,7 +133,7 @@ public class GlassSwitch extends SwitchMaterial {
             spring.start();
         }
         if (BatterySaver.lite()) {
-            spring.skipToEnd(); // MEETUBE(issue #93): no motion
+            spring.skipToEnd(); // GUTUBE(issue #93): no motion
         }
     }
 

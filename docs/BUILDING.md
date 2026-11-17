@@ -1,13 +1,13 @@
-# Building MeeTube
+# Building GuTube
 
 Requirements: JDK 17 and Android SDK 37 (the app runs on Android 7 / API 24 and later).
 Point `local.properties` at your SDK (`sdk.dir=...`), and clone with submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/yashoncode/meetube.git
+git clone --recurse-submodules https://github.com/gutube/gutube.git
 ```
 
-`MediaServiceCore` and `SharedModules` are MeeTube's forks of SmartTube's modules
+`MediaServiceCore` and `SharedModules` are GuTube's forks of SmartTube's modules
 (`upstream` = yuliskov/<name>).
 
 ```bash
@@ -25,7 +25,7 @@ git clone --recurse-submodules https://github.com/yashoncode/meetube.git
 Install on a connected device, always naming the device:
 
 ```bash
-adb -s DEVICE_SERIAL install -r mobile/build/outputs/renamed_apks/stmobileDebug/MeeTube_<version>_universal.apk
+adb -s DEVICE_SERIAL install -r mobile/build/outputs/renamed_apks/stmobileDebug/GuTube_<version>_universal.apk
 ```
 
 On an x86_64 emulator, add `-PemulatorAbi` so Cronet and J2V8 run natively.

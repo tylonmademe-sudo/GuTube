@@ -29,12 +29,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * MEETUBE(about): Settings > About's two pages of people - the contributors with what each did, and
+ * GUTUBE(about): Settings > About's two pages of people - the contributors with what each did, and
  * everyone who opened an issue, read live from GitHub so the list never needs a release to grow.
  */
 final class AboutPeople {
-    private static final String OWNER = "yashoncode";
-    private static final String ISSUES_URL = "https://api.github.com/repos/yashoncode/meetube/issues?state=all&per_page=100&page=";
+    private static final String OWNER = "";
+    private static final String ISSUES_URL = "";
     private static final int PAGE_SIZE = 100;
     private static final int MAX_PAGES = 10;
 
@@ -88,7 +88,8 @@ final class AboutPeople {
         ((TextView) row.findViewById(R.id.about_person_name)).setText(login);
         ((TextView) row.findViewById(R.id.about_person_what)).setText(what);
         Glide.with(context).load(avatar).circleCrop().into((ImageView) row.findViewById(R.id.about_person_avatar));
-        row.setOnClickListener(v -> Utils.openLinkExt(context, "https://github.com/" + login));
+        // static: no external link
+        row.setClickable(false);
         return row;
     }
 

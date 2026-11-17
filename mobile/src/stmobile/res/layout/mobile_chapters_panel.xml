@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #238): the chapters slide over the watch page, under the video, as the transcript:
+<!-- GUTUBE(issue #238): the chapters slide over the watch page, under the video, as the transcript:
      the video above takes taps as usual and the seek bar's dot draws over the panel's edge. -->
 <com.newtube.mobile.ui.playback.CommentsPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"

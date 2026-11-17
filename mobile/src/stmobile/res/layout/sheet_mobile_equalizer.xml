@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #177): the phone sheet theme supplies the surface. Only the controls scroll. -->
+<!-- GUTUBE(issue #177): the phone sheet theme supplies the surface. Only the controls scroll. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:orientation="vertical"
     android:paddingBottom="12dp">
 
@@ -46,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="56dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@android:color/transparent"
+                android:foreground="@null"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
@@ -68,13 +70,14 @@
                     android:contentDescription="@string/mobile_settings_equalizer_enable" />
             </LinearLayout>
 
-            <!-- MEETUBE(autoeq): headphone correction, independent of the switch above -->
+            <!-- GUTUBE(autoeq): headphone correction, independent of the switch above -->
             <LinearLayout
                 android:id="@+id/equalizer_autoeq_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="56dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@android:color/transparent"
+                android:foreground="@null"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"

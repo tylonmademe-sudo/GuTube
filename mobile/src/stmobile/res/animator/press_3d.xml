@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(settings back): a physical button - it sinks while held and springs back up past
+<!-- GUTUBE(settings back): a physical button - it sinks while held and springs back up past
      its rest height when let go. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">

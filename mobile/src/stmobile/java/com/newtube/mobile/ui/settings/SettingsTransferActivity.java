@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * MEETUBE(settings-transfer): the app's settings as one JSON file - saved for later, shared with a
+ * GUTUBE(settings-transfer): the app's settings as one JSON file - saved for later, shared with a
  * friend, or imported back - and the invisible host for the system file pickers it needs.
  *
  * <p>Only settings travel, by allowlist: never the signed-in accounts, linked devices, watch
@@ -46,7 +46,7 @@ public final class SettingsTransferActivity extends Activity {
     private static final String EXTRA_IMPORT = "import";
     private static final int REQUEST_EXPORT = 1;
     private static final int REQUEST_IMPORT = 2;
-    private static final String FORMAT = "meetube-settings";
+    private static final String FORMAT = "gutube-settings";
     /** A settings file is a few KB; anything far bigger is not one. */
     private static final int MAX_BYTES = 2 * 1024 * 1024;
 
@@ -55,9 +55,9 @@ public final class SettingsTransferActivity extends Activity {
             "video_player_tweaks_data", "search_data", "content_block_data", "sidebar_data",
             "channel_group_data", "blocked_channel_data"};
     /** The phone's own settings (SharedPreferences files). */
-    private static final String[] PREFS = {"meetube_app", "meetube_ui", "meetube_background",
-            "meetube_performance", "meetube_player", "meetube_player_ui", "meetube_nav_tabs", "meetube_loader",
-            "meetube_shorts", "mini_pip", "newtube_theme", "newtube_playback_sources"};
+    private static final String[] PREFS = {"gutube_app", "gutube_ui", "gutube_background",
+            "gutube_performance", "gutube_player", "gutube_player_ui", "gutube_nav_tabs", "gutube_loader",
+            "gutube_shorts", "mini_pip", "newtube_theme", "newtube_playback_sources"};
     /** general_data's settings password and master password (GeneralData.restoreData). */
     private static final int[] PASSWORDS = {33, 41};
 
@@ -139,7 +139,7 @@ public final class SettingsTransferActivity extends Activity {
     }
 
     private static String fileName() {
-        return "MeeTube_settings_" + new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date()) + ".json";
+        return "GuTube_settings_" + new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date()) + ".json";
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -187,7 +187,7 @@ public final class SettingsTransferActivity extends Activity {
     /** Writes an imported file's settings; anything not on the allowlists is ignored. */
     private static void apply(Activity activity, JSONObject root) throws JSONException {
         if (!FORMAT.equals(root.optString("format"))) {
-            throw new JSONException("not a MeeTube settings file");
+            throw new JSONException("not a GuTube settings file");
         }
         JSONObject data = root.optJSONObject("data");
         if (data != null) {

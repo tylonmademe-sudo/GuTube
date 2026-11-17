@@ -1199,7 +1199,7 @@ public class AppDialogUtil {
     }
 
     /**
-     * MEETUBE(save a whole playlist): a playlist or Mix card ("13 videos") stands for its list, but
+     * GUTUBE(save a whole playlist): a playlist or Mix card ("13 videos") stands for its list, but
      * saving it to a playlist saved only the one video the card plays first. These carry the list.
      */
     @androidx.annotation.Nullable

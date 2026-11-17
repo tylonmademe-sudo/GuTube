@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(issue #139): "Translate to ..." under a comment (Material "translate"). -->
+<!-- GUTUBE(issue #139): "Translate to ..." under a comment (Material "translate"). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="16dp"
     android:height="16dp"

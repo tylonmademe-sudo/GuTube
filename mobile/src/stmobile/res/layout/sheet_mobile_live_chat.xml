@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_sheet"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <View
@@ -43,7 +43,8 @@
             android:id="@+id/chat_sheet_close"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@android:color/transparent"
+            android:foreground="@null"
             android:contentDescription="@string/mobile_sheet_close"
             android:src="@drawable/ic_sheet_close" />
 

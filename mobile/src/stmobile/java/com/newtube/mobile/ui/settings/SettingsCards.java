@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.newtube.mobile.ui.common.AccentCard;
 
 /**
- * MEETUBE(settings cards): each run of rows between headers sits on the You page's glass card
+ * GUTUBE(settings cards): each run of rows between headers sits on the You page's glass card
  * ({@link AccentCard}: a faint fill, an accent glow, a hairline warming to the accent). Headers,
  * notes, dividers and custom views break a run; the rows are inset into the card and the first and
  * last clip their press ripple to its rounded corners.

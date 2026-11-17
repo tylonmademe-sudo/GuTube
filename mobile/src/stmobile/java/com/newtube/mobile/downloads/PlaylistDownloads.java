@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-/** MEETUBE(playlist page): one quality choice, then the same format selection and queue as DownloadPicker. */
+/** GUTUBE(playlist page): one quality choice, then the same format selection and queue as DownloadPicker. */
 public final class PlaylistDownloads {
     public interface QualityCallback {
         void onQuality(int quality);
@@ -83,7 +83,7 @@ public final class PlaylistDownloads {
                     if (emitter.isDisposed()) {
                         return;
                     }
-                    // MEETUBE(playlist page): a single download may have been queued while formats loaded.
+                    // GUTUBE(playlist page): a single download may have been queued while formats loaded.
                     String title = video.getTitle() != null ? video.getTitle() : info.getTitle();
                     String author = video.getAuthor() != null ? video.getAuthor() : info.getAuthor();
                     String thumb = video.getCardImageUrl();

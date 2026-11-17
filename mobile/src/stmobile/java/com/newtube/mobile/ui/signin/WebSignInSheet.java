@@ -64,6 +64,8 @@ public final class WebSignInSheet {
         int selected = WebSignInState.selectedSlot(activity);
         for (WebSignInState.Account account : WebSignInState.accounts(activity)) {
             View row = LayoutInflater.from(sheet.getContext()).inflate(R.layout.item_mobile_account_row, list, false);
+            row.setBackground(null);
+            row.setForeground(null);
             ((TextView) row.findViewById(R.id.mobile_account_row_name)).setText(account.name);
             row.findViewById(R.id.mobile_account_row_email).setVisibility(View.GONE);
             row.findViewById(R.id.mobile_account_row_check)
@@ -119,6 +121,8 @@ public final class WebSignInSheet {
 
     private static void addAction(BottomSheetDialog sheet, LinearLayout parent, int icon, int label, Runnable onClick) {
         View row = LayoutInflater.from(sheet.getContext()).inflate(R.layout.item_mobile_you_row, parent, false);
+        row.setBackground(null);
+        row.setForeground(null);
         ((ImageView) row.findViewById(R.id.mobile_you_row_icon)).setImageResource(icon);
         row.findViewById(R.id.mobile_you_row_glass).setWillNotDraw(true); // the You page's bubble, not the sheet's
         ((TextView) row.findViewById(R.id.mobile_you_row_label)).setText(label);
@@ -135,11 +139,15 @@ public final class WebSignInSheet {
         if (activity.isFinishing() || activity.isDestroyed()) return;
         BottomSheetDialog sheet = Haptics.watch(new BottomSheetDialog(activity));
         View content = LayoutInflater.from(sheet.getContext()).inflate(R.layout.sheet_mobile_web_signin, null);
-        content.findViewById(R.id.web_signin_continue).setOnClickListener(v -> {
+        View btnContinue = content.findViewById(R.id.web_signin_continue);
+        View btnNotNow = content.findViewById(R.id.web_signin_not_now);
+        btnContinue.setOnClickListener(v -> {
             sheet.dismiss();
             signIn.run();
         });
-        content.findViewById(R.id.web_signin_not_now).setOnClickListener(v -> sheet.dismiss());
+        btnNotNow.setOnClickListener(v -> sheet.dismiss());
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(btnContinue);
+        com.newtube.mobile.ui.common.SpotlightHelper.attach(btnNotNow);
         sheet.setContentView(content);
         sheet.show();
     }

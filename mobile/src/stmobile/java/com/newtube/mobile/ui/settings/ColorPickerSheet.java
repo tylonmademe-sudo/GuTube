@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.function.IntConsumer;
 
 /**
- * MEETUBE(accent): any colour. A live preview bubble with the hex code, a saturation / brightness
+ * GUTUBE(accent): any colour. A live preview bubble with the hex code, a saturation / brightness
  * square and a hue slider whose thumbs carry the colour and grow while dragged, a grid of quick
  * picks, a hex field (type or paste), and one big Use colour button tinted with the pick.
  */
@@ -50,7 +50,7 @@ final class ColorPickerSheet {
     }
 
     static void show(Context context, int initial, IntConsumer onPick) {
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // GUTUBE(glass): frosted
         Context c = sheet.getContext();
         float dp = c.getResources().getDisplayMetrics().density;
         int onSurface = ContextCompat.getColor(c, R.color.mobile_color_on_surface);

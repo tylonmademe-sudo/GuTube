@@ -33,21 +33,26 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MEETUBE(bar editor): Settings > Customization > Tabs shows the bars as a stack you drag: a live
- * preview of the top and bottom bars, then a tile per item. Home and You stay put; Search and the
- * two tabs slide between them, and Search can go up into the top bar. A tap on a tab picks what it
- * shows, a tap on Search picks its bar. Each drop saves the whole order ({@link NavTabs#setLayout});
- * Browse rebuilds its bar when it comes back.
+ * GUTUBE(bar editor): Settings > Customization > Tabs shows the bars as a stack you drag: a live
+ * preview of the top and bottom bars, then a tile per item.
+ * All tabs (including Cast, Search, Home, and You) are completely unlocked and can be freely dragged
+ * between the Top Bar and Bottom Bar sections and reordered at will.
  */
 final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    // The stack's items: a tab is its section id (or NavTabs.NONE), Home is MediaGroup.TYPE_HOME.
-    private static final int TOP_HEADER = -100;
-    private static final int BOTTOM_HEADER = -101;
-    private static final int SEARCH = -102;
-    private static final int YOU = -103;
-    private static final int CAST = -104; // the preview's top bar only
+    public static final int TOP_HEADER = -100;
+    public static final int BOTTOM_HEADER = -101;
+    public static final int SEARCH = NavTabs.ITEM_SEARCH;
+    public static final int YOU = NavTabs.ITEM_YOU;
+    public static final int CAST = NavTabs.ITEM_CAST;
+    public static final int ITEM_ADD = -105;
+
+    private static final int ACTION_MOVE_TOP = -200;
+    private static final int ACTION_MOVE_BOTTOM = -201;
+    private static final int ACTION_REMOVE = -202;
+
     private static final int VIEW_HEADER = 0;
     private static final int VIEW_TILE = 1;
+    private static final int VIEW_ADD = 2;
 
     private final Context mContext;
     private final SettingsAdapter.Listener mPage;
@@ -99,21 +104,46 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mPage = page;
         mPreviewTop = previewTop;
         mPreviewBottom = previewBottom;
-        boolean onTop = NavTabs.searchOnTop(context);
-        List<Integer> middle = new ArrayList<>();
-        middle.add(NavTabs.get(context, NavTabs.FIRST));
-        middle.add(NavTabs.get(context, NavTabs.SECOND));
-        if (!onTop) {
-            middle.add(Math.max(0, Math.min(2, NavTabs.searchPosition(context))), SEARCH);
+
+        List<Integer> top = NavTabs.getTopBarItems(context);
+        List<Integer> bottom = NavTabs.getBottomBarItems(context);
+
+        // Ensure CAST is present if not already in either bar
+        if (!top.contains(CAST) && !bottom.contains(CAST)) {
+            top.add(0, CAST);
         }
+        // Ensure SEARCH is present
+        if (!top.contains(SEARCH) && !bottom.contains(SEARCH)) {
+            bottom.add(SEARCH);
+        }
+        // Ensure YOU is present
+        if (!top.contains(YOU) && !bottom.contains(YOU)) {
+            bottom.add(YOU);
+        }
+        // Ensure HOME is present if enabled
+        if (!top.contains(MediaGroup.TYPE_HOME) && !bottom.contains(MediaGroup.TYPE_HOME) && NavTabs.showHome(context)) {
+            bottom.add(0, MediaGroup.TYPE_HOME);
+        }
+
+        List<Integer> cleanTop = new ArrayList<>();
+        for (int id : top) {
+            if (id != NavTabs.NONE && !cleanTop.contains(id)) {
+                cleanTop.add(id);
+            }
+        }
+        List<Integer> cleanBottom = new ArrayList<>();
+        for (int id : bottom) {
+            if (id != NavTabs.NONE && !cleanTop.contains(id) && !cleanBottom.contains(id)) {
+                cleanBottom.add(id);
+            }
+        }
+
         mItems.add(TOP_HEADER);
-        if (onTop) {
-            mItems.add(SEARCH);
-        }
+        mItems.addAll(cleanTop);
         mItems.add(BOTTOM_HEADER);
-        mItems.add(MediaGroup.TYPE_HOME);
-        mItems.addAll(middle);
-        mItems.add(YOU);
+        mItems.addAll(cleanBottom);
+        mItems.add(ITEM_ADD);
+
         syncPreview();
     }
 
@@ -125,7 +155,13 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         int item = mItems.get(position);
-        return item == TOP_HEADER || item == BOTTOM_HEADER ? VIEW_HEADER : VIEW_TILE;
+        if (item == TOP_HEADER || item == BOTTOM_HEADER) {
+            return VIEW_HEADER;
+        }
+        if (item == ITEM_ADD) {
+            return VIEW_ADD;
+        }
+        return VIEW_TILE;
     }
 
     @NonNull
@@ -133,7 +169,11 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         int layout = viewType == VIEW_HEADER ? R.layout.item_mobile_settings_header : R.layout.item_mobile_bar_tile;
-        return new RecyclerView.ViewHolder(inflater.inflate(layout, parent, false)) {};
+        View view = inflater.inflate(layout, parent, false);
+        if (viewType != VIEW_HEADER) {
+            com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(view, 16f);
+        }
+        return new RecyclerView.ViewHolder(view) {};
     }
 
     @Override
@@ -144,116 +184,220 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((TextView) view).setText(item == TOP_HEADER ? R.string.mobile_settings_bar_top : R.string.mobile_settings_tabs_bottom_bar);
             return;
         }
-        boolean fixed = item == MediaGroup.TYPE_HOME || item == YOU;
-        ((ImageView) view.findViewById(R.id.bar_tile_icon)).setImageResource(icon(item));
-        ((TextView) view.findViewById(R.id.bar_tile_title)).setText(title(item));
-        ((TextView) view.findViewById(R.id.bar_tile_summary)).setText(summary(item));
+
+        ImageView iconView = view.findViewById(R.id.bar_tile_icon);
+        TextView titleView = view.findViewById(R.id.bar_tile_title);
+        TextView summaryView = view.findViewById(R.id.bar_tile_summary);
         ImageView grip = view.findViewById(R.id.bar_tile_grip);
-        grip.setImageResource(fixed ? R.drawable.ic_bar_lock : R.drawable.ic_bar_drag);
-        boolean homeOff = item == MediaGroup.TYPE_HOME && !NavTabs.showHome(mContext);
-        view.setAlpha(item == NavTabs.NONE || homeOff ? 0.6f : 1f);
-        if (item == MediaGroup.TYPE_HOME) { // MEETUBE(issue #213): Home stays first but a tap removes it
-            grip.setOnTouchListener(null);
-            view.setOnClickListener(v -> pick(holder.getBindingAdapterPosition()));
+
+        if (item == ITEM_ADD) {
+            iconView.setImageResource(R.drawable.ic_mobile_add);
+            boolean canAdd = hasAvailableButtonsToAdd();
+            titleView.setText(canAdd ? R.string.mobile_settings_bar_add_button : R.string.mobile_settings_bar_all_added);
+            summaryView.setText(canAdd ? R.string.mobile_settings_bar_add_summary : R.string.mobile_settings_bar_all_added_summary);
+            grip.setVisibility(View.GONE);
+            view.setAlpha(canAdd ? 1f : 0.6f);
+            view.setOnClickListener(v -> {
+                if (hasAvailableButtonsToAdd()) {
+                    showAddDialog();
+                }
+            });
             view.setClickable(true);
             return;
         }
-        // The grip drags at once; a long press anywhere on the tile does too.
-        grip.setOnTouchListener(fixed ? null : (v, event) -> {
+
+        grip.setVisibility(View.VISIBLE);
+        iconView.setImageResource(icon(item));
+        titleView.setText(title(item));
+        summaryView.setText(summary(item));
+        grip.setImageResource(R.drawable.ic_bar_drag);
+
+        boolean homeOff = item == MediaGroup.TYPE_HOME && !NavTabs.showHome(mContext);
+        view.setAlpha(item == NavTabs.NONE || homeOff ? 0.6f : 1f);
+
+        // Grip starts drag on touch
+        grip.setOnTouchListener((v, event) -> {
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 mTouchHelper.startDrag(holder);
+                return true;
             }
             return false;
         });
-        view.setOnClickListener(fixed ? null : v -> pick(holder.getBindingAdapterPosition()));
-        view.setClickable(!fixed);
+
+        view.setOnClickListener(v -> pick(holder.getBindingAdapterPosition()));
+        view.setClickable(true);
     }
 
-    /** A tap: what a tab shows, or which bar Search sits in (the same sheet as any choice row). */
-    private void pick(int position) {
-        if (position == RecyclerView.NO_POSITION) {
-            return;
-        }
-        Context c = mContext;
-        int first = NavTabs.get(c, NavTabs.FIRST);
-        int second = NavTabs.get(c, NavTabs.SECOND);
-        int searchPosition = NavTabs.searchPosition(c);
-        if (mItems.get(position) == SEARCH) {
-            mPage.onRowClicked(SettingsRow.<Boolean>choice(c.getString(R.string.mobile_settings_search_place))
-                    .option(c.getString(R.string.mobile_settings_search_place_bottom), false)
-                    .option(c.getString(R.string.mobile_settings_search_place_top), true)
-                    .bind(() -> NavTabs.searchOnTop(c), onTop -> NavTabs.setLayout(c, first, second, searchPosition, onTop)));
-            return;
-        }
-        if (mItems.get(position) == MediaGroup.TYPE_HOME) {
-            mPage.onRowClicked(SettingsRow.<Boolean>choice(c.getString(R.string.header_home))
-                    .option(c.getString(R.string.mobile_settings_bar_home_shown), true)
-                    .option(c.getString(R.string.mobile_settings_bar_home_removed),
-                            c.getString(R.string.mobile_settings_bar_home_removed_desc), false)
-                    .bind(() -> NavTabs.showHome(c), show -> NavTabs.setShowHome(c, show)));
-            return;
-        }
-        int slot = 0;
-        for (int i = mItems.indexOf(MediaGroup.TYPE_HOME) + 1; i < position; i++) {
-            if (mItems.get(i) != SEARCH) {
-                slot++;
+    private boolean hasAvailableButtonsToAdd() {
+        for (int candidate : NavTabs.ALL_BUTTON_CHOICES) {
+            if (!mItems.contains(candidate)) {
+                return true;
             }
         }
-        int chosenSlot = slot;
-        SettingsRow.Choice<Integer> choice = SettingsRow.choice(c.getString(R.string.mobile_settings_bar_tab));
-        for (int sectionId : NavTabs.CHOICES) {
-            choice.option(c.getString(sectionTitle(sectionId)), sectionId);
+        return false;
+    }
+
+    private void showAddDialog() {
+        Context c = mContext;
+        List<Integer> unadded = new ArrayList<>();
+        for (int candidate : NavTabs.ALL_BUTTON_CHOICES) {
+            if (!mItems.contains(candidate)) {
+                unadded.add(candidate);
+            }
         }
-        choice.option(c.getString(R.string.mobile_settings_tabs_none), NavTabs.NONE);
-        mPage.onRowClicked(choice.bind(() -> NavTabs.get(c, chosenSlot), sectionId -> {
-            NavTabs.set(c, chosenSlot, sectionId);
-            if (sectionId != NavTabs.NONE) {
-                BrowsePresenter.instance(c).enableSection(sectionId, true);
+        if (unadded.isEmpty()) {
+            return;
+        }
+        SettingsRow.Choice<Integer> choice = SettingsRow.choice(c.getString(R.string.mobile_settings_bar_add_button));
+        for (int candidate : unadded) {
+            choice.option(title(candidate), icon(candidate), candidate);
+        }
+        mPage.onRowClicked(choice.bind(() -> unadded.get(0), selected -> {
+            int addPos = mItems.indexOf(ITEM_ADD);
+            if (addPos < 0) {
+                addPos = mItems.size();
+            }
+            mItems.add(addPos, selected);
+            notifyItemInserted(addPos);
+            syncPreview();
+            save();
+            notifyDataSetChanged();
+            if (selected >= 0 && selected != MediaGroup.TYPE_HOME) {
+                BrowsePresenter.instance(c).enableSection(selected, true);
             }
         }));
     }
 
-    /** Moves the dragged item; false when it can't go there. Search jumps between the bars. */
-    private boolean move(int from, int to) {
-        int item = mItems.get(from);
+    /** A tap: customize what any tab or button shows, move it, or remove it. All buttons unlocked. */
+    private void pick(int position) {
+        if (position == RecyclerView.NO_POSITION || position >= mItems.size()) {
+            return;
+        }
+        int item = mItems.get(position);
+        if (item == TOP_HEADER || item == BOTTOM_HEADER || item == ITEM_ADD) {
+            return;
+        }
+        Context c = mContext;
         int bottomHeader = mItems.indexOf(BOTTOM_HEADER);
-        int home = mItems.indexOf(MediaGroup.TYPE_HOME);
-        int you = mItems.indexOf(YOU);
-        if (item == SEARCH && from > home && to <= home) {
-            to = bottomHeader; // up into the top bar
-        } else if (item == SEARCH && from < bottomHeader && to >= bottomHeader) {
-            to = home; // down to just after Home (Home moves up one as Search leaves)
-        } else if (from < bottomHeader || to <= home || to >= you) {
+        boolean inTop = bottomHeader >= 0 && position < bottomHeader;
+
+        SettingsRow.Choice<Integer> choice = SettingsRow.choice(title(item));
+
+        // 1. Move between bars option
+        if (inTop) {
+            choice.option(c.getString(R.string.mobile_settings_bar_move_bottom), R.drawable.ic_menu_arrow_down, ACTION_MOVE_BOTTOM);
+        } else {
+            choice.option(c.getString(R.string.mobile_settings_bar_move_top), R.drawable.ic_menu_arrow_up, ACTION_MOVE_TOP);
+        }
+
+        // 2. Change what this slot represents (all buttons unlocked)
+        for (int candidate : NavTabs.ALL_BUTTON_CHOICES) {
+            choice.option(title(candidate), icon(candidate), candidate);
+        }
+
+        // 3. Remove option
+        choice.option(c.getString(R.string.mobile_settings_bar_remove), R.drawable.ic_sheet_close, ACTION_REMOVE);
+
+        mPage.onRowClicked(choice.bind(() -> item, selected -> {
+            int currentPos = mItems.indexOf(item);
+            if (currentPos < 0) {
+                return;
+            }
+            if (selected == ACTION_MOVE_TOP) {
+                int bHeader = mItems.indexOf(BOTTOM_HEADER);
+                if (currentPos > bHeader) {
+                    move(currentPos, bHeader);
+                    save();
+                    notifyDataSetChanged();
+                }
+            } else if (selected == ACTION_MOVE_BOTTOM) {
+                int bHeader = mItems.indexOf(BOTTOM_HEADER);
+                int addPos = mItems.indexOf(ITEM_ADD);
+                int target = addPos > 0 ? addPos - 1 : mItems.size() - 1;
+                if (currentPos < bHeader) {
+                    move(currentPos, target);
+                    save();
+                    notifyDataSetChanged();
+                }
+            } else if (selected == ACTION_REMOVE) {
+                mItems.remove(currentPos);
+                notifyItemRemoved(currentPos);
+                syncPreview();
+                save();
+                notifyDataSetChanged();
+            } else {
+                // Assign new identity
+                int existingPos = mItems.indexOf(selected);
+                if (existingPos >= 0 && existingPos != currentPos) {
+                    // Swap the two slots
+                    mItems.set(existingPos, item);
+                    notifyItemChanged(existingPos);
+                }
+                mItems.set(currentPos, selected);
+                notifyItemChanged(currentPos);
+                syncPreview();
+                save();
+                if (selected >= 0 && selected != MediaGroup.TYPE_HOME) {
+                    BrowsePresenter.instance(c).enableSection(selected, true);
+                }
+            }
+        }));
+    }
+
+    /** Moves the dragged item; instantly updates list and preview. */
+    private boolean move(int from, int to) {
+        if (from == to || from < 0 || to < 0 || from >= mItems.size() || to >= mItems.size()) {
             return false;
         }
-        mItems.add(to, mItems.remove(from));
+        int item = mItems.get(from);
+        if (item == TOP_HEADER || item == BOTTOM_HEADER || item == ITEM_ADD) {
+            return false;
+        }
+        int targetItem = mItems.get(to);
+        if (targetItem == TOP_HEADER || targetItem == ITEM_ADD) {
+            return false;
+        }
+        if (to == 0) {
+            return false;
+        }
+        int moved = mItems.remove(from);
+        mItems.add(to, moved);
         notifyItemMoved(from, to);
         syncPreview();
         return true;
     }
 
     private void save() {
-        boolean onTop = mItems.indexOf(SEARCH) < mItems.indexOf(BOTTOM_HEADER);
-        List<Integer> tabs = new ArrayList<>();
-        int searchPosition = NavTabs.searchPosition(mContext);
-        for (int i = mItems.indexOf(MediaGroup.TYPE_HOME) + 1; i < mItems.indexOf(YOU); i++) {
-            if (mItems.get(i) == SEARCH) {
-                searchPosition = tabs.size();
+        int bottomHeader = mItems.indexOf(BOTTOM_HEADER);
+        List<Integer> top = new ArrayList<>();
+        List<Integer> bottom = new ArrayList<>();
+        for (int i = 0; i < mItems.size(); i++) {
+            int item = mItems.get(i);
+            if (item == TOP_HEADER || item == BOTTOM_HEADER || item == ITEM_ADD || item == NavTabs.NONE) {
+                continue;
+            }
+            if (bottomHeader >= 0 && i < bottomHeader) {
+                top.add(item);
             } else {
-                tabs.add(mItems.get(i));
+                bottom.add(item);
             }
         }
-        NavTabs.setLayout(mContext, tabs.get(0), tabs.get(1), searchPosition, onTop);
-        // A tab on the bar is switched on (#54): one turned off under You used to vanish from the bar too.
-        for (int tab : tabs) {
-            if (tab != NavTabs.NONE) {
-                BrowsePresenter.instance(mContext).enableSection(tab, true);
+        NavTabs.saveBarItems(mContext, top, bottom);
+        for (int item : bottom) {
+            if (item >= 0 && item != MediaGroup.TYPE_HOME) {
+                BrowsePresenter.instance(mContext).enableSection(item, true);
             }
         }
-        notifyItemChanged(mItems.indexOf(SEARCH)); // its line says where a drag would take it now
+        for (int item : top) {
+            if (item >= 0 && item != MediaGroup.TYPE_HOME) {
+                BrowsePresenter.instance(mContext).enableSection(item, true);
+            }
+        }
     }
 
     private final class Drag extends ItemTouchHelper.Callback {
+        private boolean mMoved;
+
         @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder holder) {
             int position = holder.getBindingAdapterPosition();
@@ -261,15 +405,36 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return 0;
             }
             int item = mItems.get(position);
-            boolean draggable = item != TOP_HEADER && item != BOTTOM_HEADER && item != MediaGroup.TYPE_HOME && item != YOU;
+            boolean draggable = item != TOP_HEADER && item != BOTTOM_HEADER && item != ITEM_ADD;
             return makeMovementFlags(draggable ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0, 0);
+        }
+
+        @Override
+        public boolean canDropOver(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder current,
+                                  @NonNull RecyclerView.ViewHolder target) {
+            int targetPos = target.getBindingAdapterPosition();
+            if (targetPos <= 0 || targetPos >= mItems.size()) {
+                return false;
+            }
+            int targetItem = mItems.get(targetPos);
+            return targetItem != TOP_HEADER && targetItem != ITEM_ADD;
         }
 
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder holder,
                               @NonNull RecyclerView.ViewHolder target) {
-            boolean moved = move(holder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+            int from = holder.getBindingAdapterPosition();
+            int to = target.getBindingAdapterPosition();
+            if (from == RecyclerView.NO_POSITION || to == RecyclerView.NO_POSITION || from == to) {
+                return false;
+            }
+            int targetItem = mItems.get(to);
+            if (targetItem == TOP_HEADER || targetItem == ITEM_ADD) {
+                return false;
+            }
+            boolean moved = move(from, to);
             if (moved) {
+                mMoved = true;
                 Haptics.tick(recyclerView);
             }
             return moved;
@@ -283,12 +448,15 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onSelectedChanged(RecyclerView.ViewHolder holder, int actionState) {
             super.onSelectedChanged(holder, actionState);
             if (holder != null && actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                // Lifted off the stack: a touch bigger, raised, the grip lit.
                 Haptics.longPress(holder.itemView);
-                holder.itemView.animate().scaleX(1.05f).scaleY(1.05f).translationZ(dp(mContext, 14))
+                holder.itemView.animate().scaleX(1.05f).scaleY(1.05f)
+                        .translationZ(dp(mContext, 14))
                         .setDuration(160).setInterpolator(new OvershootInterpolator(2f)).start();
-                ((ImageView) holder.itemView.findViewById(R.id.bar_tile_grip)).setColorFilter(
-                        ContextCompat.getColor(mContext, R.color.mobile_color_primary));
+                View grip = holder.itemView.findViewById(R.id.bar_tile_grip);
+                if (grip instanceof ImageView) {
+                    ((ImageView) grip).setColorFilter(
+                            ContextCompat.getColor(mContext, R.color.mobile_color_primary));
+                }
             }
         }
 
@@ -298,8 +466,15 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Haptics.click(holder.itemView);
             holder.itemView.animate().scaleX(1f).scaleY(1f).translationZ(0)
                     .setDuration(260).setInterpolator(new OvershootInterpolator(3f)).start();
-            ((ImageView) holder.itemView.findViewById(R.id.bar_tile_grip)).clearColorFilter();
-            save();
+            View grip = holder.itemView.findViewById(R.id.bar_tile_grip);
+            if (grip instanceof ImageView) {
+                ((ImageView) grip).clearColorFilter();
+            }
+            if (mMoved) {
+                mMoved = false;
+                save();
+                recyclerView.post(() -> notifyDataSetChanged());
+            }
         }
 
         @Override
@@ -317,16 +492,19 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void syncPreview() {
         List<Integer> top = new ArrayList<>();
-        top.add(CAST);
         List<Integer> bottom = new ArrayList<>();
         int bottomHeader = mItems.indexOf(BOTTOM_HEADER);
         for (int i = 0; i < mItems.size(); i++) {
             int item = mItems.get(i);
-            if (item == TOP_HEADER || item == BOTTOM_HEADER || item == NavTabs.NONE
+            if (item == TOP_HEADER || item == BOTTOM_HEADER || item == ITEM_ADD || item == NavTabs.NONE
                     || (item == MediaGroup.TYPE_HOME && !NavTabs.showHome(mContext))) {
                 continue;
             }
-            (i < bottomHeader ? top : bottom).add(item);
+            if (bottomHeader >= 0 && i < bottomHeader) {
+                top.add(item);
+            } else {
+                bottom.add(item);
+            }
         }
         sync(mPreviewTop, top);
         sync(mPreviewBottom, bottom);
@@ -383,7 +561,7 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ImageView previewIcon(int item) {
         ImageView icon = new ImageView(mContext);
         icon.setTag(item);
-        icon.setImageResource(item == CAST ? R.drawable.ic_mobile_cast : icon(item));
+        icon.setImageResource(icon(item));
         icon.setImageTintList(ContextCompat.getColorStateList(mContext, R.color.mobile_color_on_surface));
         icon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         int pad = dp(mContext, 9);
@@ -409,6 +587,8 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static int icon(int item) {
         switch (item) {
+            case CAST:
+                return R.drawable.ic_mobile_cast;
             case MediaGroup.TYPE_HOME:
                 return R.drawable.ic_nav_home;
             case SEARCH:
@@ -425,6 +605,10 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return R.drawable.ic_nav_history;
             case MediaGroup.TYPE_TRENDING:
                 return R.drawable.ic_nav_hyped;
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return R.drawable.ic_menu_folder;
+            case NavTabs.NONE:
+                return R.drawable.ic_sheet_close;
             default:
                 return R.drawable.ic_mobile_add;
         }
@@ -432,12 +616,16 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private CharSequence title(int item) {
         switch (item) {
+            case CAST:
+                return mContext.getString(R.string.mobile_cast_button);
             case MediaGroup.TYPE_HOME:
                 return mContext.getString(R.string.header_home);
             case SEARCH:
                 return mContext.getString(R.string.mobile_search_button);
             case YOU:
                 return mContext.getString(R.string.mobile_nav_you);
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return mContext.getString(R.string.mobile_settings_menu_playlists);
             case NavTabs.NONE:
                 return mContext.getString(R.string.mobile_settings_bar_empty);
             default:
@@ -446,19 +634,23 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private CharSequence summary(int item) {
-        switch (item) {
-            case MediaGroup.TYPE_HOME:
-                return mContext.getString(NavTabs.showHome(mContext)
-                        ? R.string.mobile_settings_bar_home_summary : R.string.mobile_settings_bar_home_removed);
-            case YOU:
-                return mContext.getString(R.string.mobile_settings_bar_last);
-            case SEARCH:
-                return mContext.getString(mItems.indexOf(SEARCH) < mItems.indexOf(BOTTOM_HEADER)
-                        ? R.string.mobile_settings_bar_search_down : R.string.mobile_settings_bar_search_up);
-            case NavTabs.NONE:
-                return mContext.getString(R.string.mobile_settings_bar_empty_summary);
-            default:
-                return mContext.getString(R.string.mobile_settings_bar_tab_summary);
+        int bottomHeader = mItems.indexOf(BOTTOM_HEADER);
+        int pos = mItems.indexOf(item);
+        boolean inTopBar = bottomHeader >= 0 && pos >= 0 && pos < bottomHeader;
+        if (item == NavTabs.NONE) {
+            return mContext.getString(R.string.mobile_settings_bar_empty_summary);
+        }
+        if (item == MediaGroup.TYPE_HOME && !NavTabs.showHome(mContext)) {
+            return mContext.getString(R.string.mobile_settings_bar_home_removed);
+        }
+        if (inTopBar) {
+            return mContext.getString(R.string.mobile_settings_bar_in_top);
+        } else {
+            int bottomIndex = pos - bottomHeader - 1;
+            if (bottomIndex >= 5) {
+                return mContext.getString(R.string.mobile_settings_bar_bottom_overflow);
+            }
+            return mContext.getString(R.string.mobile_settings_bar_in_bottom);
         }
     }
 
@@ -472,6 +664,8 @@ final class BarEditor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return R.string.header_downloads;
             case MediaGroup.TYPE_TRENDING:
                 return R.string.header_trending;
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return R.string.mobile_settings_menu_playlists;
             default:
                 return R.string.header_history;
         }

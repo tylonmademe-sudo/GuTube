@@ -17,7 +17,7 @@ import androidx.annotation.DrawableRes;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * MEETUBE(app icon): the launcher icon picked in Settings > Customization. Each icon is an
+ * GUTUBE(app icon): the launcher icon picked in Settings > Customization. Each icon is an
  * {@code activity-alias} of SplashActivity (stmobile AndroidManifest, com.newtube.mobile.icon.*) and
  * exactly one is enabled. The in-app marks (Home's brand pill, the update sheet) follow the pick too;
  * the launch animation is the same for every icon (LaunchSplash). Only icons built into the APK can
@@ -55,13 +55,13 @@ public final class AppIcon {
             R.mipmap.app_icon_play_dark, R.mipmap.app_icon_blaze, R.mipmap.app_icon_red_crt,
             R.mipmap.app_icon_chrome, R.mipmap.app_icon_pixel_play, R.mipmap.app_icon_starry_night,
             R.mipmap.app_icon_gta_vi};
-    private static final int[] MARKS = {R.drawable.ic_meetube_mark_default, R.drawable.ic_meetube_mark_classic,
-            R.drawable.ic_meetube_mark_art, R.drawable.ic_meetube_mark_glass_heart, R.drawable.ic_meetube_mark_ruby,
-            R.drawable.ic_meetube_mark_play, R.drawable.ic_meetube_mark_play_dark, R.drawable.ic_meetube_mark_blaze,
+    private static final int[] MARKS = {R.drawable.ic_gutube_mark_default, R.drawable.ic_gutube_mark_classic,
+            R.drawable.ic_gutube_mark_art, R.drawable.ic_gutube_mark_glass_heart, R.drawable.ic_gutube_mark_ruby,
+            R.drawable.ic_gutube_mark_play, R.drawable.ic_gutube_mark_play_dark, R.drawable.ic_gutube_mark_blaze,
             R.mipmap.app_icon_red_crt, R.mipmap.app_icon_chrome, R.mipmap.app_icon_pixel_play,
             R.mipmap.app_icon_starry_night, R.mipmap.app_icon_gta_vi};
     private static final String PREFIX = "com.newtube.mobile.icon.";
-    private static final String PREFS = "meetube_app_icon";
+    private static final String PREFS = "gutube_app_icon";
     private static final String KEY_PENDING = "pending";
     /** Long enough for the relaunch to replace the old task's root before its alias goes. */
     private static final long DISABLE_DELAY_MS = 1_000;

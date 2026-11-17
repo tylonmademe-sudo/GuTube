@@ -16,13 +16,13 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.ui.common.MobileSnackbar;
 
 /**
- * MEETUBE(download-folder): a folder the user picks through the system picker (internal storage,
+ * GUTUBE(download-folder): a folder the user picks through the system picker (internal storage,
  * an SD card, anything the picker offers), one for videos and one for music. Unset means the default:
- * Movies/MeeTube for videos, Music/MeeTube for music.
+ * Movies/GuTube for videos, Music/GuTube for music.
  * Opened from Settings > General and by a long press on Download.
  */
 public final class DownloadFolder {
-    private static final String PREFS = "meetube_downloads";
+    private static final String PREFS = "gutube_downloads";
     private static final String KEY_TREE = "folder_tree_uri"; // videos (and, before 3.4.3, music too)
     private static final String KEY_TREE_AUDIO = "folder_tree_uri_audio"; // "" = the default; absent = as videos
     public static final String EXTRA_AUDIO = "audio";
@@ -63,14 +63,14 @@ public final class DownloadFolder {
         prefs(context).edit().putString(audio ? KEY_TREE_AUDIO : KEY_TREE, tree != null ? tree.toString() : "").apply();
     }
 
-    /** "Download/MeeTube", or the default ("Movies/MeeTube", "Music/MeeTube"). */
+    /** "Download/GuTube", or the default ("Movies/GuTube", "Music/GuTube"). */
     public static CharSequence label(Context context, boolean audio) {
         Uri tree = get(context, audio);
         if (tree == null) {
             return context.getString(audio ? R.string.mobile_download_folder_default_audio
                     : R.string.mobile_download_folder_default_video);
         }
-        String id = DocumentsContract.getTreeDocumentId(tree); // "primary:Download/MeeTube", "1A2B-3C4D:Videos"
+        String id = DocumentsContract.getTreeDocumentId(tree); // "primary:Download/GuTube", "1A2B-3C4D:Videos"
         int colon = id.indexOf(':');
         String volume = colon >= 0 ? id.substring(0, colon) : "";
         String path = colon >= 0 ? id.substring(colon + 1) : id;

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** MEETUBE(playlist page): sorts only facts carried by loaded cards, leaving Manual untouched. */
+/** GUTUBE(playlist page): sorts only facts carried by loaded cards, leaving Manual untouched. */
 final class PlaylistSort {
     static final int MANUAL = 0;
     static final int NEWEST = 1;
@@ -58,7 +58,7 @@ final class PlaylistSort {
         for (Video video : videos) {
             values.put(video, value(video, sort, now));
         }
-        // MEETUBE(playlist page): stable ties preserve Manual order; missing facts always come last.
+        // GUTUBE(playlist page): stable ties preserve Manual order; missing facts always come last.
         java.util.Collections.sort(result, (a, b) -> {
             long left = values.get(a);
             long right = values.get(b);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(watch-look): the small dot between the compact watch page's channel, subscribers, views and date. -->
+<!-- GUTUBE(watch-look): the small dot between the compact watch page's channel, subscribers, views and date. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <size

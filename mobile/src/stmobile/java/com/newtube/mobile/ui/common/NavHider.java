@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * MEETUBE(nav hide, issue #37): YouTube's bottom bar. Scrolling a list down slides the floating nav
+ * GUTUBE(nav hide, issue #37): YouTube's bottom bar. Scrolling a list down slides the floating nav
  * pill off the bottom; scrolling back up, or reaching the top, brings it back. Only a translation:
  * the pill keeps its layout, so nothing under it moves and its taps and gestures stay as they were.
  */
@@ -17,7 +17,7 @@ public final class NavHider extends RecyclerView.OnScrollListener {
     private static final long DURATION_MS = 220;
 
     private final View mBar;
-    /** MEETUBE(issue #181): a bar along the top (the top pills) slides up and away instead of down. */
+    /** GUTUBE(issue #181): a bar along the top (the top pills) slides up and away instead of down. */
     private final boolean mTop;
     private final int mSlopPx;
     private boolean mHidden;
@@ -27,7 +27,7 @@ public final class NavHider extends RecyclerView.OnScrollListener {
     @Nullable private Morph mMorph;
 
     /**
-     * MEETUBE(search fab): plays the bar's going and coming itself (the bar shrinking into a
+     * GUTUBE(search fab): plays the bar's going and coming itself (the bar shrinking into a
      * Search bubble and back); false = not this time, the usual slide runs.
      */
     public interface Morph {
@@ -48,7 +48,7 @@ public final class NavHider extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrolled(@NonNull RecyclerView list, int dx, int dy) {
-        if (isFixed(mBar.getContext(), mTop)) { // MEETUBE(fixed bars): stays put while the list scrolls
+        if (isFixed(mBar.getContext(), mTop)) { // GUTUBE(fixed bars): stays put while the list scrolls
             show();
             return;
         }
@@ -67,9 +67,9 @@ public final class NavHider extends RecyclerView.OnScrollListener {
         }
     }
 
-    private static final String PREFS = "meetube_fixed_bars";
+    private static final String PREFS = "gutube_fixed_bars";
 
-    /** MEETUBE(fixed bars): Customization > Bars, Fixed Top Bar / Fixed Nav Bar; off by default. */
+    /** GUTUBE(fixed bars): Customization > Bars, Fixed Top Bar / Fixed Nav Bar; off by default. */
     public static boolean isFixed(android.content.Context context, boolean top) {
         return context.getApplicationContext().getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE)
                 .getBoolean(top ? "top" : "nav", false);
@@ -80,7 +80,7 @@ public final class NavHider extends RecyclerView.OnScrollListener {
                 .edit().putBoolean(top ? "top" : "nav", fixed).apply();
     }
 
-    /** MEETUBE(issue #125): told where the bar slides to (0 back, its travel away), for what rides on it. */
+    /** GUTUBE(issue #125): told where the bar slides to (0 back, its travel away), for what rides on it. */
     public void setOnSlide(@Nullable java.util.function.Consumer<Float> onSlide) {
         mOnSlide = onSlide;
     }
@@ -89,7 +89,7 @@ public final class NavHider extends RecyclerView.OnScrollListener {
         mMorph = morph;
     }
 
-    /** MEETUBE(shorts, issue #107): held, the bar stays down whatever the list does. */
+    /** GUTUBE(shorts, issue #107): held, the bar stays down whatever the list does. */
     public void hold(boolean held) {
         mHeld = held;
         if (held) {

@@ -3,7 +3,7 @@
      (com.newtube.mobile.ui.settings). Spanish in values-es. -->
 <resources>
     <!-- Shared -->
-    <string name="mobile_settings_restart_needed">Перезапустите MeeTube, чтобы применить это изменение</string>
+    <string name="mobile_settings_restart_needed">Перезапустите GuTube, чтобы применить это изменение</string>
     <string name="mobile_settings_restart">Перезапустить</string>
     <string name="mobile_settings_off">Выкл.</string>
     <string name="mobile_settings_more">Ещё</string>
@@ -61,7 +61,7 @@
     <string name="mobile_settings_advanced_summary">Потоковая передача, сеть и исправления</string>
     <string name="mobile_settings_about">О приложении</string>
     <string name="mobile_settings_coffee">Угостить разработчика кофе</string>
-    <string name="mobile_settings_coffee_summary">Поддержите MeeTube, если вам нравится приложение</string>
+    <string name="mobile_settings_coffee_summary">Поддержите GuTube, если вам нравится приложение</string>
 
     <!-- General -->
     <string name="mobile_settings_language">Язык</string>
@@ -84,7 +84,7 @@
     <string name="mobile_settings_nav_labels">Названия вкладок</string>
     <string name="mobile_settings_nav_labels_summary">Показывать название каждой вкладки под её значком на нижней панели</string>
     <string name="mobile_settings_brand_name">Название приложения на верхней панели</string>
-    <string name="mobile_settings_brand_name_summary">Показывать MeeTube рядом со значком вверху. При выключении остаётся только значок</string>
+    <string name="mobile_settings_brand_name_summary">Показывать GuTube рядом со значком вверху. При выключении остаётся только значок</string>
     <string name="mobile_settings_top_bar">Всегда показывать верхнюю панель</string>
     <string name="mobile_settings_top_bar_summary">Оставлять верхнюю панель на экране при прокрутке ленты, а не скрывать её</string>
     <string name="mobile_settings_search_fab">Кнопка поиска при скрытой панели</string>
@@ -166,9 +166,9 @@
     <string name="mobile_settings_watch_history_auto">Следовать настройке YouTube</string>
     <string name="mobile_settings_watch_history_auto_desc">Сохранять историю, если она включена в аккаунте YouTube</string>
     <string name="mobile_settings_watch_history_on">Всегда сохранять</string>
-    <string name="mobile_settings_watch_history_on_desc">При каждом запуске MeeTube снова включает историю просмотров YouTube</string>
+    <string name="mobile_settings_watch_history_on_desc">При каждом запуске GuTube снова включает историю просмотров YouTube</string>
     <string name="mobile_settings_watch_history_off">Не сохранять</string>
-    <string name="mobile_settings_watch_history_off_desc">MeeTube перестаёт передавать YouTube информацию о просмотренных видео</string>
+    <string name="mobile_settings_watch_history_off_desc">GuTube перестаёт передавать YouTube информацию о просмотренных видео</string>
     <string name="mobile_settings_clear_watch_history">Очистить историю просмотров</string>
     <string name="mobile_settings_clear_watch_history_summary">Удаляет просмотренные видео из истории YouTube</string>
     <string name="mobile_settings_clear_watch_history_confirm">Очистить историю просмотров?</string>
@@ -178,7 +178,7 @@
     <string name="mobile_settings_clear_search_history">Очистить историю поиска</string>
     <string name="mobile_settings_clear_search_history_summary">Удаляет поисковые запросы, сохранённые на этом телефоне</string>
     <string name="mobile_settings_clear_search_history_confirm">Очистить историю поиска?</string>
-    <string name="mobile_settings_clear_search_history_body">Поисковые запросы, сохранённые MeeTube на этом телефоне, будут удалены. Это действие нельзя отменить.</string>
+    <string name="mobile_settings_clear_search_history_body">Поисковые запросы, сохранённые GuTube на этом телефоне, будут удалены. Это действие нельзя отменить.</string>
 
     <!-- Backup -->
     <string name="mobile_settings_backup_now">Создать резервную копию</string>
@@ -188,9 +188,9 @@
     <string name="mobile_settings_restore_summary">Из резервной копии в %1$s</string>
     <string name="mobile_settings_auto_backup">Автоматическое резервное копирование</string>
     <string name="mobile_settings_auto_backup_off">Никогда</string>
-    <string name="mobile_settings_backup_note">Резервная копия содержит все ваши настройки MeeTube. Данные аккаунта YouTube, например подписки и история просмотров, остаются в аккаунте.</string>
+    <string name="mobile_settings_backup_note">Резервная копия содержит все ваши настройки GuTube. Данные аккаунта YouTube, например подписки и история просмотров, остаются в аккаунте.</string>
 
-    <!-- MEETUBE(home-rows): General > Home layout (issue #4). -->
+    <!-- GUTUBE(home-rows): General > Home layout (issue #4). -->
     <string name="mobile_settings_home_layout">Макет главной страницы</string>
     <string name="mobile_settings_app_icon">Значок приложения</string>
     <string name="mobile_app_icon_default">Классический (по умолчанию)</string>
@@ -210,14 +210,14 @@
     <string name="mobile_loader_glass_orb">Стеклянная сфера</string>
     <string name="mobile_loader_morphing_blob">Жидкая капля</string>
     <string name="mobile_loader_glass_orbit">Стеклянная орбита</string>
-    <string name="mobile_app_icon_pending">Перезапустите MeeTube, чтобы новый значок отображался везде. Иначе он изменится после выхода из приложения</string>
+    <string name="mobile_app_icon_pending">Перезапустите GuTube, чтобы новый значок отображался везде. Иначе он изменится после выхода из приложения</string>
     <string name="mobile_settings_home_layout_feed">Лента</string>
     <string name="mobile_settings_home_layout_feed_desc">Единый список видео, как в YouTube</string>
     <string name="mobile_settings_home_layout_rows">Ряды</string>
     <string name="mobile_settings_home_layout_rows_desc">Отдельный горизонтально прокручиваемый ряд для каждой темы, как в SmartTube</string>
     <string name="mobile_settings_home_shorts">Shorts на главной</string>
     <string name="mobile_settings_home_shorts_summary">Горизонтальный ряд Shorts, как в приложении YouTube</string>
-    <!-- MEETUBE(glass, issue #80; minimal buttons) -->
+    <!-- GUTUBE(glass, issue #80; minimal buttons) -->
     <string name="mobile_settings_player_buttons_look">Стиль кнопок плеера</string>
     <string name="mobile_settings_player_buttons_see_through">Полупрозрачный</string>
     <string name="mobile_settings_player_buttons_see_through_desc">Полупрозрачный стеклянный круг за каждой кнопкой поверх видео, Shorts и мини-плеера</string>
@@ -225,17 +225,17 @@
     <string name="mobile_settings_player_buttons_frosted_desc">Круги размывают изображение под ними. Расход батареи выше, а на медленных телефонах возможны подтормаживания</string>
     <string name="mobile_settings_player_buttons_minimal">Минималистичный</string>
     <string name="mobile_settings_player_buttons_minimal_desc">Без кругов — только значки с лёгкой тенью, как в YouTube</string>
-    <!-- MEETUBE(performance) -->
+    <!-- GUTUBE(performance) -->
     <string name="mobile_settings_performance">Производительность</string>
     <string name="mobile_settings_high_refresh">Режим высокой производительности</string>
     <string name="mobile_settings_high_refresh_summary">Поддерживает частоту обновления приложения на уровне %1$d Гц для максимально плавной анимации. Расходует больше заряда; Android может снизить частоту при перегреве телефона или включённом энергосбережении</string>
-    <!-- MEETUBE(nav lens, issue #46) -->
+    <!-- GUTUBE(nav lens, issue #46) -->
     <string name="mobile_settings_tab_motion">Анимация переключения вкладок</string>
     <string name="mobile_settings_tab_motion_summary">Стеклянный блик перемещается к вкладке, а панель слегка покачивается. На медленных телефонах функция выключена, пока вы не включите её</string>
-    <!-- MEETUBE(bar reset) -->
+    <!-- GUTUBE(bar reset) -->
     <string name="mobile_settings_tabs_reset">Сбросить панель к настройкам по умолчанию</string>
     <string name="mobile_settings_tabs_reset_summary">Главная, Shorts, Поиск, Подписки, Вы</string>
-    <!-- MEETUBE(list layout, issue #82) -->
+    <!-- GUTUBE(list layout, issue #82) -->
     <string name="mobile_settings_video_layout">Макет видео</string>
     <string name="mobile_settings_video_layout_cards">Карточки</string>
     <string name="mobile_settings_video_layout_cards_desc">Большая миниатюра для каждого видео</string>
@@ -243,10 +243,10 @@
     <string name="mobile_settings_video_layout_list_desc">Небольшая миниатюра рядом с названием; на экране помещается больше видео</string>
 
     <!-- Playback -->
-    <!-- MEETUBE(background): the battery-optimization exemption row (Playback). -->
+    <!-- GUTUBE(background): the battery-optimization exemption row (Playback). -->
     <string name="mobile_settings_screen_off">Продолжать воспроизведение при выключенном экране</string>
     <string name="mobile_settings_screen_off_on">Разрешено: режим энергосбережения не будет останавливать звук</string>
-    <string name="mobile_settings_screen_off_off">Режим энергосбережения может остановить звук. Нажмите, чтобы разрешить MeeTube работать в фоне</string>
+    <string name="mobile_settings_screen_off_off">Режим энергосбережения может остановить звук. Нажмите, чтобы разрешить GuTube работать в фоне</string>
     <string name="mobile_settings_auto_pip">Картинка в картинке</string>
     <string name="mobile_settings_auto_pip_summary">При выходе из приложения воспроизводимое видео сворачивается в небольшое окно. При выключении продолжает воспроизводиться только звук</string>
     <string name="mobile_settings_video_ends">Когда видео закончится</string>
@@ -265,7 +265,7 @@
     <string name="mobile_settings_remember_speed_video">Для каждого видео</string>
     <string name="mobile_settings_remember_speed_all">Одинаковая для всех видео</string>
     <string name="mobile_settings_remember_speed_none">Не запоминать</string>
-    <string name="mobile_settings_remember_speed_none_desc">При каждом запуске MeeTube скорость сбрасывается до 1×</string>
+    <string name="mobile_settings_remember_speed_none_desc">При каждом запуске GuTube скорость сбрасывается до 1×</string>
     <string name="mobile_settings_speed_list">Скорости в разделе «Другие скорости»</string>
     <string name="mobile_settings_speed_list_basic">Краткий список</string>
     <string name="mobile_settings_speed_list_fine">Точные шаги</string>
@@ -294,11 +294,11 @@
     <!-- Video quality -->
     <string name="mobile_settings_quality_intro">Качество, с которого запускаются видео. Для отдельного видео его можно изменить в настройках плеера.</string>
     <string name="mobile_settings_default_quality">Качество по умолчанию</string>
-    <!-- MEETUBE(quality-network): one default per network; "%1$s" are the two picks' labels. -->
+    <!-- GUTUBE(quality-network): one default per network; "%1$s" are the two picks' labels. -->
     <string name="mobile_settings_quality_wifi">По Wi-Fi</string>
     <string name="mobile_settings_quality_mobile">По мобильной сети</string>
     <string name="mobile_settings_quality_same">Как по Wi-Fi</string>
-    <!-- MEETUBE(shorts-quality): issue #26. -->
+    <!-- GUTUBE(shorts-quality): issue #26. -->
     <string name="mobile_settings_quality_shorts">Shorts</string>
     <string name="mobile_settings_quality_both">Wi-Fi: %1$s · Мобильная сеть: %2$s</string>
     <string name="mobile_settings_quality_auto">Авто (до %1$dp)</string>
@@ -312,7 +312,7 @@
     <string name="mobile_settings_loudness">Выравнивать громкость</string>
     <string name="mobile_settings_loudness_summary">Снижает громкость слишком громких видео до обычного уровня YouTube</string>
     <string name="mobile_settings_player_volume">Громкость плеера</string>
-    <string name="mobile_settings_quality_data_saver_note">При включённой системной экономии трафика MeeTube использует меньший буфер при работе через мобильную сеть.</string>
+    <string name="mobile_settings_quality_data_saver_note">При включённой системной экономии трафика GuTube использует меньший буфер при работе через мобильную сеть.</string>
 
     <!-- Captions -->
     <string name="mobile_settings_caption_style">Стиль</string>
@@ -342,7 +342,7 @@
     <string name="mobile_settings_dearrow_note">DeArrow получает идентификаторы видео, которые вы видите в списках.</string>
 
     <!-- Advanced -->
-    <string name="mobile_settings_advanced_note">Эти настройки обычно не нужны. Они меняют способ потоковой передачи данных и подключения MeeTube.</string>
+    <string name="mobile_settings_advanced_note">Эти настройки обычно не нужны. Они меняют способ потоковой передачи данных и подключения GuTube.</string>
     <string name="mobile_settings_streaming">Потоковая передача</string>
     <string name="mobile_settings_buffer">Буфер</string>
     <string name="mobile_settings_buffer_low_desc">Примерно 25 секунд вперёд. Использует минимум памяти</string>
@@ -373,7 +373,7 @@
     <string name="mobile_settings_chapter_popup_summary">Показывает название каждой главы при её начале. Нажмите, чтобы перейти к следующей</string>
     <string name="mobile_settings_network">Сеть</string>
     <string name="mobile_settings_proxy">Веб-прокси</string>
-    <string name="mobile_settings_proxy_summary">Перенаправляет трафик MeeTube через HTTP- или SOCKS-прокси</string>
+    <string name="mobile_settings_proxy_summary">Перенаправляет трафик GuTube через HTTP- или SOCKS-прокси</string>
     <string name="mobile_settings_dns">Поиск серверов YouTube</string>
     <string name="mobile_settings_dns_ipv4">Сначала IPv4</string>
     <string name="mobile_settings_dns_ipv4_desc">Вариант по умолчанию. Помогает при проблемах с IPv6 в сети</string>
@@ -390,7 +390,7 @@
     <!-- About -->
     <string name="mobile_settings_version">Версия</string>
     <string name="mobile_settings_update_notify_summary">Сообщает о выходе новой версии, даже когда приложение закрыто</string>
-    <!-- MEETUBE(customize): the Customization page's groups and its tiles' short names -->
+    <!-- GUTUBE(customize): the Customization page's groups and its tiles' short names -->
     <string name="mobile_settings_customize_look">Внешний вид</string>
     <string name="mobile_settings_customize_layout">Макет</string>
     <string name="mobile_settings_customize_effects">Стекло и анимация</string>
@@ -402,7 +402,7 @@
     <string name="mobile_settings_playlists_style_grid_short">Плейлисты</string>
     <string name="mobile_settings_playlists_style_rows_short">Видео</string>
     <string name="mobile_settings_interface_size_sample">Так выглядит название видео при этом размере</string>
-    <string name="mobile_settings_interface_size_sample_meta">MeeTube · 1,2 млн просмотров · 2 дня назад</string>
+    <string name="mobile_settings_interface_size_sample_meta">GuTube · 1,2 млн просмотров · 2 дня назад</string>
     <string name="mobile_settings_tab_glow">Свечение вкладки</string>
     <string name="mobile_settings_tab_glow_white">Белое</string>
     <string name="mobile_settings_tab_glow_white_desc">Обычное белое свечение (серое в светлой теме)</string>
@@ -411,7 +411,7 @@
     <string name="mobile_settings_tab_glow_tabs">Цвета вкладок</string>
     <string name="mobile_settings_tab_glow_tabs_desc">Каждая вкладка светится своим цветом</string>
     <string name="mobile_settings_tab_glow_accent">Акцентный цвет</string>
-    <string name="mobile_settings_tab_glow_accent_desc">Каждая вкладка светится красным цветом MeeTube</string>
+    <string name="mobile_settings_tab_glow_accent_desc">Каждая вкладка светится красным цветом GuTube</string>
     <string name="mobile_settings_tab_glow_off">Выкл.</string>
     <string name="mobile_settings_progress_glow">Свечение прогресса</string>
     <string name="mobile_settings_progress_glow_summary">Мягкое свечение в конце шкалы прокрутки и на полосе просмотренного видео</string>
@@ -426,22 +426,22 @@
     <string name="mobile_settings_watched_bar_summary">Показывает под миниатюрой, какую часть видео вы посмотрели</string>
     <string name="mobile_settings_refresh_sound">Звук обновления</string>
     <string name="mobile_settings_refresh_sound_summary">Ненавязчивый звук при потягивании страницы вниз для обновления</string>
-    <!-- MEETUBE(settings-transfer): Backup > Share or move your settings. -->
+    <!-- GUTUBE(settings-transfer): Backup > Share or move your settings. -->
     <string name="mobile_settings_transfer">Поделиться настройками или перенести их</string>
     <string name="mobile_settings_transfer_export">Сохранить настройки в файл</string>
     <string name="mobile_settings_transfer_export_summary">Оставить на будущее или перенести на другой телефон</string>
     <string name="mobile_settings_transfer_share">Поделиться настройками с другом</string>
     <string name="mobile_settings_transfer_share_summary">Отправить файл настроек в чате или по почте</string>
-    <string name="mobile_settings_transfer_share_text">Мои настройки MeeTube. В MeeTube: Настройки &gt; Резервное копирование &gt; Импорт настроек из файла</string>
+    <string name="mobile_settings_transfer_share_text">Мои настройки GuTube. В GuTube: Настройки &gt; Резервное копирование &gt; Импорт настроек из файла</string>
     <string name="mobile_settings_transfer_import">Импортировать настройки из файла</string>
     <string name="mobile_settings_transfer_import_summary">Загрузить файл настроек, который вы сохранили или получили от друга</string>
-    <string name="mobile_settings_transfer_import_confirm">Настройки будут заменены данными из файла, а MeeTube перезапустится. Аккаунты, история просмотров, загрузки и пароли останутся без изменений.</string>
+    <string name="mobile_settings_transfer_import_confirm">Настройки будут заменены данными из файла, а GuTube перезапустится. Аккаунты, история просмотров, загрузки и пароли останутся без изменений.</string>
     <string name="mobile_settings_transfer_import_button">Импортировать</string>
     <string name="mobile_settings_transfer_saved">Настройки сохранены</string>
-    <string name="mobile_settings_transfer_imported">Настройки импортированы. MeeTube перезапускается</string>
+    <string name="mobile_settings_transfer_imported">Настройки импортированы. GuTube перезапускается</string>
     <string name="mobile_settings_transfer_failed">Не удалось сохранить файл настроек</string>
-    <string name="mobile_settings_transfer_not_settings">Это не файл настроек MeeTube</string>
-    <!-- MEETUBE(issue #177): phone player audio. -->
+    <string name="mobile_settings_transfer_not_settings">Это не файл настроек GuTube</string>
+    <!-- GUTUBE(issue #177): phone player audio. -->
     <string name="mobile_settings_stable_volume">Стабильная громкость</string>
     <string name="mobile_settings_stable_volume_summary">Позволяет смягчать перепады громкости в сжатом аудио YouTube. Применяется к следующему открытому видео</string>
     <string name="mobile_settings_equalizer">Эквалайзер</string>
@@ -449,7 +449,7 @@
     <string name="mobile_settings_equalizer_custom">Пользовательский</string>
     <string name="mobile_settings_equalizer_reset">Сбросить</string>
     <string name="mobile_settings_equalizer_unavailable">Эквалайзер недоступен на этом устройстве</string>
-    <!-- Russian translations for the latest MeeTube additions. -->
+    <!-- Russian translations for the latest GuTube additions. -->
     <string name="mobile_settings_downloads_summary">Папка, качество, автозагрузка</string>
     <string name="mobile_settings_download_quality">Качество загрузки</string>
     <string name="mobile_settings_download_ask">Спрашивать каждый раз</string>
@@ -518,7 +518,7 @@
     <string name="mobile_settings_coffee_scan">Или отсканируйте QR-код другим телефоном</string>
     <string name="mobile_settings_coffee_footer">Это необязательно. Звезда ⭐ на GitHub поможет не меньше ❤️</string>
     <string name="mobile_settings_tv_title">Установить на телевизор</string>
-    <string name="mobile_settings_tv_summary">Установите MeeTube TV на Android TV с этого телефона</string>
+    <string name="mobile_settings_tv_summary">Установите GuTube TV на Android TV с этого телефона</string>
     <string name="mobile_settings_tv_android">Google TV / Android TV</string>
     <string name="mobile_settings_tv_fire">Fire TV</string>
     <string name="mobile_settings_tv_step_one">1</string>
@@ -540,19 +540,19 @@
     <string name="mobile_settings_tv_ip">IP-адрес телевизора</string>
     <string name="mobile_settings_tv_ip_invalid">Введите IPv4-адрес телевизора, например %1$s</string>
     <string name="mobile_settings_tv_install">Установить</string>
-    <string name="mobile_settings_tv_install_button">Установить MeeTube TV</string>
+    <string name="mobile_settings_tv_install_button">Установить GuTube TV</string>
     <string name="mobile_settings_tv_connecting">Подключение к %1$s… Посмотрите на экран телевизора и нажмите «Разрешить». Также отметьте пункт «Всегда разрешать».</string>
-    <string name="mobile_settings_tv_finding_release">Поиск последней версии MeeTube TV…</string>
-    <string name="mobile_settings_tv_downloading">Загрузка MeeTube TV %1$s… %2$s%%</string>
-    <string name="mobile_settings_tv_downloading_unknown">Загрузка MeeTube TV %1$s…</string>
+    <string name="mobile_settings_tv_finding_release">Поиск последней версии GuTube TV…</string>
+    <string name="mobile_settings_tv_downloading">Загрузка GuTube TV %1$s… %2$s%%</string>
+    <string name="mobile_settings_tv_downloading_unknown">Загрузка GuTube TV %1$s…</string>
     <string name="mobile_settings_tv_installing">Установка на телевизор…</string>
-    <string name="mobile_settings_tv_done">Готово! MeeTube TV открыт на телевизоре 🎉</string>
+    <string name="mobile_settings_tv_done">Готово! GuTube TV открыт на телевизоре 🎉</string>
     <string name="mobile_settings_tv_unreachable">Не удалось подключиться к телевизору. Проверьте, включена ли отладка (шаг 2) и правильно ли указан IP-адрес.</string>
     <string name="mobile_settings_tv_auth_failed">Телевизор не разрешил подключение. Повторите попытку и нажмите «Разрешить» на телевизоре.</string>
-    <string name="mobile_settings_tv_download_failed">Не удалось скачать MeeTube TV. Проверьте подключение к интернету.</string>
+    <string name="mobile_settings_tv_download_failed">Не удалось скачать GuTube TV. Проверьте подключение к интернету.</string>
     <string name="mobile_settings_tv_install_failed">Не удалось установить приложение на телевизор: %1$s</string>
     <string name="mobile_settings_tv_unknown_error">Неизвестная ошибка</string>
-    <string name="mobile_settings_tv_launch_failed">MeeTube TV установлено. Запустите его из списка приложений на телевизоре.</string>
+    <string name="mobile_settings_tv_launch_failed">GuTube TV установлено. Запустите его из списка приложений на телевизоре.</string>
     <string name="mobile_settings_tv_busy">Установка уже выполняется. Попробуйте ещё раз чуть позже.</string>
     <string name="mobile_settings_tv_permission">Разрешите доступ к локальной сети, чтобы найти телевизор и подключиться к нему.</string>
     <string name="mobile_settings_tv_footer">После установки отладку на телевизоре можно отключить.</string>
@@ -580,7 +580,7 @@
     <string name="mobile_settings_segment_modes_note">Пропустить, спросить кнопкой, только показать на шкале перемотки или ничего не делать.</string>
     <string name="mobile_settings_segment_show">Показать</string>
     <string name="mobile_settings_storage">Хранилище</string>
-    <string name="mobile_settings_storage_app">Занято MeeTube</string>
+    <string name="mobile_settings_storage_app">Занято GuTube</string>
     <string name="mobile_settings_storage_app_size">Приложение</string>
     <string name="mobile_settings_storage_cache">Кэш видео и изображений</string>
     <string name="mobile_settings_storage_clear">Очистить кэш</string>

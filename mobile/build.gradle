@@ -48,7 +48,7 @@ abstract class CopyRenamedApks extends DefaultTask {
         builtArtifacts.elements.each { artifact ->
             def abi = artifact.filters.find { it.filterType.toString() == 'ABI' }?.identifier ?: 'universal'
             def version = (artifact.versionName ?: 'unknown').split(' ')[0] // without the code name
-            def outputFile = new File(outputDirectory, "MeeTube_${version}_${nameTag.get()}${abi}.apk")
+            def outputFile = new File(outputDirectory, "GuTube_${version}_${nameTag.get()}${abi}.apk")
             Files.copy(new File(artifact.outputFile).toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
     }
@@ -271,14 +271,14 @@ android {
     }
 
     packagingOptions {
-        // MEETUBE(size): native libs go into the APK compressed (extracted at install), not stored
+        // GUTUBE(size): native libs go into the APK compressed (extracted at install), not stored
         // raw: J2V8 alone is 32 MB raw and 9 MB compressed, so the arm64 APK drops from 62 MB to ~33.
         jniLibs {
             useLegacyPackaging = true
         }
     }
 
-    // MEETUBE(size): only the languages MeeTube itself is translated into. The libraries (Material,
+    // GUTUBE(size): only the languages GuTube itself is translated into. The libraries (Material,
     // AppCompat, media3) carry ~80 more, whose strings would sit next to English app text anyway.
     // A new translation adds its locale here.
     androidResources {
@@ -318,14 +318,14 @@ android {
             // package name never has to change if the app is ever renamed — "arc" ties to the
             // arch-"n" launcher mark (Catalan for "arch"). This ID is permanent once released;
             // do not couple it to the marketing name. See docs/gtm + the legal-risk memo.
-            applicationId "io.yash.meetube"
+            applicationId "io.gutube.app"
             minSdk = 24 // media3 1.10.x floor is 23; 24 = project-wide minimum
             targetSdk = project.ext.targetSdkVersion
             // NewTube versions independently of upstream SmartTube (defaultConfig carries the
             // fork-point 31.97/2387). versionCode starts at 10000 - above upstream's code so
             // existing test installs upgrade in place - and encodes the version:
             // 1.0.0 -> 10000, 1.0.1 -> 10001, 1.1.0 -> 10100, 2.0.0 -> 20000.
-            // MEETUBE: every release has a code name after its number (Settings > About, App info);
+            // GUTUBE: every release has a code name after its number (Settings > About, App info);
             // APK files and the update manifest use the number alone.
             versionCode 30402
             versionName "3.4.2 Severus"
@@ -375,7 +375,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.annotation:annotation:' + annotationXVersion
-    implementation 'androidx.work:work-runtime:' + workVersion // MEETUBE(auto download): already common's, compiled against here
+    compileOnly 'org.jetbrains.kotlin:kotlin-annotations-jvm:1.3.72'
+    implementation 'androidx.work:work-runtime:' + workVersion // GUTUBE(auto download): already common's, compiled against here
     implementation 'androidx.activity:activity:' + activityXVersion
     implementation 'androidx.lifecycle:lifecycle-runtime:' + liveDataVersion
     implementation 'androidx.recyclerview:recyclerview:' + recyclerviewXVersion // exoplayer 2.12.1 fix
@@ -457,7 +458,7 @@ dependencies {
     // :common module already declares for WebProxyDialog; the root build forces okhttpVersion.
     implementation 'com.squareup.okhttp3:okhttp:' + okhttpVersion
 
-    // MEETUBE(tv install): ADB over Wi-Fi to install MeeTube TV from the phone
+    // GUTUBE(tv install): ADB over Wi-Fi to install GuTube TV from the phone
     implementation 'dev.mobile:dadb:2.0.0'
 
     // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
@@ -472,7 +473,7 @@ configurations {
     sabrProofProtoc
 }
 dependencies {
-    // MEETUBE: the compiler for the machine running the build (it was pinned to Linux only).
+    // GUTUBE: the compiler for the machine running the build (it was pinned to Linux only).
     def os = System.getProperty('os.name').toLowerCase()
     def arch = System.getProperty('os.arch') in ['aarch64', 'arm64'] ? 'aarch_64' : 'x86_64'
     def protocTarget = os.contains('win') ? 'windows-x86_64' : (os.contains('mac') ? 'osx-' + arch : 'linux-' + arch)

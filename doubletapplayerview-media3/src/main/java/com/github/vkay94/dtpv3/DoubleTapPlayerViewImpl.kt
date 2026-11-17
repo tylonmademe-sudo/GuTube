@@ -91,7 +91,7 @@ open class DoubleTapPlayerViewImpl @JvmOverloads constructor(
         addView(contentFrame, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             .apply { gravity = Gravity.CENTER })
 
-        // MEETUBE(issue #138): subtitles sit over the content frame, not in it - a fill (resize
+        // GUTUBE(issue #138): subtitles sit over the content frame, not in it - a fill (resize
         // ZOOM) or a pinch zoom makes the frame bigger than this view and carried their bottom line
         // off the screen. Padded to the part of the picture that shows, they still track the video
         // box where it is letterboxed, and stop at this view's edge where it is cropped.

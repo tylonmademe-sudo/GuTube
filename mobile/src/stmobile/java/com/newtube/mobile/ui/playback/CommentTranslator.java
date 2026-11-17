@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
- * MEETUBE(issue #139): a comment in the app's language, from Google Translate's public endpoint
+ * GUTUBE(issue #139): a comment in the app's language, from Google Translate's public endpoint
  * (the one its web widget uses; no key). Blocking: call it off the main thread.
  */
 final class CommentTranslator {

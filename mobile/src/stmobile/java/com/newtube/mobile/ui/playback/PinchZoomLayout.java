@@ -33,7 +33,7 @@ import androidx.annotation.Nullable;
  * ratio, and the accumulator resets, so one long gesture can toggle fill -> original -> fill,
  * matching YouTube's mid-gesture snapping.</p>
  *
- * <p>MEETUBE(issue #55): past the snap (or where there is none: the portrait player, Shorts) the
+ * <p>GUTUBE(issue #55): past the snap (or where there is none: the portrait player, Shorts) the
  * pinch zooms the {@link #setZoomTarget target} freely, up to {@link #MAX_ZOOM}, around the
  * fingers, and two fingers pan it; it never shows more than the picture's own edges. Pinching
  * back to 1x lets a further pinch in snap to original again.</p>
@@ -78,7 +78,7 @@ public class PinchZoomLayout extends FrameLayout {
     private final Rect mZoomBox = new Rect();
     private boolean mSnapEnabled;
 
-    /** MEETUBE(shorts): the child whose picture's edges fade into this box's background. */
+    /** GUTUBE(shorts): the child whose picture's edges fade into this box's background. */
     @Nullable
     private View mFadeChild;
     /** The picture inside it (the video's frame), whose edges fade; null: the child's own. */
@@ -209,7 +209,7 @@ public class PinchZoomLayout extends FrameLayout {
     private android.animation.ValueAnimator mPop;
 
     /**
-     * MEETUBE(seek pill): one double-tap seek nudges the picture 3% bigger and 5dp toward the
+     * GUTUBE(seek pill): one double-tap seek nudges the picture 3% bigger and 5dp toward the
      * tapped side, peaking at 130 ms and settled by 440 ms, over whatever zoom it is at.
      */
     public void pop(boolean forward) {
@@ -344,7 +344,7 @@ public class PinchZoomLayout extends FrameLayout {
         return true;
     }
     /**
-     * MEETUBE(shorts): fade the edges of {@code picture} (inside {@code child}) {@code px} into this
+     * GUTUBE(shorts): fade the edges of {@code picture} (inside {@code child}) {@code px} into this
      * box's background (the ambient fill), like Instagram's reels - no hard line where the video
      * meets the blur. A picture as big as the child (a zoomed short on a phone) fades at the
      * child's top and bottom; one narrower (a whole short on a tablet) fades at its sides too.
@@ -377,7 +377,7 @@ public class PinchZoomLayout extends FrameLayout {
         int bottom = child.getBottom();
         mFadeAt.set(left, top, right, bottom);
         if (mFadePicture != null && mFadePicture.getWidth() > 0 && mFadePicture.isAttachedToWindow()) {
-            // MEETUBE(issue #117): through each view's matrix, so a zoomed or panned picture fades
+            // GUTUBE(issue #117): through each view's matrix, so a zoomed or panned picture fades
             // at its real edges (offsetDescendantRectToMyCoords ignores scale and translation).
             RectF picture = mFadePictureAt;
             picture.set(0, 0, mFadePicture.getWidth(), mFadePicture.getHeight());

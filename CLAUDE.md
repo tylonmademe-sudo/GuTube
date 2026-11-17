@@ -1,7 +1,7 @@
-# MeeTube — Claude Code context
+# GuTube — Claude Code context
 
-MeeTube is a **phone-only fork of SmartTube** ("SmartTube for phones"): package
-`io.yash.meetube` (Java sources still live under `com.newtube.*`), single product flavor `stmobile`,
+GuTube is a **phone-only fork of SmartTube** ("SmartTube for phones"): package
+`io.gutube.gutube` (Java sources still live under `com.newtube.*`), single product flavor `stmobile`,
 touch UI in
 `mobile/src/stmobile/`, playback on **androidx.media3 1.10.1** (Cronet media
 path). The TV flavors and the vendored ExoPlayer fork were deleted in the
@@ -17,17 +17,17 @@ screen in `ui/settings/`: a new setting is a row there (design and per-row audit
 `docs/settings/`), never a row in the TV `*SettingsPresenter`s, which Settings no longer opens.
 
 ## Repos & commit order
-- Main: `origin` = github.com/yashoncode/meetube, branch `main` (pushed from local `meetube-root`).
+- Main: `origin` = github.com/gutube/gutube, branch `main` (pushed from local `gutube-root`).
 - Submodules, branch `master`, `upstream` = yuliskov/<name>. `MediaServiceCore`:
-  `origin` = yashoncode/MediaServiceCore (our fork, made 2026-10-18), `newtube` =
+  `origin` = gutube/MediaServiceCore (our fork, made 2026-10-18), `newtube` =
   aleixrodriala/MediaServiceCore (NewTube's, pull its fixes from there).
-  `SharedModules`: the same, `origin` = yashoncode/SharedModules (our fork, made
+  `SharedModules`: the same, `origin` = gutube/SharedModules (our fork, made
   2026-11-03), `newtube` = aleixrodriala/SharedModules. HTTPS only. Commit INSIDE the
   submodule first, push `origin master`, then commit the pointer bump in main.
-- **MeeTube TV** (`io.yash.meetube.tv`) has its own repo since 2026-11-14:
-  github.com/yashoncode/meetube-tv, local `C:\Users\Yashwanth\meetube-tv`, with its own CLAUDE.md.
+- **GuTube TV** (`io.gutube.gutube.tv`) has its own repo since 2026-11-14:
+  github.com/gutube/gutube-tv, with its own CLAUDE.md.
   Do TV work there, never from here; nothing in this repo is TV code. The old branch `tv` here stays
-  only because TVs on 1.1.0 or older read its `meetube_tv.json`; never merge it into `main`. The
+  only because TVs on 1.1.0 or older read its `gutube_tv.json`; never merge it into `main`. The
   phone's TV install (`TvInstall`) and `release.yml`'s TV download row still read `tv-v` releases
   of this repo.
 - Upstream (yuliskov) fixes are merged into the **submodule forks only**; the
@@ -38,7 +38,7 @@ screen in `ui/settings/`: a new setting is a row there (design and per-row audit
 ```
 ANDROID_HOME=<sdk> ./gradlew :mobile:assembleStmobileDebug   # verification builds
 ANDROID_HOME=<sdk> ./gradlew :mobile:assembleStmobileRelease # distribution
-# -> mobile/build/outputs/apk/stmobile/<type>/MeeTube_<ver>_<abi>.apk
+# -> mobile/build/outputs/apk/stmobile/<type>/GuTube_<ver>_<abi>.apk
 ```
 On an x86_64 emulator add `-PemulatorAbi` (native Cronet/J2V8; without it every
 CPU-bound timing runs through ARM translation — see HANDOFF §29).
@@ -111,7 +111,7 @@ without auditing `LiveDashManifestParser` + `Helpers.setField` call sites).
 ## Code graph (codebase-memory MCP)
 
 `.mcp.json` registers `codebase-memory-mcp` (binary on PATH; project
-`C-Users-Yashwanth-MeeTube`, includes both submodules; `.cbmignore` drops test fixtures and
+`GuTube`, includes both submodules; `.cbmignore` drops test fixtures and
 native libs). Optional, not a required first step: when the file is already known, read it.
 Use it when the answer spans files you have not located:
 - callers/callees: `trace_path` (`direction` inbound/outbound, `depth` 1-2) — exact, ~150 tokens.

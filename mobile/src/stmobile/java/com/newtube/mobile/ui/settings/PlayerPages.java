@@ -78,7 +78,7 @@ final class PlayerPages {
                 .option(context.getString(R.string.mobile_settings_video_ends_close), PlayerConstants.PLAYBACK_MODE_CLOSE)
                 .bind(playerData::getPlaybackMode, playerData::setPlaybackMode));
 
-        // MEETUBE(issue #134): Shorts loop or scroll on by themselves, apart from the mode above.
+        // GUTUBE(issue #134): Shorts loop or scroll on by themselves, apart from the mode above.
         rows.add(SettingsRow.<Boolean>choice(context.getString(R.string.mobile_settings_short_ends))
                 .option(context.getString(R.string.mobile_settings_short_ends_loop), true)
                 .option(context.getString(R.string.mobile_settings_short_ends_next), false)
@@ -131,7 +131,7 @@ final class PlayerPages {
                 tweaks::isAudioTimeStretchingEnabled, tweaks::setAudioTimeStretchingEnabled));
 
         rows.add(sleepTimer(context, playerData));
-        // MEETUBE(background): OEM battery managers kill an optimized app's screen-off audio.
+        // GUTUBE(background): OEM battery managers kill an optimized app's screen-off audio.
         rows.add(SettingsRow.action(0, context.getString(R.string.mobile_settings_screen_off),
                 () -> context.getString(com.newtube.mobile.ui.playback.BackgroundPlay.isExempt(context)
                         ? R.string.mobile_settings_screen_off_on : R.string.mobile_settings_screen_off_off),
@@ -145,7 +145,7 @@ final class PlayerPages {
                 context.getString(R.string.mobile_settings_audio_focus_summary),
                 tweaks::isAudioFocusEnabled, tweaks::setAudioFocusEnabled));
 
-        // MEETUBE(home autoplay): the centred Home card plays muted, as on YouTube.
+        // GUTUBE(home autoplay): the centred Home card plays muted, as on YouTube.
         rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_settings_home_autoplay))
                 .option(context.getString(R.string.mobile_settings_home_autoplay_wifi),
                         context.getString(R.string.mobile_settings_home_autoplay_wifi_desc),
@@ -178,7 +178,7 @@ final class PlayerPages {
                 context.getString(R.string.mobile_settings_gesture_seek_summary),
                 () -> PlayerGesturePrefs.isSeekSwipeOn(context),
                 on -> PlayerGesturePrefs.setSeekSwipeOn(context, on)));
-        // MEETUBE(double-tap seek, issue #6): how far a double tap jumps; 10 s stays the default.
+        // GUTUBE(double-tap seek, issue #6): how far a double tap jumps; 10 s stays the default.
         SettingsRow.Choice<Integer> doubleTap = SettingsRow.choice(
                 context.getString(R.string.mobile_settings_double_tap_seek));
         for (int seconds : new int[] {3, 5, 10, 15, 30}) {
@@ -187,7 +187,7 @@ final class PlayerPages {
         rows.add(doubleTap.bind(playerData::getSeekIncrementMs, playerData::setSeekIncrementMs));
 
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_watch_page)));
-        // MEETUBE(ambient): on by default in the dark theme, off in the light one.
+        // GUTUBE(ambient): on by default in the dark theme, off in the light one.
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_ambient),
                 context.getString(R.string.mobile_settings_ambient_summary),
                 () -> com.newtube.mobile.ui.playback.AmbientGlow.isOn(context),
@@ -283,7 +283,7 @@ final class PlayerPages {
         rows.add(defaultQuality(context, QUALITY_WIFI));
         rows.add(defaultQuality(context, QUALITY_MOBILE));
         rows.add(defaultQuality(context, QUALITY_SHORTS));
-        // MEETUBE(issue #35): only where the screen can show it.
+        // GUTUBE(issue #35): only where the screen can show it.
         if (com.newtube.mobile.player.Media3PlayerController.isHdrDisplay(context)) {
             rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_hdr),
                     context.getString(R.string.mobile_settings_hdr_summary),
@@ -298,7 +298,7 @@ final class PlayerPages {
         return new SettingsPages.Page(context.getString(R.string.mobile_settings_quality), rows);
     }
 
-    // MEETUBE(issue #177): the audio rows have their own page next to Video quality.
+    // GUTUBE(issue #177): the audio rows have their own page next to Video quality.
     static SettingsPages.Page audio(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
         PlayerTweaksData tweaks = PlayerTweaksData.instance(context);
@@ -348,8 +348,8 @@ final class PlayerPages {
      */
     private static SettingsRow defaultQuality(Context context, int which) {
         PlayerData playerData = PlayerData.instance(context);
-        // MEETUBE(quality-network): one row for Wi-Fi, one for mobile data ("Same as Wi-Fi" = none),
-        // MEETUBE(shorts-quality): and one for Shorts, Auto (up to 1080p) at first (issue #26).
+        // GUTUBE(quality-network): one row for Wi-Fi, one for mobile data ("Same as Wi-Fi" = none),
+        // GUTUBE(shorts-quality): and one for Shorts, Auto (up to 1080p) at first (issue #26).
         FormatItem current = which == QUALITY_MOBILE ? playerData.getCellularVideoFormat()
                 : which == QUALITY_SHORTS ? playerData.getShortsVideoFormat() : playerData.getWifiVideoFormat();
         SettingsRow.Pick<FormatItem> store = format -> {
@@ -477,7 +477,7 @@ final class PlayerPages {
 
     /** Fraction of full volume the player plays at, on top of the phone's own volume. */
     private static SettingsRow playerVolume(Context context, PlayerData playerData) {
-        // MEETUBE(issue #177): media3's base volume stops at 100%; the session effect boosts above it.
+        // GUTUBE(issue #177): media3's base volume stops at 100%; the session effect boosts above it.
         return SettingsRow.custom(context.getString(R.string.mobile_settings_player_volume), (parent, page) -> {
             android.widget.LinearLayout root = Tiles.column(parent.getContext());
             android.widget.TextView summary = Tiles.heading(root, context.getString(R.string.mobile_settings_player_volume));
@@ -593,7 +593,7 @@ final class PlayerPages {
     }
 
     /**
-     * MEETUBE(sponsorblock modes): one row per kind of part - its name, then Skip / Ask / Show / Off
+     * GUTUBE(sponsorblock modes): one row per kind of part - its name, then Skip / Ask / Show / Off
      * side by side. Show = only its mark on the seek bar; Off = no mark, no skip. Skip and Ask mark it
      * too. Picking Skip keeps a "skip without a word" choice made before (the old list had both).
      */

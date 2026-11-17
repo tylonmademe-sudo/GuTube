@@ -24,7 +24,7 @@ import com.newtube.mobile.ui.common.MobileSheets;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-/** MEETUBE(issue #177): the phone's device equalizer, applied live to the playing session. */
+/** GUTUBE(issue #177): the phone's device equalizer, applied live to the playing session. */
 public final class EqualizerSheet {
     private final Context mContext;
     private final LayoutInflater mInflater;
@@ -90,9 +90,9 @@ public final class EqualizerSheet {
         sheet.show();
     }
 
-    /** MEETUBE(issue #236): the same sheet from the player's gear menu; the caller shows it. */
+    /** GUTUBE(issue #236): the same sheet from the player's gear menu; the caller shows it. */
     public static BottomSheetDialog create(Context context) {
-        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // MEETUBE(glass): frosted
+        BottomSheetDialog sheet = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(context)); // GUTUBE(glass): frosted
         View content = LayoutInflater.from(sheet.getContext()).inflate(R.layout.sheet_mobile_equalizer, null);
         new EqualizerSheet(sheet.getContext(), content);
         sheet.setContentView(content);

@@ -130,7 +130,7 @@ class DialogRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /**
-     * MEETUBE(menu-sheet): the menu actions' icons, by title (the menus are the TV presenters', which
+     * GUTUBE(menu-sheet): the menu actions' icons, by title (the menus are the TV presenters', which
      * name an action only by its text). A format string ("Remove from %s") matches on its fixed
      * start. An action without one keeps the icon column empty, so the titles stay in one line.
      */
@@ -315,7 +315,10 @@ class DialogRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new HeaderViewHolder(inflater.inflate(R.layout.item_mobile_dialog_header, parent, false));
         }
 
-        return new RowViewHolder(inflater.inflate(R.layout.item_mobile_dialog_row, parent, false));
+        View row = inflater.inflate(R.layout.item_mobile_dialog_row, parent, false);
+        row.setBackground(null);
+        row.setForeground(null);
+        return new RowViewHolder(row);
     }
 
     @Override

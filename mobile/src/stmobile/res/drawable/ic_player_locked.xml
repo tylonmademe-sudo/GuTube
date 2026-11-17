@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MEETUBE(lock): a shut, filled padlock on the Locked pill (the lock button's is an outline). -->
+<!-- GUTUBE(lock): a shut, filled padlock on the Locked pill (the lock button's is an outline). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="20dp"
     android:height="20dp"

@@ -32,8 +32,8 @@ import java.lang.reflect.Field;
  * comes through the list's nested scrolling, {@code mInitialMotionY} for one it catches itself).
  * If a later version renames them, the pull just goes back to being silent.</p>
  *
- * <p>MEETUBE(loader): the circle that comes down shows the loader picked in Settings (the theme's
- * {@code meetubeLoader}, as every other spinner) on a see-through glass disc, in place of the stock arrow;
+ * <p>GUTUBE(loader): the circle that comes down shows the loader picked in Settings (the theme's
+ * {@code gutubeLoader}, as every other spinner) on a see-through glass disc, in place of the stock arrow;
  * SwipeRefreshLayout still animates its own arrow drawable, which is just no longer drawn.</p>
  */
 public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
@@ -69,7 +69,7 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
 
     /** Puts the picked loader into SwipeRefreshLayout's circle; left as the arrow if that fails. */
     private void useLoader(Context context) {
-        TypedArray a = context.obtainStyledAttributes(new int[] {R.attr.meetubeLoader});
+        TypedArray a = context.obtainStyledAttributes(new int[] {R.attr.gutubeLoader});
         Drawable loader = a.getDrawable(0);
         a.recycle();
         Field circleField = field("mCircleView");

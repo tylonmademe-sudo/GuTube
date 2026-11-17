@@ -75,7 +75,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         void onReplyClicked(Entry entry);
         void onMoreClicked(Entry entry, View anchor);
         void onDeleteClicked(Entry entry);
-        /** MEETUBE(issue #139): "Translate to …" / "See original" under the comment. */
+        /** GUTUBE(issue #139): "Translate to …" / "See original" under the comment. */
         void onTranslateClicked(Entry entry);
         /** Find out, off the main thread, whether {@link Entry#foreign}; rebind with PAYLOAD_TRANSLATE if so. */
         void onDetectLanguage(Entry entry);
@@ -99,7 +99,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
          * shares one list among every entry of the same comment (Top and Newest each have theirs).
          */
         List<Entry> postedReplies = new ArrayList<>();
-        /** MEETUBE(issue #139): the comment in the app's language, once fetched; shown while {@link #translated}. */
+        /** GUTUBE(issue #139): the comment in the app's language, once fetched; shown while {@link #translated}. */
         @Nullable
         String translation;
         boolean translated;
@@ -155,7 +155,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int TYPE_COMPOSE = 5;
 
     static final Object PAYLOAD_LIKE = new Object();
-    /** MEETUBE(issue #139): the text and its "Translate to …" line only. */
+    /** GUTUBE(issue #139): the text and its "Translate to …" line only. */
     static final Object PAYLOAD_TRANSLATE = new Object();
     private static final int FOOTER_SKELETONS = 2;
     private static final long ID_LABEL = -2;
@@ -269,7 +269,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     /**
-     * MEETUBE: the "Add a comment…" row leaves while the composer is open (one bar on screen, no
+     * GUTUBE: the "Add a comment…" row leaves while the composer is open (one bar on screen, no
      * gap where it was) and comes back after.
      */
     void setComposeHidden(boolean hidden) {
@@ -523,12 +523,12 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    /** MEETUBE(bidi): Unicode first-strong isolate and its end. */
+    /** GUTUBE(bidi): Unicode first-strong isolate and its end. */
     private static final String FSI = "⁨";
     private static final String PDI = "⁩";
 
     /**
-     * MEETUBE(bidi): a comment reads in the direction of its first letter. Invisible direction marks
+     * GUTUBE(bidi): a comment reads in the direction of its first letter. Invisible direction marks
      * (LRM/RLM/ALM) are skipped: an "RLM 0:16" reply right-aligned itself though it has no letters.
      * No letter at all: the app language's direction.
      */
@@ -676,7 +676,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 return false;
             });
-            // MEETUBE(issue #78): like YouTube - a tap opens the replies, a double tap likes.
+            // GUTUBE(issue #78): like YouTube - a tap opens the replies, a double tap likes.
             android.view.GestureDetector rowGestures = new android.view.GestureDetector(context,
                     new android.view.GestureDetector.SimpleOnGestureListener() {
                         @Override
@@ -735,7 +735,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         /**
-         * MEETUBE(issue #139): the comment, or its translation; under it YouTube's "Translate to
+         * GUTUBE(issue #139): the comment, or its translation; under it YouTube's "Translate to
          * English" once the comment reads as another language, "See original" after.
          */
         void bindMessage() {
@@ -760,7 +760,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         /**
-         * MEETUBE(issue #190): the GIF posted in the comment, at most 240 x 180dp at its own aspect
+         * GUTUBE(issue #190): the GIF posted in the comment, at most 240 x 180dp at its own aspect
          * ratio; sized before it loads so the row doesn't jump.
          */
         private void bindImage(CommentItem item) {
@@ -936,7 +936,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         /**
          * "@handle • 2 days ago"; the video's creator gets their handle on a quiet pill.
-         * MEETUBE(bidi): the handle is a Unicode isolate (FSI...PDI), so a right-to-left name keeps to
+         * GUTUBE(bidi): the handle is a Unicode isolate (FSI...PDI), so a right-to-left name keeps to
          * itself - it no longer drags the date's number across it ("days ago 4 •").
          */
         private CharSequence buildMeta(CommentItem item, @Nullable String creatorHandle) {

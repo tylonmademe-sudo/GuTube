@@ -35,16 +35,16 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * MEETUBE(update notify): a new version is announced in the notification shade, also when the app
+ * GUTUBE(update notify): a new version is announced in the notification shade, also when the app
  * isn't opened. Every 12 hours (online, battery not low) this runs the same quiet manifest check as
  * Home's ({@link AppUpdates#checkIfDue}) and posts one notification per version; a tap opens the
- * update sheet. Follows Settings > About > Notify about updates. Not posted while MeeTube is on
+ * update sheet. Follows Settings > About > Notify about updates. Not posted while GuTube is on
  * screen (Home's pop-up says it there) or once the user opened that version's sheet.
  */
 public class UpdateNotifyWorker extends Worker {
     private static final String TAG = "UpdateNotifyWorker";
     private static final String WORK = "update_notify";
-    private static final String CHANNEL_ID = "meetube_new_version";
+    private static final String CHANNEL_ID = "gutube_new_version";
     private static final int NOTIFICATION_ID = 0x4E5503;
     /** The manifest is ~2 KB; a check that hasn't answered by then failed quietly. */
     private static final long CHECK_TIMEOUT_S = 30;

@@ -17,7 +17,7 @@
     android:orientation="horizontal"
     android:padding="14dp">
 
-    <!-- MEETUBE(issue #73): a channel seen live gets the glowing red ring. -->
+    <!-- GUTUBE(issue #73): a channel seen live gets the glowing red ring. -->
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

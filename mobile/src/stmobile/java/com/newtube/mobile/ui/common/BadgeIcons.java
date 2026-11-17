@@ -2,9 +2,9 @@ package com.newtube.mobile.ui.common;
 
 import android.content.Context;
 
-/** MEETUBE(badge icons): whether time pills show the Mix waves and the music note. On by default. */
+/** GUTUBE(badge icons): whether time pills show the Mix waves and the music note. On by default. */
 public final class BadgeIcons {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_SHOWN = "badge_icons";
 
     private BadgeIcons() {

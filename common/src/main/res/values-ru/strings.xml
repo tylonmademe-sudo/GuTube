@@ -748,7 +748,7 @@
         <item quantity="many">%s секунд</item>
         <item quantity="other">%s секунды</item>
     </plurals>
-    <!-- Additional Russian translations for current MeeTube features -->
+    <!-- Additional Russian translations for current GuTube features -->
     <string name="header_downloads">Загрузки</string>
     <string name="dialog_download">Скачать</string>
     <string name="msg_sign_in_to_save">Войдите, чтобы сохранять видео в плейлисты</string>

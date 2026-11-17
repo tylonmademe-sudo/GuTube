@@ -21,7 +21,7 @@ import com.newtube.mobile.ui.common.GlassView;
 import com.newtube.mobile.ui.common.GlassSource;
 
 /**
- * MEETUBE(issue #188): the floating mini player's type and size (Settings > Customization), and
+ * GUTUBE(issue #188): the floating mini player's type and size (Settings > Customization), and
  * its compact corner buttons, small and set in from the corners so a tap on the picture to expand
  * does not land on Close or Audio.
  *
@@ -81,7 +81,7 @@ public final class MiniSize {
 
     public static int width(Context context) {
         if (type(context) == MINIMAL) {
-            return cardWidth(context); // MEETUBE(issue #226): the whole bar
+            return cardWidth(context); // GUTUBE(issue #226): the whole bar
         }
         if (isBar(context)) {
             return Math.round(height(context) * 16f / 9f);
@@ -105,10 +105,10 @@ public final class MiniSize {
     }
 
     private static float baseWidth(Context context) {
-        return context.getResources().getDimension(R.dimen.meetube_mini_width);
+        return context.getResources().getDimension(R.dimen.gutube_mini_width);
     }
 
-    /** MEETUBE(issue #233): the Default card can grow almost edge to edge in its actual parent. */
+    /** GUTUBE(issue #233): the Default card can grow almost edge to edge in its actual parent. */
     static float maxWidth(View card) {
         Context context = card.getContext();
         View parent = (View) card.getParent();
@@ -121,7 +121,7 @@ public final class MiniSize {
         return Math.min(baseWidth(card.getContext()) * MIN_PERCENT / 100f, maxWidth(card));
     }
 
-    /** MEETUBE(issue #233): persist and relayout once, after the transform-only pinch ends. */
+    /** GUTUBE(issue #233): persist and relayout once, after the transform-only pinch ends. */
     static void commitWidth(View card, float width) {
         setPercent(card.getContext(), Math.round(width * 100f / baseWidth(card.getContext())));
         ViewGroup.LayoutParams params = card.getLayoutParams();
@@ -146,7 +146,7 @@ public final class MiniSize {
             card.setCardElevation(frosted ? 0 : 8 * dp); // a shadow shows through a see-through card
             card.setRadius(frosted ? height(activity) / 2f : 18 * dp);
             card.setStrokeWidth(bar ? Math.round(dp) : 0);
-            card.setPreventCornerOverlap(bar); // MEETUBE(issue #233): the picture reaches the rounded edge
+            card.setPreventCornerOverlap(bar); // GUTUBE(issue #233): the picture reaches the rounded edge
             frost((ViewGroup) card.getChildAt(0), frosted, activity);
             scrim((ViewGroup) card.getChildAt(0), type(activity) == MINIMAL);
         }
@@ -159,7 +159,7 @@ public final class MiniSize {
             params.setMarginStart(bar ? pictureOffset(activity) : 0);
             frame.setLayoutParams(params);
             if (frame instanceof AspectRatioFrameLayout) {
-                // MEETUBE(issue #226): Minimal's video fills the bar, cropped; elsewhere it is
+                // GUTUBE(issue #226): Minimal's video fills the bar, cropped; elsewhere it is
                 // whole, letterboxed in its window (issue #9, #225).
                 ((AspectRatioFrameLayout) frame).setResizeMode(type(activity) == MINIMAL
                         ? AspectRatioFrameLayout.RESIZE_MODE_ZOOM : AspectRatioFrameLayout.RESIZE_MODE_FIT);
@@ -184,7 +184,7 @@ public final class MiniSize {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) audio.getLayoutParams();
             params.width = bar ? 0 : box; // a bar has no audio button
             params.height = bar ? 0 : box;
-            // MEETUBE(issue #233): bottom-left, YouTube's place for it; pause keeps top-left.
+            // GUTUBE(issue #233): bottom-left, YouTube's place for it; pause keeps top-left.
             params.gravity = Gravity.BOTTOM | Gravity.LEFT;
             params.setMargins(margin, margin, margin, margin);
             audio.setLayoutParams(params);
@@ -199,7 +199,7 @@ public final class MiniSize {
             params.width = box;
             params.height = params.width;
             params.gravity = bar ? Gravity.END | Gravity.CENTER_VERTICAL : Gravity.TOP | Gravity.START;
-            // MEETUBE(issue #233): small corner controls; the bars keep their original placement.
+            // GUTUBE(issue #233): small corner controls; the bars keep their original placement.
             params.setMargins(bar ? 0 : margin, bar ? 0 : margin, bar ? Math.round(48 * dp) : margin, bar ? 0 : margin);
             pause.setLayoutParams(params);
         }
@@ -256,7 +256,7 @@ public final class MiniSize {
     }
 
     /**
-     * MEETUBE(issue #226): Minimal's shade over the video, dark under the title on the left and the
+     * GUTUBE(issue #226): Minimal's shade over the video, dark under the title on the left and the
      * buttons on the right, lighter between, so both read over any frame.
      */
     private static void scrim(ViewGroup inner, boolean on) {

@@ -146,7 +146,7 @@ public class SectionMenuPresenter extends BaseMenuPresenter {
     }
 
     private void appendRefreshButton() {
-        // MEETUBE: the phone opens this menu from You's tiles, where it acted on the TV sidebar
+        // GUTUBE: the phone opens this menu from You's tiles, where it acted on the TV sidebar
         // (move) or on the page hidden under You (refresh), not on the tile.
         if (!mIsRefreshEnabled || com.liskovsoft.smartyoutubetv2.common.misc.PhoneUi.isEnabled()) {
             return;
@@ -167,7 +167,7 @@ public class SectionMenuPresenter extends BaseMenuPresenter {
     }
 
     private void appendMoveSectionButton() {
-        // MEETUBE: the phone opens this menu from You's tiles, where it acted on the TV sidebar
+        // GUTUBE: the phone opens this menu from You's tiles, where it acted on the TV sidebar
         // (move) or on the page hidden under You (refresh), not on the tile.
         if (!mIsMoveSectionEnabled || com.liskovsoft.smartyoutubetv2.common.misc.PhoneUi.isEnabled()) {
             return;

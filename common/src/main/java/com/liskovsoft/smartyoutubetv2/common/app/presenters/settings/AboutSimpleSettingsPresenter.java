@@ -95,12 +95,12 @@ public class AboutSimpleSettingsPresenter extends BasePresenter<Void> {
 
         settingsPresenter.appendSingleButton(UiOptionItem.from(
                 getContext().getString(R.string.about_source_code),
-                getContext().getString(R.string.about_source_code_url).replace("https://", ""),
-                option -> Utils.openLinkExt(getContext(), getContext().getString(R.string.about_source_code_url))));
+                getContext().getString(R.string.app_name),
+                option -> {}));
         settingsPresenter.appendSingleButton(UiOptionItem.from(
                 getContext().getString(R.string.about_license),
                 getContext().getString(R.string.about_license_name),
-                option -> Utils.openLinkExt(getContext(), getContext().getString(R.string.about_license_url))));
+                option -> {}));
         settingsPresenter.appendSingleButton(UiOptionItem.from(
                 getContext().getString(R.string.diagnostic_log_send),
                 getContext().getString(R.string.diagnostic_log_send_desc),

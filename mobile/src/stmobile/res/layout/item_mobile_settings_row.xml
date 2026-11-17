@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@android:color/transparent"
+    android:foreground="@null"
     android:gravity="center_vertical"
     android:minHeight="@dimen/mobile_settings_row_min_height"
     android:orientation="horizontal"
@@ -63,7 +64,7 @@
         android:importantForAccessibility="no"
         android:visibility="gone" />
 
-    <!-- MEETUBE(settings cards): a row that opens a page. -->
+    <!-- GUTUBE(settings cards): a row that opens a page. -->
     <ImageView
         android:id="@+id/settings_row_chevron"
         android:layout_width="20dp"

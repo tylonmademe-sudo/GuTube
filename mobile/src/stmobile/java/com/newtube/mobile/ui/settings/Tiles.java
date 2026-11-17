@@ -41,7 +41,7 @@ import com.newtube.mobile.ui.common.Motion;
 import java.util.Locale;
 
 /**
- * MEETUBE(customize): Customization's pickers drawn on the page instead of behind a sheet: a choice
+ * GUTUBE(customize): Customization's pickers drawn on the page instead of behind a sheet: a choice
  * becomes a strip of tiles, each a little picture of what it does (a phone in that theme, Home as a
  * feed or as rows, the app icon itself), and a tap picks it with a bounce. Interface size is a
  * slider with a live preview. The row keeps its choice's title and options, so search still finds
@@ -91,7 +91,7 @@ final class Tiles {
     static final int BUTTONS_MINIMAL = 33;
     /** The top bar's brand pill: the icon, then the app's name. */
     static final int FX_BRAND_NAME = 34;
-    // MEETUBE(issue #188): the mini player types, and the chip styles.
+    // GUTUBE(issue #188): the mini player types, and the chip styles.
     static final int MINI_DEFAULT = 35;
     static final int MINI_MINIMAL = 36;
     static final int MINI_MINIMAL2 = 37;
@@ -107,7 +107,7 @@ final class Tiles {
     // The You page's top: its corner light in the accent, or in shifting colours.
     static final int YOU_GLOW_ACCENT = 47;
     static final int YOU_GLOW_RGB = 48;
-    // MEETUBE(youtube mode): a screen with a square-cornered video and the bar docked flat at its foot.
+    // GUTUBE(youtube mode): a screen with a square-cornered video and the bar docked flat at its foot.
     static final int YOUTUBE_MODE = 49;
 
     private static final float OFF_ALPHA = 0.55f;
@@ -361,7 +361,7 @@ final class Tiles {
         summary.setVisibility(description != null ? View.VISIBLE : View.GONE);
     }
 
-    /** MEETUBE(press): the row tracks touch for its picture; tiles scale around their own pop. */
+    /** GUTUBE(press): the row tracks touch for its picture; tiles scale around their own pop. */
     private static void pressScale(View target, View picture) {
         target.setOnTouchListener((v, event) -> {
             switch (event.getActionMasked()) {
@@ -562,7 +562,7 @@ final class Tiles {
             setLitFraction(lit ? 1f : 0f);
         }
 
-        /** MEETUBE(toggle): saturation and opacity share a fade, independent of the scale pop. */
+        /** GUTUBE(toggle): saturation and opacity share a fade, independent of the scale pop. */
         void animateLit(boolean lit, View picture) {
             if (mLitAnimator != null) {
                 mLitAnimator.cancel();
@@ -935,7 +935,7 @@ final class Tiles {
                         pic = new RectF(bar.left + bh * 0.3f, bar.top + in, bar.left + bh * 0.3f + vw, bar.bottom - in);
                         textLeft = pic.right + in;
                         textRight = bar.right - bh * 1.5f;
-                    } else { // MEETUBE(issue #226): the bar is the video, the title over it
+                    } else { // GUTUBE(issue #226): the bar is the video, the title over it
                         pic = new RectF(bar);
                         textLeft = bar.left + in * 2;
                         textRight = bar.right - bh * 1.5f;

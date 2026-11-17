@@ -13,6 +13,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.LinearGradient;
 import android.graphics.Outline;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -37,7 +38,7 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import java.util.Random;
 
 /**
- * MEETUBE(glass): iOS-style liquid glass over a {@link GlassSource} - BitChord's floating bar,
+ * GUTUBE(glass): iOS-style liquid glass over a {@link GlassSource} - BitChord's floating bar,
  * ported from Compose to plain RenderNodes, with its numbers:
  *
  * <ol>
@@ -170,6 +171,9 @@ public class GlassView extends FrameLayout {
     private final Paint mNoisePaint = new Paint();
     private final Paint mRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF mRimRect = new RectF();
+    private final Path mClipPath = new Path();
+    private final Spotlight mSpotlight;
+    private final SpotlightTilt mTilt;
     private final int[] mLoc = new int[2];
     private final int[] mSourceLoc = new int[2];
     private int mRecordedX = Integer.MIN_VALUE;
@@ -226,6 +230,10 @@ public class GlassView extends FrameLayout {
         mNoisePaint.setShader(new BitmapShader(noise(), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
         mNoisePaint.setAlpha(NOISE_ALPHA);
         setUpRim(mRimPaint, mDensity);
+        mSpotlight = new Spotlight(mDensity);
+        mSpotlight.updateTheme(context);
+        mTilt = new SpotlightTilt(mDensity);
+        mTilt.setEnabled(false);
     }
 
     /** Kyant's Highlight.Default: a 0.5dp line (stroked 1dp across the edge), softened by 0.25dp. */
@@ -250,7 +258,7 @@ public class GlassView extends FrameLayout {
     }
 
     /**
-     * MEETUBE(live chat, issue #32): this glass's specular rim alone, as a foreground for a rounded
+     * GUTUBE(live chat, issue #32): this glass's specular rim alone, as a foreground for a rounded
      * card that is not a GlassView (the landscape chat and comments cards).
      */
     public static Drawable rim(float cornerPx, float density) {
@@ -295,7 +303,7 @@ public class GlassView extends FrameLayout {
      * page's top bar and pinned tabs) met in a line; reaching into each other they blur alike.
      */
     /**
-     * MEETUBE(youtube mode): no glass of its own - its content alone, on whatever is under it (the
+     * GUTUBE(youtube mode): no glass of its own - its content alone, on whatever is under it (the
      * top bar's brand and buttons sit straight on the bar's frost). Call before {@link #setSource}.
      */
     public void setPlain() {
@@ -307,7 +315,7 @@ public class GlassView extends FrameLayout {
         invalidate();
     }
 
-    /** MEETUBE(stats): a heavier frost than the default, for a card that sits on glass already. */
+    /** GUTUBE(stats): a heavier frost than the default, for a card that sits on glass already. */
     public void setBlur(float dp) {
         mBlurDp = dp;
         mEffectW = -1; // rebuild the effect on the next draw
@@ -326,7 +334,7 @@ public class GlassView extends FrameLayout {
     public void setSource(@Nullable GlassSource source) {
         mSource = source;
         if (source != null && source.node != null && mNode == null) {
-            mNode = new RenderNode("MeeTube glass");
+            mNode = new RenderNode("GuTube glass");
         }
         mRecordedX = Integer.MIN_VALUE;
         invalidate();
@@ -364,9 +372,46 @@ public class GlassView extends FrameLayout {
     }
 
     @Override
+    public boolean dispatchTouchEvent(android.view.MotionEvent ev) {
+        if (mSpotlight != null) {
+            mSpotlight.onTouchEvent(this, ev);
+        }
+        if (mTilt != null && mTilt.isEnabled()) {
+            mTilt.updateTouch(this, ev);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @NonNull
+    public Spotlight getSpotlight() {
+        return mSpotlight;
+    }
+
+    @NonNull
+    public SpotlightTilt getTilt() {
+        return mTilt;
+    }
+
+    public void setEnableTilt(boolean enable) {
+        mTilt.setEnabled(enable);
+        if (!enable) {
+            mTilt.reset(this);
+        }
+    }
+
+    @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        float r = radius(getWidth(), getHeight());
+        int save = -1;
+        if (r > 0f) {
+            save = canvas.save();
+            mClipPath.reset();
+            mClipPath.addRoundRect(mRimRect, r, r, Path.Direction.CW);
+            canvas.clipPath(mClipPath);
+        }
+
         boolean live = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mNode != null && mSource != null
-                && !BatterySaver.lite() // MEETUBE(issue #93): the tint alone
+                && !BatterySaver.lite() // GUTUBE(issue #93): the tint alone
                 && mSource.node != null && canvas.isHardwareAccelerated() && getWidth() > 0 && getHeight() > 0;
         // The frost (not the bar's children) in a layer, so its bottom can be faded out below.
         int faded = mFadeBottom > 0 ? canvas.saveLayer(0, 0, getWidth(), getHeight(), null) : -1;
@@ -380,16 +425,40 @@ public class GlassView extends FrameLayout {
         }
         canvas.drawRect(0, 0, getWidth(), getHeight(), mTintPaint);
         if (mLiquid) {
-            // MEETUBE(amoled): only the floating glass is grainy - the flat top bar stays true black.
+            // GUTUBE(amoled): only the floating glass is grainy - the flat top bar stays true black.
             canvas.drawRect(0, 0, getWidth(), getHeight(), mNoisePaint);
-            float r = radius(getWidth(), getHeight());
             canvas.drawRoundRect(mRimRect, r, r, mRimPaint);
+        }
+        if (mSpotlight != null && mSpotlight.isVisible()) {
+            mSpotlight.drawSurface(canvas, mRimRect, r);
         }
         if (faded >= 0) {
             canvas.drawRect(0, getHeight() - mFadeBottom, getWidth(), getHeight(), mFadePaint);
             canvas.restoreToCount(faded);
         }
         super.onDraw(canvas);
+        if (save >= 0) {
+            canvas.restoreToCount(save);
+        }
+    }
+
+    @Override
+    protected void dispatchDraw(@NonNull Canvas canvas) {
+        float r = radius(getWidth(), getHeight());
+        int save = -1;
+        if (r > 0f) {
+            save = canvas.save();
+            mClipPath.reset();
+            mClipPath.addRoundRect(mRimRect, r, r, Path.Direction.CW);
+            canvas.clipPath(mClipPath);
+        }
+        super.dispatchDraw(canvas);
+        if (mSpotlight != null && mSpotlight.isVisible()) {
+            mSpotlight.drawEdge(canvas, mRimRect, r);
+        }
+        if (save >= 0) {
+            canvas.restoreToCount(save);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.S)

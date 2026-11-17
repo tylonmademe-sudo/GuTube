@@ -89,7 +89,7 @@ public class MobilePlaybackService extends Service {
     private Player mNotificationPlayer;
     private Player.Listener mSessionSyncListener;
     private boolean mIsForeground;
-    /** MEETUBE(issue #235): the last pause came from a media key and nothing has played since. */
+    /** GUTUBE(issue #235): the last pause came from a media key and nothing has played since. */
     private boolean mKeyPaused;
     private long mPauseKeyAtMs = -10_000;
     /**
@@ -98,7 +98,7 @@ public class MobilePlaybackService extends Service {
      * startForeground from the background (API 31+ crash).
      */
     private boolean mReattaching;
-    /** MEETUBE(issue #121): told of a play from outside the screen (see {@link #notifyPlayClicked}). */
+    /** GUTUBE(issue #121): told of a play from outside the screen (see {@link #notifyPlayClicked}). */
     @Nullable private Runnable mOnExternalPlay;
 
     private final NotificationArtwork<Bitmap> mArtwork = new NotificationArtwork<>();
@@ -227,7 +227,7 @@ public class MobilePlaybackService extends Service {
         }
     }
 
-    /** MEETUBE(issue #121): the activity shows its controls on a headset, lock screen or notification play. */
+    /** GUTUBE(issue #121): the activity shows its controls on a headset, lock screen or notification play. */
     public void setOnExternalPlay(@Nullable Runnable onExternalPlay) {
         mOnExternalPlay = onExternalPlay;
     }
@@ -289,7 +289,7 @@ public class MobilePlaybackService extends Service {
         mMediaSession = new MediaSessionCompat(getApplicationContext(), getPackageName());
         mMediaSession.setCallback(new MediaSessionCompat.Callback() {
             /**
-             * MEETUBE(issue #235): some Bluetooth headsets keep their own idea of the play state
+             * GUTUBE(issue #235): some Bluetooth headsets keep their own idea of the play state
              * and send PAUSE, not a toggle, when their one button is pressed. Believing the video
              * still plays, they paused it, then sent PAUSE again to resume - a no-op. A PAUSE on a
              * video a media key paused now plays it. Only then: a car sending PAUSE as it

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MEETUBE(more videos, issue #24): YouTube's "More videos" in the landscape player. A swipe up on
+ * GUTUBE(more videos, issue #24): YouTube's "More videos" in the landscape player. A swipe up on
  * the fullscreen video raises a row of the watch page's Up next cards over its lower part,
  * following the finger; a card plays in this player. A swipe down, a tap on the video or Back
  * puts it away.

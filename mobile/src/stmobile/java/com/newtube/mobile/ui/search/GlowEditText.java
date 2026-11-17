@@ -15,12 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 
 /**
- * MEETUBE(search glow): the query glows in Siri's colours while it is typed - a gradient drifting
+ * GUTUBE(search glow): the query glows in Siri's colours while it is typed - a gradient drifting
  * through the letters with a soft halo, like iOS 27's Search or Ask bar - and settles back to plain
  * text a moment after the last keystroke.
  */
 public class GlowEditText extends AppCompatEditText {
-    private static final String PREFS = "meetube_app";
+    private static final String PREFS = "gutube_app";
     private static final String KEY_ON = "typing_glow";
     private static final int[] SIRI = {0xFFFF6A88, 0xFFFFB86B, 0xFFB45CFF, 0xFF5E9BFF, 0xFFFF6A88};
     private static final int HALO = 0xB45CFF;

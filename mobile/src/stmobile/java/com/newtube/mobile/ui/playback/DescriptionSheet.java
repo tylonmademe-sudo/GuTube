@@ -24,8 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * MEETUBE(description): YouTube's Description panel - the title, a Likes / Views / date row and the
- * description, selectable so any of it can be copied. MEETUBE(description-panel): shared by the
+ * GUTUBE(description): YouTube's Description panel - the title, a Likes / Views / date row and the
+ * description, selectable so any of it can be copied. GUTUBE(description-panel): shared by the
  * portrait page's panel and the fullscreen / Shorts dialog.
  */
 final class DescriptionSheet {
@@ -39,7 +39,7 @@ final class DescriptionSheet {
     private DescriptionSheet() {
     }
 
-    /** MEETUBE(description): the sections under the description; any left null is not shown. */
+    /** GUTUBE(description): the sections under the description; any left null is not shown. */
     static final class Extras {
         /** Opens the transcript; null for a video without captions. */
         @Nullable
@@ -55,10 +55,10 @@ final class DescriptionSheet {
         TextView subscribe;
         @Nullable
         Runnable openChannel;
-        /** MEETUBE(exact counts): Video details' whole numbers ("12,345,678"); -1 = the short form above. */
+        /** GUTUBE(exact counts): Video details' whole numbers ("12,345,678"); -1 = the short form above. */
         long views = -1;
         long likes = -1;
-        /** MEETUBE(issue #175): a description timestamp seeks the video here (ms); null = plain text. */
+        /** GUTUBE(issue #175): a description timestamp seeks the video here (ms); null = plain text. */
         @Nullable
         java.util.function.LongConsumer seek;
         /** The video's length: a timestamp past it stays plain text, as on YouTube; 0 or less = unknown. */
@@ -87,7 +87,7 @@ final class DescriptionSheet {
         return dialog;
     }
 
-    // MEETUBE(description-panel): fresh content resets the scroll, rows and Subscribe's listeners.
+    // GUTUBE(description-panel): fresh content resets the scroll, rows and Subscribe's listeners.
     static void bindPanel(@NonNull CommentsPanelLayout panel, CharSequence title, @Nullable CharSequence likes,
                           @Nullable String views, @Nullable String date, CharSequence description,
                           @NonNull Extras extras) {
@@ -104,7 +104,11 @@ final class DescriptionSheet {
     private static void bind(View content, Runnable dismiss, CharSequence title, @Nullable CharSequence likes,
                              @Nullable String views, @Nullable String date, CharSequence description, Extras extras) {
         android.content.Context context = content.getContext();
-        content.findViewById(R.id.description_sheet_close).setOnClickListener(v -> dismiss.run());
+        View closeBtn = content.findViewById(R.id.description_sheet_close);
+        if (closeBtn != null) {
+            closeBtn.setOnClickListener(v -> dismiss.run());
+            com.newtube.mobile.ui.common.SpotlightHelper.attach(closeBtn);
+        }
         ((TextView) content.findViewById(R.id.description_sheet_title)).setText(title);
         TextView text = content.findViewById(R.id.description_sheet_text);
         // A selectable TextView with autoLink still clicks the ClickableSpan under a tap.
@@ -126,11 +130,15 @@ final class DescriptionSheet {
         stats.setVisibility(stats.getChildCount() > 0 ? View.VISIBLE : View.GONE);
 
         if (extras.transcript != null) {
+            View transcriptShow = content.findViewById(R.id.description_sheet_transcript_show);
             content.findViewById(R.id.description_sheet_transcript).setVisibility(View.VISIBLE);
-            content.findViewById(R.id.description_sheet_transcript_show).setOnClickListener(v -> {
-                dismiss.run();
-                extras.transcript.run();
-            });
+            if (transcriptShow != null) {
+                transcriptShow.setOnClickListener(v -> {
+                    dismiss.run();
+                    extras.transcript.run();
+                });
+                com.newtube.mobile.ui.common.SpotlightHelper.attach(transcriptShow);
+            }
         }
         bindChannel(content, dismiss, extras);
 
@@ -213,7 +221,7 @@ final class DescriptionSheet {
         subs.setVisibility(TextUtils.isEmpty(extras.subscribers) ? View.GONE : View.VISIBLE);
         android.graphics.drawable.Drawable avatar = extras.avatar;
         if (avatar instanceof android.graphics.drawable.TransitionDrawable) {
-            // MEETUBE(issue #159): Glide's cross-fade; a copy restarts it on the placeholder layer.
+            // GUTUBE(issue #159): Glide's cross-fade; a copy restarts it on the placeholder layer.
             android.graphics.drawable.TransitionDrawable fade = (android.graphics.drawable.TransitionDrawable) avatar;
             avatar = fade.getDrawable(fade.getNumberOfLayers() - 1);
         }
@@ -262,7 +270,7 @@ final class DescriptionSheet {
         };
         source.addTextChangedListener(watcher);
         source.addOnLayoutChangeListener(follow);
-        // MEETUBE(description-panel): the body detaches on rebind; the dialog's body detaches on dismiss.
+        // GUTUBE(description-panel): the body detaches on rebind; the dialog's body detaches on dismiss.
         subscribe.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(@NonNull View v) {
@@ -278,7 +286,7 @@ final class DescriptionSheet {
         });
     }
 
-    /** MEETUBE(issue #175): the description's timestamps seek the video, as on YouTube. */
+    /** GUTUBE(issue #175): the description's timestamps seek the video, as on YouTube. */
     private static CharSequence withTimestamps(CharSequence description, Extras extras) {
         java.util.function.LongConsumer seek = extras.seek;
         if (seek == null || TextUtils.isEmpty(description)) {
