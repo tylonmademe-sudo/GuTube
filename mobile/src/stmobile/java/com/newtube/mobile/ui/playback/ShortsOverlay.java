@@ -1,5 +1,7 @@
 package com.newtube.mobile.ui.playback;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -125,7 +127,7 @@ final class ShortsOverlay {
     private final ImageView mLikeIcon;
     private final ImageView mAvatar;
     private final ImageView mFlash;
-    private final ImageView mHeart;
+    private final LottieAnimationView mHeart;
     private final ImageView mPeek;
     /** GUTUBE(shorts peek): the next short's real first frame, over its thumbnail (ShortsPeekPlayer). */
     private final TextureView mPeekFrame;
@@ -185,6 +187,10 @@ final class ShortsOverlay {
         mAvatar = root.findViewById(R.id.mobile_shorts_avatar);
         mFlash = root.findViewById(R.id.mobile_shorts_flash);
         mHeart = root.findViewById(R.id.mobile_shorts_heart);
+        if (mHeart != null) {
+            mHeart.setAnimation(R.raw.liked);
+            mHeart.setRepeatCount(0);
+        }
         mPeek = root.findViewById(R.id.mobile_shorts_peek);
         mPeekFrame = root.findViewById(R.id.mobile_shorts_peek_video);
         mPeekFrame.setTranslationY(PARKED);
@@ -493,16 +499,86 @@ final class ShortsOverlay {
                 mFlash.animate().alpha(0f).setStartDelay(220).setDuration(140).start()).start();
     }
 
-    /** Double tap: a big heart springs in and floats off. */
-    void popHeart() {
+    /**
+     * Double tap: YouTube-style adaptive Lottie like animation at touch coordinates
+     * with natural dynamic angle/tilt and edge clamping to prevent clipping.
+     */
+    void popHeart(float posX, float posY) {
+        if (mHeart == null) return;
+
         mHeart.animate().cancel();
+        mHeart.removeAllAnimatorListeners();
+        mHeart.cancelAnimation();
+
+        float width = mOverlay.getWidth() > 0 ? mOverlay.getWidth() : 1080f;
+        float height = mOverlay.getHeight() > 0 ? mOverlay.getHeight() : 1920f;
+        float density = mOverlay.getResources().getDisplayMetrics().density;
+
+        // Heart bounds: 190dp x 190dp
+        float halfSize = 95f * density;
+
+        // Screen boundaries safety margin to prevent clipping off screen edges:
+        float minX = halfSize + 12f * density;
+        float maxX = Math.max(minX, width - halfSize - 12f * density);
+        float minY = halfSize + 48f * density;
+        float maxY = Math.max(minY, height - halfSize - 80f * density);
+
+        float clampedX = (posX >= 0) ? Math.max(minX, Math.min(maxX, posX)) : (width / 2f);
+        float clampedY = (posY >= 0) ? Math.max(minY, Math.min(maxY, posY)) : (height / 2f);
+
+        // Position centered on touch coordinates (relative to center layout gravity)
+        mHeart.setTranslationX(clampedX - width / 2f);
+        mHeart.setTranslationY(clampedY - height / 2f);
+
+        // YouTube-style natural adaptive tilt angle based on tap location:
+        // Left side taps tilt counter-clockwise (-12° to -18°), right side taps tilt clockwise (+12° to +18°),
+        // with subtle vertical modulation matching hand/thumb ergonomics.
+        float normX = (clampedX - width / 2f) / (width / 2f); // -1.0 (left) to 1.0 (right)
+        float normY = (clampedY - height / 2f) / (height / 2f); // -1.0 (top) to 1.0 (bottom)
+        float baseTilt = normX * 18f;
+        float verticalMod = -normY * 4f * Math.signum(normX);
+        float angle = Math.max(-22f, Math.min(22f, baseTilt + verticalMod));
+        mHeart.setRotation(angle);
+
+        // Initial pop-in scale & state
+        mHeart.setVisibility(View.VISIBLE);
         mHeart.setAlpha(1f);
-        mHeart.setScaleX(0.4f);
-        mHeart.setScaleY(0.4f);
-        mHeart.setRotation((float) (Math.random() * 24 - 12));
-        mHeart.animate().scaleX(1f).scaleY(1f).setInterpolator(new OvershootInterpolator(2.5f)).setDuration(260)
-                .withEndAction(() -> mHeart.animate().scaleX(1.4f).scaleY(1.4f).alpha(0f).setStartDelay(250)
-                        .setInterpolator(new DecelerateInterpolator()).setDuration(400).start()).start();
+        mHeart.setScaleX(0.5f);
+        mHeart.setScaleY(0.5f);
+
+        // Start Lottie burst animation
+        mHeart.setFrame(0);
+        mHeart.setSpeed(1.35f);
+        mHeart.playAnimation();
+
+        // Spring entrance scale
+        mHeart.animate()
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(280)
+                .setInterpolator(new OvershootInterpolator(2.0f))
+                .start();
+
+        // Fade out and hide when Lottie animation finishes
+        mHeart.addAnimatorListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                mHeart.animate()
+                        .alpha(0f)
+                        .scaleX(0.85f)
+                        .scaleY(0.85f)
+                        .setDuration(160)
+                        .withEndAction(() -> {
+                            mHeart.setVisibility(View.GONE);
+                            mHeart.setAlpha(0f);
+                        })
+                        .start();
+            }
+        });
+    }
+
+    void popHeart() {
+        popHeart(-1f, -1f);
     }
 
     /** The short follows the finger; the neighbour's thumbnail comes in behind it. */

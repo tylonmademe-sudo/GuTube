@@ -47,11 +47,13 @@
         <item name="gutubeCardCorner">@dimen/mobile_card_corner_radius</item>
         <item name="gutubeRowCorner">12dp</item>
         <item name="gutubeRelatedCorner">14dp</item>
-        <item name="gutubeNavCorner">34dp</item>
+        <item name="gutubeNavCorner">28dp</item>
         <item name="gutubeNavSideMargin">16dp</item>
         <item name="gutubeNavBottomMargin">12dp</item>
         <item name="gutubeNavMaxWidth">@dimen/gutube_nav_max_width</item>
-        <item name="gutubeNavTint">@color/gutube_glass_tint</item>
+        <item name="gutubeNavTint">@color/gutube_nav_glass_tint</item>
+        <item name="gutubeNavStrokeColor">@color/gutube_nav_glass_stroke</item>
+        <item name="gutubeNavStrokeWidth">1dp</item>
         <item name="gutubeNavItemBackground">@android:color/transparent</item>
         <item name="gutubeNavLiquid">true</item>
         <item name="colorPrimary">?attr/gutubeAccent</item>
@@ -450,9 +452,9 @@
     <!-- GUTUBE(fullscreen-actions): an action on the fullscreen pill - a size under the player's
          48dp buttons. -->
     <style name="MobilePlayerAction">
-        <item name="android:layout_width">38dp</item>
-        <item name="android:layout_height">38dp</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/bg_player_glass_circle</item>
         <item name="android:padding">10dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:tint">@color/mobile_player_on_video</item>
@@ -460,9 +462,10 @@
 
     <!-- GUTUBE(lock, issue #98): the fullscreen lock button, on the controls' glass (GlassDrawable). -->
     <style name="MobilePlayerLock">
-        <item name="android:layout_width">44dp</item>
-        <item name="android:layout_height">44dp</item>
-        <item name="android:padding">11dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/bg_player_glass_circle</item>
+        <item name="android:padding">10dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:src">@drawable/ic_player_unlocked</item>
         <item name="android:tint">@color/mobile_player_on_video</item>
@@ -626,9 +629,10 @@
 
     <!-- GUTUBE(shorts): the vertical player's action column (mobile_shorts_overlay). -->
     <style name="GuTubeShortsAction">
-        <item name="android:layout_width">42dp</item>
-        <item name="android:layout_height">42dp</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@drawable/bg_shorts_button_circle</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:tint">@android:color/white</item>
     </style>
@@ -740,6 +744,8 @@
         <item name="gutubeNavBottomMargin">0dp</item>
         <item name="gutubeNavMaxWidth">4000dp</item>
         <item name="gutubeNavTint">@color/gutube_youtube_nav_tint</item>
+        <item name="gutubeNavStrokeColor">@android:color/transparent</item>
+        <item name="gutubeNavStrokeWidth">0dp</item>
         <item name="gutubeNavItemBackground">@android:color/transparent</item>
         <!-- A flat frost, as the top bar: no rim down its sides, no grain, no lens edge. -->
         <item name="gutubeNavLiquid">false</item>

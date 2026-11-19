@@ -4,13 +4,17 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -132,6 +136,11 @@ public class MobileBrowseActivity extends MobileActivity
     private static final int REQUEST_POST_NOTIFICATIONS = 1;
     /** Intent action (download notifications) that lands on the Downloads tab. */
     public static final String ACTION_OPEN_DOWNLOADS = "com.newtube.mobile.OPEN_DOWNLOADS";
+    /** App launcher shortcut actions. */
+    public static final String ACTION_SEARCH = "com.newtube.mobile.action.SEARCH";
+    public static final String ACTION_SHORTS = "com.newtube.mobile.action.SHORTS";
+    public static final String ACTION_SUBSCRIPTIONS = "com.newtube.mobile.action.SUBSCRIPTIONS";
+    public static final String ACTION_HISTORY = "com.newtube.mobile.action.HISTORY";
 
     private BrowsePresenter mPresenter;
 
@@ -268,6 +277,12 @@ public class MobileBrowseActivity extends MobileActivity
     private TextView mYouAccountText;
     private TextView mYouAccountSub;
     private ImageView mYouAvatar;
+    private final Handler mTypewriterHandler = new Handler(Looper.getMainLooper());
+    private Runnable mTypewriterRunnable;
+    private int mTypewriterPhraseIndex = 0;
+    private int mTypewriterCharIndex = 0;
+    private boolean mTypewriterDeleting = false;
+    private boolean mTypewriterRunning = false;
     /** True while the You panel covers the content grid (the You tab is selected). */
     private boolean mYouShowing;
     private HomePreview mPreview; // GUTUBE(home autoplay)
@@ -401,6 +416,7 @@ public class MobileBrowseActivity extends MobileActivity
         // while it is the section on screen; see onDownloadsChanged.
         DownloadRegistry.instance(this).addListener(mDownloadsListener);
         handleOpenDownloads(getIntent());
+        handleShortcutIntent(getIntent());
 
         // NEWTUBE(update-flow): a known update puts a dot on the You tab and a row at the top of
         // its list; the first launch after an update says so (once the feed has had its moment).
@@ -443,13 +459,7 @@ public class MobileBrowseActivity extends MobileActivity
         mErrorMessage = findViewById(R.id.mobile_error_message);
         mErrorAction = findViewById(R.id.mobile_error_action);
         mCastButton = findViewById(R.id.mobile_cast_button);
-        if (mCastButton != null) {
-            com.newtube.mobile.ui.common.Spotlight.attach(mCastButton);
-        }
         mSearchButton = findViewById(R.id.mobile_search_button);
-        if (mSearchButton != null) {
-            com.newtube.mobile.ui.common.Spotlight.attach(mSearchButton);
-        }
         mTopBar = new BrowseTopBar(this, () -> getOnBackPressedDispatcher().onBackPressed());
 
         // GUTUBE(glass): the floating nav pill blurs the page scrolling under it (real backdrop
@@ -458,20 +468,13 @@ public class MobileBrowseActivity extends MobileActivity
         com.newtube.mobile.ui.common.Glass.blur(navGlass,
                 findViewById(R.id.mobile_blur_target));
         if (navGlass != null) {
-            com.newtube.mobile.ui.common.Spotlight spotlight = com.newtube.mobile.ui.common.SpotlightHelper.attachCard(navGlass);
-            spotlight.setSizeDp(200f)
-                    .setSoftness(0.65f)
-                    .setBorderGlow(0.85f)
-                    .setSmoothing(0.18f);
-            if (navGlass instanceof com.newtube.mobile.ui.common.GlassView) {
-                ((com.newtube.mobile.ui.common.GlassView) navGlass).setEnableTilt(false);
+            navGlass.bringToFront();
+            if (mBottomNav != null) {
+                mBottomNav.bringToFront();
             }
         }
         mSearchFab = findViewById(R.id.mobile_search_fab);
         com.newtube.mobile.ui.common.Glass.blur(mSearchFab, findViewById(R.id.mobile_blur_target));
-        if (mSearchFab != null) {
-            com.newtube.mobile.ui.common.SpotlightHelper.attachCard(mSearchFab);
-        }
         mSearchFab.setOnClickListener(v -> SearchPresenter.instance(this).startTextSearch());
         // The pill floats above the system bar (content is already inset), so the bar must not
         // pad itself by that inset too - Material does, whatever paddingBottomSystemWindowInsets says.
@@ -1649,41 +1652,11 @@ public class MobileBrowseActivity extends MobileActivity
             mNavDownX = mBottomNav != null && mBottomNav.isShown() && isOn(mBottomNav, event)
                     && !com.newtube.mobile.ui.common.YouTubeMode.isOn(this) ? event.getRawX() : Float.NaN;
 
-            if (bar != null && !Float.isNaN(mNavDownX)) {
-                com.newtube.mobile.ui.common.Spotlight s = com.newtube.mobile.ui.common.SpotlightHelper.getSpotlight(bar);
-                if (s != null) {
-                    int[] barLoc = new int[2];
-                    bar.getLocationOnScreen(barLoc);
-                    float bx = Math.max(0f, Math.min(bar.getWidth(), event.getRawX() - barLoc[0]));
-                    float by = Math.max(0f, Math.min(bar.getHeight(), event.getRawY() - barLoc[1]));
-                    android.view.MotionEvent barEv = android.view.MotionEvent.obtain(
-                            event.getDownTime(), event.getEventTime(), event.getAction(),
-                            bx, by, event.getMetaState());
-                    s.onTouchEvent(bar, barEv);
-                    barEv.recycle();
-                }
-            }
             return false;
         }
 
         if (Float.isNaN(mNavDownX)) {
             return false;
-        }
-
-        // Stream continuous drag coordinates into the spotlight physics engine on ACTION_MOVE / ACTION_UP
-        if (bar != null) {
-            com.newtube.mobile.ui.common.Spotlight s = com.newtube.mobile.ui.common.SpotlightHelper.getSpotlight(bar);
-            if (s != null) {
-                int[] barLoc = new int[2];
-                bar.getLocationOnScreen(barLoc);
-                float bx = Math.max(0f, Math.min(bar.getWidth(), event.getRawX() - barLoc[0]));
-                float by = Math.max(0f, Math.min(bar.getHeight(), event.getRawY() - barLoc[1]));
-                android.view.MotionEvent barEv = android.view.MotionEvent.obtain(
-                        event.getDownTime(), event.getEventTime(), event.getAction(),
-                        bx, by, event.getMetaState());
-                s.onTouchEvent(bar, barEv);
-                barEv.recycle();
-            }
         }
 
         boolean end = action == android.view.MotionEvent.ACTION_UP || action == android.view.MotionEvent.ACTION_CANCEL;
@@ -2193,36 +2166,108 @@ public class MobileBrowseActivity extends MobileActivity
     // ---------------------------------------------------------------------------------
 
     private void setupYouPanel() {
-        // Account row: the one always-visible sign-in entry point (the other is the signed-out
-        // Subscriptions/Playlists "Sign in" button). AccountsSheet routes: no stored accounts
-        // -> device-code sign-in; otherwise the native switch/add/sign-out sheet (also when
-        // browsing signed-out with stored accounts, so they stay re-selectable).
-        // GUTUBE(you page): only the avatar (and Accounts) opens the accounts sheet; the name and
-        // email just pop when touched.
         View accountRow = findViewById(R.id.mobile_you_account_row);
-        accountRow.setClickable(false);
-        accountRow.setBackground(null);
-        findViewById(R.id.mobile_you_avatar_glass).setOnClickListener(v -> AccountsSheet.show(this, this::updateAccountRow));
-        findViewById(R.id.mobile_you_account_text).setOnClickListener(this::popText);
-        findViewById(R.id.mobile_you_account_sub).setOnClickListener(this::popText);
-        findViewById(R.id.mobile_you_accounts).setOnClickListener(v -> AccountsSheet.show(this, this::updateAccountRow));
-        findViewById(R.id.mobile_you_settings).setOnClickListener(v -> openSettings());
-        com.newtube.mobile.ui.common.Spotlight.attach(findViewById(R.id.mobile_you_accounts));
-        com.newtube.mobile.ui.common.Spotlight.attach(findViewById(R.id.mobile_you_settings));
-        findViewById(R.id.mobile_you_actions).setBackground(new com.newtube.mobile.ui.common.AccentCard(this,
-                com.newtube.mobile.ui.common.AccentCard.YOU_GLASS));
-        com.newtube.mobile.ui.common.Glass.blur(findViewById(R.id.mobile_you_avatar_glass), findViewById(R.id.mobile_you_glow_source));
+        if (accountRow != null) {
+            accountRow.setClickable(false);
+            accountRow.setBackground(null);
+        }
+        View avatarGlass = findViewById(R.id.mobile_you_avatar_glass);
+        if (avatarGlass != null) {
+            avatarGlass.setOnClickListener(v -> AccountsSheet.show(this, this::updateAccountRow));
+        }
+        View accountText = findViewById(R.id.mobile_you_account_text);
+        if (accountText != null) {
+            accountText.setOnClickListener(this::popText);
+        }
+        View accountSub = findViewById(R.id.mobile_you_account_sub);
+        if (accountSub != null) {
+            accountSub.setOnClickListener(this::popText);
+        }
+        View notifBtn = findViewById(R.id.mobile_you_notifications);
+        if (notifBtn != null) {
+            notifBtn.setOnClickListener(v -> startActivity(
+                    com.newtube.mobile.ui.settings.MobileSettingsActivity.intent(this,
+                            com.newtube.mobile.ui.settings.SettingsPages.NOTIFICATIONS)));
+        }
+        View signinBtn = findViewById(R.id.mobile_you_signin_btn);
+        if (signinBtn != null) {
+            signinBtn.setOnClickListener(v -> AccountsSheet.show(this, this::updateAccountRow));
+        }
+        View accountsBtn = findViewById(R.id.mobile_you_accounts);
+        if (accountsBtn != null) {
+            accountsBtn.setOnClickListener(v -> AccountsSheet.show(this, this::updateAccountRow));
+        }
+        View settingsBtn = findViewById(R.id.mobile_you_settings);
+        if (settingsBtn != null) {
+            settingsBtn.setOnClickListener(v -> openSettings());
+        }
+
+        // Library section tiles
+        View libSubs = findViewById(R.id.mobile_you_lib_subscriptions);
+        if (libSubs != null) {
+            libSubs.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_SUBSCRIPTIONS));
+        }
+        View libDownloads = findViewById(R.id.mobile_you_lib_downloads);
+        if (libDownloads != null) {
+            libDownloads.setOnClickListener(v -> openFromYou(VideoDownloads.SECTION_ID));
+        }
+        View libWatchLater = findViewById(R.id.mobile_you_lib_watch_later);
+        if (libWatchLater != null) {
+            libWatchLater.setOnClickListener(v -> openWatchLater());
+        }
+        View libLiked = findViewById(R.id.mobile_you_lib_liked);
+        if (libLiked != null) {
+            libLiked.setOnClickListener(v -> openLikedVideos());
+        }
+        View libPlaylists = findViewById(R.id.mobile_you_lib_playlists);
+        if (libPlaylists != null) {
+            libPlaylists.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_USER_PLAYLISTS));
+        }
+        View libMyVideos = findViewById(R.id.mobile_you_lib_my_videos);
+        if (libMyVideos != null) {
+            libMyVideos.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_MY_VIDEOS));
+        }
+
+        // Explore section tiles
+        View expKids = findViewById(R.id.mobile_you_explore_kids);
+        if (expKids != null) {
+            expKids.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_KIDS_HOME));
+        }
+        View expHyped = findViewById(R.id.mobile_you_explore_hyped);
+        if (expHyped != null) {
+            expHyped.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_TRENDING));
+        }
+        View expSports = findViewById(R.id.mobile_you_explore_sports);
+        if (expSports != null) {
+            expSports.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_SPORTS));
+        }
+        View expLive = findViewById(R.id.mobile_you_explore_live);
+        if (expLive != null) {
+            expLive.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_LIVE));
+        }
+        View expGaming = findViewById(R.id.mobile_you_explore_gaming);
+        if (expGaming != null) {
+            expGaming.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_GAMING));
+        }
+        View expNews = findViewById(R.id.mobile_you_explore_news);
+        if (expNews != null) {
+            expNews.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_NEWS));
+        }
+        View expMusic = findViewById(R.id.mobile_you_explore_music);
+        if (expMusic != null) {
+            expMusic.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_MUSIC));
+        }
+
         View historyTitle = findViewById(R.id.mobile_you_history_title);
-        historyTitle.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_HISTORY));
-        // GUTUBE(you page): the avatar leans with the phone, as the About photo does.
-        com.newtube.mobile.ui.settings.TiltParallax.attach((ViewGroup) findViewById(R.id.mobile_you_avatar_glass), 0.4f,
-                findViewById(R.id.mobile_you_avatar));
+        if (historyTitle != null) {
+            historyTitle.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_HISTORY));
+        }
+        if (avatarGlass instanceof ViewGroup && mYouAvatar != null) {
+            com.newtube.mobile.ui.settings.TiltParallax.attach((ViewGroup) avatarGlass, 0.4f, mYouAvatar);
+        }
 
         // GUTUBE(you page): History's latest videos, two and a bit across like YouTube's You page.
         int cardWidth = Math.round(getResources().getDisplayMetrics().widthPixels / 2.4f);
-        // GUTUBE(shorts): the row says its taps are History's. The card's own group is a weak
-        // reference, so belongsToHistory() turned false whenever the GC took it, and a Short opened
-        // as a normal video, now and then.
         mYouHistoryAdapter = new VideoCardAdapter(video -> {
             mYouHistoryTap = true;
             try {
@@ -2249,19 +2294,93 @@ public class MobileBrowseActivity extends MobileActivity
             }
         };
         RecyclerView historyList = findViewById(R.id.mobile_you_history_list);
-        historyList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        historyList.setAdapter(mYouHistoryAdapter);
-        // GUTUBE(issue #215): no fades or slides when the fresh list replaces the cached one; they
-        // blanked the first card for a moment and crossfaded titles on every visit.
-        historyList.setItemAnimator(null);
-        historyList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    mYouHistoryToStart = false; // the user's own scroll wins over the landing
+        if (historyList != null) {
+            historyList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+            historyList.setAdapter(mYouHistoryAdapter);
+            historyList.setItemAnimator(null);
+            historyList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        mYouHistoryToStart = false; // the user's own scroll wins over the landing
+                    }
                 }
+            });
+        }
+    }
+
+    private void openWatchLater() {
+        mSectionFromYou = true;
+        hideYouPanel();
+        Video playlist = new Video();
+        playlist.playlistId = "WL";
+        playlist.title = getString(R.string.mobile_you_watch_later);
+        com.liskovsoft.smartyoutubetv2.common.app.presenters.ChannelUploadsPresenter.instance(this)
+                .openChannel(playlist);
+        onYouPanelToggled();
+    }
+
+    private void openLikedVideos() {
+        mSectionFromYou = true;
+        hideYouPanel();
+        Video playlist = new Video();
+        playlist.playlistId = "LL";
+        playlist.title = getString(R.string.mobile_you_liked_videos);
+        com.liskovsoft.smartyoutubetv2.common.app.presenters.ChannelUploadsPresenter.instance(this)
+                .openChannel(playlist);
+        onYouPanelToggled();
+    }
+
+    private void startTypewriter() {
+        if (mTypewriterRunning || mYouAccountSub == null) {
+            return;
+        }
+        mTypewriterRunning = true;
+        final String[] phrases = new String[] {
+                getString(R.string.mobile_you_phrase_sync),
+                getString(R.string.mobile_you_phrase_playlists),
+                getString(R.string.mobile_you_phrase_history)
+        };
+        mTypewriterPhraseIndex = 0;
+        mTypewriterCharIndex = phrases[0].length();
+        mTypewriterDeleting = true;
+
+        mTypewriterRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!mTypewriterRunning || mYouAccountSub == null || isDestroyed()) {
+                    return;
+                }
+                String currentPhrase = phrases[mTypewriterPhraseIndex];
+                if (mTypewriterDeleting) {
+                    mTypewriterCharIndex = Math.max(0, mTypewriterCharIndex - 1);
+                    mYouAccountSub.setText(currentPhrase.substring(0, mTypewriterCharIndex));
+                } else {
+                    mTypewriterCharIndex = Math.min(currentPhrase.length(), mTypewriterCharIndex + 1);
+                    mYouAccountSub.setText(currentPhrase.substring(0, mTypewriterCharIndex));
+                }
+
+                long delay = mTypewriterDeleting ? 35 : 65;
+                if (!mTypewriterDeleting && mTypewriterCharIndex >= currentPhrase.length()) {
+                    delay = 2200;
+                    mTypewriterDeleting = true;
+                } else if (mTypewriterDeleting && mTypewriterCharIndex <= 0) {
+                    mTypewriterDeleting = false;
+                    mTypewriterPhraseIndex = (mTypewriterPhraseIndex + 1) % phrases.length;
+                    delay = 450;
+                }
+                mTypewriterHandler.postDelayed(this, delay);
             }
-        });
+        };
+        mTypewriterHandler.postDelayed(mTypewriterRunnable, 2200);
+    }
+
+    private void stopTypewriter() {
+        mTypewriterRunning = false;
+        if (mTypewriterRunnable != null) {
+            mTypewriterHandler.removeCallbacks(mTypewriterRunnable);
+            mTypewriterRunnable = null;
+        }
     }
 
     /** GUTUBE(you page): a quick springy pop of the touched text, nothing else. */
@@ -2349,6 +2468,7 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void hideYouPanel() {
+        stopTypewriter();
         mYouShowing = false;
         mYouPanel.setVisibility(View.GONE);
         View top = findViewById(R.id.mobile_top_glass);
@@ -2454,16 +2574,6 @@ public class MobileBrowseActivity extends MobileActivity
             }
             addYouGroupLabel(getString(channels ? R.string.mobile_you_pinned_channels : R.string.mobile_you_pinned));
             addYouSectionRows(pinned, 2);
-        }
-
-        if (!library.isEmpty()) {
-            addYouGroupLabel(getString(R.string.mobile_you_library));
-            addYouLines(library, 4); // GUTUBE(you page): small tiles, like Explore
-        }
-
-        if (!explore.isEmpty()) {
-            addYouGroupLabel(getString(R.string.mobile_you_explore));
-            addYouSectionRows(explore, 4);
         }
     }
 
@@ -2733,7 +2843,6 @@ public class MobileBrowseActivity extends MobileActivity
         label.setText(title);
 
         row.setOnClickListener(v -> action.run());
-        com.newtube.mobile.ui.common.Spotlight.attach(row);
         return row;
     }
 
@@ -3590,6 +3699,7 @@ public class MobileBrowseActivity extends MobileActivity
             rebuildYouRows();
         }
         openPendingDownloads();
+        openPendingShortcutSection();
     };
 
     /**
@@ -3615,6 +3725,61 @@ public class MobileBrowseActivity extends MobileActivity
         intent.setAction(null); // consume: a rotation must not re-open the tab
         mPendingDownloadsOpen = true;
         openPendingDownloads();
+    }
+
+    private int mPendingShortcutSection = -1;
+
+    private void handleShortcutIntent(Intent intent) {
+        if (intent == null || intent.getAction() == null) {
+            return;
+        }
+        String action = intent.getAction();
+        if (ACTION_SEARCH.equals(action)) {
+            intent.setAction(null);
+            if (mBottomNav != null) {
+                mBottomNav.post(() -> SearchPresenter.instance(this).startTextSearch());
+            }
+        } else if (ACTION_SHORTS.equals(action)) {
+            intent.setAction(null);
+            openShortcutSection(MediaGroup.TYPE_SHORTS);
+        } else if (ACTION_SUBSCRIPTIONS.equals(action)) {
+            intent.setAction(null);
+            openShortcutSection(MediaGroup.TYPE_SUBSCRIPTIONS);
+        } else if (ACTION_HISTORY.equals(action)) {
+            intent.setAction(null);
+            openShortcutSection(MediaGroup.TYPE_HISTORY);
+        }
+    }
+
+    private void openShortcutSection(int sectionId) {
+        hideYouPanel();
+        int menuItemId = toMenuItemId(sectionId);
+        if (mBottomNav != null && mBottomNav.getMenu().findItem(menuItemId) != null) {
+            mBottomNav.setSelectedItemId(menuItemId);
+        } else {
+            mPendingShortcutSection = sectionId;
+            openPendingShortcutSection();
+        }
+    }
+
+    private void openPendingShortcutSection() {
+        if (mPendingShortcutSection < 0) {
+            return;
+        }
+        for (BrowseSection section : mSections) {
+            if (section.getId() == mPendingShortcutSection) {
+                int id = mPendingShortcutSection;
+                mPendingShortcutSection = -1;
+                hideYouPanel();
+                int menuItemId = toMenuItemId(id);
+                if (mBottomNav != null && mBottomNav.getMenu().findItem(menuItemId) != null) {
+                    mBottomNav.setSelectedItemId(menuItemId);
+                } else {
+                    onSectionChosen(id);
+                }
+                return;
+            }
+        }
     }
 
     private void openPendingDownloads() {
@@ -3790,7 +3955,6 @@ public class MobileBrowseActivity extends MobileActivity
                 if (itemView != null) {
                     fitNavLabel(itemView);
                     itemView.setOnLongClickListener(v -> showNavHint(v, id));
-                    com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(itemView, 24f);
                 }
             }
             com.newtube.mobile.ui.common.NavSpringPhysics.attachToChildren(mBottomNav);
@@ -4029,7 +4193,6 @@ public class MobileBrowseActivity extends MobileActivity
         if (descRes != 0) {
             btn.setContentDescription(getString(descRes));
         }
-        com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(btn, 22f);
         return btn;
     }
 
@@ -4176,36 +4339,50 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
+        TextView signinLabel = findViewById(R.id.mobile_you_signin_label);
         Account account = MediaServiceManager.instance().getSelectedAccount();
         if (account != null) {
+            stopTypewriter();
             String name = account.getName() != null ? account.getName() : account.getEmail();
             mYouAccountText.setText(name != null ? name : getString(R.string.settings_accounts));
 
             String email = account.getEmail();
             boolean showEmail = email != null && !email.equals(name);
-            mYouAccountSub.setText(showEmail ? email : null);
+            mYouAccountSub.setText(showEmail ? email : "");
             mYouAccountSub.setVisibility(showEmail ? View.VISIBLE : View.GONE);
+
+            if (signinLabel != null) {
+                signinLabel.setText(R.string.settings_accounts);
+            }
 
             String avatarUrl = account.getAvatarImageUrl();
             if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                mYouAvatar.setImageTintList(null);
                 com.bumptech.glide.Glide.with(this)
                         .load(avatarUrl)
                         .circleCrop()
                         .placeholder(R.drawable.ic_you_avatar)
                         .into(mYouAvatar);
             } else {
+                mYouAvatar.setImageTintList(null);
                 mYouAvatar.setImageResource(R.drawable.ic_you_avatar);
             }
         } else {
-            mYouAccountText.setText(R.string.dialog_add_account);
-            mYouAccountSub.setVisibility(View.GONE);
-            mYouAvatar.setImageResource(R.drawable.ic_you_avatar);
+            mYouAccountText.setText(R.string.mobile_you_welcome_back);
+            mYouAccountSub.setVisibility(View.VISIBLE);
+            startTypewriter();
+            if (signinLabel != null) {
+                signinLabel.setText(R.string.mobile_you_signin_now);
+            }
+            mYouAvatar.setImageResource(R.drawable.ic_you_signin_user);
+            mYouAvatar.setImageTintList(ColorStateList.valueOf(Color.parseColor("#E6FFFFFF")));
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        stopTypewriter();
         mPreview.stop();
         mBottomNav.removeCallbacks(mLeaveShortsTab);
 
@@ -4296,6 +4473,7 @@ public class MobileBrowseActivity extends MobileActivity
         super.onNewIntent(intent);
         setIntent(intent);
         handleOpenDownloads(intent);
+        handleShortcutIntent(intent);
         int tab = intent.getIntExtra(EXTRA_NAV_TAB, 0);
         if (tab != 0 && mBottomNav.getMenu().findItem(tab) != null) {
             mBottomNav.setSelectedItemId(tab);
@@ -4375,6 +4553,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        stopTypewriter();
         unwatchMiniScreenOn(); // the shared player outlives this Activity
         mPreview.release();
         mNavHandler.removeCallbacks(mNavRebuild);

@@ -4,6 +4,8 @@
          ones (the palette the app shipped before the Theme setting, unchanged). A colour with no
          night entry is the same in both themes: the accent, and everything drawn over pictures. -->
     <color name="mobile_color_primary_dark">#D7372D</color>
+    <!-- GUTUBE(app icon): pure white solid color for adaptive icon background (ColorOS 2x2 resizable icon support) -->
+    <color name="ic_launcher_white">#FFFFFF</color>
     <!-- Cast: the only place the app tints an icon to show a live connection. Was the stock
          Material pink (#FF4081) inherited from the theme's colorAccent, which leaked into
          every checkbox, radio, caret and untinted spinner - see Theme.NewTube. -->
@@ -79,6 +81,10 @@
 
     <!-- GUTUBE(glass): the floating-glass surfaces (light side; dark in values-night). -->
     <color name="gutube_glass_tint">#66FAFAFA</color>
+    <!-- Liquid Glass navigation tint: rgba(255, 255, 255, 0) -->
+    <color name="gutube_nav_glass_tint">#00FFFFFF</color>
+    <!-- Liquid Glass navigation stroke: subtle specular highlight rgba(255, 255, 255, 0.2) -->
+    <color name="gutube_nav_glass_stroke">#33FFFFFF</color>
     <!-- GUTUBE(stats): a milky frost over a blurred page, for a card on the greeting's glass. -->
     <color name="gutube_frost_tint">#B3FFFFFF</color>
     <!-- GUTUBE(youtube mode): the docked bar's frost, denser (dark in values-night). -->
@@ -99,7 +105,7 @@
     <!-- GUTUBE(glass): sheet surfaces - the surface, a little see-through over the blurred page. -->
     <color name="gutube_sheet_glass">#D6FFFFFF</color>
     <color name="gutube_glass_fill">#0D000000</color>
-    <color name="gutube_glass_stroke">#1A000000</color>
+    <color name="gutube_glass_stroke">#1F000000</color>
     <color name="gutube_glass_rim">#1F000000</color>
     <color name="gutube_glass_sheen">#80FFFFFF</color>
     <color name="gutube_glass_selected">#14000000</color>

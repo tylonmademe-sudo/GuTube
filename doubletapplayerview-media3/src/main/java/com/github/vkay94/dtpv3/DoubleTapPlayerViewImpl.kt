@@ -44,7 +44,7 @@ open class DoubleTapPlayerViewImpl @JvmOverloads constructor(
     var isInstantSingleTap = false
 
     fun interface DoubleTapBeganListener {
-        fun onDoubleTapBegan(posX: Float)
+        fun onDoubleTapBegan(posX: Float, posY: Float)
     }
 
     var doubleTapBeganListener: DoubleTapBeganListener? = null
@@ -297,7 +297,7 @@ open class DoubleTapPlayerViewImpl @JvmOverloads constructor(
             if (DEBUG) Log.d(TAG, "onDoubleTap")
             if (!isDoubleTapping) {
                 if (rootView.isInstantSingleTap) {
-                    rootView.doubleTapBeganListener?.onDoubleTapBegan(e.x)
+                    rootView.doubleTapBeganListener?.onDoubleTapBegan(e.x, e.y)
                 }
                 isDoubleTapping = true
                 keepInDoubleTapMode()

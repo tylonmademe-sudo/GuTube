@@ -50,7 +50,7 @@ public final class AppIcon {
     private static final String[] ICONS = {DEFAULT, CLASSIC, FANTASY, GLASS_HEART, RUBY, PLAY, PLAY_DARK, BLAZE,
             RED_CRT, CHROME, PIXEL_PLAY, STARRY_NIGHT, VICE_CITY};
     // Per icon, in ICONS' order: launcher icon, brand-pill mark.
-    private static final int[] LAUNCHERS = {R.mipmap.app_icon, R.mipmap.app_icon_classic, R.mipmap.app_icon_fantasy,
+    private static final int[] LAUNCHERS = {R.mipmap.ic_launcher, R.mipmap.app_icon_classic, R.mipmap.app_icon_fantasy,
             R.mipmap.app_icon_glass_heart, R.mipmap.app_icon_ruby, R.mipmap.app_icon_play,
             R.mipmap.app_icon_play_dark, R.mipmap.app_icon_blaze, R.mipmap.app_icon_red_crt,
             R.mipmap.app_icon_chrome, R.mipmap.app_icon_pixel_play, R.mipmap.app_icon_starry_night,

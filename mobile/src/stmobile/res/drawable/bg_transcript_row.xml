@@ -14,7 +14,6 @@
             <item android:state_selected="true">
                 <shape android:shape="rectangle">
                     <solid android:color="@color/gutube_glass_fill" />
-                    <stroke android:width="0.5dp" android:color="@color/gutube_glass_stroke" />
                     <corners android:radius="14dp" />
                 </shape>
             </item>

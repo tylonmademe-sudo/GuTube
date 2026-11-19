@@ -266,29 +266,41 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
 
         private void bindThumbnail(Context context, Video video) {
             int thumbQuality = MainUIData.instance(context).getThumbQuality();
-            String thumbnailUrl = ClickbaitRemover.updateThumbnail(video, thumbQuality);
+            String thumbnailUrl;
+            if (video.altCardImageUrl != null) {
+                thumbnailUrl = video.altCardImageUrl;
+            } else if (thumbQuality != ClickbaitRemover.THUMB_QUALITY_DEFAULT) {
+                thumbnailUrl = ClickbaitRemover.updateThumbnail(video, thumbQuality);
+            } else if (video.bgImageUrl != null && !video.bgImageUrl.isEmpty()) {
+                thumbnailUrl = video.bgImageUrl;
+            } else if (video.videoId != null && !video.videoId.isEmpty()) {
+                thumbnailUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg";
+            } else {
+                thumbnailUrl = video.getCardImageUrl();
+            }
 
-            // NEWTUBE(net): downsampling happens on the DEVICE, so a 640px sddefault still crosses the
-            // wire in full before Glide throws most of it away. Ask the CDN for the row's actual size
-            // instead: 12 of these bind at once and the difference is ~1.3 MB vs ~300 KB per open.
-            thumbnailUrl = ClickbaitRemover.fitThumbnail(thumbnailUrl, relatedThumbWidthPx(context));
+            int w = relatedThumbWidthPx(context);
+            int h = Math.round(w * 9f / 16f);
 
-            // SCROLL-JANK FIX: opaque JPEG thumbs -> RGB_565 halves decode + GPU upload. The thumb view
-            // is fixed-dp-sized, so Glide already downsamples to it (no override needed). Only build the
-            // fallback request when its URL can actually differ from the primary (never at default quality).
             com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> request = Glide.with(context)
                     .load(thumbnailUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .override(w, h)
                     .centerCrop()
                     // Fade network loads in over the placeholder; cache hits skip the transition.
                     .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(150));
 
             String fallbackUrl = video.getCardImageUrl();
+            if (fallbackUrl == null && video.videoId != null) {
+                fallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
+            }
             if (fallbackUrl != null && !fallbackUrl.equals(thumbnailUrl)) {
                 request = request.error(Glide.with(context)
                         .load(fallbackUrl)
-                        .format(DecodeFormat.PREFER_RGB_565)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .override(w, h)
                         .centerCrop());
             }
 

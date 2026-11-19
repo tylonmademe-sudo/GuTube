@@ -86,7 +86,6 @@ public abstract class MobileActivity extends MotherActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        SpotlightDispatcher.dispatch(getWindow().peekDecorView(), event); // GUTUBE(spotlight): universal dynamic touch lighting
         Haptics.onTouch(getWindow().peekDecorView(), event); // GUTUBE(haptics): every tap clicks
         return super.dispatchTouchEvent(event);
     }

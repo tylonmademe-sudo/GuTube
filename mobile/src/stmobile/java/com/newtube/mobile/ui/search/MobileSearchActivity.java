@@ -213,13 +213,6 @@ public class MobileSearchActivity extends MobileActivity
         mBackButton = findViewById(R.id.mobile_search_back);
         mClearButton = findViewById(R.id.mobile_search_clear);
         mMicButton = findViewById(R.id.mobile_search_mic);
-        com.newtube.mobile.ui.common.Spotlight.attach(mBackButton);
-        com.newtube.mobile.ui.common.Spotlight.attach(mClearButton);
-        com.newtube.mobile.ui.common.Spotlight.attach(mMicButton);
-        View filtersBtn = findViewById(R.id.mobile_search_filters);
-        if (filtersBtn != null) {
-            com.newtube.mobile.ui.common.SpotlightHelper.attach(filtersBtn);
-        }
         mSuggestions = findViewById(R.id.mobile_search_suggestions);
         mGrid = findViewById(R.id.mobile_search_grid);
         setupNavPill(); // before the mini inset, which keeps the grid's bottom padding as its base
@@ -249,7 +242,6 @@ public class MobileSearchActivity extends MobileActivity
         }
         mNavPill = pill;
         com.newtube.mobile.ui.common.Glass.blur(pill, findViewById(R.id.mobile_search_glass_source));
-        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(pill);
         // The pill floats above the system bar already: the bar must not pad itself by it too.
         ViewCompat.setOnApplyWindowInsetsListener(bar, (v, insets) -> insets);
         int clearance = getResources().getDimensionPixelSize(R.dimen.gutube_nav_clearance);

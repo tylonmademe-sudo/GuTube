@@ -530,17 +530,6 @@ public class MobileChannelActivity extends MobileActivity
         mBackButton = findViewById(R.id.mobile_channel_back);
         mSwipe = findViewById(R.id.mobile_channel_swipe);
         mLoadState = new PageLoadState(findViewById(R.id.mobile_page_load_state), this::retryFirstPage);
-        com.newtube.mobile.ui.common.Spotlight.attach(mSubscribe);
-        com.newtube.mobile.ui.common.Spotlight.attach(mBell);
-        com.newtube.mobile.ui.common.Spotlight.attach(mBackButton);
-        View postsBtn = findViewById(R.id.mobile_channel_posts);
-        if (postsBtn != null) {
-            com.newtube.mobile.ui.common.Spotlight.attach(postsBtn);
-        }
-        View sortBtn = findViewById(R.id.mobile_channel_sort);
-        if (sortBtn != null) {
-            com.newtube.mobile.ui.common.Spotlight.attach(sortBtn);
-        }
     }
 
     private void setupGrid() {
@@ -792,7 +781,6 @@ public class MobileChannelActivity extends MobileActivity
             return;
         }
         Glass.blur(pill, findViewById(R.id.mobile_channel_glass_source));
-        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(pill);
         // The pill floats above the system bar already: the bar must not pad itself by it too.
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(bar, (v, insets) -> insets);
         int clearance = getResources().getDimensionPixelSize(R.dimen.gutube_nav_clearance);

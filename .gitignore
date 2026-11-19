@@ -28,7 +28,6 @@ Thumbs.db
 # Android Studio
 .idea
 *.iml
-.kotlin/
 
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
@@ -85,3 +84,6 @@ __pycache__/
 
 # EUTube TV: its own git repo (a SmartTube clone), never part of the phone app
 /eutubetv/
+
+# Kotlin compiler daemon/IDE cache
+.kotlin/

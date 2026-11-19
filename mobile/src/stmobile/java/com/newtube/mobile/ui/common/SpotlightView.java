@@ -48,7 +48,7 @@ public class SpotlightView extends FrameLayout {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SpotlightView);
         int color = a.getColor(R.styleable.SpotlightView_spotlightColor, 0xFFFFFFFF);
-        float intensity = a.getFloat(R.styleable.SpotlightView_spotlightIntensity, 1.0f);
+        float intensity = a.getFloat(R.styleable.SpotlightView_spotlightIntensity, 0.06f);
         float sizeDp = a.getDimension(R.styleable.SpotlightView_spotlightSize, 240f * density) / density;
         float softness = a.getFloat(R.styleable.SpotlightView_spotlightSoftness, 0.7f);
         float borderGlow = a.getFloat(R.styleable.SpotlightView_spotlightBorderGlow, 0.75f);
@@ -65,11 +65,11 @@ public class SpotlightView extends FrameLayout {
                 .setIntensity(intensity)
                 .setSizeDp(sizeDp)
                 .setSoftness(softness)
-                .setBorderGlow(borderGlow)
+                .setBorderGlow(0.0f)
                 .setSmoothing(smoothing)
                 .setFlare(flare)
                 .setAmbient(ambient)
-                .setDrawEdge(drawEdge);
+                .setDrawEdge(false);
 
         mTilt.setEnabled(mEnableTilt);
 
@@ -196,9 +196,5 @@ public class SpotlightView extends FrameLayout {
     @Override
     protected void dispatchDraw(@NonNull Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (mSpotlight.isVisible() && mSpotlight.isDrawEdge()) {
-            float r = Math.min(mCornerRadius, Math.min(getWidth(), getHeight()) / 2f);
-            mSpotlight.drawEdge(canvas, mBounds, r);
-        }
     }
 }

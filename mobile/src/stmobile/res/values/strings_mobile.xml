@@ -751,4 +751,29 @@
     <string name="mobile_shorts_clean_off">Buttons are back. Long press to hide them</string>
     <string name="mobile_shorts_clean_tip">Tip: long press a Short to hide its buttons</string>
     <string name="mobile_player_most_replayed">Most replayed</string>
+    <string name="mobile_you_welcome_back">Welcome back</string>
+    <string name="mobile_you_signin_now">Sign In Now</string>
+    <string name="mobile_you_switch_account">Switch account</string>
+    <string name="mobile_you_my_videos">My videos</string>
+    <string name="mobile_you_hyped">Hyped</string>
+    <string name="mobile_you_kids">Kids</string>
+    <string name="mobile_you_sports">Sports</string>
+    <string name="mobile_you_live">Live</string>
+    <string name="mobile_you_gaming">Gaming</string>
+    <string name="mobile_you_news">News</string>
+    <string name="mobile_you_music">Music</string>
+    <string name="mobile_you_phrase_sync">Sign in to sync your library</string>
+    <string name="mobile_you_phrase_playlists">Access playlists &amp; downloads</string>
+    <string name="mobile_you_phrase_history">Keep track of your history</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="mobile_shorts_sub_added">Subscription added</string>
+    <string name="mobile_shorts_sub_removed">Subscription removed</string>
+    <string name="mobile_shorts_unsubscribe_prompt">Unsubscribe from %1$s?</string>
+    <string name="mobile_shorts_unsubscribe_body">You will no longer receive notifications from this channel and will need to resubscribe to see updates.</string>
+
+    <!-- App launcher shortcuts -->
+    <string name="shortcut_search">Search</string>
+    <string name="shortcut_shorts">Shorts</string>
+    <string name="shortcut_subscriptions">Subscriptions</string>
+    <string name="shortcut_history">History</string>
 </resources>

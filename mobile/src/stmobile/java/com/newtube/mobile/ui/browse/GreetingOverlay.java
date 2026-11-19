@@ -52,21 +52,47 @@ final class GreetingOverlay {
     GreetingOverlay(ComponentActivity activity) {
         mActivity = activity;
         mOverlay = activity.findViewById(R.id.mobile_greet_overlay);
+        if (mOverlay instanceof com.newtube.mobile.ui.common.GlassView) {
+            ((com.newtube.mobile.ui.common.GlassView) mOverlay).setLiquid(false);
+        }
         mContent = activity.findViewById(R.id.mobile_greet_content);
         mTitle = activity.findViewById(R.id.mobile_greet_title);
         mLine = activity.findViewById(R.id.mobile_greet_line);
+        if (mOverlay instanceof ViewGroup) {
+            ((ViewGroup) mOverlay).setClipChildren(false);
+            ((ViewGroup) mOverlay).setClipToPadding(false);
+        }
         mOverlay.setOnClickListener(v -> hide());
 
+        View scroll = activity.findViewById(R.id.mobile_greet_scroll);
+        if (scroll instanceof ViewGroup) {
+            ((ViewGroup) scroll).setClipChildren(false);
+            ((ViewGroup) scroll).setClipToPadding(false);
+        }
+        if (scroll != null) {
+            scroll.setOnClickListener(v -> hide());
+        }
+        View scrollInner = activity.findViewById(R.id.mobile_greet_scroll_inner);
+        if (scrollInner instanceof ViewGroup) {
+            ((ViewGroup) scrollInner).setClipChildren(false);
+            ((ViewGroup) scrollInner).setClipToPadding(false);
+        }
+        if (scrollInner != null) {
+            scrollInner.setOnClickListener(v -> hide());
+        }
+
         ViewGroup content = (ViewGroup) mContent;
+        if (content != null) {
+            content.setClipChildren(false);
+            content.setClipToPadding(false);
+        }
         mStats = LayoutInflater.from(activity).inflate(R.layout.item_mobile_greet_stats, content, false);
         content.addView(mStats);
         frost(mStats);
-        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(mStats);
 
         mFocus = LayoutInflater.from(activity).inflate(R.layout.item_mobile_greet_focus, content, false);
         content.addView(mFocus);
         frost(mFocus);
-        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(mFocus);
         mFocus.findViewById(R.id.focus_label).setOnClickListener(v -> {
             if (FocusTimer.remainingMs() < 0) { // running: the countdown is not a picker
                 com.newtube.mobile.ui.common.Haptics.tick(v);
@@ -95,8 +121,6 @@ final class GreetingOverlay {
         });
         addOption(content, R.drawable.ic_mobile_settings, R.string.header_settings,
                 () -> open(null));
-        addOption(content, R.drawable.ic_settings_customize, R.string.mobile_settings_customize,
-                () -> open(SettingsPages.CUSTOMIZE));
         addOption(content, R.drawable.ic_mobile_update, R.string.check_for_updates, () -> {
             if (AppUpdatePresenter.isInAppUpdatesDisabled()) {
                 open(SettingsPages.ABOUT); // store build: no updater, the version lives in About
@@ -112,7 +136,6 @@ final class GreetingOverlay {
         text.setText(label);
         text.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
         frost(option);
-        com.newtube.mobile.ui.common.SpotlightHelper.attachCard(option);
         option.setOnClickListener(v -> {
             hide();
             action.run();
@@ -137,6 +160,11 @@ final class GreetingOverlay {
         bindStats();
         bindFocus();
 
+        StarfieldView starfield = mStats.findViewById(R.id.starfieldCanvas);
+        if (starfield != null) {
+            starfield.start();
+        }
+
         mBack.remove(); // re-added last, so it is the callback Back reaches first
         mActivity.getOnBackPressedDispatcher().addCallback(mBack);
 
@@ -155,6 +183,10 @@ final class GreetingOverlay {
     private void hide() {
         mBack.remove();
         mFocus.removeCallbacks(mFocusTick);
+        StarfieldView starfield = mStats.findViewById(R.id.starfieldCanvas);
+        if (starfield != null) {
+            starfield.stop();
+        }
         if (mOverlay.getVisibility() != View.VISIBLE) {
             return;
         }
@@ -245,20 +277,21 @@ final class GreetingOverlay {
         ViewGroup labels = mStats.findViewById(R.id.stats_days);
         bars.removeAllViews();
         labels.removeAllViews();
+        int barWidth = Math.round(22 * dp);
         for (int i = 6; i >= 0; i--) {
             // The bar fills a full-height, clickable column, so a short bar is as easy to tap as a tall one.
             android.widget.FrameLayout column = new android.widget.FrameLayout(context);
             View bar = new View(context);
-            android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
-            shape.setCornerRadius(6 * dp);
-            shape.setColor(accent);
-            bar.setBackground(shape);
-            column.addView(bar, new android.widget.FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    Math.max(Math.round(4 * dp), Math.round(72 * dp * days[i] / max)), android.view.Gravity.BOTTOM));
+            bar.setBackgroundResource(i == 0 ? R.drawable.bg_greet_bar_active : R.drawable.bg_greet_bar_inactive);
+            int barHeight = Math.max(Math.round(4 * dp), Math.round(72 * dp * days[i] / max));
+            android.widget.FrameLayout.LayoutParams barLp = new android.widget.FrameLayout.LayoutParams(
+                    barWidth, barHeight, android.view.Gravity.BOTTOM | android.view.Gravity.CENTER_HORIZONTAL);
+            column.addView(bar, barLp);
+
             android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(0,
                     ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-            lp.setMarginStart(Math.round(4 * dp));
-            lp.setMarginEnd(Math.round(4 * dp));
+            lp.setMarginStart(Math.round(2 * dp));
+            lp.setMarginEnd(Math.round(2 * dp));
             int daysAgo = i;
             column.setOnClickListener(v -> {
                 com.newtube.mobile.ui.common.Haptics.tick(v);
@@ -269,7 +302,11 @@ final class GreetingOverlay {
             TextView label = new TextView(context);
             label.setText(UsageStats.weekday(i));
             label.setGravity(android.view.Gravity.CENTER);
-            label.setTextSize(11);
+            label.setTextSize(12);
+            label.setTextColor(i == 0 ? 0xFFFFFFFF : 0x99FFFFFF);
+            if (i == 0) {
+                label.setTypeface(label.getTypeface(), android.graphics.Typeface.BOLD);
+            }
             labels.addView(label, new android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         }
         selectDay(-1);
@@ -281,12 +318,19 @@ final class GreetingOverlay {
         ViewGroup bars = mStats.findViewById(R.id.stats_bars);
         ViewGroup labels = mStats.findViewById(R.id.stats_days);
         int lit = daysAgo < 0 ? 0 : daysAgo; // no pick: today's bar stands out
+        float dp = context.getResources().getDisplayMetrics().density;
         for (int k = 0; k < bars.getChildCount(); k++) {
             boolean on = 6 - k == lit; // bars run oldest (6 days ago) to today
             View bar = ((ViewGroup) bars.getChildAt(k)).getChildAt(0);
-            bar.animate().alpha(on ? 1f : 0.4f).setDuration(Motion.ENTER_MS).start();
-            ((TextView) labels.getChildAt(k)).setTextColor(androidx.core.content.ContextCompat.getColor(context,
-                    on ? R.color.mobile_color_on_surface : R.color.mobile_color_on_surface_secondary));
+            bar.setBackgroundResource(on ? R.drawable.bg_greet_bar_active : R.drawable.bg_greet_bar_inactive);
+            bar.animate().alpha(on ? 1f : 0.85f).setDuration(Motion.ENTER_MS).start();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                bar.setElevation(on ? 6 * dp : 0f);
+                bar.setOutlineSpotShadowColor(0x99EA382B);
+            }
+            TextView label = (TextView) labels.getChildAt(k);
+            label.setTextColor(on ? 0xFFFFFFFF : 0x99FFFFFF);
+            label.setTypeface(label.getTypeface(), on ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
         }
         TextView footer = mStats.findViewById(R.id.stats_footer);
         if (daysAgo < 0) {
@@ -308,17 +352,22 @@ final class GreetingOverlay {
         column.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
         TextView big = new TextView(mActivity);
         big.setText(value);
-        big.setTextSize(20);
+        big.setTextSize(21);
         big.setTypeface(big.getTypeface(), android.graphics.Typeface.BOLD);
-        big.setTextColor(androidx.core.content.ContextCompat.getColor(mActivity, R.color.mobile_color_on_surface));
+        big.setTextColor(0xFFFFFFFF);
+        big.setIncludeFontPadding(false);
         TextView small = new TextView(mActivity);
         small.setText(label);
         small.setTextSize(12);
-        small.setTextColor(androidx.core.content.ContextCompat.getColor(mActivity, R.color.mobile_color_on_surface_secondary));
+        small.setTextColor(0x99FFFFFF);
+        small.setIncludeFontPadding(false);
+        android.widget.LinearLayout.LayoutParams lpSmall = new android.widget.LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lpSmall.topMargin = Math.round(2 * mActivity.getResources().getDisplayMetrics().density);
         big.setGravity(android.view.Gravity.CENTER); // a column's children fill its width: centre the text
         small.setGravity(android.view.Gravity.CENTER);
         column.addView(big);
-        column.addView(small);
+        column.addView(small, lpSmall);
         row.addView(column, new android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
     }
 

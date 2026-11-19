@@ -173,6 +173,12 @@ android {
         // its inclusion policy forbids self-updates that aren't an explicit opt-in.
         buildConfigField "boolean", "IN_APP_UPDATES", project.hasProperty('fdroid') ? "false" : "true"
 
+        // Strips unused localized strings from third-party libraries (e.g. Material/AndroidX)
+        resourceConfigurations += ['en', 'ar', 'az', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'es', 'et', 'fa-rIR',
+                'fi', 'fr', 'gl-rES', 'he', 'hi', 'hr', 'hu', 'hy', 'in', 'it', 'iw', 'ja', 'ko', 'lt',
+                'lv', 'mo', 'nb', 'nl', 'pl', 'pt', 'pt-rBR', 'pt-rPT', 'ro', 'ru', 'sk', 'sl', 'sq',
+                'sr', 'sv', 'te', 'th', 'tr', 'uk', 'vi', 'zh', 'zh-rCN', 'zh-rTW']
+
         // The content of Universal apk
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
@@ -266,8 +272,9 @@ android {
         // Optional, generated synthetic input for explicitly opted-in link comparisons.
         // Generate with tools/generate-sabr-comparison-fixtures.sh; never part of the app APK.
         androidTest.assets.srcDir layout.buildDirectory.dir('generated/sabrComparisonAssets').get().asFile
-        // Reuse the generated offline media fixture only in the benchmark APK, never release.
-        benchmark.assets.srcDir 'src/debug/assets'
+        androidTest.assets.srcDir 'src/benchmark/assets'
+        // Reuse the generated offline media fixture only in the benchmark APK, never normal app APK.
+        benchmark.assets.srcDir 'src/benchmark/assets'
     }
 
     packagingOptions {
@@ -275,6 +282,21 @@ android {
         // raw: J2V8 alone is 32 MB raw and 9 MB compressed, so the arm64 APK drops from 62 MB to ~33.
         jniLibs {
             useLegacyPackaging = true
+        }
+        resources {
+            excludes += [
+                'META-INF/*.version',
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/license.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/notice.txt',
+                'META-INF/ASL2.0',
+                'META-INF/*.kotlin_module',
+                'DebugProbesKt.bin'
+            ]
         }
     }
 
@@ -400,6 +422,9 @@ dependencies {
     // Touch UI (stmobile flavor): spring physics for the magnetic drags (ui/common/MagneticDrag).
     // Material already brings this exact version in; named here because we call it directly.
     implementation 'androidx.dynamicanimation:dynamicanimation:1.1.0'
+
+    // Lottie animation engine for fluid like animations in Shorts
+    implementation 'com.airbnb.android:lottie:' + lottieVersion
 
     implementation 'com.github.bumptech.glide:glide:' + glideVersion
     implementation 'com.github.bumptech.glide:annotations:' + glideVersion

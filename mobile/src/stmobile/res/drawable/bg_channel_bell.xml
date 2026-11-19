@@ -6,7 +6,6 @@
         <item>
             <shape android:shape="oval">
                 <solid android:color="@color/gutube_glass_fill" />
-                <stroke android:width="0.5dp" android:color="@color/gutube_glass_stroke" />
             </shape>
         </item>
     </ripple>

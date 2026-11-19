@@ -84,17 +84,12 @@ public final class SettingsPages {
             case GENERAL:
                 return AppPages.general(context);
             case CUSTOMIZE:
-                return AppPages.customize(context);
             case CUSTOMIZE_THEME:
-                return AppPages.customizeTheme(context);
             case CUSTOMIZE_LISTS:
-                return AppPages.customizeLists(context);
             case CUSTOMIZE_PLAYER:
-                return AppPages.customizePlayer(context);
             case CUSTOMIZE_BARS:
-                return AppPages.customizeBars(context);
             case CUSTOMIZE_EFFECTS:
-                return AppPages.customizeEffects(context);
+                return root(context);
             case FEEDS:
                 return AppPages.feeds(context);
             case FEEDS_TABS:
@@ -152,9 +147,6 @@ public final class SettingsPages {
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_app)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_general, context.getString(R.string.mobile_settings_general),
                 context.getString(R.string.mobile_settings_general_summary), GENERAL));
-        rows.add(SettingsRow.page(R.drawable.ic_settings_customize, context.getString(R.string.mobile_settings_customize),
-                context.getString(R.string.mobile_settings_customize_summary), CUSTOMIZE)
-                .summary(() -> customizeSummary(context)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_feeds, context.getString(R.string.mobile_settings_feeds),
                 context.getString(R.string.mobile_settings_feeds_summary), FEEDS));
         rows.add(SettingsRow.page(R.drawable.ic_settings_privacy, context.getString(R.string.mobile_settings_privacy),
@@ -213,14 +205,6 @@ public final class SettingsPages {
                 .bind(() -> BatterySaver.mode(context), mode -> BatterySaver.setMode(context, mode)));
         rows.add(SettingsRow.note(context.getString(R.string.mobile_settings_battery_note)));
         return new Page(context.getString(R.string.mobile_settings_battery), rows);
-    }
-
-    /** "Dark theme, tabs, ...": the theme is what people open Customization for most. */
-    private static CharSequence customizeSummary(Context context) {
-        int theme = ThemeMode.get();
-        String themeLabel = context.getString(theme == ThemeMode.LIGHT ? R.string.mobile_settings_theme_light_short
-                : theme == ThemeMode.DARK ? R.string.mobile_settings_theme_dark_short : R.string.mobile_settings_theme_system_short);
-        return context.getString(R.string.mobile_settings_customize_summary_value, themeLabel);
     }
 
     private static String versionLine(Context context) {

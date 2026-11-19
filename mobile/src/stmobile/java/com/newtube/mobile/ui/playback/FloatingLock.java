@@ -16,8 +16,8 @@ import android.view.ViewConfiguration;
 final class FloatingLock {
     private static final String KEY_X = "lock_x";
     private static final String KEY_Y = "lock_y";
-    private static final float DEFAULT_X = 0f; // the left edge, halfway down, until moved
-    private static final float DEFAULT_Y = 0.5f;
+    private static final float DEFAULT_X = 0f; // the left edge, below top bar, until moved
+    private static final float DEFAULT_Y = 0.18f;
     private static final float STEP = 0.05f;
 
     private final SharedPreferences mPrefs;

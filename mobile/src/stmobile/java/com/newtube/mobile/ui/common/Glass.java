@@ -23,14 +23,13 @@ public final class Glass {
         context.getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE).edit().putBoolean(KEY_LIQUID, on).apply();
     }
 
-    /** The Spotlight effect setting: interactive radial illumination following finger touch. */
+    /** The Spotlight effect setting: disabled across whole app. */
     public static boolean isSpotlight(android.content.Context context) {
-        return !BatterySaver.lite()
-                && context.getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE).getBoolean(KEY_SPOTLIGHT, true);
+        return false;
     }
 
     public static void setSpotlight(android.content.Context context, boolean on) {
-        context.getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE).edit().putBoolean(KEY_SPOTLIGHT, on).apply();
+        context.getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE).edit().putBoolean(KEY_SPOTLIGHT, false).apply();
     }
 
     /** The Player buttons setting's three looks for the controls over a video (and a short's). */

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- GUTUBE(shorts): the scrub thumb; ShortsOverlay shows it only while a finger holds the line. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <size
-        android:width="14dp"
-        android:height="14dp" />
-    <solid android:color="@android:color/white" />
-</shape>
+<!-- YouTube Shorts scrubber thumb: red glowing indicator with white ring halo -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <size
+                android:width="12dp"
+                android:height="12dp" />
+            <solid android:color="#EF4444" />
+            <stroke
+                android:width="2dp"
+                android:color="#99FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

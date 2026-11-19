@@ -47,7 +47,7 @@ public final class SheetGlass {
     /** The copy is this many times smaller than the page; scaling it back up adds to the blur. */
     private static final int SCALE = 8;
     private static final int BLUR_RADIUS = 3;
-    private static final float CORNER_DP = 22f;
+    private static final float CORNER_DP = 28f;
     /** A live sheet's copies: about the frame rate of most videos. */
     private static final long LIVE_FRAME_MS = 33;
     /**
@@ -222,9 +222,9 @@ public final class SheetGlass {
     }
 
     /**
-     * The frosted edge, over everything the sheet holds: a hairline rim lit along the rounded corners
-     * and a faint sheen fading down from the top. An overlay, not a foreground, so the frame's
-     * padding for the system bars does not inset it from the glass.
+     * Glassmorphism specular rim and top sheen over the sheet:
+     * - Top sheen fading down (rgba(255, 255, 255, 0.15))
+     * - Hairline stroke rim (inset 0px 0px 4px 2px rgba(255, 255, 255, 0.21))
      */
     private static void rim(@NonNull View cover, float cornerPx, boolean sheenToo) {
         if (cover.getTag(R.id.mobile_sheet_rim) != null) {
@@ -234,17 +234,16 @@ public final class SheetGlass {
         float density = context.getResources().getDisplayMetrics().density;
         android.graphics.drawable.GradientDrawable sheen = new android.graphics.drawable.GradientDrawable(
                 android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {ContextCompat.getColor(context, R.color.gutube_glass_sheen), 0});
+                new int[] {ContextCompat.getColor(context, R.color.gutube_glass_sheen), 0x00FFFFFF});
         sheen.setCornerRadii(new float[] {cornerPx, cornerPx, cornerPx, cornerPx, 0, 0, 0, 0});
         android.graphics.drawable.GradientDrawable line = new android.graphics.drawable.GradientDrawable();
         line.setCornerRadius(cornerPx);
-        // the message pill: the player pills' white hairline (GlassDrawable), dark in both themes
         int lineColor = ContextCompat.getColor(context, sheenToo ? R.color.gutube_glass_rim : R.color.gutube_toast_rim);
-        line.setStroke(Math.max(1, Math.round(density)), lineColor);
+        line.setStroke(Math.max(1, Math.round(1.2f * density)), lineColor);
         android.graphics.drawable.LayerDrawable rim = new android.graphics.drawable.LayerDrawable(
                 sheenToo ? new Drawable[] {sheen, line} : new Drawable[] {line});
         if (sheenToo) {
-            rim.setLayerHeight(0, Math.round(72 * density));
+            rim.setLayerHeight(0, Math.round(64 * density));
             rim.setLayerGravity(0, android.view.Gravity.TOP | android.view.Gravity.FILL_HORIZONTAL);
         }
         rim.setBounds(0, 0, cover.getWidth(), cover.getHeight());
@@ -410,6 +409,7 @@ public final class SheetGlass {
         private float mScaleY;
         private final Paint mPage = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         private final Paint mTint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint mRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private BitmapShader mShader;
         private final Matrix mMatrix = new Matrix();
         private final RectF mRect = new RectF();
@@ -433,9 +433,13 @@ public final class SheetGlass {
                 mBlurNode = null;
             }
             ColorMatrix saturate = new ColorMatrix();
-            saturate.setSaturation(1.4f);
+            saturate.setSaturation(1.8f);
             mPage.setColorFilter(new ColorMatrixColorFilter(saturate));
             mTint.setColor(tint != 0 ? tint : ContextCompat.getColor(target.getContext(), R.color.gutube_sheet_glass));
+            float density = target.getContext().getResources().getDisplayMetrics().density;
+            mRimPaint.setStyle(Paint.Style.STROKE);
+            mRimPaint.setStrokeWidth(1.2f * density);
+            mRimPaint.setColor(ContextCompat.getColor(target.getContext(), R.color.gutube_glass_rim));
             mCorner = corner;
             // A drag moves the sheet without redrawing it: redraw so the page stays put underneath.
             target.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -504,6 +508,10 @@ public final class SheetGlass {
                 canvas.drawRoundRect(mRect, mCorner, mCorner, mPage);
             }
             canvas.drawRoundRect(mRect, mCorner, mCorner, mTint);
+            if (mCorner > 0) {
+                // Glassmorphism specular rim highlight (inset 0px 0px 4px 2px rgba(255, 255, 255, 0.21))
+                canvas.drawRoundRect(mRect, mCorner, mCorner, mRimPaint);
+            }
         }
 
         @Override

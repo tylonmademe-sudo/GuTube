@@ -217,13 +217,15 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
         android:layout_marginBottom="?attr/gutubeNavBottomMargin"
-        android:elevation="6dp"
+        android:elevation="16dp"
         android:padding="6dp"
         android:visibility="gone"
         app:glassCornerRadius="?attr/gutubeNavCorner"
         app:glassMaxWidth="?attr/gutubeNavMaxWidth"
         app:glassLiquid="?attr/gutubeNavLiquid"
-        app:glassTint="?attr/gutubeNavTint">
+        app:glassTint="?attr/gutubeNavTint"
+        app:glassStrokeColor="?attr/gutubeNavStrokeColor"
+        app:glassStrokeWidth="?attr/gutubeNavStrokeWidth">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mobile_bottom_nav"

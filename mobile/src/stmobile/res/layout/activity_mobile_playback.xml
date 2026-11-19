@@ -113,148 +113,136 @@
                     android:layout_gravity="bottom"
                     android:background="@drawable/mobile_player_bottom_scrim" />
 
-                <!-- Top bar: back + title -->
-                <ImageButton
-                    android:id="@+id/mobile_player_back"
-                    android:layout_width="@dimen/mobile_player_icon_button"
-                    android:layout_height="@dimen/mobile_player_icon_button"
-                    android:layout_gravity="top|start"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="10dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_player_minimize"
-                    android:padding="12dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_player_minimize"
-                    android:tint="@color/mobile_player_on_video" />
-
-                <!-- GUTUBE(audio-only): headphones - play the sound alone (the video track is dropped,
-                     the thumbnail stays), and Home keeps the audio going instead of a PiP window. -->
-                <com.newtube.mobile.ui.playback.PlayerButton
-                    android:id="@+id/mobile_player_audio"
-                    android:layout_width="@dimen/mobile_player_icon_button"
-                    android:layout_height="@dimen/mobile_player_icon_button"
-                    android:layout_gravity="top|start"
-                    android:layout_marginStart="52dp"
-                    android:layout_marginTop="10dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_player_audio_only"
-                    android:padding="12dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_player_headphones"
-                    android:tint="@color/mobile_player_audio_tint" />
-
-                <!-- paddingEnd must clear the full top-right options row (mobile_player_options):
-                     3 icon buttons * 48dp (no end margin) = 144dp. Otherwise the wrapped
-                     title runs under the leftmost option (cast) icon. -->
-                <!-- GUTUBE(fullscreen): the title, and in the vertical fullscreen the channel under it
-                     (placeTitle moves them below the top row there, YouTube's). -->
+                <!-- Top bar: back, audio mode, title + channel subtitle, and options (cast, cc, more) -->
                 <LinearLayout
+                    android:id="@+id/mobile_player_top_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:orientation="vertical">
-
-                <!-- GUTUBE(issue #165): in landscape, centred on the top row's 48dp buttons; margins,
-                     not padding, so the tappable title (issue #164: it opens the description)
-                     never covers the buttons beside it. -->
-                <TextView
-                    android:id="@+id/mobile_player_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="104dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="148dp"
-                    android:background="@drawable/bg_mobile_menu_row"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical|start"
-                    android:maxLines="2"
-                    android:minHeight="48dp"
-                    android:shadowColor="#80000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:text="Video title goes here and may wrap onto a second line" />
-
-                <TextView
-                    android:id="@+id/mobile_player_author"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingStart="16dp"
-                    android:paddingTop="2dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="12dp"
-                    android:shadowColor="#80000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:textColor="#CCFFFFFF"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    tools:text="Channel name" />
-
-                </LinearLayout>
-
-                <!-- Top-right player options, YouTube-style trio: Cast, Subtitles/CC, and the
-                     gear. Everything else (quality, speed, PiP, the long tail) lives one level
-                     down in the gear's bottom sheet (openPlayerMenu). -->
-                <LinearLayout
-                    android:id="@+id/mobile_player_options"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
 
-                    <!-- Cast picker (casting wave): lists DIAL-discovered TVs + paired screens.
-                         Route B only for now; see com.newtube.mobile.casting. -->
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_cast"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_cast_button"
-                        android:padding="12dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_mobile_cast"
-                        android:tint="@color/mobile_player_on_video" />
-
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_subtitles"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_subtitles"
-                        android:padding="12dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_player_cc_off" />
-
-                    <!-- Gear: opens the player-options bottom sheet (quality / speed / PiP up
-                         top, then repeat/shuffle/zoom/background/stats/rotate-lock/playlist/
-                         queue), each dispatched through PlaybackPresenter.onButtonClicked /
-                         onButtonLongClicked. -->
                     <ImageButton
-                        android:id="@+id/mobile_player_more"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_settings"
-                        android:padding="12dp"
+                        android:id="@+id/mobile_player_back"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_player_glass_circle"
+                        android:contentDescription="@string/mobile_player_minimize"
+                        android:padding="10dp"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_mobile_settings"
+                        android:src="@drawable/ic_player_minimize"
                         android:tint="@color/mobile_player_on_video" />
+
+                    <!-- GUTUBE(audio-only): headphones - play the sound alone (the video track is dropped,
+                         the thumbnail stays), and Home keeps the audio going instead of a PiP window. -->
+                    <com.newtube.mobile.ui.playback.PlayerButton
+                        android:id="@+id/mobile_player_audio"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_player_glass_circle"
+                        android:contentDescription="@string/mobile_player_audio_only"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_player_headphones"
+                        android:tint="@color/mobile_player_audio_tint" />
+
+                    <LinearLayout
+                        android:id="@+id/mobile_player_title_group"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/mobile_player_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|start"
+                            android:maxLines="1"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
+                            android:shadowRadius="3"
+                            android:textColor="@android:color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="Video title goes here and may wrap onto a second line" />
+
+                        <TextView
+                            android:id="@+id/mobile_player_author"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:paddingTop="1dp"
+                            android:shadowColor="#80000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
+                            android:shadowRadius="3"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="11sp"
+                            android:visibility="gone"
+                            tools:text="Channel name" />
+
+                    </LinearLayout>
+
+                    <!-- Top-right player options, YouTube-style trio: Cast, Subtitles/CC, and the gear. -->
+                    <LinearLayout
+                        android:id="@+id/mobile_player_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Cast picker (casting wave): lists DIAL-discovered TVs + paired screens. -->
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_cast"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_player_glass_circle"
+                            android:contentDescription="@string/mobile_cast_button"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_mobile_cast"
+                            android:tint="@color/mobile_player_on_video" />
+
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_subtitles"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_player_glass_circle"
+                            android:contentDescription="@string/mobile_player_subtitles"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_player_cc_off" />
+
+                        <!-- Gear: opens the player-options bottom sheet -->
+                        <ImageButton
+                            android:id="@+id/mobile_player_more"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_player_glass_circle"
+                            android:contentDescription="@string/mobile_player_settings"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_mobile_settings"
+                            android:tint="@color/mobile_player_on_video" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- Center transport: previous / play-pause-replay / next.
-                     Previous & next dispatch PlaybackPresenter.onPreviousClicked / onNextClicked
-                     (manual skip; auto-advance already works via the controllers). -->
+                <!-- Center transport: previous / play-pause-replay / next. -->
                 <LinearLayout
                     android:id="@+id/mobile_player_transport"
                     android:layout_width="wrap_content"
@@ -265,42 +253,40 @@
 
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_previous"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:layout_marginEnd="20dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="28dp"
+                        android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_previous"
-                        android:padding="12dp"
+                        android:padding="11dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_previous" />
 
                     <!-- Large center play / pause / replay -->
                     <ImageButton
                         android:id="@+id/mobile_player_play_pause"
-                        android:layout_width="@dimen/mobile_player_center_button"
-                        android:layout_height="@dimen/mobile_player_center_button"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_pause"
+                        android:padding="16dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_pause" />
 
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_next"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:layout_marginStart="20dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="28dp"
+                        android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_next"
-                        android:padding="12dp"
+                        android:padding="11dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_next" />
 
                 </LinearLayout>
 
-                <!-- NEWTUBE(seek bar): the bottom row sits on the seek bar (PlayerTimeBar, outside this
-                     overlay, so that it can stay on the video's edge as a line while the controls
-                     are hidden): the time, the current chapter (YouTube's "· Title >"; tap = the
-                     Chapters list; gone without chapters) and fullscreen. Its bottom margin clears
-                     the bar's touch band (applyControlsInsets adds the fullscreen lift). -->
+                <!-- NEWTUBE(seek bar): the bottom row sits on the seek bar: time and chapter -->
                 <LinearLayout
                     android:id="@+id/mobile_player_bottom_row"
                     android:layout_width="match_parent"
@@ -310,7 +296,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="8dp"
-                    android:paddingEnd="4dp">
+                    android:paddingEnd="8dp">
 
                     <!-- GUTUBE(glass): position / duration on one glass pill. -->
                     <LinearLayout
@@ -322,32 +308,32 @@
                         android:paddingHorizontal="9dp"
                         android:paddingVertical="4dp">
 
-                    <TextView
-                        android:id="@+id/mobile_player_position"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFeatureSettings="tnum"
-                        android:shadowColor="#80000000"
-                        android:shadowRadius="3"
-                        android:text="@string/mobile_player_time_default"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/mobile_player_position"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFeatureSettings="tnum"
+                            android:shadowColor="#80000000"
+                            android:shadowRadius="3"
+                            android:text="@string/mobile_player_time_default"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/mobile_player_duration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFeatureSettings="tnum"
-                        android:shadowColor="#80000000"
-                        android:shadowRadius="3"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        tools:text=" / 4:26:52" />
+                        <TextView
+                            android:id="@+id/mobile_player_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFeatureSettings="tnum"
+                            android:shadowColor="#80000000"
+                            android:shadowRadius="3"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="12sp"
+                            tools:text=" / 4:26:52" />
 
                     </LinearLayout>
 
-                    <!-- Live streams only (toggled from onProgressTick): red at the live edge,
-                         dimmed while rewound into the DVR window; tap = jump back to the edge. -->
+                    <!-- Live streams only (toggled from onProgressTick): red at the live edge -->
                     <TextView
                         android:id="@+id/mobile_player_live"
                         android:layout_width="wrap_content"
@@ -392,132 +378,175 @@
 
                     </FrameLayout>
 
-                    <!-- GUTUBE(fullscreen-actions): fullscreen only - hides (chevron down) or brings
-                         back (chevron up) the row of actions under the seek bar. -->
-                    <ImageButton
-                        android:id="@+id/mobile_player_actions_toggle"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_hide_actions"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_chips_expand"
-                        android:visibility="gone" />
-
-                    <ImageButton
-                        android:id="@+id/mobile_player_fullscreen"
-                        android:layout_width="@dimen/mobile_player_icon_button"
-                        android:layout_height="@dimen/mobile_player_icon_button"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_fullscreen"
-                        android:padding="12dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_player_fullscreen" />
-
                 </LinearLayout>
 
-                <!-- GUTUBE(fullscreen-actions): the watch page's actions, small, on one glass pill
-                     under the seek bar in fullscreen (YouTube's, with Download for Save). Each one
-                     taps its watch-page twin; applySeekBarLayout places the row and lifts the bar. -->
+                <!-- Action toolbar (Left Group): Segmented Like/Dislike pill + Comment + Download + Share -->
                 <LinearLayout
                     android:id="@+id/mobile_player_actions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
                     android:layout_marginStart="8dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="4dp"
                     android:visibility="gone">
 
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_like"
-                        style="@style/MobilePlayerAction"
-                        android:contentDescription="@string/mobile_watch_like"
-                        android:src="@drawable/ic_watch_thumb_up_outline" />
-
-                    <!-- GUTUBE(issue #230): the watch page's count, beside its button. -->
-                    <TextView
-                        android:id="@+id/mobile_player_like_count"
+                    <!-- Segmented Like / Dislike Liquid Glass Capsule -->
+                    <LinearLayout
+                        android:id="@+id/mobile_player_like_dislike_pill"
                         android:layout_width="wrap_content"
-                        android:layout_height="38dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_player_segmented_capsule"
                         android:gravity="center_vertical"
-                        android:paddingEnd="8dp"
-                        android:textColor="@color/mobile_player_on_video"
-                        android:textSize="13sp"
-                        android:visibility="gone" />
+                        android:orientation="horizontal">
 
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_dislike"
-                        style="@style/MobilePlayerAction"
-                        android:contentDescription="@string/mobile_watch_dislike"
-                        android:src="@drawable/ic_watch_thumb_down_outline" />
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_like"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/mobile_watch_like"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="4dp"
+                            android:paddingVertical="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_watch_thumb_up_outline"
+                            android:tint="@color/mobile_player_on_video" />
 
-                    <!-- GUTUBE(issue #230): the watch page's count, beside its button. -->
-                    <TextView
-                        android:id="@+id/mobile_player_dislike_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:gravity="center_vertical"
-                        android:paddingEnd="8dp"
-                        android:textColor="@color/mobile_player_on_video"
-                        android:textSize="13sp"
-                        android:visibility="gone" />
+                        <TextView
+                            android:id="@+id/mobile_player_like_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:paddingEnd="10dp"
+                            android:textColor="@android:color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
 
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="14dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="#33FFFFFF" />
+
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_dislike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/mobile_watch_dislike"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="12dp"
+                            android:paddingVertical="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_watch_thumb_down_outline"
+                            android:tint="@color/mobile_player_on_video" />
+
+                        <TextView
+                            android:id="@+id/mobile_player_dislike_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:paddingEnd="10dp"
+                            android:textColor="@android:color/white"
+                            android:textSize="11sp"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <!-- Comments Button -->
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_comments"
                         style="@style/MobilePlayerAction"
+                        android:layout_marginStart="8dp"
                         android:contentDescription="@string/mobile_comments_entry"
                         android:src="@drawable/ic_watch_comment" />
 
-                    <!-- GUTUBE(live chat, issue #32): a live stream's chat, from fullscreen too. -->
+                    <!-- Live Chat Button -->
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_chat"
                         style="@style/MobilePlayerAction"
+                        android:layout_marginStart="8dp"
                         android:contentDescription="@string/mobile_live_chat_entry"
                         android:src="@drawable/ic_watch_chat"
                         android:visibility="gone" />
 
+                    <!-- Download Button -->
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_download"
                         style="@style/MobilePlayerAction"
+                        android:layout_marginStart="8dp"
                         android:contentDescription="@string/dialog_download"
                         android:src="@drawable/ic_watch_download" />
 
+                    <!-- Share Button -->
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_share"
                         style="@style/MobilePlayerAction"
+                        android:layout_marginStart="8dp"
                         android:contentDescription="@string/mobile_watch_share"
                         android:src="@drawable/ic_watch_share" />
 
                 </LinearLayout>
 
-                <!-- GUTUBE(more videos, issue #196): bottom right of the landscape controls, a tap
-                     raises the same panel the swipe up does. -->
-                <TextView
-                    android:id="@+id/mobile_player_more_hint"
+                <!-- Action toolbar (Right Group): More Videos Pill & Fullscreen Toggle -->
+                <LinearLayout
+                    android:id="@+id/mobile_player_bottom_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="12dp"
-                    android:background="@drawable/bg_mobile_player_chapter"
-                    android:clickable="true"
-                    android:drawablePadding="4dp"
-                    android:drawableStart="@drawable/ic_mobile_more_videos_up"
-                    android:focusable="true"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center_vertical"
-                    android:minHeight="36dp"
-                    android:paddingHorizontal="12dp"
-                    android:shadowColor="#80000000"
-                    android:shadowRadius="3"
-                    android:text="@string/mobile_player_more_videos"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp"
-                    android:visibility="gone" />
+                    android:orientation="horizontal">
 
-                <!-- GUTUBE(lock, issue #98): fullscreen only (applyControlsInsets); locks out every
-                     gesture until mobile_player_unlock is tapped. Hideable in Player buttons.
-                     Top-left: FloatingLock moves it to wherever it was dragged (issue #124). -->
+                    <!-- 'More' Videos Pill Button -->
+                    <TextView
+                        android:id="@+id/mobile_player_more_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_player_glass_pill"
+                        android:clickable="true"
+                        android:drawablePadding="6dp"
+                        android:drawableStart="@drawable/ic_mobile_more_videos_up"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:shadowColor="#80000000"
+                        android:shadowRadius="3"
+                        android:text="@string/mobile_player_more_videos"
+                        android:textColor="@android:color/white"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/mobile_player_actions_toggle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_player_glass_circle"
+                        android:contentDescription="@string/mobile_player_hide_actions"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_chips_expand"
+                        android:visibility="gone" />
+
+                    <!-- Fullscreen Toggle Button -->
+                    <ImageButton
+                        android:id="@+id/mobile_player_fullscreen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_player_glass_circle"
+                        android:contentDescription="@string/mobile_player_fullscreen"
+                        android:padding="10dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_player_fullscreen" />
+
+                </LinearLayout>
+
+                <!-- GUTUBE(lock, issue #98): fullscreen lock button -->
                 <com.newtube.mobile.ui.playback.PlayerButton
                     android:id="@+id/mobile_player_lock"
                     style="@style/MobilePlayerLock"

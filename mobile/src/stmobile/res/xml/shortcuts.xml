@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_search"
+        android:shortcutShortLabel="@string/shortcut_search"
+        android:shortcutLongLabel="@string/shortcut_search">
+        <intent
+            android:action="com.newtube.mobile.action.SEARCH"
+            android:targetClass="com.newtube.mobile.ui.browse.MobileBrowseActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="shorts"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_shorts"
+        android:shortcutShortLabel="@string/shortcut_shorts"
+        android:shortcutLongLabel="@string/shortcut_shorts">
+        <intent
+            android:action="com.newtube.mobile.action.SHORTS"
+            android:targetClass="com.newtube.mobile.ui.browse.MobileBrowseActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="subscriptions"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_subscriptions"
+        android:shortcutShortLabel="@string/shortcut_subscriptions"
+        android:shortcutLongLabel="@string/shortcut_subscriptions">
+        <intent
+            android:action="com.newtube.mobile.action.SUBSCRIPTIONS"
+            android:targetClass="com.newtube.mobile.ui.browse.MobileBrowseActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="history"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_history"
+        android:shortcutShortLabel="@string/shortcut_history"
+        android:shortcutLongLabel="@string/shortcut_history">
+        <intent
+            android:action="com.newtube.mobile.action.HISTORY"
+            android:targetClass="com.newtube.mobile.ui.browse.MobileBrowseActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

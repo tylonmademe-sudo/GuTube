@@ -88,11 +88,9 @@ public class CastPickerSheet {
         mSmartTubePrompt = content.findViewById(R.id.cast_smarttube_prompt);
         View linkCode = content.findViewById(R.id.cast_sheet_link_code);
         linkCode.setOnClickListener(v -> showCodeDialog());
-        com.newtube.mobile.ui.common.SpotlightHelper.attach(linkCode);
 
         View chooserBack = content.findViewById(R.id.cast_chooser_back);
         chooserBack.setOnClickListener(v -> showDeviceList());
-        com.newtube.mobile.ui.common.SpotlightHelper.attach(chooserBack);
 
         content.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         mTargetsContainer.setBackgroundColor(android.graphics.Color.TRANSPARENT);

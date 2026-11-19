@@ -15,6 +15,9 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.RenderEffect;
@@ -24,6 +27,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
@@ -54,10 +58,10 @@ import java.util.Random;
  * Children draw on top, unrefracted. Wire it with {@link #setSource}.
  */
 public class GlassView extends FrameLayout {
-    private static final float BLUR_DP = 8f;
+    private static final float BLUR_DP = 7f; // Liquid Glass: blur(7px)
     /** How far past an edge {@link #setBlurReach} looks: the blur's whole kernel. */
     public static final float BLUR_REACH_DP = 2 * BLUR_DP;
-    private static final float SATURATION = 1.5f;
+    private static final float SATURATION = 1.0f; // Liquid Glass: natural saturation
     private static final float REFRACTION_HEIGHT_DP = 24f;
     private static final float REFRACTION_AMOUNT_DP = 24f;
     private static final float HIGHLIGHT_ANGLE = 45f;
@@ -170,6 +174,10 @@ public class GlassView extends FrameLayout {
     private final Paint mTintPaint = new Paint();
     private final Paint mNoisePaint = new Paint();
     private final Paint mRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mInnerGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private int mStrokeColor;
+    private float mStrokeWidth;
     private final RectF mRimRect = new RectF();
     private final Path mClipPath = new Path();
     private final Spotlight mSpotlight;
@@ -215,8 +223,14 @@ public class GlassView extends FrameLayout {
         mOnGlass = a.getBoolean(R.styleable.GlassView_glassOnGlass, false);
         mMaxWidth = a.getDimensionPixelSize(R.styleable.GlassView_glassMaxWidth, 0);
         mFadeBottom = a.getDimensionPixelSize(R.styleable.GlassView_glassFadeBottom, 0);
+        mStrokeColor = a.getColor(R.styleable.GlassView_glassStrokeColor, 0);
+        mStrokeWidth = a.getDimension(R.styleable.GlassView_glassStrokeWidth, 1f * mDensity);
         a.recycle();
-        mFadePaint.setXfermode(new android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.DST_IN));
+        mFadePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setStrokeWidth(mStrokeWidth);
+        mBorderPaint.setColor(mStrokeColor);
 
         setWillNotDraw(false);
         setOutlineProvider(new ViewOutlineProvider() {
@@ -231,29 +245,30 @@ public class GlassView extends FrameLayout {
         mNoisePaint.setAlpha(NOISE_ALPHA);
         setUpRim(mRimPaint, mDensity);
         mSpotlight = new Spotlight(mDensity);
-        mSpotlight.updateTheme(context);
+        mSpotlight.setEnabled(false);
+        mSpotlight.setDrawSurface(false);
+        mSpotlight.setDrawEdge(false);
         mTilt = new SpotlightTilt(mDensity);
         mTilt.setEnabled(false);
+
+        // Liquid glass shadow: rgba(255, 255, 255, 0.3) outer specular glow with natural elevation
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            setOutlineAmbientShadowColor(0x33000000);
+            setOutlineSpotShadowColor(0x4DFFFFFF);
+        }
     }
 
-    /** Kyant's Highlight.Default: a 0.5dp line (stroked 1dp across the edge), softened by 0.25dp. */
+    /** Specular rim highlight: softened 1.25dp line matching inset 0 0 6px rgba(255, 255, 255, 0.7). */
     private static void setUpRim(Paint paint, float density) {
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(density);
-        paint.setMaskFilter(new BlurMaskFilter(0.25f * density, BlurMaskFilter.Blur.NORMAL));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            paint.setBlendMode(BlendMode.PLUS);
-        }
+        paint.setStrokeWidth(1.25f * density);
     }
 
     /** The light rim catching the corners, for its {@code w} x {@code h} rounded rect. */
     private static Shader rimShader(int w, int h, float radius) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return highlight(w, h, radius);
-        }
-        // No runtime shaders: light from above, a faint bounce at the bottom.
+        // Soft white specular inner highlight matching inset 0 0 6px rgba(255, 255, 255, 0.7)
         return new LinearGradient(0, 0, 0, h,
-                new int[] {0x66FFFFFF, 0x14FFFFFF, 0x0AFFFFFF, 0x2EFFFFFF},
+                new int[] {0xB3FFFFFF, 0x33FFFFFF, 0x1AFFFFFF, 0x4DFFFFFF},
                 new float[] {0f, 0.35f, 0.7f, 1f}, Shader.TileMode.CLAMP);
     }
 
@@ -315,6 +330,33 @@ public class GlassView extends FrameLayout {
         invalidate();
     }
 
+    public void setStroke(int color, float widthDp) {
+        mStrokeColor = color;
+        mStrokeWidth = widthDp * mDensity;
+        mBorderPaint.setColor(color);
+        mBorderPaint.setStrokeWidth(mStrokeWidth);
+        invalidate();
+    }
+
+    public void setTint(int tint) {
+        if (mTint != tint) {
+            mTint = tint;
+            invalidate();
+        }
+    }
+
+    public void setLiquid(boolean liquid) {
+        if (mLiquid != liquid) {
+            mLiquid = liquid;
+            mEffectW = -1; // rebuild the effect on the next draw
+            invalidate();
+        }
+    }
+
+    public boolean isLiquid() {
+        return mLiquid;
+    }
+
     /** GUTUBE(stats): a heavier frost than the default, for a card that sits on glass already. */
     public void setBlur(float dp) {
         mBlurDp = dp;
@@ -365,6 +407,12 @@ public class GlassView extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         mRimRect.set(0, 0, w, h);
         mRimPaint.setShader(rimShader(w, h, radius(w, h)));
+        if (w > 0 && h > 0) {
+            // Liquid glass soft specular inner ambient glow
+            mInnerGlowPaint.setShader(new LinearGradient(0, 0, 0, Math.min(h, 40 * mDensity),
+                    new int[] {0x4DFFFFFF, 0x14FFFFFF, 0x00FFFFFF},
+                    new float[] {0f, 0.5f, 1f}, Shader.TileMode.CLAMP));
+        }
         if (mFadeBottom > 0) {
             mFadePaint.setShader(new LinearGradient(0, h - mFadeBottom, 0, h,
                     0xFF000000, 0x00000000, Shader.TileMode.CLAMP));
@@ -372,19 +420,22 @@ public class GlassView extends FrameLayout {
     }
 
     @Override
-    public boolean dispatchTouchEvent(android.view.MotionEvent ev) {
-        if (mSpotlight != null) {
-            mSpotlight.onTouchEvent(this, ev);
-        }
-        if (mTilt != null && mTilt.isEnabled()) {
-            mTilt.updateTouch(this, ev);
-        }
+    public boolean dispatchTouchEvent(MotionEvent ev) {
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent ev) {
+        return super.dispatchGenericMotionEvent(ev);
     }
 
     @NonNull
     public Spotlight getSpotlight() {
         return mSpotlight;
+    }
+
+    public float getCornerRadius() {
+        return mCorner;
     }
 
     @NonNull
@@ -424,13 +475,21 @@ public class GlassView extends FrameLayout {
             mTintPaint.setColor((mTint & 0x00FFFFFF) | (FALLBACK_ALPHA << 24));
         }
         canvas.drawRect(0, 0, getWidth(), getHeight(), mTintPaint);
-        if (mLiquid) {
-            // GUTUBE(amoled): only the floating glass is grainy - the flat top bar stays true black.
-            canvas.drawRect(0, 0, getWidth(), getHeight(), mNoisePaint);
+        if (mLiquid || r > 0f) {
+            // Glassmorphism soft specular inner rim & top highlight:
+            // inset 0px 0px 4px 2px rgba(255, 255, 255, 0.18)
+            canvas.drawRoundRect(mRimRect, r, r, mInnerGlowPaint);
+            if (mLiquid) {
+                // GUTUBE(amoled): only the floating glass is grainy - the flat top bar stays true black.
+                canvas.drawRect(0, 0, getWidth(), getHeight(), mNoisePaint);
+            }
             canvas.drawRoundRect(mRimRect, r, r, mRimPaint);
         }
-        if (mSpotlight != null && mSpotlight.isVisible()) {
-            mSpotlight.drawSurface(canvas, mRimRect, r);
+        if (mStrokeColor != 0 && mStrokeWidth > 0) {
+            float inset = mStrokeWidth / 2f;
+            mRimRect.set(inset, inset, getWidth() - inset, getHeight() - inset);
+            canvas.drawRoundRect(mRimRect, Math.max(0, r - inset), Math.max(0, r - inset), mBorderPaint);
+            mRimRect.set(0, 0, getWidth(), getHeight());
         }
         if (faded >= 0) {
             canvas.drawRect(0, getHeight() - mFadeBottom, getWidth(), getHeight(), mFadePaint);
@@ -453,9 +512,6 @@ public class GlassView extends FrameLayout {
             canvas.clipPath(mClipPath);
         }
         super.dispatchDraw(canvas);
-        if (mSpotlight != null && mSpotlight.isVisible()) {
-            mSpotlight.drawEdge(canvas, mRimRect, r);
-        }
         if (save >= 0) {
             canvas.restoreToCount(save);
         }
@@ -479,7 +535,7 @@ public class GlassView extends FrameLayout {
         recording.translate(-mRecordedX, -mRecordedY + mReachTop);
         // The source's own (opaque) background first: its node holds only the children, and text
         // on a bare background would blur to near-transparent and let the sharp page show through.
-        android.graphics.drawable.Drawable ground = mSource.getBackground();
+        Drawable ground = mSource.getBackground();
         if (ground != null) {
             ground.draw(recording);
         }

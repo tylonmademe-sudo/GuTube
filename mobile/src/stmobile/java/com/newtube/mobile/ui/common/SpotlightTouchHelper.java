@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
 import android.view.Choreographer;
@@ -18,6 +19,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.liskovsoft.smartyoutubetv2.tv.R;
 
 import java.util.WeakHashMap;
 
@@ -71,15 +75,15 @@ public class SpotlightTouchHelper {
     // Base properties (per ColorOS 17 / CSS specification)
     private int mColor = 0xFFFFFFFF; // Spotlight Color: #FFFFFF (Dark) or #18181B (Light)
     private boolean mCustomColor = false;
-    private float mIntensity = 0.15f; // Baseline surface fill intensity: 0.15
-    private float mBorderGlow = 0.60f; // Distinct edge perimeter glow: 0.60
+    private float mIntensity = 0.06f; // Globally subtle surface fill intensity: 0.06
+    private float mBorderGlow = 0.0f; // UNIVERSAL RULE: ZERO EXTRA BORDERS ANYWHERE (no border stroke)
     private float mSoftness = 0.70f; // Smoothness / Softness: 0.70
     private float mSmoothing = 0.30f; // Movement Smoothing: 0.30
     private float mCustomSizeDp = -1f; // -1 means dynamically adaptive
-    private boolean mFlare = true;
-    private boolean mEnabled = true;
-    private boolean mDrawEdge = true;
-    private boolean mDrawSurface = true;
+    private boolean mFlare = false;
+    private boolean mEnabled = false; // Globally disabled across whole app
+    private boolean mDrawEdge = false;
+    private boolean mDrawSurface = false;
     private float mDensity = 2.5f;
 
     // Theme multipliers (Dark: fill=1.0, edge=1.0; Light: fill=0.28, edge=0.70)
@@ -259,38 +263,38 @@ public class SpotlightTouchHelper {
     }
 
     public SpotlightTouchHelper setEnabled(boolean enabled) {
-        mEnabled = enabled;
+        mEnabled = false;
         return this;
     }
 
     public boolean isEnabled() {
-        return mEnabled;
+        return false;
     }
 
     public SpotlightTouchHelper setDrawEdge(boolean drawEdge) {
-        mDrawEdge = drawEdge;
+        mDrawEdge = false;
         return this;
     }
 
     public boolean isDrawEdge() {
-        return mDrawEdge;
+        return false;
     }
 
     public SpotlightTouchHelper setDrawSurface(boolean drawSurface) {
-        mDrawSurface = drawSurface;
+        mDrawSurface = false;
         return this;
     }
 
     public boolean isDrawSurface() {
-        return mDrawSurface;
+        return false;
     }
 
     public boolean isVisible() {
-        return mEnabled && (mPresence > 0.001f || mActive);
+        return false;
     }
 
     public boolean isActive() {
-        return mActive;
+        return false;
     }
 
     public float getPresence() {
@@ -316,10 +320,12 @@ public class SpotlightTouchHelper {
 
     /**
      * Adaptively computes the optimal spotlight radius based on element dimensions.
+     * Guarantees full coverage of compound buttons (e.g. Timer button with text and icon)
+     * so the light reaches all corners and icons without dead zones.
      */
     public float getAdaptiveSize(@NonNull RectF bounds) {
         if (mCustomSizeDp > 0f) {
-            return Math.max(20f * mDensity, mCustomSizeDp * mDensity);
+            return Math.max(30f * mDensity, mCustomSizeDp * mDensity);
         }
         float w = bounds.width();
         float h = bounds.height();
@@ -327,19 +333,22 @@ public class SpotlightTouchHelper {
         float maxDim = Math.max(w, h);
 
         if (minDim <= 0f) {
-            return 60f * mDensity;
+            return 80f * mDensity;
         }
 
+        float diagonal = (float) Math.hypot(w, h);
         float baseSize;
         if (maxDim <= 56f * mDensity) {
-            // Icon buttons (e.g. 40-48dp icon buttons, top bar buttons)
-            baseSize = maxDim * 1.25f;
-        } else if (minDim <= 64f * mDensity && maxDim > 64f * mDensity) {
-            // Elongated pills / chips / rows
-            baseSize = Math.max(minDim * 1.6f, Math.min(maxDim * 0.75f, 180f * mDensity));
+            // Icon buttons (e.g. 40-48dp icon buttons, top bar buttons):
+            // Ensure glow covers full button bounds and extends beyond corners
+            baseSize = Math.max(88f * mDensity, diagonal * 1.35f);
+        } else if (minDim <= 72f * mDensity && maxDim > 56f * mDensity) {
+            // Elongated pills / chips / buttons (like Timer button 230x52dp, greeting shortcuts):
+            // Radius MUST exceed the full diagonal so touching any end illuminates the opposite end & icon
+            baseSize = Math.max(180f * mDensity, diagonal * 1.15f);
         } else {
-            // Cards, sheets, full bottom nav (default 240dp reference size)
-            baseSize = Math.max(160f * mDensity, Math.min(maxDim * 0.70f, 260f * mDensity));
+            // Cards, sheets, dialog surfaces
+            baseSize = Math.max(260f * mDensity, Math.max(maxDim * 0.85f, diagonal * 0.75f));
         }
 
         return baseSize;
@@ -349,12 +358,7 @@ public class SpotlightTouchHelper {
      * Wakes up the animation loop and requests redraws until settled.
      */
     public void wake(@NonNull View host) {
-        if (!mIsAnimating) {
-            mIsAnimating = true;
-            mLastTimeMs = SystemClock.uptimeMillis();
-            scheduleNextFrame(host);
-        }
-        host.invalidate();
+        // Disabled across whole app
     }
 
     private void scheduleNextFrame(@NonNull View host) {
@@ -435,141 +439,23 @@ public class SpotlightTouchHelper {
      * Direct touch processing entry point for high-performance touch routing.
      */
     public void onTouch(@NonNull View view, int action, float x, float y, float pressure) {
-        if (!mEnabled || BatterySaver.lite()) {
-            return;
-        }
-
-        int width = view.getWidth();
-        int height = view.getHeight();
-        if (width <= 0 || height <= 0) {
-            return;
-        }
-
-        updateTheme(view.getContext());
-
-        float clampedX = Math.max(0f, Math.min(width, x));
-        float clampedY = Math.max(0f, Math.min(height, y));
-        float p = (pressure > 0.01f) ? Math.max(0.1f, Math.min(1.2f, pressure)) : 0.5f;
-
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mTargetX = clampedX;
-                mTargetY = clampedY;
-                mTargetPressure = p;
-                if (mPresence < 0.02f) {
-                    mCurrentX = clampedX;
-                    mCurrentY = clampedY;
-                    mCurrentPressure = p;
-                }
-                mPressed = true;
-                mActive = true;
-                wake(view);
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                mTargetX = clampedX;
-                mTargetY = clampedY;
-                mTargetPressure = p;
-                mActive = true;
-                wake(view);
-                break;
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                mPressed = false;
-                mActive = false;
-                mTargetPressure = 0.5f;
-                wake(view);
-                break;
-        }
+        // Disabled across whole app
     }
 
-    /**
-     * Interactive Touch & Drag Listener:
-     * Tracks MotionEvent.ACTION_DOWN and ACTION_MOVE. The center of the spotlight precisely
-     * and smoothly follows the user's finger as they drag across the view.
-     */
     public boolean onTouchEvent(@NonNull View view, @NonNull MotionEvent event) {
-        onTouch(view, event.getActionMasked(), event.getX(), event.getY(), event.getPressure());
         return false;
     }
 
     public void release(@NonNull View view) {
-        onTouch(view, MotionEvent.ACTION_UP, mCurrentX, mCurrentY, 0.5f);
     }
 
-    /**
-     * Draws the soft radial surface light onto the given canvas area, strictly clipped to bounds.
-     */
     public void drawSurface(@NonNull Canvas canvas, @NonNull RectF bounds, float cornerRadius) {
-        if (!mEnabled || !mDrawSurface || mPresence <= 0.001f || mIntensity <= 0f || bounds.isEmpty()) {
-            return;
-        }
-
-        float clampedPressure = Math.max(0.1f, Math.min(1.0f, mCurrentPressure));
-        float pressureFactor = 0.70f + 0.58f * clampedPressure;
-        float pressureSizeFactor = 0.94f + 0.12f * clampedPressure;
-
-        // Size scaling on press flare (s.size * (1 + 0.2 * flare))
-        float size = getAdaptiveSize(bounds) * (1.0f + 0.20f * mFlareAmount) * pressureSizeFactor;
-        // Boost scaling on press flare (1 + 0.7 * flare)
-        float boost = 1.0f + 0.70f * mFlareAmount;
-        float peakAlpha = Math.min(1.0f, mPresence * mIntensity * boost * mThemeFillMultiplier * pressureFactor);
-        if (peakAlpha <= 0.001f) {
-            return;
-        }
-
-        int baseRgb = mColor & 0x00FFFFFF;
-        for (int i = 0; i < FILL_STOPS_COUNT; i++) {
-            int a = Math.round(255f * peakAlpha * mFillMultipliers[i]);
-            mFillColors[i] = (a << 24) | baseRgb;
-        }
-
-        mFillPaint.setShader(new RadialGradient(mCurrentX, mCurrentY, size, mFillColors, mFillPositions, Shader.TileMode.CLAMP));
-        canvas.drawRoundRect(bounds, cornerRadius, cornerRadius, mFillPaint);
     }
 
-    /**
-     * Draws the distinct edge tracing the border of the view (softness = 1.0, rimSize = size * 0.6).
-     */
     public void drawEdge(@NonNull Canvas canvas, @NonNull RectF bounds, float cornerRadius) {
-        if (!mEnabled || !mDrawEdge || mPresence <= 0.001f || mBorderGlow <= 0f || bounds.isEmpty()) {
-            return;
-        }
-
-        float clampedPressure = Math.max(0.1f, Math.min(1.0f, mCurrentPressure));
-        float pressureFactor = 0.70f + 0.58f * clampedPressure;
-        float pressureSizeFactor = 0.94f + 0.12f * clampedPressure;
-
-        // Edge rim radius is size * 0.6 per CSS specification
-        float size = getAdaptiveSize(bounds) * 0.60f * (1.0f + 0.20f * mFlareAmount) * pressureSizeFactor;
-        float boost = 1.0f + 0.70f * mFlareAmount;
-        float edgePeak = Math.min(1.0f, mPresence * mBorderGlow * boost * mThemeEdgeMultiplier * pressureFactor);
-        if (edgePeak <= 0.001f) {
-            return;
-        }
-
-        int baseRgb = mColor & 0x00FFFFFF;
-        for (int i = 0; i < EDGE_STOPS_COUNT; i++) {
-            int a = Math.round(255f * edgePeak * EDGE_MULTIPLIERS[i]);
-            mEdgeColors[i] = (a << 24) | baseRgb;
-        }
-
-        mEdgePaint.setShader(new RadialGradient(mCurrentX, mCurrentY, size, mEdgeColors, EDGE_POSITIONS, Shader.TileMode.CLAMP));
-
-        float halfStroke = mEdgePaint.getStrokeWidth() / 2f;
-        mEdgeBounds.set(bounds.left + halfStroke, bounds.top + halfStroke, bounds.right - halfStroke, bounds.bottom - halfStroke);
-        float edgeRadius = Math.max(0f, cornerRadius - halfStroke);
-
-        canvas.drawRoundRect(mEdgeBounds, edgeRadius, edgeRadius, mEdgePaint);
     }
 
-    /**
-     * Draws both the surface light and the edge rim glow with strict boundary clipping.
-     */
     public void draw(@NonNull Canvas canvas, @NonNull RectF bounds, float cornerRadius) {
-        drawSurface(canvas, bounds, cornerRadius);
-        drawEdge(canvas, bounds, cornerRadius);
     }
 
     // =========================================================================
@@ -597,29 +483,23 @@ public class SpotlightTouchHelper {
      */
     @NonNull
     public static SpotlightTouchHelper attach(@NonNull View view, int color, float sizeDp, float cornerRadiusDp) {
-        SpotlightTouchHelper existing = sAttachedHelpers.get(view);
-        if (existing != null) {
-            existing.setColor(color);
-            if (sizeDp > 0f) existing.setSizeDp(sizeDp);
-            return existing;
-        }
-
-        float density = view.getResources().getDisplayMetrics().density;
+        float density = view.getResources() != null ? view.getResources().getDisplayMetrics().density : 2.5f;
         SpotlightTouchHelper helper = new SpotlightTouchHelper(density);
-        helper.setColor(color);
-        if (sizeDp > 0f) helper.setSizeDp(sizeDp);
-        helper.updateTheme(view.getContext());
-
-        sAttachedHelpers.put(view, helper);
-
-        // Add overlay drawable
-        SpotlightOverlayDrawable overlay = new SpotlightOverlayDrawable(view, helper);
-        if (cornerRadiusDp >= 0f) {
-            overlay.setCornerRadius(cornerRadiusDp * density);
-        }
-        view.getOverlay().add(overlay);
-
+        helper.setEnabled(false);
         return helper;
+    }
+
+    public static void detach(@NonNull View view) {
+        SpotlightTouchHelper helper = sAttachedHelpers.remove(view);
+        if (helper != null) {
+            helper.setEnabled(false);
+            helper.setDrawSurface(false);
+            helper.setDrawEdge(false);
+        }
+        Drawable bg = view.getBackground();
+        if (bg instanceof SpotlightBackgroundDrawable) {
+            view.setBackground(((SpotlightBackgroundDrawable) bg).getOriginalBackground());
+        }
     }
 
     public static void register(@NonNull View view, @NonNull SpotlightTouchHelper helper) {

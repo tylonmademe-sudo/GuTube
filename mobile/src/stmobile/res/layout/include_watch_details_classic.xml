@@ -385,6 +385,7 @@
             android:background="@drawable/bg_watch_subscribe"
             android:clickable="true"
             android:focusable="true"
+            android:stateListAnimator="@null"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:maxLines="1"

@@ -40,7 +40,7 @@ public class SpotlightCardLayout extends FrameLayout {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SpotlightCardLayout);
             int color = a.getColor(R.styleable.SpotlightCardLayout_spotlightColor, 0xFFFFFFFF);
-            float intensity = a.getFloat(R.styleable.SpotlightCardLayout_spotlightIntensity, 0.11f);
+            float intensity = a.getFloat(R.styleable.SpotlightCardLayout_spotlightIntensity, 0.06f);
             float edgeIntensity = a.getFloat(R.styleable.SpotlightCardLayout_spotlightBorderGlow, 0.70f);
             float sizeDp = a.getDimension(R.styleable.SpotlightCardLayout_spotlightSize, 240f * density) / density;
             float softness = a.getFloat(R.styleable.SpotlightCardLayout_spotlightSoftness, 1.0f);
@@ -51,11 +51,11 @@ public class SpotlightCardLayout extends FrameLayout {
 
             mHelper.setColor(color)
                     .setIntensity(intensity)
-                    .setBorderGlow(edgeIntensity)
+                    .setBorderGlow(0.0f)
                     .setSizeDp(sizeDp)
                     .setSoftness(softness)
                     .setSmoothing(smoothing)
-                    .setDrawEdge(drawEdge);
+                    .setDrawEdge(false);
         } else {
             mCornerRadius = 16f * density;
         }

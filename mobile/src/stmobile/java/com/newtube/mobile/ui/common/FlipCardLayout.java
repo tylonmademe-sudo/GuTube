@@ -189,7 +189,7 @@ public class FlipCardLayout extends FrameLayout {
         mSpotlightHelper = new SpotlightTouchHelper(mDensity);
         mSpotlightHelper.setColor(0xFFFFFFFF)
                 .setIntensity(0.11f)
-                .setBorderGlow(0.70f)
+                .setBorderGlow(0.0f)
                 .setSoftness(1.0f)
                 .setSmoothing(0.3f)
                 .setDrawEdge(false);
@@ -947,11 +947,6 @@ public class FlipCardLayout extends FrameLayout {
             RadialGradient glareGrad = new RadialGradient(mGlareX, mGlareY, glareRadius, colors, positions, Shader.TileMode.CLAMP);
             mGlarePaint.setShader(glareGrad);
             canvas.drawRoundRect(mBounds, mCornerRadius, mCornerRadius, mGlarePaint);
-        }
-
-        // 6. Draw Spotlight distinct edge tracing
-        if (mSpotlightHelper.isVisible()) {
-            mSpotlightHelper.drawEdge(canvas, mBounds, mCornerRadius);
         }
 
         canvas.restoreToCount(save);

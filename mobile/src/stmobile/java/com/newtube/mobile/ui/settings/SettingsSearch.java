@@ -70,7 +70,6 @@ final class SettingsSearch {
             {R.string.mobile_web_signin_setting, R.string.mobile_settings_search_web_signin},
             {R.string.mobile_settings_account, R.string.mobile_settings_search_kw_account},
             {R.string.mobile_theme, R.string.mobile_settings_search_kw_theme},
-            {R.string.mobile_settings_customize, R.string.mobile_settings_search_kw_customize},
             {R.string.mobile_settings_country, R.string.mobile_settings_search_kw_country},
             {R.string.mobile_settings_start_screen, R.string.mobile_settings_search_kw_start_screen},
             {R.string.mobile_settings_interface_size, R.string.mobile_settings_search_kw_interface_size},

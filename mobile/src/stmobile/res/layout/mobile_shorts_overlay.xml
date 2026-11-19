@@ -7,6 +7,7 @@
      forward to the watch page's own buttons. The peek is the next (or previous) short's portrait
      thumbnail that follows a swipe in from the edge, outside this box (clipChildren off). -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_shorts_overlay"
     android:layout_width="match_parent"
@@ -45,72 +46,73 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/mobile_shorts_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_shorts_button_circle"
             android:contentDescription="@string/mobile_back"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_mobile_back_arrow"
             android:tint="@android:color/white" />
 
-        <!-- GUTUBE(glass): the header is glass lettering, no pill (ShortsOverlay). -->
         <TextView
             android:id="@+id/mobile_shorts_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
             android:fontFamily="sans-serif-medium"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="6dp"
             android:text="@string/header_shorts"
             android:textColor="@android:color/white"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
-    <!-- Download, mute and search, small like the back button: YouTube's top-right pair plus ours. -->
+    <!-- Download, mute and search: authentic 40dp frosted glass buttons -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="14dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/mobile_shorts_download"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_shorts_button_circle"
             android:contentDescription="@string/dialog_download"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_watch_download"
             android:tint="@android:color/white" />
 
         <ImageButton
             android:id="@+id/mobile_shorts_mute"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_shorts_button_circle"
             android:contentDescription="@string/mobile_shorts_mute"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_player_volume_up"
             android:tint="@android:color/white" />
 
         <ImageButton
             android:id="@+id/mobile_shorts_search"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_shorts_button_circle"
             android:contentDescription="@string/mobile_search_button"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_mobile_search"
             android:tint="@android:color/white" />
 
@@ -124,6 +126,18 @@
         android:background="@drawable/mobile_player_bottom_scrim"
         android:importantForAccessibility="no" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/mobile_shorts_heart"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_gravity="center"
+        android:alpha="0"
+        android:importantForAccessibility="no"
+        app:lottie_rawRes="@raw/liked"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="false"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/mobile_shorts_flash"
         android:layout_width="72dp"
@@ -134,16 +148,6 @@
         android:padding="16dp"
         android:src="@drawable/ic_player_play"
         android:tint="@android:color/white" />
-
-    <ImageView
-        android:id="@+id/mobile_shorts_heart"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        android:alpha="0"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_watch_thumb_up"
-        android:tint="@color/mobile_color_primary" />
 
     <LinearLayout
         android:id="@+id/mobile_shorts_info"
@@ -254,9 +258,9 @@
         <ImageButton
             android:id="@+id/mobile_shorts_dislike"
             style="@style/GuTubeShortsAction"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/mobile_watch_dislike"
-            android:src="@drawable/ic_watch_thumb_down_outline" />
+            android:src="@drawable/ic_watch_thumb_down" />
 
         <TextView
             style="@style/GuTubeShortsActionLabel"
@@ -265,7 +269,7 @@
         <ImageButton
             android:id="@+id/mobile_shorts_comments"
             style="@style/GuTubeShortsAction"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/mobile_comments_title"
             android:src="@drawable/ic_watch_comment" />
 
@@ -277,9 +281,9 @@
         <ImageButton
             android:id="@+id/mobile_shorts_share"
             style="@style/GuTubeShortsAction"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/mobile_watch_share"
-            android:src="@drawable/ic_watch_share" />
+            android:src="@drawable/ic_shorts_share" />
 
         <TextView
             style="@style/GuTubeShortsActionLabel"
@@ -288,7 +292,7 @@
         <ImageButton
             android:id="@+id/mobile_shorts_more"
             style="@style/GuTubeShortsAction"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/mobile_menu_more"
             android:src="@drawable/ic_mobile_more_vert" />
 
@@ -326,5 +330,114 @@
         android:splitTrack="false"
         android:thumb="@drawable/gutube_shorts_seek_thumb"
         android:thumbOffset="0dp" />
+
+    <!-- YouTube Shorts Subscription Feedback Toast -->
+    <LinearLayout
+        android:id="@+id/mobile_shorts_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="68dp"
+        android:background="@drawable/bg_shorts_toast"
+        android:elevation="12dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        android:alpha="0"
+        android:translationY="12dp">
+
+        <TextView
+            android:id="@+id/mobile_shorts_toast_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:text="Subscription added" />
+    </LinearLayout>
+
+    <!-- YouTube Authentic Unsubscribe Dialog / Bottom Sheet -->
+    <FrameLayout
+        android:id="@+id/mobile_shorts_unsubscribe_modal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="20dp"
+        android:visibility="gone">
+
+        <!-- Backdrop scrim -->
+        <View
+            android:id="@+id/mobile_shorts_unsubscribe_scrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000" />
+
+        <!-- Bottom Sheet Card -->
+        <LinearLayout
+            android:id="@+id/mobile_shorts_unsubscribe_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_shorts_bottom_sheet"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="22dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/mobile_shorts_unsubscribe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="Unsubscribe from Febro Edits?" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="3dp"
+                android:text="@string/mobile_shorts_unsubscribe_body"
+                android:textColor="#A3A3A3"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="22dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/mobile_shorts_unsubscribe_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="@android:string/cancel"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/mobile_shorts_unsubscribe_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="@string/unsubscribe_from_channel"
+                    android:textColor="#3EA6FF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>

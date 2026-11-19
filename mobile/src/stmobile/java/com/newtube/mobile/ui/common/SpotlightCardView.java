@@ -63,11 +63,11 @@ public class SpotlightCardView extends FrameLayout {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SpotlightCardView);
         int color = a.getColor(R.styleable.SpotlightCardView_spotlightColor, 0xFFFFFFFF);
-        float intensity = a.getFloat(R.styleable.SpotlightCardView_spotlightIntensity, 1.0f);
+        float intensity = a.getFloat(R.styleable.SpotlightCardView_spotlightIntensity, 0.06f);
         float sizeDp = a.getDimension(R.styleable.SpotlightCardView_spotlightSize, 260f * density) / density;
         float softness = a.getFloat(R.styleable.SpotlightCardView_spotlightSoftness, 0.7f);
-        float borderGlow = a.getFloat(R.styleable.SpotlightCardView_spotlightBorderGlow, 0.75f);
-        float smoothing = a.getFloat(R.styleable.SpotlightCardView_spotlightSmoothing, 0.28f);
+        float borderGlow = a.getFloat(R.styleable.SpotlightCardView_spotlightBorderGlow, 0.0f);
+        float smoothing = a.getFloat(R.styleable.SpotlightCardView_spotlightSmoothing, 0.20f);
         boolean flare = a.getBoolean(R.styleable.SpotlightCardView_spotlightFlare, true);
         boolean ambient = a.getBoolean(R.styleable.SpotlightCardView_spotlightAmbient, false);
         mCornerRadius = a.getDimension(R.styleable.SpotlightCardView_spotlightCornerRadius, 16f * density);
@@ -80,11 +80,11 @@ public class SpotlightCardView extends FrameLayout {
                 .setIntensity(intensity)
                 .setSizeDp(sizeDp)
                 .setSoftness(softness)
-                .setBorderGlow(borderGlow)
+                .setBorderGlow(0.0f)
                 .setSmoothing(smoothing)
                 .setFlare(flare)
                 .setAmbient(ambient)
-                .setDrawEdge(drawEdge);
+                .setDrawEdge(false);
         mSpotlight.updateTheme(context);
 
         mTilt.setEnabled(mEnableTilt);
@@ -231,10 +231,6 @@ public class SpotlightCardView extends FrameLayout {
             canvas.clipPath(mClipPath);
         }
         super.dispatchDraw(canvas);
-        // Specular rim catch is drawn on top of child perimeter without creating duplicate background fills
-        if (mSpotlight.isVisible() && mSpotlight.isDrawEdge()) {
-            mSpotlight.drawEdge(canvas, mBounds, r);
-        }
         if (save >= 0) {
             canvas.restoreToCount(save);
         }

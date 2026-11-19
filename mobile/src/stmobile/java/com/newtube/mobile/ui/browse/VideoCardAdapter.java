@@ -319,11 +319,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             // The 720x1280 portrait, decoded at tile size (the cards' request crops it to 16:9).
             com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> fallback = Glide.with(context)
                     .load("https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg")
-                    .format(DecodeFormat.PREFER_RGB_565).override(TILE_W, TILE_H).centerCrop();
+                    .format(DecodeFormat.PREFER_ARGB_8888).override(TILE_W, TILE_H).centerCrop();
             Glide.with(context)
                     .load(VideoViewHolder.thumbnailUrl(context, video))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(TILE_W, TILE_H)
                     .centerCrop()
                     .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(150))
@@ -838,12 +838,15 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             return glide
                     .load(thumbnailUrl(context, video))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(w, sThumbH)
                     .centerCrop();
         }
 
         public static String thumbnailUrl(Context context, Video video) {
+            if (video == null) {
+                return null;
+            }
             // NEWTUBE(ux): entries saved without an image (local history, link opens) get the
             // i.ytimg.com fallback here, so the preloader and the bind ask for the same URL.
             com.newtube.mobile.ui.common.LocalThumbnails.fill(video);
@@ -851,7 +854,24 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             if (video.belongsToShorts() && video.videoId != null) {
                 return "https://i.ytimg.com/vi/" + video.videoId + "/oar2.jpg";
             }
-            return ClickbaitRemover.updateThumbnail(video, MainUIData.instance(context).getThumbQuality());
+            // DeArrow cover has absolute priority if set
+            if (video.altCardImageUrl != null) {
+                return video.altCardImageUrl;
+            }
+            // If user explicitly picked Start/Middle/End frame via ClickbaitRemover
+            int thumbQuality = MainUIData.instance(context).getThumbQuality();
+            if (thumbQuality != ClickbaitRemover.THUMB_QUALITY_DEFAULT) {
+                return ClickbaitRemover.updateThumbnail(video, thumbQuality);
+            }
+            // YouTube high-resolution thumbnail from InnerTube (720p or 1080p, stored in bgImageUrl)
+            if (video.bgImageUrl != null && !video.bgImageUrl.isEmpty()) {
+                return video.bgImageUrl;
+            }
+            // High-res YouTube CDN thumbnail (720p crisp)
+            if (video.videoId != null && !video.videoId.isEmpty()) {
+                return "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg";
+            }
+            return video.getCardImageUrl();
         }
 
         private void bindThumbnail(Context context, Video video) {
@@ -871,15 +891,19 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 request = request.addListener(FIRST_THUMB_LISTENER);
             }
 
-            // At the default thumb quality the primary URL IS the card URL, so a fallback request
-            // would be identical - only pay the second RequestBuilder when it can actually differ.
+            // High-resolution fallback: if high-res URL fails (e.g. very old video without hq720),
+            // fall back to standard cardImageUrl / hqdefault in ARGB_8888.
             String fallbackUrl = video.belongsToShorts() && video.videoId != null
                     ? "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg" // no portrait image
                     : video.getCardImageUrl();
+            if (fallbackUrl == null && video.videoId != null) {
+                fallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
+            }
             if (fallbackUrl != null && !fallbackUrl.equals(thumbnailUrl)) {
                 request = request.error(Glide.with(context)
                         .load(fallbackUrl)
-                        .format(DecodeFormat.PREFER_RGB_565)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(w, sThumbH)
                         .centerCrop());
             }

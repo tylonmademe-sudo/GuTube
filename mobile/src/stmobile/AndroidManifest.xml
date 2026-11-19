@@ -106,8 +106,10 @@
     <application
         android:name="com.newtube.mobile.MobileMainApplication"
         android:banner="@drawable/gutube_tv_banner"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.NewTube"
-        tools:replace="android:name,android:theme">
+        tools:replace="android:name,android:theme,android:icon,android:roundIcon">
 
         <!-- TV autostart (boot, screen on, charger, shutdown...) for the remote control service,
              which the phone keeps off: an exported wake-on-everything receiver reads as malware. -->
@@ -129,6 +131,9 @@
             tools:replace="android:launchMode,android:configChanges">
             <!-- GUTUBE(app icon): the launcher entries are the aliases below, one per icon. -->
             <intent-filter tools:node="removeAll" />
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- GUTUBE(app icon): Settings > Customization > App icon enables exactly one (AppIcon). -->
@@ -136,7 +141,8 @@
             android:name="com.newtube.mobile.icon.Default"
             android:enabled="true"
             android:exported="true"
-            android:icon="@mipmap/app_icon"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:targetActivity="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -145,6 +151,9 @@
                 <!-- GUTUBE(tv): the TV home screen's entry (the application's banner). -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity-alias>
         <activity-alias
             android:name="com.newtube.mobile.icon.Classic"
@@ -312,12 +321,20 @@
 
         <activity
             android:name="com.newtube.mobile.ui.browse.MobileBrowseActivity"
-            android:exported="false"
+            android:exported="true"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTop"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
             android:screenOrientation="unspecified"
-            android:theme="@style/Theme.NewTube" />
+            android:theme="@style/Theme.NewTube">
+            <intent-filter>
+                <action android:name="com.newtube.mobile.action.SEARCH" />
+                <action android:name="com.newtube.mobile.action.SHORTS" />
+                <action android:name="com.newtube.mobile.action.SUBSCRIPTIONS" />
+                <action android:name="com.newtube.mobile.action.HISTORY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!--
           Touch player (Wave 2). configChanges covers orientation/screenSize/keyboardHidden so

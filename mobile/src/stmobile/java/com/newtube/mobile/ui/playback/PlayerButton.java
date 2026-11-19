@@ -27,4 +27,13 @@ public class PlayerButton extends AppCompatImageButton {
     public void setVisibility(int visibility) {
         super.setVisibility(mHidden ? GONE : visibility);
     }
+
+    @Override
+    public void setPressed(boolean pressed) {
+        super.setPressed(pressed);
+        animate().scaleX(pressed ? 0.94f : 1.0f)
+                .scaleY(pressed ? 0.94f : 1.0f)
+                .setDuration(120)
+                .start();
+    }
 }

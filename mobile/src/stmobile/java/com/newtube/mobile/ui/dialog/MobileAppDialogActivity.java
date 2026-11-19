@@ -253,7 +253,6 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         mBackButton = findViewById(R.id.mobile_dialog_back);
 
         mRecyclerView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-        com.newtube.mobile.ui.common.SpotlightHelper.attach(mBackButton);
 
         // Sheet mode: tapping the dim scrim dismisses the whole dialog (like a Material sheet).
         mScrim.setOnClickListener(v -> dismissSheet());

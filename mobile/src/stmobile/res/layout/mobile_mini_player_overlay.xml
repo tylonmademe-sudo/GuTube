@@ -17,8 +17,8 @@
     app:cardBackgroundColor="@android:color/black"
     app:cardCornerRadius="18dp"
     app:cardElevation="8dp"
-    app:strokeColor="@color/gutube_glass_stroke"
-    app:strokeWidth="1dp"
+    app:strokeColor="@android:color/transparent"
+    app:strokeWidth="0dp"
     tools:visibility="visible">
 
     <FrameLayout

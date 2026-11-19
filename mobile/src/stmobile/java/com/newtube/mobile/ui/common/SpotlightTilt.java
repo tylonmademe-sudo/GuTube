@@ -32,8 +32,8 @@ public final class SpotlightTilt {
     private static final float PERSPECTIVE_PX = 1100.0f; // perspective: 1100px
 
     private float mMaxTilt = DEFAULT_TILT;
-    private boolean mEnabled = true;
-    private boolean mPressEnabled = true;
+    private boolean mEnabled = false; // Globally disabled across whole app
+    private boolean mPressEnabled = false;
 
     private float mCurrentRx = 0f;
     private float mCurrentRy = 0f;
@@ -76,77 +76,39 @@ public final class SpotlightTilt {
     }
 
     public void setEnabled(boolean enabled) {
-        mEnabled = enabled;
-        if (!enabled) {
-            mTargetRx = 0f;
-            mTargetRy = 0f;
-            mTargetPress = 1.0f;
-        }
+        mEnabled = false;
+        mTargetRx = 0f;
+        mTargetRy = 0f;
+        mTargetPress = 1.0f;
     }
 
     public boolean isEnabled() {
-        return mEnabled;
+        return false;
     }
 
     public void setPressEnabled(boolean pressEnabled) {
-        mPressEnabled = pressEnabled;
+        mPressEnabled = false;
     }
 
     /**
      * Updates target rotation and press based on continuous touch events with local coordinates.
      */
     public void updateTouch(@NonNull View view, int action, float x, float y) {
-        if (!mEnabled || BatterySaver.lite() || !Glass.isSpotlight(view.getContext())) {
-            reset(view);
-            return;
-        }
-
-        int width = view.getWidth();
-        int height = view.getHeight();
-
-        if (width <= 0 || height <= 0) {
-            return;
-        }
-
-        boolean inside = x >= 0f && y >= 0f && x <= width && y <= height;
-
-        if (!inside || action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            mTargetRx = 0f;
-            mTargetRy = 0f;
-            mTargetPress = 1.0f;
-            wake(view);
-            return;
-        }
-
-        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
-            // Normalized offset from center: -0.5 to +0.5
-            float u = Math.max(0f, Math.min(1f, x / (float) width)) - 0.5f;
-            float v = Math.max(0f, Math.min(1f, y / (float) height)) - 0.5f;
-
-            // Touching top tilts top towards user (positive rotateX)
-            // Touching right tilts right towards user (positive rotateY)
-            mTargetRx = -v * 2.0f * mMaxTilt;
-            mTargetRy = u * 2.0f * mMaxTilt;
-            mTargetPress = mPressEnabled ? LIFT_TARGET : 1.0f;
-            wake(view);
-        }
+        reset(view);
     }
 
     /**
      * Updates target rotation and press based on continuous touch events (ACTION_DOWN, ACTION_MOVE, ACTION_UP).
      */
     public void updateTouch(@NonNull View view, @NonNull MotionEvent event) {
-        updateTouch(view, event.getActionMasked(), event.getX(), event.getY());
+        reset(view);
     }
 
     /**
      * Smoothly springs tilt and scaling back to neutral (0, 0, 1.0) using mass-spring physics.
      */
     public void springToNeutral(@NonNull View view) {
-        mTargetRx = 0f;
-        mTargetRy = 0f;
-        mTargetPress = 1.0f;
-        wake(view);
+        reset(view);
     }
 
     /**
@@ -170,11 +132,6 @@ public final class SpotlightTilt {
     }
 
     private void wake(@NonNull View view) {
-        if (!mIsAnimating) {
-            mIsAnimating = true;
-            mLastTimeMs = SystemClock.uptimeMillis();
-            scheduleNextFrame(view);
-        }
     }
 
     private void scheduleNextFrame(@NonNull View view) {

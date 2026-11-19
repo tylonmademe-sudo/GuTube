@@ -141,6 +141,21 @@ public final class Spotlight extends SpotlightTouchHelper {
         return SpotlightHelper.attach(view, color, intensity);
     }
 
+    @NonNull
+    public static Spotlight attachButton(@NonNull View button) {
+        return SpotlightHelper.attachButton(button);
+    }
+
+    @NonNull
+    public static Spotlight attachCard(@NonNull View card) {
+        return SpotlightHelper.attachCard(card);
+    }
+
+    @NonNull
+    public static Spotlight attachNavPill(@NonNull View navPill) {
+        return SpotlightHelper.attachNavPill(navPill);
+    }
+
     public static void link(@NonNull View host, @NonNull Spotlight spotlight) {
         SpotlightHelper.link(host, spotlight);
     }

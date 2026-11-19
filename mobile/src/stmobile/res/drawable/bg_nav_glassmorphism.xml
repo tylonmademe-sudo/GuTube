@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Liquid Glass Navigation Bar: background rgba(255, 255, 255, 0), corner 28dp, blur 7px, liquid refraction -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Inset specular highlight: inset 0 0 6px -50px rgba(255, 255, 255, 0.7) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <stroke
+                android:width="1dp"
+                android:color="#B3FFFFFF" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+    <!-- Liquid glass clear layer & specular outline: box-shadow: 0px 0px 21px -50px rgba(255, 255, 255, 0.3) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <solid android:color="#00FFFFFF" />
+            <stroke
+                android:width="1dp"
+                android:color="#33FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

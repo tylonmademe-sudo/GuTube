@@ -159,7 +159,7 @@ final class ChaptersSheet {
                 Glide.with(context)
                         .load(chapter.cardImageUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .format(DecodeFormat.PREFER_RGB_565)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
                         .priority(Priority.IMMEDIATE)
                         .centerCrop()
                         .into(mThumbnail);

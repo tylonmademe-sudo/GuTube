@@ -120,7 +120,9 @@
             android:id="@+id/mobile_you_panel"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/mobile_color_background"
+            android:background="@drawable/bg_you_ambient"
+            android:scrollbars="none"
+            android:overScrollMode="never"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,14 +134,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <!-- GUTUBE(rgb glow): the RGB light in the top left, behind the header and the top pills
-                 (the rows below are padded by padUnderTopBar). Its own glass source: the Accounts and
-                 Settings pills frost it (they sit inside mobile_blur_target, so can't sample that). -->
+            <!-- GUTUBE(rgb glow) -->
             <com.newtube.mobile.ui.common.GlassSource
                 android:id="@+id/mobile_you_glow_source"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:background="@color/mobile_color_background">
+                android:layout_height="0dp"
+                android:visibility="gone">
 
                 <com.newtube.mobile.ui.common.RgbGlow
                     android:id="@+id/mobile_you_glow"
@@ -153,134 +153,786 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="20dp"
                 android:paddingBottom="@dimen/gutube_nav_clearance">
 
-                <!-- Account header, as YouTube's You page has it: a big avatar, the name and the
-                     email, then the Accounts and Settings pills. A tap on the header or on Accounts
-                     signs in when signed out and switches accounts when signed in. -->
+                <!-- 1. Profile Glass Card -->
                 <LinearLayout
-                    android:id="@+id/mobile_you_account_row"
+                    android:id="@+id/mobile_you_profile_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="12dp">
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/bg_you_profile_card"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <!-- GUTUBE(glass): the avatar sits in a frosted disc; signed out, the disc is the avatar. -->
-                    <com.newtube.mobile.ui.common.GlassView
-                        android:id="@+id/mobile_you_avatar_glass"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        app:glassCornerRadius="48dp"
-                        app:glassTint="@color/gutube_glass_button">
+                    <!-- Header Row: User Info & Notification Bell -->
+                    <LinearLayout
+                        android:id="@+id/mobile_you_account_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Avatar Frame with gradient ring border -->
+                        <FrameLayout
+                            android:id="@+id/mobile_you_avatar_glass"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_you_avatar_circle">
+
+                            <ImageView
+                                android:id="@+id/mobile_you_avatar"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_signin_user"
+                                app:tint="#E6FFFFFF" />
+
+                        </FrameLayout>
+
+                        <!-- User Details: Welcome back / Name & Typewriter subtitle -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/mobile_you_account_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_welcome_back"
+                                android:textColor="#FFFFFF"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/mobile_you_account_sub"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:fontFamily="sans-serif"
+                                    android:maxLines="1"
+                                    android:text="@string/mobile_you_phrase_sync"
+                                    android:textColor="#99FFFFFF"
+                                    android:textSize="13sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Notification Bell Button -->
+                        <ImageButton
+                            android:id="@+id/mobile_you_notifications"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_you_bell_circle"
+                            android:contentDescription="@string/mobile_settings_notifications"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_you_bell"
+                            app:tint="#E6FFFFFF" />
+
+                    </LinearLayout>
+
+                    <!-- Main Action Button: Sign In Now -->
+                    <LinearLayout
+                        android:id="@+id/mobile_you_signin_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_you_signin_btn"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/mobile_you_avatar"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_gravity="center"
+                            android:id="@+id/mobile_you_signin_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/ic_you_avatar" />
-
-                    </com.newtube.mobile.ui.common.GlassView>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:src="@drawable/ic_you_signin_user"
+                            app:tint="#000000" />
 
                         <TextView
-                            android:id="@+id/mobile_you_account_text"
+                            android:id="@+id/mobile_you_signin_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/dialog_add_account"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="26sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/mobile_you_signin_now"
+                            android:textColor="#000000"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/mobile_you_account_sub"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/mobile_color_on_surface_secondary"
-                            android:textSize="14sp"
-                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <!-- Secondary Row: Switch Account & Settings -->
+                    <LinearLayout
+                        android:id="@+id/mobile_you_actions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/mobile_you_accounts"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_glass_pill"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_switch_account"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/mobile_you_switch_account"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/mobile_you_settings"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_glass_pill"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginEnd="8dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_settings_gear"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/header_settings"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- GUTUBE(you page): Accounts / Settings as two tiles on an accent glass card, like Library's
-                     (the card is set in MobileBrowseActivity.setupYouPanel). -->
+                <!-- 2. Library Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/mobile_you_library"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
-                    android:id="@+id/mobile_you_actions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="14dp"
-                    android:orientation="horizontal"
-                    android:padding="7dp">
+                    android:background="@drawable/bg_you_section_box"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/mobile_you_tile_bg">
+                    <!-- Library Row 1: Subscriptions & Downloads -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/mobile_you_accounts"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="sans-serif-medium"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:letterSpacing="0"
-                            android:text="@string/settings_accounts"
-                            android:textAllCaps="false"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="14sp"
-                            app:cornerRadius="20dp"
-                            app:rippleColor="@android:color/transparent" />
+                        <!-- Subscriptions -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_subscriptions"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
 
-                    </FrameLayout>
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
 
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/mobile_you_tile_bg">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_subscriptions"
+                                    app:tint="#FFFFFF" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/mobile_you_settings"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="sans-serif-medium"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:letterSpacing="0"
-                            android:text="@string/header_settings"
-                            android:textAllCaps="false"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="14sp"
-                            app:cornerRadius="20dp"
-                            app:rippleColor="@android:color/transparent" />
+                            </FrameLayout>
 
-                    </FrameLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_nav_subs"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                        <!-- Downloads -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_downloads"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_downloads"
+                                    app:tint="#FFFFFF" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/header_downloads"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Library Row 2: Watch later & Liked videos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <!-- Watch later -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_watch_later"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_watch_later"
+                                    app:tint="#FFFFFF" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_watch_later"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                        <!-- Liked videos -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_liked"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_liked"
+                                    app:tint="#FFFFFF" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_liked_videos"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Library Row 3: Playlists & My videos -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <!-- Playlists -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_playlists"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_playlists"
+                                    app:tint="#FFFFFF" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/header_playlists"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                        <!-- My videos -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_lib_my_videos"
+                            android:layout_width="0dp"
+                            android:layout_height="68dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_library_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_you_squircle">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_you_my_videos"
+                                    app:tint="#FFFFFF" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_my_videos"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13.5sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 3. Explore Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/mobile_you_explore"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_you_section_box"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <!-- Explore Row 1: Kids, Hyped, Sports, Live -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Kids -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_kids"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_kids"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_kids"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- Hyped -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_hyped"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginHorizontal="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_hyped"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_hyped"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- Sports -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_sports"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginHorizontal="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_sports"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_sports"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- Live -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_live"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_live"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_live"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Explore Row 2: Gaming, News, Music -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <!-- Gaming -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_gaming"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_gaming"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_gaming"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- News -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_news"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginHorizontal="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_news"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_news"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- Music -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_music"
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginHorizontal="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_you_music"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_you_music"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                        <!-- Empty 4th slot to maintain 4-column alignment -->
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="88dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -290,6 +942,7 @@
                     android:id="@+id/mobile_you_history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -297,14 +950,13 @@
                         android:id="@+id/mobile_you_history_title"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
-                        android:layout_marginTop="12dp"
                         android:background="?attr/selectableItemBackground"
                         android:drawableEnd="@drawable/ic_chevron_right"
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="16dp"
+                        android:paddingHorizontal="4dp"
                         android:text="@string/header_history"
-                        android:textColor="@color/mobile_color_on_surface"
+                        android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -314,7 +966,7 @@
                         android:layout_height="wrap_content"
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"
-                        android:paddingHorizontal="10dp" />
+                        android:paddingHorizontal="2dp" />
 
                 </LinearLayout>
 
@@ -322,6 +974,7 @@
                     android:id="@+id/mobile_you_rows"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:orientation="vertical" />
 
             </LinearLayout>
@@ -566,8 +1219,8 @@
         app:cardBackgroundColor="@android:color/black"
         app:cardCornerRadius="18dp"
         app:cardElevation="8dp"
-        app:strokeColor="@color/gutube_glass_stroke"
-        app:strokeWidth="1dp"
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toTopOf="@id/mobile_nav_glass"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
@@ -679,11 +1332,13 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
         android:layout_marginBottom="?attr/gutubeNavBottomMargin"
-        android:elevation="6dp"
+        android:elevation="16dp"
         android:padding="6dp"
         app:glassCornerRadius="?attr/gutubeNavCorner"
         app:glassLiquid="?attr/gutubeNavLiquid"
         app:glassTint="?attr/gutubeNavTint"
+        app:glassStrokeColor="?attr/gutubeNavStrokeColor"
+        app:glassStrokeWidth="?attr/gutubeNavStrokeWidth"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -802,6 +1457,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:elevation="20dp"
         android:focusable="true"
         android:visibility="gone"
@@ -813,37 +1470,62 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/mobile_greet_content"
+        <ScrollView
+            android:id="@+id/mobile_greet_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="40dp">
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
-            <TextView
-                android:id="@+id/mobile_greet_title"
+            <LinearLayout
+                android:id="@+id/mobile_greet_scroll_inner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="cursive"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:gravity="center"
-                android:textColor="@color/mobile_color_on_surface"
-                android:textSize="44sp"
-                android:textStyle="bold"
-                tools:text="Good evening" />
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="32dp">
 
-            <TextView
-                android:id="@+id/mobile_greet_line"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="28dp"
-                android:gravity="center"
-                android:textColor="@color/mobile_color_on_surface_secondary"
-                android:textSize="16sp"
-                tools:text="Wind down with something good" />
+                <LinearLayout
+                    android:id="@+id/mobile_greet_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/mobile_greet_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="cursive"
+                        android:gravity="center"
+                        android:textColor="@color/mobile_color_on_surface"
+                        android:textSize="44sp"
+                        android:textStyle="bold"
+                        tools:text="Good evening" />
+
+                    <TextView
+                        android:id="@+id/mobile_greet_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="28dp"
+                        android:gravity="center"
+                        android:textColor="@color/mobile_color_on_surface_secondary"
+                        android:textSize="16sp"
+                        tools:text="Wind down with something good" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </com.newtube.mobile.ui.common.GlassView>
 

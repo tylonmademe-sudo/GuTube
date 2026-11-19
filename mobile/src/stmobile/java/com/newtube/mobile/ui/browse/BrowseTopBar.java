@@ -28,7 +28,6 @@ final class BrowseTopBar {
         syncMark(activity);
         if (mBack != null) {
             mBack.setOnClickListener(v -> onBack.run());
-            com.newtube.mobile.ui.common.SpotlightTouchHelper.attach(mBack, 18f);
         }
         // GUTUBE(quotes): on a tab the brand pill shows a quote; on a sub-screen it goes back.
         QuoteCard quote = new QuoteCard(activity);

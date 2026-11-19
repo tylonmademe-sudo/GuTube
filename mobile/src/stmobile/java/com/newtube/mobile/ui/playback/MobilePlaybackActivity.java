@@ -51,6 +51,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.DisplayCutoutCompat;
 import androidx.core.view.OneShotPreDrawListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -188,6 +189,7 @@ public class MobilePlaybackActivity extends MobileActivity
     private DoubleTapPlayerViewImpl mPlayerView;
     private YouTubeOverlay mYouTubeOverlay;
     private View mControlsRoot;
+    private WindowInsetsCompat mLastInsets;
     @Nullable private View mTopScrim;
     @Nullable private View mBottomScrim;
     /** NEWTUBE(issue #9): the last known video display aspect (pixel aspect included), 0 = none yet. */
@@ -967,7 +969,7 @@ public class MobilePlaybackActivity extends MobileActivity
                 com.newtube.mobile.ui.common.Glass.isPlayerFrost(this) ? findViewById(R.id.mobile_player_glass) : null;
         for (View control : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
                 mPrevButton, mNextButton, mFullscreenButton, mActionsToggle}) {
-            com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, dp(4), true);
+            com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
             com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
         }
         // GUTUBE(toasts): the player's own message pills (zoom, 2x, brightness/volume, chapter,
@@ -983,8 +985,11 @@ public class MobilePlaybackActivity extends MobileActivity
             }
         }
         View time = findViewById(R.id.mobile_player_time);
-        for (View control : new View[] {mPlayPauseButton, mActionsRow, mPlayerLock, mPlayerUnlock,
-                mPlayerLike, mPlayerDislike, mPlayerDownload, mPlayerComments, mPlayerChat}) {
+        View likeDislikePill = findViewById(R.id.mobile_player_like_dislike_pill);
+        View moreHint = findViewById(R.id.mobile_player_more_hint);
+        View playerShare = findViewById(R.id.mobile_player_share);
+        for (View control : new View[] {mPlayPauseButton, mPlayerLock, mPlayerUnlock,
+                likeDislikePill, mPlayerDownload, mPlayerComments, mPlayerChat, playerShare, moreHint}) {
             if (control != null) {
                 com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
                 com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
@@ -994,7 +999,8 @@ public class MobilePlaybackActivity extends MobileActivity
         com.newtube.mobile.ui.common.GlassDrawable.apply(time, videoGlass, 0);
         if (videoGlass != null) {
             mGlassControls = new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
-                    mPrevButton, mNextButton, mFullscreenButton, mActionsToggle, mPlayPauseButton, time, mActionsRow,
+                    mPrevButton, mNextButton, mFullscreenButton, mActionsToggle, mPlayPauseButton, time,
+                    likeDislikePill, mPlayerComments, mPlayerDownload, playerShare, moreHint,
                     mPlayerLock, mPlayerUnlock};
         }
         mDebugViewGroup = findViewById(R.id.mobile_player_debug);
@@ -1348,6 +1354,7 @@ public class MobilePlaybackActivity extends MobileActivity
         //    starts below a solid status bar, YouTube-style, so the window insets are already
         //    consumed and the controls just anchor FLUSH to the video box (no extra padding).
         ViewCompat.setOnApplyWindowInsetsListener(mControlsRoot, (v, insets) -> {
+            mLastInsets = insets;
             applyControlsInsets();
             return insets;
         });
@@ -1439,10 +1446,10 @@ public class MobilePlaybackActivity extends MobileActivity
                 }
             }
         });
-        mPlayerView.setDoubleTapBeganListener(posX -> {
+        mPlayerView.setDoubleTapBeganListener((posX, posY) -> {
             if (isShortsMode()) {
                 mVideoArea.removeCallbacks(mShortsSingleTap);
-                likeShort();
+                likeShort(posX, posY);
                 return;
             }
             if (mPlayer != null && doubleTapSeekForward(mPlayer, posX) != null) {
@@ -1757,19 +1764,30 @@ public class MobilePlaybackActivity extends MobileActivity
      * keeps its size) so they cover less of its picture; fullscreen keeps the full-size ones.
      */
     private void sizePlayerControls(boolean compact) {
-        int icon = compact ? dp(40) : getResources().getDimensionPixelSize(R.dimen.mobile_player_icon_button);
-        int pad = compact ? dp(10) : dp(12);
+        int icon = dp(40);
+        int pad = dp(10);
         for (View button : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
-                mPrevButton, mNextButton, mFullscreenButton}) {
+                mFullscreenButton}) {
             if (button != null) {
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) button.getLayoutParams();
                 lp.width = icon;
                 lp.height = icon;
-                if (button == mAudioButton) {
-                    lp.setMarginStart(dp(4) + icon); // beside the back button
+                if (button == mAudioButton && !(button.getParent() instanceof LinearLayout)) {
+                    lp.setMarginStart(dp(4) + icon);
                 }
                 button.setLayoutParams(lp);
                 button.setPadding(pad, pad, pad, pad);
+            }
+        }
+        int triadIcon = dp(44);
+        int triadPad = dp(11);
+        for (View button : new View[] {mPrevButton, mNextButton}) {
+            if (button != null) {
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) button.getLayoutParams();
+                lp.width = triadIcon;
+                lp.height = triadIcon;
+                button.setLayoutParams(lp);
+                button.setPadding(triadPad, triadPad, triadPad, triadPad);
             }
         }
     }
@@ -3199,12 +3217,10 @@ public class MobilePlaybackActivity extends MobileActivity
      * ExoPlayer instance across rotation); this only follows it.
      */
     /**
-     * PLAYER LAYOUT POLISH + REACH FIX. Portrait: the decor fits the system windows, controls
-     * anchor flush to the video box (no padding). Landscape/fullscreen: inset by the system bars
-     * AND by the pillarbox strip beside the video (see {@link #controlsStrip}), so the whole
-     * overlay - especially the fullscreen-exit button in the bottom-right - aligns with the video
-     * content edges ("where the black strips start", like YouTube) instead of the far screen corners.
-     * The top/bottom scrims are exempt: they cover the whole video area (bleedScrim).
+     * Controls layout: in landscape/fullscreen, controls anchor to the system bars and camera
+     * cutout safe insets (YouTube-style) so buttons remain fixed in place and never jump or shift
+     * when zooming the video to fill or changing aspect ratio. Portrait: decor fits system windows
+     * and controls anchor flush to the video box.
      */
     private void applyControlsInsets() {
         if (mControlsRoot == null) {
@@ -3213,26 +3229,30 @@ public class MobilePlaybackActivity extends MobileActivity
         int left = 0, top = 0, right = 0, bottom = 0;
         if (isLandscape()) {
             WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(mControlsRoot);
-            // The camera cutout too: a film wider than 16:9 has no pillarbox to keep the back
-            // button and the time label off the punch hole any more (controlsStrip).
+            if (rootInsets == null && mLastInsets != null) {
+                rootInsets = mLastInsets;
+            }
+            if (rootInsets == null && getWindow() != null && getWindow().getDecorView() != null) {
+                rootInsets = ViewCompat.getRootWindowInsets(getWindow().getDecorView());
+            }
             Insets bars = rootInsets != null
                     ? rootInsets.getInsets(WindowInsetsCompat.Type.systemBars()
                             | WindowInsetsCompat.Type.displayCutout()) : Insets.NONE;
-            // The video box's size: the controls fill it, but keep a stale one while they are GONE.
-            View box = mVideoArea != null && mVideoArea.getWidth() > 0 ? mVideoArea : mControlsRoot;
-            int width = box.getWidth() > 0
-                    ? box.getWidth() : getResources().getDisplayMetrics().widthPixels;
-            int height = box.getHeight() > 0
-                    ? box.getHeight() : getResources().getDisplayMetrics().heightPixels;
-            int strip = controlsStrip(width, height, mVideoAspect, getResizeMode());
-            left = Math.max(bars.left, strip);
-            right = Math.max(bars.right, strip);
-            top = bars.top;
-            bottom = bars.bottom;
+            DisplayCutoutCompat cutout = rootInsets != null ? rootInsets.getDisplayCutout() : null;
+            left = Math.max(bars.left, cutout != null ? cutout.getSafeInsetLeft() : 0);
+            right = Math.max(bars.right, cutout != null ? cutout.getSafeInsetRight() : 0);
+            top = Math.max(bars.top, cutout != null ? cutout.getSafeInsetTop() : 0);
+            bottom = Math.max(bars.bottom, cutout != null ? cutout.getSafeInsetBottom() : 0);
         } else if (mPortraitFull) {
             // GUTUBE(fullscreen): the video runs under the hidden status bar, so the top row
             // drops below the camera's band (the bars' room, visible or not) instead of flanking it.
             WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(mControlsRoot);
+            if (rootInsets == null && mLastInsets != null) {
+                rootInsets = mLastInsets;
+            }
+            if (rootInsets == null && getWindow() != null && getWindow().getDecorView() != null) {
+                rootInsets = ViewCompat.getRootWindowInsets(getWindow().getDecorView());
+            }
             if (rootInsets != null) {
                 top = Math.max(rootInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars()).top,
                         rootInsets.getInsets(WindowInsetsCompat.Type.displayCutout()).top);
@@ -3269,6 +3289,10 @@ public class MobilePlaybackActivity extends MobileActivity
             return;
         }
         boolean full = mPortraitFull && !isLandscape();
+        if (mTitleView.getParent() != null && mTitleView.getParent() != mControlsRoot) {
+            mPlayerAuthor.setVisibility((full || isLandscape()) ? View.VISIBLE : View.GONE);
+            return;
+        }
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mTitleView.getLayoutParams();
         lp.setMarginStart(dp(full ? 16 : 104));
         lp.topMargin = dp(full ? 62 : 10);
@@ -3280,7 +3304,7 @@ public class MobilePlaybackActivity extends MobileActivity
         mTitleView.setMinHeight(full ? 0 : dp(48));
         mTitleView.setMinimumHeight(full ? 0 : dp(48));
         mTitleView.setGravity((full ? Gravity.TOP : Gravity.CENTER_VERTICAL) | Gravity.START);
-        mPlayerAuthor.setVisibility(full ? View.VISIBLE : View.GONE);
+        mPlayerAuthor.setVisibility((full || isLandscape()) ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -3312,6 +3336,13 @@ public class MobilePlaybackActivity extends MobileActivity
                     ? R.string.mobile_player_hide_actions : R.string.mobile_player_show_actions));
         }
         updateMoreVideosHint();
+        View bottomEnd = findViewById(R.id.mobile_player_bottom_end);
+        if (bottomEnd != null) {
+            int bottomMargin = inline
+                    ? getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin)
+                    : (actions ? dp(8) : lift);
+            setMargins(bottomEnd, 0, 0, dp(8), bottomMargin);
+        }
         if (actions) {
             lift += dp(44);
         }
@@ -3445,27 +3476,6 @@ public class MobilePlaybackActivity extends MobileActivity
             lp.setMargins(-left, -top, -right, -bottom);
             scrim.setLayoutParams(lp);
         }
-    }
-
-    /**
-     * NEWTUBE(issue #9): width of the pillarbox strip beside a fitted video in a width x height
-     * box - where the fullscreen controls start. It used to be the 16:9 strip for every video, so on
-     * a 20:9 phone the controls of a film wider than 16:9 (2.35:1 fills the width) sat 272 px in,
-     * over the picture, and their scrims (then padded with them) ended there as two hard vertical
-     * edges. Capped at the 16:9 strip, so a narrower video (4:3, vertical)
-     * keeps the 16:9 control box instead of a thin column; 0 when the video covers the width: a
-     * wider film, or a fill/zoom resize mode. An unknown aspect (no video size yet) counts as 16:9.
-     */
-    static int controlsStrip(int width, int height, float videoAspect, int resizeMode) {
-        int strip16x9 = Math.max(0, Math.round((width - height * 16f / 9f) / 2f));
-        if (resizeMode != PlayerConstants.RESIZE_MODE_DEFAULT
-                && resizeMode != PlayerConstants.RESIZE_MODE_FIT_HEIGHT) {
-            return 0; // fixed width, fill and zoom all cover the full width
-        }
-        if (!(videoAspect > 0f)) {
-            return strip16x9;
-        }
-        return Math.min(strip16x9, Math.max(0, Math.round((width - height * videoAspect) / 2f)));
     }
 
     private void applySystemBarsForOrientation(int orientation) {
@@ -3974,7 +3984,7 @@ public class MobilePlaybackActivity extends MobileActivity
             Glide.with(getApplicationContext())
                     .load(thumb)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
                     .into(mAudioCoverArt);
         }
     }
@@ -6275,7 +6285,6 @@ public class MobilePlaybackActivity extends MobileActivity
     private final Player.Listener mUiPlayerListener = new Player.Listener() {
         @Override
         public void onVideoSizeChanged(VideoSize videoSize) {
-            // NEWTUBE(issue #9): the fullscreen controls follow this video's shape (controlsStrip).
             // An unknown size keeps the last one, as the content frame does (DoubleTapPlayerViewImpl).
             if (videoSize.width > 0 && videoSize.height > 0) {
                 mVideoAspect = videoSize.width * videoSize.pixelWidthHeightRatio / videoSize.height;
@@ -6929,7 +6938,7 @@ public class MobilePlaybackActivity extends MobileActivity
                     .load(thumb)
                     .onlyRetrieveFromCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
                     .override(mStillW, mStillH)
                     .centerCrop()
                     .placeholder(seed) // Glide would otherwise clear the seed while it loads
@@ -6937,7 +6946,7 @@ public class MobilePlaybackActivity extends MobileActivity
                             .load(narrow)
                             .onlyRetrieveFromCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .format(DecodeFormat.PREFER_RGB_565)
+                            .format(DecodeFormat.PREFER_ARGB_8888)
                             .override(mStillW, mStillH)
                             .centerCrop()
                             .placeholder(seed)
@@ -7146,7 +7155,7 @@ public class MobilePlaybackActivity extends MobileActivity
                 mMoreVideos.open();
             }
         });
-        if (show) {
+        if (show && !(hint.getParent() instanceof LinearLayout)) {
             setMargins(hint, 0, 0, dp(12), ((ViewGroup.MarginLayoutParams) mActionsRow.getLayoutParams()).bottomMargin);
         }
     }
@@ -7279,11 +7288,15 @@ public class MobilePlaybackActivity extends MobileActivity
         }
     };
 
-    private void likeShort() {
+    private void likeShort(float x, float y) {
         if (getButtonState(R.id.action_thumbs_up) != BUTTON_ON && mWatchLike != null) {
             mWatchLike.performClick();
         }
-        mShorts.popHeart();
+        mShorts.popHeart(x, y);
+    }
+
+    private void likeShort() {
+        likeShort(-1f, -1f);
     }
 
     /** Shorts filling the portrait screen (not while its comments are open, nor in landscape). */
@@ -11285,7 +11298,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (page == null || pill == null) {
             return;
         }
-        boolean shown = isTablet() && page.getVisibility() == View.VISIBLE && !isCountUnset(page);
+        boolean shown = page.getVisibility() == View.VISIBLE && !isCountUnset(page);
         pill.setText(shown ? page.getText() : null);
         pill.setVisibility(shown ? View.VISIBLE : View.GONE);
     }
@@ -11667,10 +11680,9 @@ public class MobilePlaybackActivity extends MobileActivity
         // came from there.
         boolean pill = mActionsRow != null && mActionsRow.isShown();
         View likeIcon = mShorts != null && mShorts.isActive() ? mShorts.likeIcon() : pill ? mPlayerLike : mWatchLikeIcon;
-        if (like && stateAfter == BUTTON_ON) {
-            Burst.play(likeIcon, getColorInt(R.color.mobile_color_primary));
+        if (!like) {
+            Motion.pop(pill ? mPlayerDislike : mWatchDislikeIcon);
         }
-        Motion.pop(like ? likeIcon : pill ? mPlayerDislike : mWatchDislikeIcon);
         WatchActionFeedback.confirmRating(this, like, stateAfter == BUTTON_ON,
                 undoRating(ratingBefore, ratingAfter));
     }
@@ -11693,6 +11705,7 @@ public class MobilePlaybackActivity extends MobileActivity
         } else {
             mWatchLikeCount.setText(text);
         }
+        syncPillCounts();
     }
 
     private int currentRating() {
@@ -12813,7 +12826,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mPlayerView != null) {
             mPlayerView.setResizeMode(mode);
         }
-        applyControlsInsets(); // fill/zoom: the controls span the width (controlsStrip)
+        applyControlsInsets();
     }
 
     /**

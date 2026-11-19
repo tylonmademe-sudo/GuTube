@@ -35,6 +35,7 @@
         android:layout_marginStart="12dp"
         android:layout_weight="1"
         app:glassCornerRadius="22dp"
+        app:glassLiquid="true"
         app:glassOnGlass="true"
         app:glassTint="@color/gutube_glass_pill_tint">
 

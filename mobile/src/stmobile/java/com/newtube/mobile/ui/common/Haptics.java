@@ -21,6 +21,8 @@ import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.liskovsoft.smartyoutubetv2.tv.R;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 
@@ -238,7 +240,6 @@ public final class Haptics {
         window.setCallback((Window.Callback) Proxy.newProxyInstance(Window.Callback.class.getClassLoader(),
                 new Class<?>[]{Window.Callback.class}, (proxy, method, args) -> {
                     if ("dispatchTouchEvent".equals(method.getName())) {
-                        SpotlightDispatcher.dispatch(window.peekDecorView(), (MotionEvent) args[0]);
                         onTouch(window.peekDecorView(), (MotionEvent) args[0]);
                     } else if ("onAttachedToWindow".equals(method.getName())) {
                         if (dialog instanceof com.google.android.material.bottomsheet.BottomSheetDialog) {

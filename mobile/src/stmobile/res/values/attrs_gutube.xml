@@ -15,6 +15,8 @@
     <attr name="gutubeNavBottomMargin" format="dimension" />
     <attr name="gutubeNavMaxWidth" format="dimension" />
     <attr name="gutubeNavTint" format="color" />
+    <attr name="gutubeNavStrokeColor" format="color" />
+    <attr name="gutubeNavStrokeWidth" format="dimension" />
     <attr name="gutubeNavItemBackground" format="reference" />
     <attr name="gutubeNavLiquid" format="boolean" />
     <!-- GUTUBE(glass): GlassView's shape and tint. -->
@@ -29,6 +31,8 @@
         <attr name="glassMaxWidth" format="dimension" />
         <!-- A flat bar's frost thins out to nothing over this much of its bottom (Settings' top bar). -->
         <attr name="glassFadeBottom" format="dimension" />
+        <attr name="glassStrokeColor" format="color" />
+        <attr name="glassStrokeWidth" format="dimension" />
     </declare-styleable>
 
     <!-- GUTUBE(spotlight): Adaptive Spotlight effect attributes for cards, buttons and containers. -->

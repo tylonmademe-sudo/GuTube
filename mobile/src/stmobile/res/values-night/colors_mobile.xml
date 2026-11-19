@@ -3,6 +3,8 @@
     <!-- NEWTUBE(theme): the dark palette - exactly the values the app shipped before the Theme
          setting, moved here from values/ (which now holds the light ones). Only the colours that
          differ between the themes are listed; see values/colors_mobile.xml for what they're for. -->
+    <!-- GUTUBE(app icon): pure white solid color for adaptive icon background (ColorOS 2x2 resizable icon support) -->
+    <color name="ic_launcher_white">#FFFFFF</color>
     <color name="mobile_color_cast_active">#64D2FF</color>
     <!-- GUTUBE(amoled): pages are true black - an AMOLED pixel showing #000 is off. -->
     <color name="mobile_color_background">#000000</color>
@@ -37,27 +39,32 @@
     <color name="dialog_hint_color">#33FFFFFF</color>
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
 
-    <!-- GUTUBE(glass): BitChord's glass tint (#121212 at 40%), 14% white hairline, 14% white lit tab. -->
-    <color name="gutube_glass_tint">#66000000</color>
+    <!-- GUTUBE(glass): Glassmorphism spec (background: rgba(0,0,0,0.18), saturate 180%, inset highlight) -->
+    <color name="gutube_glass_tint">#2E000000</color>
+    <!-- Liquid Glass navigation tint: rgba(255, 255, 255, 0) on night (#00000000 for dark fallback) -->
+    <color name="gutube_nav_glass_tint">#00000000</color>
+    <!-- Liquid Glass navigation stroke: subtle specular highlight rgba(255, 255, 255, 0.25) -->
+    <color name="gutube_nav_glass_stroke">#40FFFFFF</color>
     <!-- GUTUBE(stats): a milky frost over a blurred page, for a card on the greeting's glass. -->
     <color name="gutube_frost_tint">#2EFFFFFF</color>
     <color name="gutube_youtube_nav_tint">#C70A0A0A</color>
-    <color name="gutube_glass_button">#66000000</color>
-    <color name="gutube_watch_card">#17FFFFFF</color>
-    <!-- GUTUBE(issue #250): dark like the rest of the app's glass, not a white lift. -->
-    <color name="gutube_search_glass_tint">#66000000</color>
-    <color name="gutube_dialog_glass_tint">#A6000000</color>
-    <color name="gutube_greet_glass_tint">#66000000</color>
-    <!-- GUTUBE(glass): a pill on a frosted sheet ("Add a comment"): a see-through lift. -->
-    <color name="gutube_glass_pill_tint">#1FFFFFFF</color>
-    <!-- A frosted sheet's tint over the blurred page: dark glass, as the search bar and dialogs (the grey surface at 78% read as milk). -->
-    <color name="gutube_sheet_glass">#A6000000</color>
-    <color name="gutube_glass_fill">#17FFFFFF</color>
-    <color name="gutube_glass_stroke">#24FFFFFF</color>
-    <!-- GUTUBE(glass): the lit rim and top sheen of glass with nothing to blur (sheets, icon circles). -->
-    <color name="gutube_glass_rim">#3DFFFFFF</color>
-    <color name="gutube_glass_sheen">#1AFFFFFF</color>
-    <color name="gutube_glass_selected">#24FFFFFF</color>
+    <color name="gutube_glass_button">#1AFFFFFF</color>
+    <color name="gutube_watch_card">#1AFFFFFF</color>
+    <!-- GUTUBE(issue #250): dark translucent glass for search bar, dialogs and greeting overlay. -->
+    <color name="gutube_search_glass_tint">#2E000000</color>
+    <color name="gutube_dialog_glass_tint">#36000000</color>
+    <color name="gutube_greet_glass_tint">#2E000000</color>
+    <!-- GUTUBE(glass): a pill on a frosted sheet ("Add a comment"): rgba(255, 255, 255, 0.1). -->
+    <color name="gutube_glass_pill_tint">#1AFFFFFF</color>
+    <!-- A frosted sheet's tint over the blurred page: rgba(0, 0, 0, 0.21) allowing background colors to show through. -->
+    <color name="gutube_sheet_glass">#36000000</color>
+    <color name="gutube_glass_fill">#1AFFFFFF</color>
+    <!-- 1px solid rgba(255, 255, 255, 0.2) -->
+    <color name="gutube_glass_stroke">#33FFFFFF</color>
+    <!-- inset 0px 0px 4px 2px rgba(255, 255, 255, 0.21) -->
+    <color name="gutube_glass_rim">#36FFFFFF</color>
+    <color name="gutube_glass_sheen">#26FFFFFF</color>
+    <color name="gutube_glass_selected">#2EFFFFFF</color>
     <color name="gutube_nav_inactive">#ADFFFFFF</color>
     <color name="gutube_nav_bloom_plain">#FFFFFFFF</color>
     <!-- GUTUBE(glass): the frosted top bar - the page colour at ~75%. -->
