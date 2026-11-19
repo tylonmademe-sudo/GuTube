@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -58,7 +60,7 @@ import okhttp3.ResponseBody;
  * and automatically triggers the Android Package Installer.
  */
 public final class GitHubAppUpdater {
-    private static final String TAG = "GitHubAppUpdater";
+    private static final String TAG = "GitHubUpdater";
     private static final String RELEASES_API_URL = "https://api.github.com/repos/tylonmademe-sudo/GuTube/releases/latest";
 
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
@@ -107,13 +109,13 @@ public final class GitHubAppUpdater {
                         for (File f : files) {
                             if (f.getName().endsWith(".apk") || f.getName().endsWith(".tmp")) {
                                 boolean deleted = f.delete();
-                                Log.d(TAG, "Cleaned update file: " + f.getName() + " (deleted=" + deleted + ")");
+                                Log.d(TAG, "Cleaned old update file: " + f.getName() + " (deleted=" + deleted + ")");
                             }
                         }
                     }
                 }
             } catch (Exception e) {
-                Log.w(TAG, "Error cleaning old updates: " + e.getMessage());
+                Log.e(TAG, "Error cleaning old updates: " + e.getMessage(), e);
             }
         });
     }
@@ -148,6 +150,12 @@ public final class GitHubAppUpdater {
     public static void checkUpdate(Activity activity, boolean manualCheck) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
 
+        final String currentVersion = getCurrentVersion(activity);
+        final String cleanCurrent = cleanVersionName(currentVersion);
+
+        Log.d(TAG, "Initiating update check (manual=" + manualCheck + "): API URL=" + RELEASES_API_URL);
+        Log.d(TAG, "Local app version: raw='" + currentVersion + "', numeric='" + cleanCurrent + "'");
+
         EXECUTOR.execute(() -> {
             try {
                 Request request = new Request.Builder()
@@ -156,9 +164,10 @@ public final class GitHubAppUpdater {
                         .header("User-Agent", "GuTube-Android-App")
                         .build();
 
+                Log.d(TAG, "Fetching latest release from GitHub API...");
                 try (Response response = HTTP_CLIENT.newCall(request).execute()) {
                     if (!response.isSuccessful()) {
-                        Log.d(TAG, "GitHub releases API returned code: " + response.code());
+                        Log.e(TAG, "GitHub releases API failed with HTTP " + response.code() + ": " + response.message());
                         if (manualCheck) {
                             MAIN_HANDLER.post(() -> showToast(activity, "GuTube is up to date"));
                         }
@@ -167,6 +176,7 @@ public final class GitHubAppUpdater {
 
                     ResponseBody body = response.body();
                     if (body == null) {
+                        Log.e(TAG, "GitHub releases API returned empty body");
                         if (manualCheck) {
                             MAIN_HANDLER.post(() -> showToast(activity, "GuTube is up to date"));
                         }
@@ -178,33 +188,43 @@ public final class GitHubAppUpdater {
 
                     String tagName = json.optString("tag_name", "");
                     if (tagName.isEmpty()) {
+                        Log.e(TAG, "GitHub release JSON missing 'tag_name' field");
                         if (manualCheck) {
                             MAIN_HANDLER.post(() -> showToast(activity, "GuTube is up to date"));
                         }
                         return;
                     }
 
+                    String cleanRelease = cleanVersionName(tagName);
+                    Log.d(TAG, "Fetched release tag: raw='" + tagName + "', numeric='" + cleanRelease + "'");
+
                     // Compare version
-                    final String currentVersion = getCurrentVersion(activity);
-                    if (!isNewerVersion(tagName, currentVersion)) {
-                        Log.d(TAG, "Current version (" + currentVersion + ") is >= latest release (" + tagName + ")");
+                    boolean isNewer = isNewerVersion(tagName, currentVersion);
+                    Log.d(TAG, "Version comparison: local='" + cleanCurrent + "' vs remote='" + cleanRelease + "' -> isNewer=" + isNewer);
+
+                    if (!isNewer) {
+                        Log.d(TAG, "GuTube is up to date (current: " + cleanCurrent + " >= remote: " + cleanRelease + ")");
                         if (manualCheck) {
-                            MAIN_HANDLER.post(() -> showToast(activity, "GuTube is up to date (" + currentVersion + ")"));
+                            MAIN_HANDLER.post(() -> showToast(activity, "GuTube is up to date (" + cleanCurrent + ")"));
                         }
                         return;
                     }
 
+                    Log.d(TAG, "Newer version available! Remote: " + cleanRelease + " > Local: " + cleanCurrent);
+
                     // Check if already dismissed this session (only for auto-check)
                     if (!manualCheck && tagName.equals(sDismissedVersionTag)) {
-                        Log.d(TAG, "Update " + tagName + " was dismissed for this session");
+                        Log.d(TAG, "Update " + tagName + " was dismissed by user in this session");
                         return;
                     }
 
                     // Extract APK download URL & size from assets array
                     JSONArray assets = json.optJSONArray("assets");
                     String apkUrl = null;
+                    String apkName = null;
                     long apkSize = 0;
                     if (assets != null) {
+                        Log.d(TAG, "Release contains " + assets.length() + " asset(s), searching for APK...");
                         for (int i = 0; i < assets.length(); i++) {
                             JSONObject asset = assets.optJSONObject(i);
                             if (asset == null) continue;
@@ -216,11 +236,13 @@ public final class GitHubAppUpdater {
                                 // Prefer arm64 build for modern phones
                                 if (name.contains("arm64") || name.contains("v8a")) {
                                     apkUrl = downloadUrl;
+                                    apkName = name;
                                     apkSize = size;
                                     break;
                                 }
                                 if (apkUrl == null || name.contains("universal")) {
                                     apkUrl = downloadUrl;
+                                    apkName = name;
                                     apkSize = size;
                                 }
                             }
@@ -228,20 +250,22 @@ public final class GitHubAppUpdater {
                     }
 
                     if (apkUrl == null) {
-                        Log.w(TAG, "Release " + tagName + " found, but no .apk asset attached");
+                        Log.e(TAG, "Release " + tagName + " found, but no matching .apk asset in release assets!");
                         if (manualCheck) {
                             MAIN_HANDLER.post(() -> showToast(activity, "New release " + tagName + " found, but no APK is available yet."));
                         }
                         return;
                     }
 
+                    Log.d(TAG, "Resolved APK download: name='" + apkName + "', url=" + apkUrl + ", size=" + apkSize + " bytes");
+
                     // Parse changelog bullet points
                     String rawBody = json.optString("body", "");
                     List<String> changelog = parseChangelog(rawBody);
 
-                    String cleanVersion = cleanVersionName(tagName);
-                    ReleaseInfo release = new ReleaseInfo(tagName, cleanVersion, apkUrl, apkSize, changelog);
+                    ReleaseInfo release = new ReleaseInfo(tagName, cleanRelease, apkUrl, apkSize, changelog);
 
+                    Log.d(TAG, "Showing update bottom sheet dialog for version " + cleanRelease);
                     MAIN_HANDLER.post(() -> {
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
                             showUpdateDialog(activity, release);
@@ -249,7 +273,7 @@ public final class GitHubAppUpdater {
                     });
                 }
             } catch (Exception e) {
-                Log.w(TAG, "GitHub update check failed silently: " + e.getMessage());
+                Log.e(TAG, "GitHub update check failed with exception: " + e.getMessage(), e);
                 if (manualCheck) {
                     MAIN_HANDLER.post(() -> showToast(activity, "Could not check for updates. Check connection."));
                 }
@@ -352,6 +376,7 @@ public final class GitHubAppUpdater {
                 if (tempFile.exists()) tempFile.delete();
 
                 try {
+                    Log.d(TAG, "User clicked update. Starting download from: " + release.downloadUrl);
                     Request req = new Request.Builder()
                             .url(release.downloadUrl)
                             .header("User-Agent", "GuTube-Android-App")
@@ -430,6 +455,8 @@ public final class GitHubAppUpdater {
                         tempFile.delete();
                     }
 
+                    Log.d(TAG, "APK download completed: " + finalFile.getAbsolutePath() + " (size: " + finalFile.length() + " bytes)");
+
                     MAIN_HANDLER.post(() -> {
                         dialog.dismiss();
                         installApk(activity, finalFile);
@@ -437,7 +464,7 @@ public final class GitHubAppUpdater {
 
                 } catch (Exception e) {
                     if (!isCancelled[0]) {
-                        Log.e(TAG, "Download error: " + e.getMessage());
+                        Log.e(TAG, "Download error: " + e.getMessage(), e);
                         tempFile.delete();
                         MAIN_HANDLER.post(() -> {
                             if (dialog.isShowing()) {
@@ -491,12 +518,16 @@ public final class GitHubAppUpdater {
      */
     public static void installApk(Activity activity, File apkFile) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed() || apkFile == null || !apkFile.exists()) {
+            Log.e(TAG, "installApk aborted: activity invalid or apkFile does not exist: " + (apkFile != null ? apkFile.getAbsolutePath() : "null"));
             return;
         }
+
+        Log.d(TAG, "Preparing to install APK: " + apkFile.getAbsolutePath() + " (size: " + apkFile.length() + " bytes)");
 
         // Android 8.0+ Unknown sources permission check
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!activity.getPackageManager().canRequestPackageInstalls()) {
+                Log.d(TAG, "Permission REQUEST_INSTALL_PACKAGES not granted yet. Prompting user to enable unknown sources...");
                 sPendingInstallApk = apkFile;
                 showToast(activity, "Please allow GuTube to install updates");
                 try {
@@ -504,6 +535,7 @@ public final class GitHubAppUpdater {
                             Uri.parse("package:" + activity.getPackageName()));
                     activity.startActivity(permissionIntent);
                 } catch (Exception e) {
+                    Log.e(TAG, "Failed to launch ACTION_MANAGE_UNKNOWN_APP_SOURCES, falling back to security settings: " + e.getMessage(), e);
                     Intent fallback = new Intent(Settings.ACTION_SECURITY_SETTINGS);
                     activity.startActivity(fallback);
                 }
@@ -518,33 +550,26 @@ public final class GitHubAppUpdater {
                     apkFile
             );
 
+            Log.d(TAG, "Launching Android Package Installer with URI: " + apkUri);
             Intent installIntent = new Intent(Intent.ACTION_VIEW);
             installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(installIntent);
         } catch (Exception e) {
-            Log.e(TAG, "Failed to start package installer", e);
+            Log.e(TAG, "Failed to start package installer: " + e.getMessage(), e);
             showToast(activity, "Failed to launch package installer");
         }
     }
 
     /**
-     * Compares release tag with app version name. Returns true if releaseTag is newer.
+     * Compares release tag with app version name. Returns true if releaseTag is strictly newer.
+     * Both inputs are parsed to purely numeric dot-separated integers (e.g. 3.4.3 > 3.4.2).
      */
     public static boolean isNewerVersion(String releaseTag, String currentVersion) {
         if (releaseTag == null || currentVersion == null) return false;
-        String cleanRelease = releaseTag.trim().toLowerCase();
-        if (cleanRelease.startsWith("v")) {
-            cleanRelease = cleanRelease.substring(1).trim();
-        }
-        cleanRelease = cleanRelease.split(" ")[0].trim();
-
-        String cleanCurrent = currentVersion.trim().toLowerCase();
-        if (cleanCurrent.startsWith("v")) {
-            cleanCurrent = cleanCurrent.substring(1).trim();
-        }
-        cleanCurrent = cleanCurrent.split(" ")[0].trim();
+        String cleanRelease = cleanVersionName(releaseTag);
+        String cleanCurrent = cleanVersionName(currentVersion);
 
         String[] relParts = cleanRelease.split("\\.");
         String[] curParts = cleanCurrent.split("\\.");
@@ -554,16 +579,10 @@ public final class GitHubAppUpdater {
             int r = 0;
             int c = 0;
             if (i < relParts.length) {
-                String num = relParts[i].replaceAll("[^0-9]", "");
-                if (!num.isEmpty()) {
-                    try { r = Integer.parseInt(num); } catch (NumberFormatException ignored) {}
-                }
+                try { r = Integer.parseInt(relParts[i]); } catch (NumberFormatException ignored) {}
             }
             if (i < curParts.length) {
-                String num = curParts[i].replaceAll("[^0-9]", "");
-                if (!num.isEmpty()) {
-                    try { c = Integer.parseInt(num); } catch (NumberFormatException ignored) {}
-                }
+                try { c = Integer.parseInt(curParts[i]); } catch (NumberFormatException ignored) {}
             }
             if (r > c) return true;
             if (r < c) return false;
@@ -574,20 +593,28 @@ public final class GitHubAppUpdater {
     private static String getCurrentVersion(Context context) {
         try {
             if (context != null) {
-                return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+                String vn = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+                if (vn != null && !vn.isEmpty()) {
+                    return vn;
+                }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.d(TAG, "PackageManager lookup failed, using BuildConfig.VERSION_NAME: " + e.getMessage());
         }
         return BuildConfig.VERSION_NAME;
     }
 
-    private static String cleanVersionName(String tag) {
-        if (tag == null) return "";
-        String v = tag.trim();
-        if (v.startsWith("v") || v.startsWith("V")) {
-            v = v.substring(1).trim();
+    /**
+     * Cleans version strings by extracting pure numeric semver (e.g., 'v3.4.2 Severus' -> '3.4.2').
+     * Strips leading 'v'/'V', codenames, suffixes, and non-numeric leading/trailing tokens.
+     */
+    public static String cleanVersionName(String raw) {
+        if (raw == null || raw.trim().isEmpty()) return "0";
+        Matcher m = Pattern.compile("(\\d+(?:\\.\\d+)*)").matcher(raw.trim());
+        if (m.find()) {
+            return m.group(1);
         }
-        return v.split(" ")[0];
+        return raw.trim().replaceAll("^[vV]", "").trim();
     }
 
     /**

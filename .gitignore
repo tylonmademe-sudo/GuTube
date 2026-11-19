@@ -38,6 +38,8 @@ build/
 /smartyoutubetv2/release
 /smarttube/release
 /mobile/release
+/mobile/stmobile/
+*.dm
 # gradle 6 fix
 /smarttube/output
 /mobile/output
