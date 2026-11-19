@@ -424,6 +424,16 @@ public class MobileBrowseActivity extends MobileActivity
         refreshUpdateBadge();
         mBottomNav.postDelayed(mAnnounceUpdateInstalled, UPDATED_NOTICE_DELAY_MS);
 
+        // GUTUBE(github-updater): clean up any leftover update APKs and check on startup
+        com.newtube.mobile.update.GitHubAppUpdater.cleanupOldUpdates(this);
+        if (savedInstanceState == null) {
+            getWindow().getDecorView().postDelayed(() -> {
+                if (!isFinishing() && !isDestroyed()) {
+                    com.newtube.mobile.update.GitHubAppUpdater.checkUpdateOnStartup(this);
+                }
+            }, 3000);
+        }
+
         // Android 13+ (targetSdk 35): POST_NOTIFICATIONS is a runtime permission - without it
         // the media-playback notification never shows on a fresh install. Ask plainly on every
         // cold start until granted; the framework itself stops showing the dialog after two
@@ -4221,6 +4231,7 @@ public class MobileBrowseActivity extends MobileActivity
     @Override
     protected void onResume() {
         super.onResume();
+        com.newtube.mobile.update.GitHubAppUpdater.resumePendingInstall(this);
         mPreview.schedule();
         mTopBar.syncMark(this);
         mBottomNav.setLabelVisibilityMode(NavTabs.showLabels(this) // GUTUBE(nav labels)

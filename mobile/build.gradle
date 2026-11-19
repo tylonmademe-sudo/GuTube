@@ -173,12 +173,6 @@ android {
         // its inclusion policy forbids self-updates that aren't an explicit opt-in.
         buildConfigField "boolean", "IN_APP_UPDATES", project.hasProperty('fdroid') ? "false" : "true"
 
-        // Strips unused localized strings from third-party libraries (e.g. Material/AndroidX)
-        resourceConfigurations += ['en', 'ar', 'az', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'es', 'et', 'fa-rIR',
-                'fi', 'fr', 'gl-rES', 'he', 'hi', 'hr', 'hu', 'hy', 'in', 'it', 'iw', 'ja', 'ko', 'lt',
-                'lv', 'mo', 'nb', 'nl', 'pl', 'pt', 'pt-rBR', 'pt-rPT', 'ro', 'ru', 'sk', 'sl', 'sq',
-                'sr', 'sv', 'te', 'th', 'tr', 'uk', 'vi', 'zh', 'zh-rCN', 'zh-rTW']
-
         // The content of Universal apk
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'

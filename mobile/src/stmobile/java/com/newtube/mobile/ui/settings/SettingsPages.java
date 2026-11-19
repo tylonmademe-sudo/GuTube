@@ -222,7 +222,7 @@ public final class SettingsPages {
                     SettingsRow.action(context.getString(R.string.mobile_settings_version), versionLine(context), page -> { })));
         } else {
             rows.add(icon(R.drawable.ic_mobile_update, SettingsRow.action(context.getString(R.string.check_for_updates),
-                    versionLine(context), page -> AppUpdatePresenter.instance(page.requireContext()).start(true))));
+                    versionLine(context), page -> com.newtube.mobile.update.GitHubAppUpdater.checkUpdate(page.requireActivity(), true))));
             AppUpdateChecker checker = new AppUpdateChecker(context, null);
             rows.add(icon(R.drawable.ic_about_notifications, SettingsRow.toggle(context.getString(R.string.check_updates_auto),
                     context.getString(R.string.mobile_settings_update_notify_summary),

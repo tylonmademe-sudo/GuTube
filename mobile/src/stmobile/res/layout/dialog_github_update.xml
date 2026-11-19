@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- In-app GitHub update bottom sheet modal dialog -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_shorts_bottom_sheet"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <!-- Top Drag Handle -->
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_mobile_sheet_handle" />
+
+    <!-- Header: App Icon, Title, Version Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="18dp">
+
+        <ImageView
+            android:id="@+id/github_update_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/github_update_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Available"
+                android:textColor="@color/mobile_color_on_surface"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/github_update_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_color_on_surface_secondary"
+                android:textSize="14sp"
+                tools:text="Version 3.4.3 · 34 MB" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Download Progress Bar & Live Text (Visible during download) -->
+    <LinearLayout
+        android:id="@+id/github_update_progress_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/github_update_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="@color/mobile_color_progress"
+            app:trackColor="@color/mobile_color_track"
+            app:trackCornerRadius="2dp"
+            app:trackThickness="4dp" />
+
+        <TextView
+            android:id="@+id/github_update_progress_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13sp"
+            tools:text="1.9 MB of 34 MB" />
+
+    </LinearLayout>
+
+    <!-- What's New / Changelog Bullet Points -->
+    <LinearLayout
+        android:id="@+id/github_update_notes_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/github_update_whats_new_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What's new"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <com.newtube.mobile.ui.update.MaxHeightScrollView
+            android:id="@+id/github_update_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:id="@+id/github_update_notes_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </com.newtube.mobile.ui.update.MaxHeightScrollView>
+
+    </LinearLayout>
+
+    <!-- Action Buttons: Cancel and Update Now -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/github_update_btn_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Cancel"
+            android:textColor="@color/mobile_color_on_surface"
+            app:rippleColor="@color/mobile_color_pill" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/github_update_btn_action"
+            style="@style/Widget.NewTube.Button.Pill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Now" />
+
+    </LinearLayout>
+
+</LinearLayout>

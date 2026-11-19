@@ -49,6 +49,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- GUTUBE(tv install): finding and reaching the TV on the Wi-Fi (asked for on Android 17+). -->
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <!-- In-app self-updater APK installation -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- The in-app updater hands its APK straight to Android's installer (AppUpdates.systemInstaller):
          from Android 11 these queries make the installers visible, so apps that also open APK files
@@ -110,6 +112,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.NewTube"
         tools:replace="android:name,android:theme,android:icon,android:roundIcon">
+
+        <!-- FileProvider for internal cacheDir/updates/ in-app APK installer -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.update_provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource" />
+        </provider>
 
         <!-- TV autostart (boot, screen on, charger, shutdown...) for the remote control service,
              which the phone keeps off: an exported wake-on-everything receiver reads as malware. -->

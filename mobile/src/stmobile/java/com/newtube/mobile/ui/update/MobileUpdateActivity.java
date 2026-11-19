@@ -105,12 +105,20 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
 
     /** Settings -> About -> Check for updates. */
     public static void startCheck(Context context) {
-        start(context, MODE_CHECK);
+        if (context instanceof Activity) {
+            com.newtube.mobile.update.GitHubAppUpdater.checkUpdate((Activity) context, true);
+        } else {
+            start(context, MODE_CHECK);
+        }
     }
 
     /** The You tab's update row. */
     public static void start(Context context) {
-        start(context, MODE_UPDATE);
+        if (context instanceof Activity) {
+            com.newtube.mobile.update.GitHubAppUpdater.checkUpdate((Activity) context, true);
+        } else {
+            start(context, MODE_UPDATE);
+        }
     }
 
     /** GUTUBE(update pop-up): Home found an update by itself (AppUpdates.shouldPrompt). */
