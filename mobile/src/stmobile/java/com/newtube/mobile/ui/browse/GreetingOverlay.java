@@ -42,6 +42,8 @@ final class GreetingOverlay {
     private final View mStats;
     private final View mFocus;
     private final Runnable mFocusTick = this::bindFocus;
+    private final Runnable mStatsTick = this::tickStats;
+    private int mSelectedDaysAgo = -1;
     private final OnBackPressedCallback mBack = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
@@ -93,6 +95,10 @@ final class GreetingOverlay {
         mFocus = LayoutInflater.from(activity).inflate(R.layout.item_mobile_greet_focus, content, false);
         content.addView(mFocus);
         frost(mFocus);
+        TextView focusLabel = mFocus.findViewById(R.id.focus_label);
+        if (focusLabel != null) {
+            focusLabel.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
+        }
         mFocus.findViewById(R.id.focus_label).setOnClickListener(v -> {
             if (FocusTimer.remainingMs() < 0) { // running: the countdown is not a picker
                 com.newtube.mobile.ui.common.Haptics.tick(v);
@@ -134,6 +140,7 @@ final class GreetingOverlay {
         View option = LayoutInflater.from(mActivity).inflate(R.layout.item_mobile_greet_option, parent, false);
         TextView text = option.findViewById(R.id.mobile_greet_option_label);
         text.setText(label);
+        text.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
         text.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
         frost(option);
         option.setOnClickListener(v -> {
@@ -145,7 +152,8 @@ final class GreetingOverlay {
 
     /** GUTUBE(stats): its own heavier frost of the page, so a card or button reads as frosted glass on the greeting's. */
     private void frost(View glass) {
-        ((com.newtube.mobile.ui.common.GlassView) glass).setBlur(28f);
+        float blur = glass.getId() == R.id.tiltCard ? 10f : 24f;
+        ((com.newtube.mobile.ui.common.GlassView) glass).setBlur(blur);
         com.newtube.mobile.ui.common.Glass.blur(glass, mActivity.findViewById(R.id.mobile_blur_target));
     }
 
@@ -157,8 +165,10 @@ final class GreetingOverlay {
         int[] period = PERIODS[period(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))];
         mTitle.setText(period[0]);
         mLine.setText(period[1]);
+        mSelectedDaysAgo = -1;
         bindStats();
         bindFocus();
+        startStatsTicker();
 
         StarfieldView starfield = mStats.findViewById(R.id.starfieldCanvas);
         if (starfield != null) {
@@ -183,6 +193,7 @@ final class GreetingOverlay {
     private void hide() {
         mBack.remove();
         mFocus.removeCallbacks(mFocusTick);
+        mStats.removeCallbacks(mStatsTick);
         StarfieldView starfield = mStats.findViewById(R.id.starfieldCanvas);
         if (starfield != null) {
             starfield.stop();
@@ -246,6 +257,85 @@ final class GreetingOverlay {
         }
     }
 
+    private void startStatsTicker() {
+        mStats.removeCallbacks(mStatsTick);
+        mStats.postDelayed(mStatsTick, 1000);
+    }
+
+    private void tickStats() {
+        if (mOverlay == null || mOverlay.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        updateLiveTodayStats();
+        mStats.postDelayed(mStatsTick, 1000);
+    }
+
+    private void updateLiveTodayStats() {
+        long todayAppMs = UsageStats.appMs(0);
+        long todayWatchMs = UsageStats.watchMs(0);
+        long todayVideos = UsageStats.videos(0);
+
+        TextView hero = mStats.findViewById(R.id.stats_hero);
+        if (hero != null) {
+            hero.setText(UsageStats.duration(todayAppMs));
+        }
+
+        long week = 0;
+        long max = 1;
+        long[] days = new long[7];
+        for (int i = 0; i < 7; i++) {
+            days[i] = UsageStats.appMs(i);
+            week += days[i];
+            max = Math.max(max, days[i]);
+        }
+
+        TextView weekTitle = mStats.findViewById(R.id.stats_week_title);
+        if (weekTitle != null) {
+            weekTitle.setText(mActivity.getString(R.string.mobile_stats_week_title, UsageStats.duration(week)));
+        }
+
+        ViewGroup numbers = mStats.findViewById(R.id.stats_numbers);
+        if (numbers != null && numbers.getChildCount() >= 3) {
+            ViewGroup col0 = (ViewGroup) numbers.getChildAt(0);
+            if (col0 != null && col0.getChildCount() > 0) {
+                ((TextView) col0.getChildAt(0)).setText(UsageStats.duration(todayWatchMs));
+            }
+            ViewGroup col1 = (ViewGroup) numbers.getChildAt(1);
+            if (col1 != null && col1.getChildCount() > 0) {
+                ((TextView) col1.getChildAt(0)).setText(String.valueOf(todayVideos));
+            }
+            ViewGroup col2 = (ViewGroup) numbers.getChildAt(2);
+            if (col2 != null && col2.getChildCount() > 0) {
+                ((TextView) col2.getChildAt(0)).setText(UsageStats.duration(week / 7));
+            }
+        }
+
+        ViewGroup bars = mStats.findViewById(R.id.stats_bars);
+        if (bars != null && bars.getChildCount() == 7) {
+            float dp = mActivity.getResources().getDisplayMetrics().density;
+            int barHeight = Math.max(Math.round(4 * dp), Math.round(72 * dp * days[0] / max));
+            ViewGroup column = (ViewGroup) bars.getChildAt(6);
+            if (column != null && column.getChildCount() > 0) {
+                View bar = column.getChildAt(0);
+                android.widget.FrameLayout.LayoutParams lp = (android.widget.FrameLayout.LayoutParams) bar.getLayoutParams();
+                if (lp != null && lp.height != barHeight) {
+                    lp.height = barHeight;
+                    bar.setLayoutParams(lp);
+                }
+            }
+        }
+
+        if (mSelectedDaysAgo == 0) {
+            TextView footer = mStats.findViewById(R.id.stats_footer);
+            if (footer != null) {
+                String name = mActivity.getString(R.string.mobile_stats_today);
+                footer.setText(mActivity.getString(R.string.mobile_stats_day, name,
+                        UsageStats.duration(todayAppMs), UsageStats.duration(todayWatchMs),
+                        String.valueOf(todayVideos)));
+            }
+        }
+    }
+
     /**
      * GUTUBE(stats): today's time in GuTube, big; today's watch time and videos and the 7-day daily
      * average under it; the 7 days as bars under their total. A tapped bar lights up and its day is spelled out.
@@ -304,9 +394,7 @@ final class GreetingOverlay {
             label.setGravity(android.view.Gravity.CENTER);
             label.setTextSize(12);
             label.setTextColor(i == 0 ? 0xFFFFFFFF : 0x99FFFFFF);
-            if (i == 0) {
-                label.setTypeface(label.getTypeface(), android.graphics.Typeface.BOLD);
-            }
+            label.setTypeface(android.graphics.Typeface.create("sans-serif-medium", i == 0 ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL));
             labels.addView(label, new android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         }
         selectDay(-1);
@@ -314,6 +402,7 @@ final class GreetingOverlay {
 
     /** Lights {@code daysAgo}'s bar and label and spells its day out under the bars; -1: no pick yet, a hint. */
     private void selectDay(int daysAgo) {
+        mSelectedDaysAgo = daysAgo;
         android.content.Context context = mActivity;
         ViewGroup bars = mStats.findViewById(R.id.stats_bars);
         ViewGroup labels = mStats.findViewById(R.id.stats_days);
@@ -330,7 +419,7 @@ final class GreetingOverlay {
             }
             TextView label = (TextView) labels.getChildAt(k);
             label.setTextColor(on ? 0xFFFFFFFF : 0x99FFFFFF);
-            label.setTypeface(label.getTypeface(), on ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+            label.setTypeface(android.graphics.Typeface.create("sans-serif-medium", on ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL));
         }
         TextView footer = mStats.findViewById(R.id.stats_footer);
         if (daysAgo < 0) {
@@ -340,7 +429,7 @@ final class GreetingOverlay {
         java.util.Calendar day = java.util.Calendar.getInstance();
         day.add(java.util.Calendar.DAY_OF_YEAR, -daysAgo);
         String name = daysAgo == 0 ? context.getString(R.string.mobile_stats_today)
-                : new java.text.SimpleDateFormat("EEE d MMM", java.util.Locale.getDefault()).format(day.getTime());
+                : new java.text.SimpleDateFormat("EEE, d MMM", java.util.Locale.getDefault()).format(day.getTime());
         footer.setText(context.getString(R.string.mobile_stats_day, name,
                 UsageStats.duration(UsageStats.appMs(daysAgo)), UsageStats.duration(UsageStats.watchMs(daysAgo)),
                 String.valueOf(UsageStats.videos(daysAgo))));
@@ -353,14 +442,17 @@ final class GreetingOverlay {
         TextView big = new TextView(mActivity);
         big.setText(value);
         big.setTextSize(21);
-        big.setTypeface(big.getTypeface(), android.graphics.Typeface.BOLD);
+        big.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.BOLD));
         big.setTextColor(0xFFFFFFFF);
         big.setIncludeFontPadding(false);
+        big.setShadowLayer(3f, 0f, 1f, 0x33000000);
         TextView small = new TextView(mActivity);
         small.setText(label);
         small.setTextSize(12);
+        small.setTypeface(android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.NORMAL));
         small.setTextColor(0x99FFFFFF);
         small.setIncludeFontPadding(false);
+        small.setShadowLayer(2f, 0f, 1f, 0x33000000);
         android.widget.LinearLayout.LayoutParams lpSmall = new android.widget.LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lpSmall.topMargin = Math.round(2 * mActivity.getResources().getDisplayMetrics().density);

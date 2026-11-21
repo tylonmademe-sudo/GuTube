@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Authentic liquid glass circular button background from player replica -->
+<!--
+  Liquid Glass Circular Button Background
+  rgba(255, 255, 255, 0.08) - rgba(255, 255, 255, 0.15) frosted glass gradient
+  + 1px rgba(255, 255, 255, 0.22) specular rim
+  + inner top specular sheen reflection
+-->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#40FFFFFF">
+    android:color="#33FFFFFF">
     <item>
-        <shape android:shape="oval">
-            <solid android:color="#24FFFFFF" />
-            <stroke
-                android:width="1dp"
-                android:color="#30FFFFFF" />
-        </shape>
+        <layer-list>
+            <!-- 1. Ambient Glass Dark Tint Underlayer (ensures contrast over bright frames) -->
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="#26000000" />
+                </shape>
+            </item>
+            <!-- 2. Frosted Liquid Glass Gradient Body -->
+            <item>
+                <shape android:shape="oval">
+                    <gradient
+                        android:angle="270"
+                        android:startColor="#26FFFFFF"
+                        android:centerColor="#1AFFFFFF"
+                        android:endColor="#12FFFFFF" />
+                </shape>
+            </item>
+            <!-- 3. Specular Border Rim -->
+            <item>
+                <shape android:shape="oval">
+                    <stroke
+                        android:width="1dp"
+                        android:color="#38FFFFFF" />
+                </shape>
+            </item>
+            <!-- 4. Top Inner Specular Reflection Arc -->
+            <item
+                android:top="1dp"
+                android:left="6dp"
+                android:right="6dp"
+                android:bottom="22dp">
+                <shape android:shape="oval">
+                    <gradient
+                        android:angle="270"
+                        android:startColor="#26FFFFFF"
+                        android:endColor="#00FFFFFF" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
 </ripple>

@@ -246,6 +246,8 @@ public class MobilePlaybackActivity extends MobileActivity
     /** Previous / play-pause / next, and the top-right options: they step aside while scrubbing. */
     @Nullable private View mTransport;
     @Nullable private View mOptionsRow;
+    @Nullable private View mPlayerScreenshot;
+    private FrameStudioOverlay mFrameStudio;
     /** Over the top of the video: "Release to cancel" (seek bar). */
     @Nullable private TextView mTopPill;
     /** NEWTUBE(gestures): brightness / volume while a side swipe sets it (SwipeLevels). */
@@ -958,6 +960,7 @@ public class MobilePlaybackActivity extends MobileActivity
         mCastDuration = findViewById(R.id.mobile_cast_duration);
         mCastSeekBar = findViewById(R.id.mobile_cast_seekbar);
         mSubtitlesButton = findViewById(R.id.mobile_player_subtitles);
+        mPlayerScreenshot = findViewById(R.id.mobile_player_screenshot);
         mMoreButton = findViewById(R.id.mobile_player_more);
         mPrevButton = findViewById(R.id.mobile_player_previous);
         mNextButton = findViewById(R.id.mobile_player_next);
@@ -967,7 +970,7 @@ public class MobilePlaybackActivity extends MobileActivity
         // with Player buttons on Minimal, no discs at all (applyButton).
         com.newtube.mobile.ui.common.GlassSource videoGlass =
                 com.newtube.mobile.ui.common.Glass.isPlayerFrost(this) ? findViewById(R.id.mobile_player_glass) : null;
-        for (View control : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
+        for (View control : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mPlayerScreenshot, mMoreButton,
                 mPrevButton, mNextButton, mFullscreenButton, mActionsToggle}) {
             com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
             com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
@@ -998,7 +1001,7 @@ public class MobilePlaybackActivity extends MobileActivity
         // the time keeps its see-through pill in every style, Minimal too
         com.newtube.mobile.ui.common.GlassDrawable.apply(time, videoGlass, 0);
         if (videoGlass != null) {
-            mGlassControls = new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
+            mGlassControls = new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mPlayerScreenshot, mMoreButton,
                     mPrevButton, mNextButton, mFullscreenButton, mActionsToggle, mPlayPauseButton, time,
                     likeDislikePill, mPlayerComments, mPlayerDownload, playerShare, moreHint,
                     mPlayerLock, mPlayerUnlock};
@@ -1391,6 +1394,9 @@ public class MobilePlaybackActivity extends MobileActivity
         // single (non-double) tap to performClick() on the view captured at construction (itself,
         // since it isn't attached yet), so an OnClickListener here is exactly that single tap.
         mPlayerView.setOnClickListener(v -> {
+            if (mFrameStudio != null && mFrameStudio.isOpen()) {
+                return;
+            }
             if (isShortsMode()) {
                 mVideoArea.removeCallbacks(mShortsSingleTap);
                 // GUTUBE(issue #216): from the release, about the rest of the system's 300 ms
@@ -1420,6 +1426,9 @@ public class MobilePlaybackActivity extends MobileActivity
         mPlayerView.setHoldListener(new DoubleTapPlayerViewImpl.HoldListener() {
             @Override
             public boolean onHoldStart(float x, float y) {
+                if (mFrameStudio != null && mFrameStudio.isOpen()) {
+                    return false;
+                }
                 if (isShortsMode() && mShorts != null) {
                     // GUTUBE(shorts): held in its top-right quarter, 2x (where it can) and clean
                     // for the hold. Held anywhere else, issue #173: the buttons go and stay gone,
@@ -1447,6 +1456,9 @@ public class MobilePlaybackActivity extends MobileActivity
             }
         });
         mPlayerView.setDoubleTapBeganListener((posX, posY) -> {
+            if (mFrameStudio != null && mFrameStudio.isOpen()) {
+                return;
+            }
             if (isShortsMode()) {
                 mVideoArea.removeCallbacks(mShortsSingleTap);
                 likeShort(posX, posY);
@@ -1477,6 +1489,9 @@ public class MobilePlaybackActivity extends MobileActivity
 
             @Override
             public boolean claimDown(android.view.MotionEvent down) {
+                if (mFrameStudio != null && mFrameStudio.isOpen()) {
+                    return false;
+                }
                 return isSecondTapOfReveal(down) && !isOnPlayPause(down);
             }
 
@@ -1549,6 +1564,14 @@ public class MobilePlaybackActivity extends MobileActivity
             showCaptionsSheet();
             return true;
         });
+
+        if (mPlayerScreenshot != null) {
+            mPlayerScreenshot.setOnClickListener(v -> openFrameStudio());
+        }
+        View frameStudioRoot = findViewById(R.id.frame_studio_root);
+        if (frameStudioRoot != null) {
+            mFrameStudio = new FrameStudioOverlay(this, frameStudioRoot);
+        }
 
         mTimeBar.addListener(new TimeBar.OnScrubListener() {
             @Override
@@ -1688,6 +1711,14 @@ public class MobilePlaybackActivity extends MobileActivity
         // beside the landscape video; the vertical fullscreen has no room, so it leaves for the page.
         mPlayerLike.setOnClickListener(v -> mWatchLike.performClick());
         mPlayerDislike.setOnClickListener(v -> mWatchDislike.performClick());
+        View likeCount = findViewById(R.id.mobile_player_like_count);
+        if (likeCount != null) {
+            likeCount.setOnClickListener(v -> mWatchLike.performClick());
+        }
+        View dislikeCount = findViewById(R.id.mobile_player_dislike_count);
+        if (dislikeCount != null) {
+            dislikeCount.setOnClickListener(v -> mWatchDislike.performClick());
+        }
         mPlayerDownload.setOnClickListener(v -> onDownloadTapped());
         mPlayerDownload.setOnLongClickListener(v -> onDownloadLongPressed());
         View playerShare = findViewById(R.id.mobile_player_share);
@@ -1766,7 +1797,7 @@ public class MobilePlaybackActivity extends MobileActivity
     private void sizePlayerControls(boolean compact) {
         int icon = dp(40);
         int pad = dp(10);
-        for (View button : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mMoreButton,
+        for (View button : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mPlayerScreenshot, mMoreButton,
                 mFullscreenButton}) {
             if (button != null) {
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) button.getLayoutParams();
@@ -1779,8 +1810,8 @@ public class MobilePlaybackActivity extends MobileActivity
                 button.setPadding(pad, pad, pad, pad);
             }
         }
-        int triadIcon = dp(44);
-        int triadPad = dp(11);
+        int triadIcon = dp(48);
+        int triadPad = dp(12);
         for (View button : new View[] {mPrevButton, mNextButton}) {
             if (button != null) {
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) button.getLayoutParams();
@@ -2887,6 +2918,10 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mClosing) {
             return;
         }
+        if (mFrameStudio != null && mFrameStudio.isOpen()) {
+            mFrameStudio.close();
+            return;
+        }
         if (mMoreVideos != null && mMoreVideos.isShown()) {
             mMoreVideos.close();
             return;
@@ -3239,10 +3274,14 @@ public class MobilePlaybackActivity extends MobileActivity
                     ? rootInsets.getInsets(WindowInsetsCompat.Type.systemBars()
                             | WindowInsetsCompat.Type.displayCutout()) : Insets.NONE;
             DisplayCutoutCompat cutout = rootInsets != null ? rootInsets.getDisplayCutout() : null;
-            left = Math.max(bars.left, cutout != null ? cutout.getSafeInsetLeft() : 0);
-            right = Math.max(bars.right, cutout != null ? cutout.getSafeInsetRight() : 0);
+            int leftInset = Math.max(bars.left, cutout != null ? cutout.getSafeInsetLeft() : 0);
+            int rightInset = Math.max(bars.right, cutout != null ? cutout.getSafeInsetRight() : 0);
             top = Math.max(bars.top, cutout != null ? cutout.getSafeInsetTop() : 0);
             bottom = Math.max(bars.bottom, cutout != null ? cutout.getSafeInsetBottom() : 0);
+
+            int horizontalSafePad = Math.max(leftInset, rightInset) + dp(16);
+            left = horizontalSafePad;
+            right = horizontalSafePad;
         } else if (mPortraitFull) {
             // GUTUBE(fullscreen): the video runs under the hidden status bar, so the top row
             // drops below the camera's band (the bars' room, visible or not) instead of flanking it.
@@ -3290,7 +3329,7 @@ public class MobilePlaybackActivity extends MobileActivity
         }
         boolean full = mPortraitFull && !isLandscape();
         if (mTitleView.getParent() != null && mTitleView.getParent() != mControlsRoot) {
-            mPlayerAuthor.setVisibility((full || isLandscape()) ? View.VISIBLE : View.GONE);
+            mPlayerAuthor.setVisibility((full || isLandscape() || !TextUtils.isEmpty(mPlayerAuthor.getText())) ? View.VISIBLE : View.GONE);
             return;
         }
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mTitleView.getLayoutParams();
@@ -3321,7 +3360,7 @@ public class MobilePlaybackActivity extends MobileActivity
         // GUTUBE(fullscreen): the vertical fullscreen floats the bar like landscape does, just over
         // the gesture bar (applyControlsInsets).
         boolean inline = !isLandscape() && !mPortraitFull;
-        int side = inline ? 0 : dp(12);
+        int side = dp(16);
         int lift = inline ? 0 : dp(8);
         // GUTUBE(fullscreen-actions): the actions pill takes the bar's place and the bar, with
         // everything over it, rises above the pill. The chevron beside fullscreen flips it.
@@ -3329,7 +3368,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mActionsRow != null && mActionsToggle != null) {
             mActionsRow.setVisibility(actions ? View.VISIBLE : View.GONE);
             syncPillCounts();
-            setMargins(mActionsRow, dp(8), 0, 0, lift);
+            setMargins(mActionsRow, dp(16), 0, 0, lift);
             mActionsToggle.setVisibility(inline ? View.GONE : View.VISIBLE);
             mActionsToggle.setRotation(actions ? 0f : 180f);
             mActionsToggle.setContentDescription(getString(actions
@@ -3340,10 +3379,12 @@ public class MobilePlaybackActivity extends MobileActivity
         if (bottomEnd != null) {
             int bottomMargin = inline
                     ? getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin)
-                    : (actions ? dp(8) : lift);
-            setMargins(bottomEnd, 0, 0, dp(8), bottomMargin);
+                    : lift;
+            setMargins(bottomEnd, 0, 0, dp(16), bottomMargin);
         }
-        if (actions) {
+        if (!inline) {
+            // In fullscreen/landscape, seekbar is ALWAYS kept above the bottom-right buttons (^ and Fullscreen)
+            // with the same vertical stack as the expanded state, never passing behind them.
             lift += dp(44);
         }
         setMargins(mTimeBar, left + side, 0, right + side, bottom + lift);
@@ -3414,6 +3455,9 @@ public class MobilePlaybackActivity extends MobileActivity
 
         @Override
         public boolean claimDown(android.view.MotionEvent down) {
+            if (mFrameStudio != null && mFrameStudio.isOpen()) {
+                return false;
+            }
             if (mTimeBar == null || mVideoArea == null || !mVideoArea.getMatrix().isIdentity()
                     || isSecondTapOfReveal(down)) {
                 return false;
@@ -4963,6 +5007,9 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     private void toggleControls() {
+        if (mFrameStudio != null && mFrameStudio.isOpen()) {
+            return;
+        }
         if (mControlsVisible) {
             hideControls();
         } else {
@@ -4970,7 +5017,10 @@ public class MobilePlaybackActivity extends MobileActivity
         }
     }
 
-    private void showControlsInternal(boolean animate) {
+    public void showControlsInternal(boolean animate) {
+        if (mFrameStudio != null && mFrameStudio.isOpen()) {
+            return;
+        }
         if (isShortsMode()) {
             return; // GUTUBE(shorts): the overlay is the chrome
         }
@@ -5009,7 +5059,7 @@ public class MobilePlaybackActivity extends MobileActivity
         armAutoHide();
     }
 
-    private void hideControls() {
+    public void hideControls() {
         if (!mControlsVisible) {
             return;
         }
@@ -7147,7 +7197,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (hint == null) {
             return;
         }
-        boolean show = isLandscape() && mActionsRow != null && mActionsRow.getVisibility() == View.VISIBLE
+        boolean show = (isLandscape() || mPortraitFull) && mActionsRow != null && mActionsRow.getVisibility() == View.VISIBLE
                 && !mRelatedVideos.isEmpty();
         hint.setVisibility(show ? View.VISIBLE : View.GONE);
         hint.setOnClickListener(v -> {
@@ -7381,6 +7431,9 @@ public class MobilePlaybackActivity extends MobileActivity
 
     @Override
     public boolean dispatchTouchEvent(android.view.MotionEvent event) {
+        if (mFrameStudio != null && mFrameStudio.isOpen()) {
+            return super.dispatchTouchEvent(event);
+        }
         int action = event.getActionMasked();
         if (mPlayerLocked) {
             // GUTUBE(lock, issue #98): a locked player answers only its unlock button - no swipe,
@@ -9029,6 +9082,14 @@ public class MobilePlaybackActivity extends MobileActivity
 
     /** ...with {@code label} in place of the player's own position (the seek bar's drag). */
     private void showSeekTime(boolean show, @Nullable CharSequence label) {
+        if (mFrameStudio != null && mFrameStudio.isOpen()) {
+            if (mSeekTime != null) {
+                mSeekTime.animate().cancel();
+                mSeekTime.setVisibility(View.GONE);
+            }
+            mSeekTimeShown = false;
+            return;
+        }
         if (mSeekTime == null || mProgressBar == null || (!show && !mSeekTimeShown)) {
             return;
         }
@@ -12731,6 +12792,41 @@ public class MobilePlaybackActivity extends MobileActivity
         return mExoPlayerController.getSubtitleFormat();
     }
 
+    @Nullable
+    public ExoPlayer getPlayer() {
+        return mPlayer;
+    }
+
+    public void openFrameStudio() {
+        if (mFrameStudio != null) {
+            mFrameStudio.open();
+        }
+    }
+
+    @Nullable
+    public FrameStudioOverlay getFrameStudio() {
+        return mFrameStudio;
+    }
+
+    @Nullable
+    public Bitmap captureVideoFrame(int targetWidth, int targetHeight) {
+        if (mHdrOutput && mHdrSurface != null && mHdrSurface.getHolder().getSurface().isValid()) {
+            return copyHdrFrame(targetWidth, targetHeight);
+        }
+        if (mVideoTexture != null && mVideoTexture.isAvailable()) {
+            try {
+                if (targetWidth > 0 && targetHeight > 0) {
+                    return mVideoTexture.getBitmap(targetWidth, targetHeight);
+                } else {
+                    return mVideoTexture.getBitmap();
+                }
+            } catch (Throwable t) {
+                return mVideoTexture.getBitmap();
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean isEngineInitialized() {
         return mPlayer != null;
@@ -12895,6 +12991,9 @@ public class MobilePlaybackActivity extends MobileActivity
         if (item != null && item.videoId != null) {
             SessionWarmup.onPlaybackRequested();
             if (!Helpers.equals(item.videoId, mWatchVideoId)) {
+                if (!item.belongsToShorts()) {
+                    com.newtube.mobile.ui.common.UsageStats.videoOpened();
+                }
                 cancelClose(); // NEWTUBE(motion): a video picked while Back was closing this player
                 // NEWTUBE(motion): or while a host's X was closing its card - this session goes on.
                 MiniPlayerBridge.cancelClosing();

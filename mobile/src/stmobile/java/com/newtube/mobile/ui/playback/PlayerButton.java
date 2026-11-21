@@ -34,6 +34,7 @@ public class PlayerButton extends AppCompatImageButton {
         animate().scaleX(pressed ? 0.94f : 1.0f)
                 .scaleY(pressed ? 0.94f : 1.0f)
                 .setDuration(120)
+                .setInterpolator(new android.view.animation.DecelerateInterpolator())
                 .start();
     }
 }

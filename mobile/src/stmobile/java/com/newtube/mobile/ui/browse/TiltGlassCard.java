@@ -24,6 +24,7 @@ import com.newtube.mobile.ui.common.Haptics;
  */
 public class TiltGlassCard extends GlassView {
     private static final float MAX_TILT = 11f; // Responsive 11-degree tilt angle matching code.html maxTilt
+    private static final float RESTING_GLARE_ALPHA = 0.12f; // Elegant resting liquid glass specular sheen
 
     private final Paint mGlarePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF mBounds = new RectF();
@@ -35,7 +36,7 @@ public class TiltGlassCard extends GlassView {
     private float mTargetScale = 1f;
     private float mTargetGlareX = 0.5f;
     private float mTargetGlareY = 0.5f;
-    private float mTargetGlareAlpha = 0f;
+    private float mTargetGlareAlpha = RESTING_GLARE_ALPHA;
 
     // Current smooth interpolated state
     private float mCurrentRotX = 0f;
@@ -43,7 +44,7 @@ public class TiltGlassCard extends GlassView {
     private float mCurrentScale = 1f;
     private float mCurrentGlareX = 0.5f;
     private float mCurrentGlareY = 0.5f;
-    private float mCurrentGlareAlpha = 0f;
+    private float mCurrentGlareAlpha = RESTING_GLARE_ALPHA;
 
     private boolean mIsTouching = false;
     private boolean mIsPhysicsRunning = false;
@@ -92,7 +93,9 @@ public class TiltGlassCard extends GlassView {
             boolean stillMoving = Math.abs(mTargetRotX - mCurrentRotX) > 0.04f
                     || Math.abs(mTargetRotY - mCurrentRotY) > 0.04f
                     || Math.abs(mTargetScale - mCurrentScale) > 0.001f
-                    || mCurrentGlareAlpha > 0.005f;
+                    || Math.abs(mTargetGlareAlpha - mCurrentGlareAlpha) > 0.005f
+                    || Math.abs(mTargetGlareX - mCurrentGlareX) > 0.5f
+                    || Math.abs(mTargetGlareY - mCurrentGlareY) > 0.5f;
 
             if (mIsTouching || stillMoving) {
                 postOnAnimation(this);
@@ -101,7 +104,9 @@ public class TiltGlassCard extends GlassView {
                 mCurrentRotX = 0f;
                 mCurrentRotY = 0f;
                 mCurrentScale = 1f;
-                mCurrentGlareAlpha = 0f;
+                mCurrentGlareAlpha = RESTING_GLARE_ALPHA;
+                mCurrentGlareX = w * 0.35f;
+                mCurrentGlareY = h * 0.25f;
                 setRotationX(0f);
                 setRotationY(0f);
                 setScaleX(1f);
@@ -109,6 +114,7 @@ public class TiltGlassCard extends GlassView {
                 if (mStarfield != null) {
                     mStarfield.setParallax(0f, 0f);
                 }
+                updateGlareShader(w, h);
                 mIsPhysicsRunning = false;
                 invalidate();
             }
@@ -124,6 +130,10 @@ public class TiltGlassCard extends GlassView {
         float density = context.getResources().getDisplayMetrics().density;
         // Deep 3D perspective distance for natural distortion
         setCameraDistance(density * 9000f);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            setOutlineAmbientShadowColor(0x4DFFFFFF);
+            setOutlineSpotShadowColor(0x4DFFFFFF);
+        }
     }
 
     @Override
@@ -132,10 +142,13 @@ public class TiltGlassCard extends GlassView {
         mBounds.set(0, 0, w, h);
         setPivotX(w * 0.5f);
         setPivotY(h * 0.5f);
-        mTargetGlareX = w * 0.5f;
-        mTargetGlareY = h * 0.5f;
-        mCurrentGlareX = w * 0.5f;
-        mCurrentGlareY = h * 0.5f;
+        mTargetGlareX = w * 0.35f;
+        mTargetGlareY = h * 0.25f;
+        mCurrentGlareX = w * 0.35f;
+        mCurrentGlareY = h * 0.25f;
+        mTargetGlareAlpha = RESTING_GLARE_ALPHA;
+        mCurrentGlareAlpha = RESTING_GLARE_ALPHA;
+        updateGlareShader(w, h);
     }
 
     @Override
@@ -178,7 +191,9 @@ public class TiltGlassCard extends GlassView {
                     mTargetRotX = 0f;
                     mTargetRotY = 0f;
                     mTargetScale = 1f;
-                    mTargetGlareAlpha = 0f;
+                    mTargetGlareX = w * 0.35f;
+                    mTargetGlareY = h * 0.25f;
+                    mTargetGlareAlpha = RESTING_GLARE_ALPHA;
                     startPhysics();
                     break;
             }

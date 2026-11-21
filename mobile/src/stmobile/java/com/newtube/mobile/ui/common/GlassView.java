@@ -105,15 +105,19 @@ public class GlassView extends FrameLayout {
             + "    float2 halfSize = size * 0.5;\n"
             + "    float2 centeredCoord = coord - halfSize;\n"
             + "    float sd = sdRoundedRect(centeredCoord, halfSize, radius);\n"
+            + "    float2 liquidWave = float2(\n"
+            + "        sin(coord.y * 0.015 + 92.0) * 3.5 + cos(coord.x * 0.030) * 1.5,\n"
+            + "        cos(coord.x * 0.015 + 46.0) * 3.5 + sin(coord.y * 0.030) * 1.5\n"
+            + "    );\n"
             + "    if (-sd >= refractionHeight) {\n"
-            + "        return content.eval(coord);\n"
+            + "        return content.eval(coord + liquidWave);\n"
             + "    }\n"
             + "    sd = min(sd, 0.0);\n"
             + "    float d = circleMap(1.0 - -sd / refractionHeight) * refractionAmount;\n"
             + "    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));\n"
             + "    float2 grad = normalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius)"
             + " + depthEffect * normalize(centeredCoord));\n"
-            + "    float2 refractedCoord = coord + d * grad;\n"
+            + "    float2 refractedCoord = coord + d * grad + liquidWave;\n"
             + "    float dispersionIntensity = chromaticAberration"
             + " * ((centeredCoord.x * centeredCoord.y) / (halfSize.x * halfSize.y));\n"
             + "    float2 dispersedCoord = d * grad * dispersionIntensity;\n"
@@ -253,7 +257,7 @@ public class GlassView extends FrameLayout {
 
         // Liquid glass shadow: rgba(255, 255, 255, 0.3) outer specular glow with natural elevation
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            setOutlineAmbientShadowColor(0x33000000);
+            setOutlineAmbientShadowColor(0x4DFFFFFF);
             setOutlineSpotShadowColor(0x4DFFFFFF);
         }
     }

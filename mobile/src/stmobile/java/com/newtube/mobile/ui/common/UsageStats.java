@@ -36,22 +36,30 @@ public final class UsageStats {
     }
 
     public static void install(Application app) {
+        if (app == null) return;
         sPrefs = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         prune();
+        sAppSince = SystemClock.elapsedRealtime();
         app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override public void onActivityStarted(@NonNull Activity activity) {
-                if (sStarted++ == 0) sAppSince = SystemClock.elapsedRealtime();
+                if (sStarted++ == 0 || sAppSince == 0) {
+                    sAppSince = SystemClock.elapsedRealtime();
+                }
             }
 
             @Override public void onActivityStopped(@NonNull Activity activity) {
                 if (sStarted > 0 && --sStarted == 0) {
-                    add(APP, SystemClock.elapsedRealtime() - sAppSince);
+                    checkpoint();
                     sAppSince = 0;
                 }
             }
 
             @Override public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle state) { }
-            @Override public void onActivityResumed(@NonNull Activity activity) { }
+            @Override public void onActivityResumed(@NonNull Activity activity) {
+                if (sAppSince == 0) {
+                    sAppSince = SystemClock.elapsedRealtime();
+                }
+            }
             @Override public void onActivityPaused(@NonNull Activity activity) {
                 checkpoint();
             }
@@ -63,11 +71,15 @@ public final class UsageStats {
     /** The player started or stopped playing (background and PiP included). */
     public static void playing(boolean playing) {
         long now = SystemClock.elapsedRealtime();
-        if (playing && sWatchSince == 0) {
-            sWatchSince = now;
-        } else if (!playing && sWatchSince != 0) {
-            add(WATCH, now - sWatchSince);
-            sWatchSince = 0;
+        if (playing) {
+            if (sWatchSince == 0) {
+                sWatchSince = now;
+            }
+        } else {
+            if (sWatchSince != 0) {
+                add(WATCH, now - sWatchSince);
+                sWatchSince = 0;
+            }
         }
     }
 
@@ -80,7 +92,7 @@ public final class UsageStats {
      * Books the running app and watch sessions so far and keeps them running. Without it a process
      * killed in the foreground (an update, a crash, the system) lost the whole session: 4 videos, 0m.
      */
-    private static void checkpoint() {
+    public static void checkpoint() {
         long now = SystemClock.elapsedRealtime();
         if (sAppSince != 0) {
             add(APP, now - sAppSince);
@@ -96,16 +108,27 @@ public final class UsageStats {
     private static void add(String kind, long value) {
         if (sPrefs == null || value <= 0) return;
         String key = kind + day(0);
-        sPrefs.edit().putLong(key, sPrefs.getLong(key, 0) + value).apply();
+        long current = sPrefs.getLong(key, 0);
+        sPrefs.edit().putLong(key, current + value).apply();
     }
 
     /** App time in ms, {@code daysAgo} days back (0 = today), the running session included. */
     public static long appMs(int daysAgo) {
-        return get(APP, daysAgo) + (daysAgo == 0 && sAppSince != 0 ? SystemClock.elapsedRealtime() - sAppSince : 0);
+        long base = get(APP, daysAgo);
+        if (daysAgo == 0) {
+            long running = sAppSince != 0 ? (SystemClock.elapsedRealtime() - sAppSince) : 0;
+            return base + running;
+        }
+        return base;
     }
 
     public static long watchMs(int daysAgo) {
-        return get(WATCH, daysAgo) + (daysAgo == 0 && sWatchSince != 0 ? SystemClock.elapsedRealtime() - sWatchSince : 0);
+        long base = get(WATCH, daysAgo);
+        if (daysAgo == 0) {
+            long running = sWatchSince != 0 ? (SystemClock.elapsedRealtime() - sWatchSince) : 0;
+            return base + running;
+        }
+        return base;
     }
 
     public static long videos(int daysAgo) {
@@ -118,6 +141,7 @@ public final class UsageStats {
 
     /** "1h 12m", "12m", "40s": under a minute in seconds, so a fresh day never reads 0m next to its videos. */
     public static String duration(long ms) {
+        if (ms < 0) ms = 0;
         if (ms < 60000) return (ms / 1000) + "s";
         long minutes = ms / 60000;
         return minutes >= 60 ? (minutes / 60) + "h " + (minutes % 60) + "m" : minutes + "m";

@@ -24,6 +24,8 @@
       stays dark in both, like YouTube's: its chrome uses the fixed mobile_player_* colours.
     -->
     <style name="Theme.NewTube" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
         <!-- GUTUBE(scrollbars): no scroll bar at the side of anything, sheets and dialogs included
              (screens also turn them off at runtime: BounceOverscroll). -->
         <item name="android:scrollViewStyle">@style/Widget.GuTube.NoScrollbars.ScrollView</item>
@@ -749,6 +751,25 @@
         <item name="gutubeNavItemBackground">@android:color/transparent</item>
         <!-- A flat frost, as the top bar: no rim down its sides, no grain, no lens edge. -->
         <item name="gutubeNavLiquid">false</item>
+    </style>
+
+    <!-- Frame Studio step and quality chip style -->
+    <style name="FrameStudioChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:background">@drawable/bg_frame_studio_chip_inactive</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:textColor">#E6FFFFFF</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#CC000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">3</item>
     </style>
 
 </resources>

@@ -42,9 +42,9 @@ public final class GlassDrawable extends Drawable {
     /** A dark-theme page pill's tint: the app's glass (gutube_glass_tint), as the search bar. */
     private static final int PAGE_TINT = 0x66000000;
     private static final float SATURATION = 1.5f;
-    private static final int TINT = 0x47000000;
-    private static final int FALLBACK_TINT = 0x8C000000;
-    private static final int NOISE_ALPHA = 10;
+    private static final int TINT = 0x1AFFFFFF; // Clean translucent frosted glass base (#14FFFFFF to #1FFFFFFF)
+    private static final int FALLBACK_TINT = 0x24FFFFFF; // Clean translucent frosted glass fallback
+    private static final int NOISE_ALPHA = 8;
 
     private final View mHost;
     private final GlassSource mSource;
@@ -212,9 +212,9 @@ public final class GlassDrawable extends Drawable {
             mRecordedX = Integer.MIN_VALUE;
             return;
         }
-        // light from above, a faint bounce at the bottom (GlassView's rim without runtime shaders)
+        // 1dp crisp inner white rim (#4DFFFFFF) with top specular lens sheen (#66FFFFFF)
         mRim.setShader(new LinearGradient(0, mShape.top, 0, mShape.bottom,
-                new int[] {0x66FFFFFF, 0x14FFFFFF, 0x0AFFFFFF, 0x2EFFFFFF},
+                new int[] {0x66FFFFFF, 0x4DFFFFFF, 0x33FFFFFF, 0x4DFFFFFF},
                 new float[] {0f, 0.35f, 0.7f, 1f}, Shader.TileMode.CLAMP));
         mRecordedX = Integer.MIN_VALUE;
     }

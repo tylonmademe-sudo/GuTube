@@ -10,11 +10,11 @@
     android:layout_marginBottom="14dp"
     android:clickable="true"
     android:elevation="12dp"
-    app:glassCornerRadius="38dp"
+    app:glassCornerRadius="28dp"
     app:glassLiquid="true"
     app:glassOnGlass="true"
-    app:glassStrokeColor="#26FFFFFF"
-    app:glassStrokeWidth="1dp"
+    app:glassStrokeColor="#33FFFFFF"
+    app:glassStrokeWidth="1.2dp"
     app:glassTint="#47000000">
 
     <!-- Starry particle field canvas (locked inside the card) -->
@@ -28,17 +28,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="20dp"
+        android:paddingHorizontal="22dp"
         android:paddingTop="24dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="22dp">
 
         <!-- Primary Usage Hero -->
         <TextView
             android:id="@+id/stats_hero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="4"
             android:textColor="#FFFFFF"
             android:textSize="48sp"
             android:textStyle="bold"
@@ -49,11 +54,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif"
             android:gravity="center"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:text="@string/mobile_stats_hero_label"
             android:textColor="#B3FFFFFF"
             android:textSize="14sp"
-            tools:text="in GuTube today" />
+            tools:text="Today\'s Screen Time" />
 
         <!-- 3-Column Metrics Row: Watched | Videos | Daily average -->
         <LinearLayout
@@ -69,10 +79,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:textColor="#D9FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
-            tools:text="Last 7 days · 54m" />
+            tools:text="Weekly Activity · 54m" />
 
         <LinearLayout
             android:id="@+id/stats_bars"
@@ -95,32 +110,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif"
             android:gravity="center"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:textColor="#B3FFFFFF"
             android:textSize="12sp"
-            tools:text="Tap a bar to see that day" />
+            tools:text="Tap a bar for details" />
 
-        <!-- Privacy Shield & Lock Note -->
+        <!-- Privacy Shield Note (no lock icon) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginEnd="6dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_greet_lock" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:shadowColor="#33000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="2"
                 android:text="@string/mobile_stats_on_device"
                 android:textColor="#8CFFFFFF"
-                android:textSize="11sp" />
+                android:textSize="11.5sp" />
 
         </LinearLayout>
 

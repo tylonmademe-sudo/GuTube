@@ -408,6 +408,7 @@ final class ShortsOverlay {
             mChannel.setText(item.getAuthor());
             mTitle.setText(item.getTitle());
             if (fresh) {
+                com.newtube.mobile.ui.common.UsageStats.videoOpened();
                 mTitle.setMaxLines(2);
                 com.bumptech.glide.Glide.with(mAvatar).clear(mAvatar);
                 mAvatarOrb = com.newtube.mobile.ui.common.ChannelAvatars.placeholder(item.getAuthor());

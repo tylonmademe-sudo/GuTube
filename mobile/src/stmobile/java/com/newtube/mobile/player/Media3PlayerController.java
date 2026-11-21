@@ -1074,6 +1074,7 @@ public class Media3PlayerController implements Player.Listener {
         }
 
         if (mPlayer != null) {
+            com.newtube.mobile.ui.common.UsageStats.playing(false);
             mPlayer.removeListener(this);
             mPlayer.removeAnalyticsListener(mOpenPhaseLog);
             mPlayer.removeAnalyticsListener(mResumeListener);
@@ -1452,7 +1453,6 @@ public class Media3PlayerController implements Player.Listener {
             mOnSourceChanged = false;
 
             mEventListener.onVideoLoaded(getVideo());
-            com.newtube.mobile.ui.common.UsageStats.videoOpened(); // GUTUBE(stats)
 
             if (mOnVideoLoaded != null) {
                 mOnVideoLoaded.run();

@@ -1177,7 +1177,7 @@
                 android:id="@+id/mobile_quote_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
+                android:fontFamily="sans-serif"
                 android:lineSpacingMultiplier="1.15"
                 android:textColor="@color/mobile_color_on_surface"
                 android:textSize="20sp"
@@ -1503,10 +1503,10 @@
                         android:id="@+id/mobile_greet_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="cursive"
+                        android:fontFamily="sans-serif-medium"
                         android:gravity="center"
                         android:textColor="@color/mobile_color_on_surface"
-                        android:textSize="44sp"
+                        android:textSize="38sp"
                         android:textStyle="bold"
                         tools:text="Good evening" />
 
@@ -1516,9 +1516,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="28dp"
+                        android:fontFamily="sans-serif"
                         android:gravity="center"
                         android:textColor="@color/mobile_color_on_surface_secondary"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         tools:text="Wind down with something good" />
 
                 </LinearLayout>

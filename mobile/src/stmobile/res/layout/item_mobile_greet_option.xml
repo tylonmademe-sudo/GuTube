@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:drawablePadding="16dp"
         android:drawableTint="@color/mobile_color_on_surface"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
         android:paddingHorizontal="22dp"
         android:textColor="@color/mobile_color_on_surface"

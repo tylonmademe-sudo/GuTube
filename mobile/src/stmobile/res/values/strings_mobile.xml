@@ -118,6 +118,24 @@
     <string name="mobile_player_lock">Screen lock</string>
     <string name="mobile_player_locked">Locked · tap to unlock</string>
     <string name="mobile_transcript">Transcript</string>
+    <!-- Frame Studio (Advanced Screenshot Mode) -->
+    <string name="close">Close</string>
+    <string name="mobile_player_screenshot">Frame Studio</string>
+    <string name="frame_studio_title">FRAME STUDIO</string>
+    <string name="frame_studio_save">Save</string>
+    <string name="frame_studio_saving">Saving&#8230;</string>
+    <string name="frame_studio_saved">Saved to %1$s</string>
+    <string name="frame_studio_share">Share</string>
+    <string name="frame_studio_gallery">Gallery</string>
+    <string name="frame_studio_tab_frame">Frame</string>
+    <string name="frame_studio_tab_second">Second</string>
+    <string name="frame_studio_tab_minute">Minute</string>
+    <string name="frame_studio_tab_custom">Custom</string>
+    <string name="frame_studio_apply">Apply</string>
+    <string name="frame_studio_unit_frames">Frames</string>
+    <string name="frame_studio_unit_seconds">Seconds</string>
+    <string name="frame_studio_unit_minutes">Minutes</string>
+    <string name="frame_studio_custom_hint">Value</string>
     <string name="mobile_transcript_follow">Follow along using the transcript.</string>
     <string name="mobile_transcript_show">Show transcript</string>
     <string name="mobile_transcript_search">Search transcript</string>
@@ -667,19 +685,19 @@
     <string name="mobile_about_coffee_note"><![CDATA[<font color="#FF5F56">●</font> <font color="#FFBD2E">●</font> <font color="#27C93F">●</font><br><br><font color="#4ADE80">$</font> gutube --status<br><font color="#E6EDF3">&#160;&#160;ads: 0 | sponsors: skipped</font><br><font color="#8B949E">// fast, private &amp; ad-free<br>// built for pure playback</font>]]></string>
     <string name="mobile_about_coffee_cta" translatable="false">GuTube</string>
     <string name="mobile_stats_today">Today</string>
-    <string name="mobile_stats_hero_label">in GuTube today</string>
-    <string name="mobile_stats_videos">Videos</string>
-    <string name="mobile_stats_week_title">Last 7 days · %1$s</string>
-    <string name="mobile_stats_tap">Tap a bar to see that day</string>
-    <string name="mobile_stats_avg">Daily average</string>
-    <string name="mobile_stats_watched">Watched</string>
-    <string name="mobile_stats_day">%1$s: %2$s in GuTube, %3$s watched, %4$s videos</string>
+    <string name="mobile_stats_hero_label">Today\'s Screen Time</string>
+    <string name="mobile_stats_videos">Videos Played</string>
+    <string name="mobile_stats_week_title">Weekly Activity · %1$s</string>
+    <string name="mobile_stats_tap">Tap a bar for details</string>
+    <string name="mobile_stats_avg">Daily Average</string>
+    <string name="mobile_stats_watched">Watch Time</string>
+    <string name="mobile_stats_day">%1$s: %2$s screen time · %3$s watch time · %4$s played</string>
     <string name="mobile_stats_storage_header">Your stats</string>
     <string name="mobile_stats_delete">Delete my stats</string>
     <string name="mobile_stats_delete_confirm">Delete your stats?</string>
     <string name="mobile_stats_delete_body">Time spent, watch time and videos counted, for every day. They start again from zero.</string>
     <string name="mobile_stats_private">Your stats (time in GuTube, watch time, videos started) are kept only on this phone. They are never uploaded or shared: no data leaves your device.</string>
-    <string name="mobile_stats_on_device">🔒 Only on this phone. Nothing leaves your device.</string>
+    <string name="mobile_stats_on_device">Stored locally on device · 100% private</string>
     <plurals name="mobile_stats_delete_summary">
         <item quantity="one">%d day kept on this phone</item>
         <item quantity="other">%d days kept on this phone</item>
@@ -726,10 +744,10 @@
     <string name="mobile_greet_afternoon">Good afternoon</string>
     <string name="mobile_greet_evening">Good evening</string>
     <string name="mobile_greet_night">Good night</string>
-    <string name="mobile_greet_morning_line">Start the day with something good</string>
-    <string name="mobile_greet_afternoon_line">Time for a little break?</string>
-    <string name="mobile_greet_evening_line">Wind down with a video or two</string>
-    <string name="mobile_greet_night_line">One more video, then sleep</string>
+    <string name="mobile_greet_morning_line">Start your day with your favorite videos</string>
+    <string name="mobile_greet_afternoon_line">Take a break and catch up on what\'s new</string>
+    <string name="mobile_greet_evening_line">Wind down with your personalized feed</string>
+    <string name="mobile_greet_night_line">One more video, then time to sleep</string>
     <string name="mobile_focus_idle">Timer · %d min</string>
     <string name="mobile_focus_running">Timer · %s</string>
     <string name="mobile_focus_start">Start timer</string>

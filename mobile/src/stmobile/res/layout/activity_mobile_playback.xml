@@ -119,16 +119,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
-                    <ImageButton
+                    <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_back"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_minimize"
                         android:padding="10dp"
@@ -142,6 +143,7 @@
                         android:id="@+id/mobile_player_audio"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_audio_only"
@@ -157,6 +159,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
 
@@ -167,7 +170,7 @@
                             android:ellipsize="end"
                             android:gravity="center_vertical|start"
                             android:maxLines="1"
-                            android:shadowColor="#80000000"
+                            android:shadowColor="#CC000000"
                             android:shadowDx="0"
                             android:shadowDy="1"
                             android:shadowRadius="3"
@@ -183,22 +186,23 @@
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:paddingTop="1dp"
-                            android:shadowColor="#80000000"
+                            android:shadowColor="#CC000000"
                             android:shadowDx="0"
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="#CCFFFFFF"
-                            android:textSize="11sp"
+                            android:textSize="10.5sp"
                             android:visibility="gone"
                             tools:text="Channel name" />
 
                     </LinearLayout>
 
-                    <!-- Top-right player options, YouTube-style trio: Cast, Subtitles/CC, and the gear. -->
+                    <!-- Top-right player options: Cast, Subtitles/CC, Screenshot, and the gear. -->
                     <LinearLayout
                         android:id="@+id/mobile_player_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -207,6 +211,7 @@
                             android:id="@+id/mobile_player_cast"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
                             android:background="@drawable/bg_player_glass_circle"
                             android:contentDescription="@string/mobile_cast_button"
                             android:padding="10dp"
@@ -218,18 +223,35 @@
                             android:id="@+id/mobile_player_subtitles"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
                             android:layout_marginStart="8dp"
                             android:background="@drawable/bg_player_glass_circle"
                             android:contentDescription="@string/mobile_player_subtitles"
                             android:padding="10dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_player_cc_off" />
+                            android:src="@drawable/ic_player_cc_off"
+                            android:tint="@color/mobile_player_on_video" />
+
+                        <!-- Frame Studio (Advanced Screenshot Mode) -->
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_screenshot"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_player_glass_circle"
+                            android:contentDescription="@string/mobile_player_screenshot"
+                            android:padding="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_player_screenshot"
+                            android:tint="@color/mobile_player_on_video" />
 
                         <!-- Gear: opens the player-options bottom sheet -->
-                        <ImageButton
+                        <com.newtube.mobile.ui.playback.PlayerButton
                             android:id="@+id/mobile_player_more"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
                             android:layout_marginStart="8dp"
                             android:background="@drawable/bg_player_glass_circle"
                             android:contentDescription="@string/mobile_player_settings"
@@ -248,14 +270,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_previous"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:layout_marginEnd="28dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_previous"
                         android:padding="11dp"
@@ -263,13 +285,16 @@
                         android:src="@drawable/ic_player_previous" />
 
                     <!-- Large center play / pause / replay -->
-                    <ImageButton
+                    <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_play_pause"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_pause"
-                        android:padding="16dp"
+                        android:padding="15dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_pause" />
 
@@ -277,7 +302,7 @@
                         android:id="@+id/mobile_player_next"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:layout_marginStart="28dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_next"
                         android:padding="11dp"
@@ -295,8 +320,8 @@
                     android:layout_marginBottom="@dimen/mobile_player_bottom_row_margin"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
                     <!-- GUTUBE(glass): position / duration on one glass pill. -->
                     <LinearLayout
@@ -313,11 +338,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFeatureSettings="tnum"
-                            android:shadowColor="#80000000"
+                            android:shadowColor="#CC000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
                             android:shadowRadius="3"
                             android:text="@string/mobile_player_time_default"
                             android:textColor="@android:color/white"
-                            android:textSize="12sp"
+                            android:textSize="11.5sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -325,10 +352,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFeatureSettings="tnum"
-                            android:shadowColor="#80000000"
+                            android:shadowColor="#CC000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="#CCFFFFFF"
-                            android:textSize="12sp"
+                            android:textSize="11.5sp"
                             tools:text=" / 4:26:52" />
 
                     </LinearLayout>
@@ -352,7 +381,8 @@
                     <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:layout_marginEnd="48dp">
 
                         <TextView
                             android:id="@+id/mobile_player_chapter"
@@ -386,7 +416,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="gone">
@@ -419,8 +449,12 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:paddingEnd="10dp"
+                            android:shadowColor="#CC000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
+                            android:shadowRadius="3"
                             android:textColor="@android:color/white"
-                            android:textSize="11sp"
+                            android:textSize="11.5sp"
                             android:textStyle="bold"
                             android:visibility="gone" />
 
@@ -449,8 +483,13 @@
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:paddingEnd="10dp"
+                            android:shadowColor="#CC000000"
+                            android:shadowDx="0"
+                            android:shadowDy="1"
+                            android:shadowRadius="3"
                             android:textColor="@android:color/white"
-                            android:textSize="11sp"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold"
                             android:visibility="gone" />
 
                     </LinearLayout>
@@ -496,7 +535,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -505,6 +544,7 @@
                         android:id="@+id/mobile_player_more_hint"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_player_glass_pill"
                         android:clickable="true"
                         android:drawablePadding="6dp"
@@ -512,19 +552,22 @@
                         android:focusable="true"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="14dp"
-                        android:shadowColor="#80000000"
+                        android:shadowColor="#CC000000"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
                         android:shadowRadius="3"
                         android:text="@string/mobile_player_more_videos"
                         android:textColor="@android:color/white"
-                        android:textSize="11sp"
+                        android:textSize="11.5sp"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
-                    <ImageButton
+                    <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_actions_toggle"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginStart="6dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_hide_actions"
                         android:padding="10dp"
@@ -533,10 +576,11 @@
                         android:visibility="gone" />
 
                     <!-- Fullscreen Toggle Button -->
-                    <ImageButton
+                    <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_fullscreen"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_fullscreen"
@@ -932,6 +976,9 @@
                     android:paddingHorizontal="4dp" />
 
             </LinearLayout>
+
+            <!-- GUTUBE(frame-studio): Pro-level Advanced Screenshot Mode Overlay -->
+            <include layout="@layout/mobile_frame_studio_overlay" />
 
         </com.newtube.mobile.ui.playback.PinchZoomLayout>
 
