@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_shorts_bottom_sheet"
+    android:background="@drawable/bg_github_update_sheet"
     android:orientation="vertical"
     android:paddingBottom="24dp">
 
@@ -45,17 +45,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Update Available"
-                android:textColor="@color/mobile_color_on_surface"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:shadowColor="#33000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="3" />
 
             <TextView
                 android:id="@+id/github_update_version"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textColor="@color/mobile_color_on_surface_secondary"
-                android:textSize="14sp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_github_update_version_pill"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textColor="#E2E8F0"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:shadowColor="#33000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="2"
                 tools:text="Version 3.4.3 · 34 MB" />
 
         </LinearLayout>
@@ -78,18 +90,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="@color/mobile_color_progress"
-            app:trackColor="@color/mobile_color_track"
-            app:trackCornerRadius="2dp"
-            app:trackThickness="4dp" />
+            app:indicatorColor="#818CF8"
+            app:trackColor="#26FFFFFF"
+            app:trackCornerRadius="3dp"
+            app:trackThickness="5dp" />
 
         <TextView
             android:id="@+id/github_update_progress_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textColor="#94A3B8"
             android:textSize="13sp"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="2"
             tools:text="1.9 MB of 34 MB" />
 
     </LinearLayout>
@@ -108,16 +124,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="What's new"
-            android:textColor="@color/mobile_color_on_surface"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textSize="14.5sp"
+            android:textStyle="bold"
+            android:shadowColor="#33000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
 
         <com.newtube.mobile.ui.update.MaxHeightScrollView
             android:id="@+id/github_update_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:overScrollMode="never"
+            android:requiresFadingEdge="vertical"
+            android:fadingEdgeLength="24dp"
             android:scrollbars="vertical">
 
             <LinearLayout
@@ -143,18 +165,33 @@
             android:id="@+id/github_update_btn_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:minHeight="40dp"
             android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_github_update_btn_cancel"
+            app:backgroundTint="@null"
+            android:paddingHorizontal="20dp"
             android:text="Cancel"
-            android:textColor="@color/mobile_color_on_surface"
-            app:rippleColor="@color/mobile_color_pill" />
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:cornerRadius="20dp"
+            app:rippleColor="#26FFFFFF" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/github_update_btn_action"
-            style="@style/Widget.NewTube.Button.Pill"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Update Now" />
+            android:layout_height="40dp"
+            android:minHeight="40dp"
+            android:background="@drawable/bg_github_update_btn_action"
+            app:backgroundTint="@null"
+            android:paddingHorizontal="24dp"
+            android:text="Update Now"
+            android:textColor="#111111"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:cornerRadius="20dp"
+            app:rippleColor="#33000000" />
 
     </LinearLayout>
 

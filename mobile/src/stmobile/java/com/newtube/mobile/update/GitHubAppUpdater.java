@@ -5,16 +5,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,13 +95,19 @@ public final class GitHubAppUpdater {
         public final String downloadUrl;
         public final long apkSize;
         public final List<String> changelog;
+        public final String rawBody;
 
-        public ReleaseInfo(String tagName, String cleanVersion, String downloadUrl, long apkSize, List<String> changelog) {
+        public ReleaseInfo(String tagName, String cleanVersion, String downloadUrl, long apkSize, List<String> changelog, String rawBody) {
             this.tagName = tagName;
             this.cleanVersion = cleanVersion;
             this.downloadUrl = downloadUrl;
             this.apkSize = apkSize;
             this.changelog = changelog;
+            this.rawBody = rawBody != null ? rawBody : "";
+        }
+
+        public ReleaseInfo(String tagName, String cleanVersion, String downloadUrl, long apkSize, List<String> changelog) {
+            this(tagName, cleanVersion, downloadUrl, apkSize, changelog, "");
         }
     }
 
@@ -263,7 +279,7 @@ public final class GitHubAppUpdater {
                     String rawBody = json.optString("body", "");
                     List<String> changelog = parseChangelog(rawBody);
 
-                    ReleaseInfo release = new ReleaseInfo(tagName, cleanRelease, apkUrl, apkSize, changelog);
+                    ReleaseInfo release = new ReleaseInfo(tagName, cleanRelease, apkUrl, apkSize, changelog, rawBody);
 
                     Log.d(TAG, "Showing update bottom sheet dialog for version " + cleanRelease);
                     MAIN_HANDLER.post(() -> {
@@ -294,6 +310,24 @@ public final class GitHubAppUpdater {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
+        // Ensure bottom sheet container is transparent so rounded glass card displays cleanly
+        dialog.setOnShowListener(d -> {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundResource(android.R.color.transparent);
+            }
+        });
+
+        // Android 12+ (API 31+) native window backdrop blur
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                window.getAttributes().setBlurBehindRadius((int) (14 * activity.getResources().getDisplayMetrics().density));
+            }
+        }
+
         ImageView iconView = view.findViewById(R.id.github_update_icon);
         TextView titleView = view.findViewById(R.id.github_update_title);
         TextView versionView = view.findViewById(R.id.github_update_version);
@@ -316,17 +350,8 @@ public final class GitHubAppUpdater {
         String sizeStr = release.apkSize > 0 ? Formatter.formatFileSize(activity, release.apkSize) : "";
         versionView.setText("Version " + release.cleanVersion + (sizeStr.isEmpty() ? "" : " · " + sizeStr));
 
-        // Populate changelog bullet points
-        notesList.removeAllViews();
-        if (release.changelog.isEmpty()) {
-            TextView item = createBulletView(activity, "Bug fixes and performance improvements.");
-            notesList.addView(item);
-        } else {
-            for (String note : release.changelog) {
-                TextView item = createBulletView(activity, note);
-                notesList.addView(item);
-            }
-        }
+        // Populate changelog bullet points with clean Markdown-to-Spannable parser
+        renderMarkdownNotes(activity, notesList, release.rawBody, release.changelog);
 
         final Call[] activeCall = new Call[1];
         final boolean[] isDownloading = new boolean[]{false};
@@ -484,13 +509,202 @@ public final class GitHubAppUpdater {
         dialog.show();
     }
 
-    private static TextView createBulletView(Context context, String text) {
+    /**
+     * Parses inline markdown tokens:
+     * - **bold** -> Bold white text (#FFFFFF) with asterisks removed
+     * - `code/tag` -> Monospace pill style (#E2E8F0 on 15% white background) with backticks removed
+     * - [link](url) -> Link text in accent color (#818CF8)
+     * - Cleans trailing GitHub commit/PR references ("in https://github.com/...")
+     * - Safely strips any leftover unmatched raw asterisks or backticks
+     */
+    private static SpannableStringBuilder parseInlineMarkdown(String text) {
+        if (text == null || text.isEmpty()) {
+            return new SpannableStringBuilder();
+        }
+        // Strip trailing commit/PR URLs e.g. " in https://github.com/..."
+        text = text.replaceAll("\\s+in https?://github\\.com/\\S+", "");
+
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        Pattern pattern = Pattern.compile("\\*\\*(.+?)\\*\\*|`([^`]+)`|\\[(.+?)\\]\\((.+?)\\)");
+        Matcher matcher = pattern.matcher(text);
+        int lastIndex = 0;
+
+        while (matcher.find()) {
+            if (matcher.start() > lastIndex) {
+                ssb.append(text.substring(lastIndex, matcher.start()));
+            }
+
+            if (matcher.group(1) != null) {
+                // **bold text**
+                String boldContent = matcher.group(1);
+                int start = ssb.length();
+                ssb.append(boldContent);
+                ssb.setSpan(new StyleSpan(Typeface.BOLD), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new ForegroundColorSpan(0xFFFFFFFF), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else if (matcher.group(2) != null) {
+                // `code/tag`
+                String codeContent = matcher.group(2);
+                int start = ssb.length();
+                ssb.append(" ").append(codeContent).append(" ");
+                ssb.setSpan(new TypefaceSpan("monospace"), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new BackgroundColorSpan(0x26FFFFFF), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new ForegroundColorSpan(0xFFE2E8F0), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else if (matcher.group(3) != null) {
+                // [link](url)
+                String linkText = matcher.group(3);
+                int start = ssb.length();
+                ssb.append(linkText);
+                ssb.setSpan(new ForegroundColorSpan(0xFF818CF8), start, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            lastIndex = matcher.end();
+        }
+
+        if (lastIndex < text.length()) {
+            ssb.append(text.substring(lastIndex));
+        }
+
+        // Clean any leftover raw markers if unmatched (e.g. lone ** or `)
+        int idx;
+        while ((idx = ssb.toString().indexOf("**")) != -1) {
+            ssb.delete(idx, idx + 2);
+        }
+        while ((idx = ssb.toString().indexOf("`")) != -1) {
+            ssb.delete(idx, idx + 1);
+        }
+
+        return ssb;
+    }
+
+    /**
+     * Renders release notes line-by-line:
+     * - Dividers (---, ***, • ---) -> Native 1dp horizontal divider View (no raw --- text)
+     * - Headings (###, ##) -> Bold white section headers with proper top spacing
+     * - Bullets (* , - , • ) -> Indented bullet points with colored bullet prefix & 4dp line spacing
+     */
+    private static void renderMarkdownNotes(Activity activity, LinearLayout container, String rawBody, List<String> fallbackChangelog) {
+        container.removeAllViews();
+        float density = activity.getResources().getDisplayMetrics().density;
+
+        if (rawBody == null || rawBody.trim().isEmpty()) {
+            if (fallbackChangelog != null && !fallbackChangelog.isEmpty()) {
+                for (String note : fallbackChangelog) {
+                    container.addView(createBulletView(activity, parseInlineMarkdown(note), density));
+                }
+            } else {
+                container.addView(createBulletView(activity, new SpannableStringBuilder("Bug fixes and performance improvements."), density));
+            }
+            return;
+        }
+
+        String[] lines = rawBody.split("\r?\n");
+        boolean hasAddedAnyView = false;
+
+        for (String rawLine : lines) {
+            String line = rawLine.trim();
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            // 1. Horizontal Dividers: ---, ***, ___ or • ---
+            if (line.matches("^[\\s•*-]*---[\\s•*-]*$") || line.matches("^[\\s•*-]*\\*\\*\\*[\\s•*-]*$") || line.matches("^_{3,}$")) {
+                if (hasAddedAnyView) {
+                    View divider = new View(activity);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, (int) Math.max(1, 1 * density));
+                    lp.topMargin = (int) (10 * density);
+                    lp.bottomMargin = (int) (10 * density);
+                    divider.setLayoutParams(lp);
+                    divider.setBackgroundColor(0x26FFFFFF);
+                    container.addView(divider);
+                }
+                continue;
+            }
+
+            // 2. Headings: #, ##, ###, ####, etc.
+            if (line.startsWith("#")) {
+                String headingText = line.replaceFirst("^#+\\s*", "").trim();
+                if (headingText.isEmpty() || headingText.equalsIgnoreCase("what's changed")
+                        || headingText.equalsIgnoreCase("changelog")) {
+                    continue;
+                }
+                TextView tv = new TextView(activity);
+                tv.setText(parseInlineMarkdown(headingText));
+                tv.setTextColor(0xFFFFFFFF);
+                tv.setTextSize(14.5f);
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.topMargin = (int) (12 * density);
+                lp.bottomMargin = (int) (4 * density);
+                tv.setLayoutParams(lp);
+                tv.setShadowLayer(3f, 0f, 1f, 0x33000000);
+                container.addView(tv);
+                hasAddedAnyView = true;
+                continue;
+            }
+
+            // Skip "Full Changelog" line
+            if (line.toLowerCase().startsWith("full changelog") || line.toLowerCase().startsWith("**full changelog")) {
+                continue;
+            }
+
+            // 3. Bullet points: - , * , + , • , or 1.
+            boolean isBullet = false;
+            if (line.startsWith("* ") || line.startsWith("- ") || line.startsWith("+ ") || line.startsWith("• ")) {
+                line = line.substring(2).trim();
+                isBullet = true;
+            } else if (line.matches("^\\d+\\.\\s+.*")) {
+                line = line.replaceFirst("^\\d+\\.\\s+", "").trim();
+                isBullet = true;
+            }
+
+            // If stripped line was just divider (e.g. • ---)
+            if (line.matches("^-{2,}$") || line.matches("^\\*{2,}$")) {
+                if (hasAddedAnyView) {
+                    View divider = new View(activity);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, (int) Math.max(1, 1 * density));
+                    lp.topMargin = (int) (10 * density);
+                    lp.bottomMargin = (int) (10 * density);
+                    divider.setLayoutParams(lp);
+                    divider.setBackgroundColor(0x26FFFFFF);
+                    container.addView(divider);
+                }
+                continue;
+            }
+
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            SpannableStringBuilder content = parseInlineMarkdown(line);
+            if (isBullet) {
+                SpannableStringBuilder bulletSsb = new SpannableStringBuilder();
+                bulletSsb.append("•  ");
+                bulletSsb.setSpan(new ForegroundColorSpan(0xFF818CF8), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                bulletSsb.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                bulletSsb.append(content);
+                container.addView(createBulletView(activity, bulletSsb, density));
+            } else {
+                container.addView(createBulletView(activity, content, density));
+            }
+            hasAddedAnyView = true;
+        }
+
+        if (!hasAddedAnyView) {
+            container.addView(createBulletView(activity, new SpannableStringBuilder("Bug fixes and performance improvements."), density));
+        }
+    }
+
+    private static TextView createBulletView(Context context, CharSequence text, float density) {
         TextView tv = new TextView(context);
-        tv.setText("•  " + text);
-        tv.setTextColor(context.getResources().getColor(R.color.mobile_color_on_surface_secondary));
+        tv.setText(text);
+        tv.setTextColor(0xFFCBD5E1); // Slate 300
         tv.setTextSize(13.5f);
-        tv.setPadding(0, 4, 0, 4);
-        tv.setLineSpacing(0, 1.15f);
+        tv.setPadding(0, (int) (3 * density), 0, (int) (3 * density));
+        tv.setLineSpacing(4 * density, 1.0f); // 4dp line spacing extra
+        tv.setShadowLayer(3f, 0f, 1f, 0x33000000); // 0 1px 3px rgba(0,0,0,0.2)
         return tv;
     }
 
@@ -628,7 +842,10 @@ public final class GitHubAppUpdater {
         for (String rawLine : lines) {
             String line = rawLine.trim();
             if (line.isEmpty() || line.startsWith("#") || line.equalsIgnoreCase("what's changed")
-                    || line.toLowerCase().startsWith("full changelog")) {
+                    || line.toLowerCase().startsWith("full changelog")
+                    || line.matches("^[\\s•*-]*---[\\s•*-]*$")
+                    || line.matches("^[\\s•*-]*\\*\\*\\*[\\s•*-]*$")
+                    || line.matches("^_{3,}$")) {
                 continue;
             }
             // Strip leading bullet markers
