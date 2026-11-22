@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Crisp Bright White Pill for Update Now Button -->
+<!-- Primary Action Pill for Update Now Button -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="20dp" />
-            <solid android:color="#E6FFFFFF" />
+            <corners android:radius="14dp" />
+            <solid android:color="#E2E8F0" />
+            <stroke
+                android:width="1dp"
+                android:color="#4D3B82F6" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <corners android:radius="20dp" />
+            <corners android:radius="14dp" />
             <solid android:color="#4DFFFFFF" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="20dp" />
+            <corners android:radius="14dp" />
             <solid android:color="#FFFFFFFF" />
+            <stroke
+                android:width="1dp"
+                android:color="#33FFFFFF" />
         </shape>
     </item>
 </selector>

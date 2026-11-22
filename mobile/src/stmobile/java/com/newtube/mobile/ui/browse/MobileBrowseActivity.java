@@ -205,9 +205,7 @@ public class MobileBrowseActivity extends MobileActivity
     private FeedStrip mStrip;
     private RecyclerView mChipRow;
     private com.newtube.mobile.ui.common.GlassChipTrack mChipTrack;
-    private ChipBar mChipBarRow;
-    private ChipBar mChipBarTrack;
-    private ChipBar mChipBar;
+    private com.google.android.material.appbar.AppBarLayout mAppBar;
     // GUTUBE(nav hide, issue #37): the floating nav pill slides away while a feed scrolls down.
     private com.newtube.mobile.ui.common.NavHider mNavHider;
     // GUTUBE(search fab): Search floated out of the slid-away bar; out = shown in its corner.
@@ -504,12 +502,8 @@ public class MobileBrowseActivity extends MobileActivity
                 return insets;
             });
         }
-        // The top pills are glass over the page: the page's lists start under their row, padded by
-        // its height.
+        // The top bar sits as the first child of the AppBarLayout, directly beneath the status bar.
         View topGlass = findViewById(R.id.mobile_top_glass);
-        if (topGlass != null) {
-            topGlass.bringToFront();
-        }
         if (com.newtube.mobile.ui.common.YouTubeMode.isOn(this)) {
             setUpYouTubeTopBar();
         }
@@ -541,20 +535,9 @@ public class MobileBrowseActivity extends MobileActivity
         com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(mMiniPlayerBar, mContentGrid);
     }
 
-    /** GUTUBE(glass): everything on the page starts below the frosted top bar but scrolls under it. */
-    /** GUTUBE(feed-strip): the top pills' row, plus Home's floating chip row when it shows. */
+    /** CoordinatorLayout + AppBarLayout handles top positioning automatically. */
     private void refreshTopPadding() {
-        View topGlass = findViewById(R.id.mobile_top_glass);
-        int bar = topGlass != null ? topGlass.getHeight() : 0;
-        if (mChipBar != null && mChipBar.isActive()) {
-            // hidden chips keep their room: the feed never jumps. Less the headroom over the top row.
-            if (mChipBar == mChipBarTrack) {
-                bar += mChipTrack.getHeight() + Math.round(4 * getResources().getDisplayMetrics().density);
-            } else {
-                bar += mChipRow.getHeight();
-            }
-        }
-        padUnderTopBar(bar);
+        padUnderTopBar(0);
     }
 
     /** A new page: the nav pill back if a scroll had slid it away. */
@@ -562,12 +545,9 @@ public class MobileBrowseActivity extends MobileActivity
         if (mNavHider != null) {
             mNavHider.show();
         }
-    }
-
-    /** Home's chips float only over Home and its topics, never over the You panel. */
-    private ChipBar chipBarForStyle() {
-        return com.newtube.mobile.ui.common.Glass.chipStyle(this) == com.newtube.mobile.ui.common.Glass.CHIPS_SEGMENT
-                ? mChipBarTrack : mChipBarRow;
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, true);
+        }
     }
 
     private void updateChipRow() {
@@ -575,27 +555,24 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
         boolean active = mStrip.mode() == FeedStrip.MODE_CHIPS && !mYouShowing;
-        if (active != mChipBar.isActive()) {
-        ChipBar style = chipBarForStyle();
-        if (style != mChipBar) { // Settings > Customization > Chips style changed
-            mChipBar.setActive(false);
-            mChipBar = style;
-        }
-            mChipBar.setActive(active);
-            refreshTopPadding();
-        } else if (active && !mContentGrid.canScrollVertically(-1)) {
-            mChipBar.show(); // a chip picked further down: the new feed starts at the top, chips out
+        boolean segment = com.newtube.mobile.ui.common.Glass.chipStyle(this) == com.newtube.mobile.ui.common.Glass.CHIPS_SEGMENT;
+        mChipRow.setVisibility(active && !segment ? View.VISIBLE : View.GONE);
+        mChipTrack.setVisibility(active && segment ? View.VISIBLE : View.GONE);
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, true);
         }
     }
 
     private void padUnderTopBar(int barPx) {
         for (View page : new View[] {mContentGrid, mFeedSkeleton, mErrorContainer}) {
             if (page != null) {
-                page.setPadding(page.getPaddingLeft(), barPx, page.getPaddingRight(), page.getPaddingBottom());
+                page.setPadding(page.getPaddingLeft(), 0, page.getPaddingRight(), page.getPaddingBottom());
             }
         }
         int spinner = Math.round(40 * getResources().getDisplayMetrics().density);
-        mContentSwipe.setProgressViewOffset(false, barPx - spinner, barPx + spinner / 2);
+        if (mContentSwipe != null) {
+            mContentSwipe.setProgressViewOffset(false, 0, spinner);
+        }
     }
 
     private void setupSwipeRefresh() {
@@ -1262,26 +1239,30 @@ public class MobileBrowseActivity extends MobileActivity
         });
         mStrip.setOnAvatarLongPressed(this::onStripLongPressed); // GUTUBE(issue #87): the channel's menu.
         mChipRow = findViewById(R.id.mobile_chip_row);
+        mChipRow.setClipChildren(false);
+        mChipRow.setClipToPadding(false);
+        mChipRow.setElevation(8 * getResources().getDisplayMetrics().density);
+        mChipRow.setTranslationZ(8 * getResources().getDisplayMetrics().density);
+        android.view.ViewParent chipParent = mChipRow.getParent();
+        while (chipParent instanceof android.view.ViewGroup) {
+            ((android.view.ViewGroup) chipParent).setClipChildren(false);
+            ((android.view.ViewGroup) chipParent).setClipToPadding(false);
+            chipParent = chipParent.getParent();
+        }
         mChipRow.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         mChipRow.setItemAnimator(null);
         mChipRow.setAdapter(mStrip.items());
         mChipTrack = findViewById(R.id.mobile_chip_track);
         mChipTrack.setGlassSource(findViewById(R.id.mobile_blur_target));
         mStrip.setTrack(mChipTrack);
-        mChipBarRow = new ChipBar(mChipRow);
-        mChipBarTrack = new ChipBar(mChipTrack);
-        mChipBar = chipBarForStyle();
-        mChipTrack.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
-            if (b - t != ob - ot) {
-                refreshTopPadding();
-            }
-        });
-        // The page starts under the top pills AND the chips while they show.
-        mChipRow.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
-            if (b - t != ob - ot) {
-                refreshTopPadding();
-            }
-        });
+        mAppBar = findViewById(R.id.mobile_appbar);
+        if (mAppBar != null) {
+            mAppBar.addOnOffsetChangedListener((appBar, offset) -> {
+                if (mContentSwipe != null) {
+                    mContentSwipe.setEnabled(offset == 0);
+                }
+            });
+        }
         mRows = new HomeRowsAdapter(this::onVideoClicked, this::onVideoLongClicked);
 
         // Channel rows (rare on Home, possible in some sections) span the whole grid width
@@ -1350,16 +1331,11 @@ public class MobileBrowseActivity extends MobileActivity
                     // gets another try by scrolling down again - one per gesture, never a loop.
                     mLastNearEndTriggerCount = -1;
                 }
-                boolean atTop = !recyclerView.canScrollVertically(-1);
-                mChipBar.onScrolled(dy, atTop);
                 maybeTriggerPagination();
             }
 
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (!recyclerView.canScrollVertically(-1)) {
-                    mChipBar.onScrolled(0, true);
-                }
             }
         });
         // GUTUBE(home autoplay): the centred Home card plays muted, as on YouTube.
@@ -2152,8 +2128,8 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** A long way down, jump most of it first: the glide covers the last few rows only. */
     private void smoothScrollGridToTop() {
-        if (mChipBar != null) {
-            mChipBar.show();
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, true);
         }
         RecyclerView.LayoutManager layout = mContentGrid.getLayoutManager();
         if (layout instanceof LinearLayoutManager) {

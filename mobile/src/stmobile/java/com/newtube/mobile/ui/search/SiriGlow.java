@@ -40,43 +40,15 @@ public final class SiriGlow extends View {
     private float mTurn;
 
     public static boolean enabled(Context context) {
-        if (sOn < 0) {
-            sOn = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_ON, true) ? 1 : 0;
-        }
-        return sOn == 1;
+        return false;
     }
 
     public static void setEnabled(Context context, boolean on) {
-        sOn = on ? 1 : 0;
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ON, on).apply();
     }
 
     /** Play once over {@code activity}'s window. */
     static void play(Activity activity) {
-        if (!enabled(activity)) {
-            return;
-        }
-        ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
-        SiriGlow glow = new SiriGlow(activity);
-        decor.addView(glow, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        ValueAnimator run = ValueAnimator.ofFloat(0f, 1f);
-        run.setDuration(DURATION_MS);
-        run.setInterpolator(new LinearInterpolator());
-        run.addUpdateListener(a -> {
-            float t = a.getAnimatedFraction();
-            glow.mTurn = t * 360f;
-            // In fast, a held glow, out slowly.
-            glow.setAlpha(t < 0.15f ? t / 0.15f : t > 0.55f ? (1f - t) / 0.45f : 1f);
-            glow.invalidate();
-        });
-        run.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                decor.removeView(glow);
-            }
-        });
-        run.start();
+        // Completely removed / disabled: zero screen edge glow animation
     }
 
     private SiriGlow(Context context) {

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Touch Search screen (Wave 4b).
-
-  Structured identically to the Home page:
-  - Base FrameLayout / GlassSource filling the screen with RecyclerView (mobile_search_grid)
-    set to clipToPadding="false" and paddingTop="@dimen/mobile_search_results_top".
-  - Floating Top Bar (mobile_search_toolbar) at the top with transparent background and elevation 6dp.
-  - Floating Chip Bar (mobile_search_chip_track / mobile_search_chips_scroll) below toolbar with
-    transparent background and elevation 4dp.
-  - Results scroll smoothly BEHIND the Top Bar and Chip Bar.
+  Touch Search screen - Official YouTube Layout.
+  - Top Bar (mobile_search_toolbar): Sleek 52dp bar with solid #0F0F0F background, back arrow, search pill, mic, filter button.
+  - Results / Suggestions / Skeletons: Positioned directly below the top bar (layout_marginTop="52dp") with zero overlap.
+  - Docked Bottom Nav Bar: Preserved at the bottom.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,46 +11,43 @@
     android:id="@+id/mobile_search_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mobile_color_background">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:background="#0F0F0F">
 
-    <!-- The results scroll under the floating search pill, which frosts them. -->
     <com.newtube.mobile.ui.common.GlassSource
         android:id="@+id/mobile_search_glass_source"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mobile_color_background">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:background="#0F0F0F">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-            <!-- The results alone, which the chips below frost (a glass may not sit
-                 in the source it samples). -->
-            <com.newtube.mobile.ui.common.GlassSource
-                android:id="@+id/mobile_search_chips_source"
+            <!-- Search Results Grid: Starts right below the 52dp toolbar, zero overlap with cards -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mobile_search_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/mobile_color_background">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/mobile_search_grid"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingTop="@dimen/mobile_search_results_top"
-                    android:paddingHorizontal="@dimen/mobile_card_spacing"
-                    android:paddingBottom="@dimen/mobile_card_spacing"
-                    android:scrollbars="none"
-                    tools:listitem="@layout/item_video_card" />
-
-            </com.newtube.mobile.ui.common.GlassSource>
+                android:layout_marginTop="52dp"
+                android:clipToPadding="false"
+                android:paddingTop="6dp"
+                android:paddingHorizontal="@dimen/mobile_card_spacing"
+                android:paddingBottom="@dimen/gutube_nav_clearance"
+                android:scrollbars="none"
+                tools:listitem="@layout/item_video_card" />
 
             <!-- Feed skeleton shimmer overlay -->
             <include
                 layout="@layout/mobile_feed_skeleton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/mobile_search_results_top"
+                android:layout_marginTop="52dp"
                 android:visibility="gone" />
 
             <!-- Empty / error message -->
@@ -64,197 +56,139 @@
                 layout="@layout/mobile_page_load_state"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/mobile_search_results_top" />
-
-            <!-- Chip track (segmented style) -->
-            <com.newtube.mobile.ui.common.GlassChipTrack
-                android:id="@+id/mobile_search_chip_track"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginTop="@dimen/mobile_title_bar_height"
-                android:background="@android:color/transparent"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:elevation="4dp"
-                android:visibility="gone" />
-
-            <!-- Chip scroll (pills style) -->
-            <HorizontalScrollView
-                android:id="@+id/mobile_search_chips_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginTop="@dimen/mobile_title_bar_height"
-                android:background="@android:color/transparent"
-                android:clipToPadding="false"
-                android:elevation="4dp"
-                android:paddingHorizontal="12dp"
-                android:scrollbars="none"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <LinearLayout
-                    android:id="@+id/mobile_search_chips"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    android:orientation="horizontal" />
-
-            </HorizontalScrollView>
+                android:layout_marginTop="52dp" />
 
         </FrameLayout>
 
     </com.newtube.mobile.ui.common.GlassSource>
-
-    <!-- Top Bar: Search Toolbar floating over the results with transparent background -->
-    <LinearLayout
-        android:id="@+id/mobile_search_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mobile_title_bar_height"
-        android:layout_gravity="top"
-        android:background="@android:color/transparent"
-        android:elevation="6dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp">
-
-        <!-- A frosted circle like the search pill beside it (same tint, height and lift). -->
-        <com.newtube.mobile.ui.common.GlassView
-            android:id="@+id/mobile_search_back_glass"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="4dp"
-            android:elevation="0dp"
-            app:glassCornerRadius="22dp"
-            app:glassTint="@color/gutube_search_glass_tint">
-
-            <ImageButton
-                android:id="@+id/mobile_search_back"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/mobile_back"
-                android:padding="10dp"
-                android:src="@drawable/ic_mobile_back_arrow" />
-
-        </com.newtube.mobile.ui.common.GlassView>
-
-        <com.newtube.mobile.ui.common.GlassView
-            android:id="@+id/mobile_search_glass"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="1"
-            android:elevation="0dp"
-            app:glassCornerRadius="22dp"
-            app:glassTint="@color/gutube_search_glass_tint">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <com.newtube.mobile.ui.search.GlowEditText
-                    android:id="@+id/mobile_search_input"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:hint="@string/mobile_search_hint"
-                    android:imeOptions="actionSearch"
-                    android:importantForAutofill="no"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="18dp"
-                    android:paddingEnd="4dp"
-                    android:singleLine="true"
-                    android:textColor="@color/mobile_color_on_surface"
-                    android:textColorHint="@color/mobile_color_on_surface_secondary"
-                    android:textCursorDrawable="@drawable/gutube_search_cursor"
-                    android:textSize="18sp" />
-
-                <!-- Clear the query; visible only while the field has text. -->
-                <ImageButton
-                    android:id="@+id/mobile_search_clear"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_search_clear"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_sheet_close"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-                <ImageButton
-                    android:id="@+id/mobile_search_mic"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/mobile_search_voice"
-                    android:padding="9dp"
-                    android:src="@drawable/ic_mobile_mic" />
-
-            </LinearLayout>
-
-        </com.newtube.mobile.ui.common.GlassView>
-
-        <!-- GUTUBE(search filters): upload date, duration, type, features, sort. -->
-        <com.newtube.mobile.ui.common.GlassView
-            android:id="@+id/mobile_search_filters_glass"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginEnd="4dp"
-            android:elevation="0dp"
-            app:glassCornerRadius="22dp"
-            app:glassTint="@color/gutube_search_glass_tint">
-
-            <ImageButton
-                android:id="@+id/mobile_search_filters"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/mobile_search_filters"
-                android:padding="10dp"
-                android:src="@drawable/ic_mobile_tune" />
-
-        </com.newtube.mobile.ui.common.GlassView>
-
-    </LinearLayout>
 
     <!-- Suggestions/history: full-height overlay below toolbar while editing query -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mobile_search_suggestions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/mobile_title_bar_height"
-        android:background="@color/mobile_color_background"
+        android:layout_marginTop="52dp"
+        android:background="#0F0F0F"
         android:clipToPadding="false"
         android:elevation="8dp"
         android:outlineProvider="none"
+        android:paddingBottom="@dimen/gutube_nav_clearance"
+        android:scrollbars="none"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_mobile_search_suggestion" />
 
-    <!-- GUTUBE(search nav): Browse's floating nav pill over the results, Search lit -->
+    <!-- Top Bar: Sleek, compact YouTube Search Toolbar (52dp, solid #0F0F0F) -->
+    <LinearLayout
+        android:id="@+id/mobile_search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="top"
+        android:background="#0F0F0F"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="6dp">
+
+        <!-- Left: Back Arrow (24dp icon inside 40dp touch target) -->
+        <ImageButton
+            android:id="@+id/mobile_search_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_back"
+            android:padding="8dp"
+            android:src="@drawable/ic_mobile_back_arrow"
+            android:tint="#F5F5F5" />
+
+        <!-- Center: Slim rounded search input pill (height 38dp, 19dp corner radius, #212121 fill) -->
+        <LinearLayout
+            android:id="@+id/mobile_search_pill"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_mobile_search_input_pill"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="4dp">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/mobile_search_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/mobile_search_hint"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#9E9E9E"
+                android:textCursorDrawable="@drawable/gutube_search_cursor"
+                android:textSize="15sp" />
+
+            <!-- Clear button (inline ✕ inside search pill) -->
+            <ImageButton
+                android:id="@+id/mobile_search_clear"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_search_clear"
+                android:padding="6dp"
+                android:src="@drawable/ic_sheet_close"
+                android:tint="#CCCCCC"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- Right: Compact Mic (22dp icon inside 38dp touch target) -->
+        <ImageButton
+            android:id="@+id/mobile_search_mic"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_search_voice"
+            android:padding="8dp"
+            android:src="@drawable/ic_mobile_mic"
+            android:tint="#F5F5F5" />
+
+        <!-- Right: Filter / Options button (22dp icon inside 38dp touch target, clean 8dp gap) -->
+        <ImageButton
+            android:id="@+id/mobile_search_filters"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_search_filters"
+            android:padding="8dp"
+            android:src="@drawable/ic_mobile_tune"
+            android:tint="#F5F5F5" />
+
+    </LinearLayout>
+
+    <!-- Docked bottom nav bar over the results, Search lit -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_nav_glass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
-        android:layout_marginBottom="?attr/gutubeNavBottomMargin"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginBottom="0dp"
         android:elevation="16dp"
-        android:padding="6dp"
+        android:padding="0dp"
         android:visibility="gone"
-        app:glassCornerRadius="?attr/gutubeNavCorner"
-        app:glassMaxWidth="?attr/gutubeNavMaxWidth"
-        app:glassLiquid="?attr/gutubeNavLiquid"
-        app:glassTint="?attr/gutubeNavTint"
-        app:glassStrokeColor="?attr/gutubeNavStrokeColor"
-        app:glassStrokeWidth="?attr/gutubeNavStrokeWidth">
+        app:glassCornerRadius="0dp"
+        app:glassMaxWidth="4000dp"
+        app:glassLiquid="false"
+        app:glassTint="@color/gutube_youtube_nav_tint"
+        app:glassStrokeColor="@android:color/transparent"
+        app:glassStrokeWidth="0dp">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mobile_bottom_nav"

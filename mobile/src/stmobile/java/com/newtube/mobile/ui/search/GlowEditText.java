@@ -42,44 +42,19 @@ public class GlowEditText extends AppCompatEditText {
     }
 
     public static boolean enabled(Context context) {
-        if (sOn < 0) {
-            sOn = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_ON, true) ? 1 : 0;
-        }
-        return sOn == 1;
+        return false;
     }
 
     public static void setEnabled(Context context, boolean on) {
-        sOn = on ? 1 : 0;
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ON, on).apply();
     }
 
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (isAttachedToWindow() && hasFocus() && (lengthBefore > 0 || lengthAfter > 0)) {
-            ignite();
-        }
     }
 
     private void ignite() {
-        if (!enabled(getContext())) {
-            stopGlow();
-            return;
-        }
-        removeCallbacks(mSettle);
-        postDelayed(mSettle, SETTLE_MS);
-        fadeTo(1f);
-        if (mSweep == null) {
-            mSweep = ValueAnimator.ofFloat(0f, 1f);
-            mSweep.setDuration(SWEEP_MS);
-            mSweep.setRepeatCount(ValueAnimator.INFINITE);
-            mSweep.setInterpolator(new LinearInterpolator());
-            mSweep.addUpdateListener(a -> {
-                mPhase = a.getAnimatedFraction();
-                applyGlow();
-            });
-            mSweep.start();
-        }
+        stopGlow();
     }
 
     private void fadeTo(float target) {

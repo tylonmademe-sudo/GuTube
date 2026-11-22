@@ -130,9 +130,9 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/bg_player_glass_circle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/mobile_player_minimize"
-                        android:padding="10dp"
+                        android:padding="8dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_minimize"
                         android:tint="@color/mobile_player_on_video" />
@@ -145,9 +145,9 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_player_glass_circle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/mobile_player_audio_only"
-                        android:padding="10dp"
+                        android:padding="8dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_headphones"
                         android:tint="@color/mobile_player_audio_tint" />
@@ -158,7 +158,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="12dp"
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:orientation="vertical">
@@ -175,7 +175,7 @@
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="@android:color/white"
-                            android:textSize="13sp"
+                            android:textSize="13.5sp"
                             android:textStyle="bold"
                             tools:text="Video title goes here and may wrap onto a second line" />
 
@@ -191,7 +191,7 @@
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="#CCFFFFFF"
-                            android:textSize="10.5sp"
+                            android:textSize="11sp"
                             android:visibility="gone"
                             tools:text="Channel name" />
 
@@ -212,9 +212,9 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:background="@drawable/bg_player_glass_circle"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_cast_button"
-                            android:padding="10dp"
+                            android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_mobile_cast"
                             android:tint="@color/mobile_player_on_video" />
@@ -224,10 +224,10 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_player_glass_circle"
+                            android:layout_marginStart="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_player_subtitles"
-                            android:padding="10dp"
+                            android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_player_cc_off"
                             android:tint="@color/mobile_player_on_video" />
@@ -238,10 +238,10 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_player_glass_circle"
+                            android:layout_marginStart="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_player_screenshot"
-                            android:padding="10dp"
+                            android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_player_screenshot"
                             android:tint="@color/mobile_player_on_video" />
@@ -252,10 +252,10 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_player_glass_circle"
+                            android:layout_marginStart="12dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_player_settings"
-                            android:padding="10dp"
+                            android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_mobile_settings"
                             android:tint="@color/mobile_player_on_video" />
@@ -290,8 +290,8 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="36dp"
+                        android:layout_marginEnd="36dp"
                         android:background="@drawable/bg_player_glass_circle"
                         android:contentDescription="@string/mobile_player_pause"
                         android:padding="15dp"
@@ -323,15 +323,13 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- GUTUBE(glass): position / duration on one glass pill. -->
+                    <!-- Clean timestamp: position / duration (no heavy box, crisp white text with subtle shadow) -->
                     <LinearLayout
                         android:id="@+id/mobile_player_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="9dp"
-                        android:paddingVertical="4dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/mobile_player_position"
@@ -344,7 +342,7 @@
                             android:shadowRadius="3"
                             android:text="@string/mobile_player_time_default"
                             android:textColor="@android:color/white"
-                            android:textSize="11.5sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -357,7 +355,7 @@
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="#CCFFFFFF"
-                            android:textSize="11.5sp"
+                            android:textSize="12sp"
                             tools:text=" / 4:26:52" />
 
                     </LinearLayout>
@@ -410,35 +408,32 @@
 
                 </LinearLayout>
 
-                <!-- Action toolbar (Left Group): Segmented Like/Dislike pill + Comment + Download + Share -->
+                <!-- Action toolbar (Row 3 Left): Clean borderless action buttons with uniform 16dp spacing -->
                 <LinearLayout
                     android:id="@+id/mobile_player_actions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="0dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <!-- Segmented Like / Dislike Liquid Glass Capsule -->
+                    <!-- Like / Dislike group (borderless, no heavy capsule) -->
                     <LinearLayout
                         android:id="@+id/mobile_player_like_dislike_pill"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:background="@drawable/bg_player_segmented_capsule"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <com.newtube.mobile.ui.playback.PlayerButton
                             android:id="@+id/mobile_player_like"
-                            android:layout_width="wrap_content"
+                            android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_watch_like"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="4dp"
-                            android:paddingVertical="10dp"
+                            android:padding="9dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_watch_thumb_up_outline"
                             android:tint="@color/mobile_player_on_video" />
@@ -448,31 +443,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:paddingEnd="10dp"
+                            android:paddingEnd="4dp"
                             android:shadowColor="#CC000000"
                             android:shadowDx="0"
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="@android:color/white"
-                            android:textSize="11.5sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             android:visibility="gone" />
 
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="14dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="#33FFFFFF" />
-
                         <com.newtube.mobile.ui.playback.PlayerButton
                             android:id="@+id/mobile_player_dislike"
-                            android:layout_width="wrap_content"
+                            android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:layout_marginStart="16dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/mobile_watch_dislike"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="12dp"
-                            android:paddingVertical="10dp"
+                            android:padding="9dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_watch_thumb_down_outline"
                             android:tint="@color/mobile_player_on_video" />
@@ -482,13 +470,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:paddingEnd="10dp"
+                            android:paddingEnd="4dp"
                             android:shadowColor="#CC000000"
                             android:shadowDx="0"
                             android:shadowDy="1"
                             android:shadowRadius="3"
                             android:textColor="@android:color/white"
-                            android:textSize="11.5sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             android:visibility="gone" />
 
@@ -498,7 +486,7 @@
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_comments"
                         style="@style/MobilePlayerAction"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:contentDescription="@string/mobile_comments_entry"
                         android:src="@drawable/ic_watch_comment" />
 
@@ -506,7 +494,7 @@
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_chat"
                         style="@style/MobilePlayerAction"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:contentDescription="@string/mobile_live_chat_entry"
                         android:src="@drawable/ic_watch_chat"
                         android:visibility="gone" />
@@ -515,7 +503,7 @@
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_download"
                         style="@style/MobilePlayerAction"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:contentDescription="@string/dialog_download"
                         android:src="@drawable/ic_watch_download" />
 
@@ -523,27 +511,27 @@
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_share"
                         style="@style/MobilePlayerAction"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:contentDescription="@string/mobile_watch_share"
                         android:src="@drawable/ic_watch_share" />
 
                 </LinearLayout>
 
-                <!-- Action toolbar (Right Group): More Videos Pill & Fullscreen Toggle -->
+                <!-- Action toolbar (Row 3 Right): Compact Liquid Glass More Videos Pill & Borderless Fullscreen -->
                 <LinearLayout
                     android:id="@+id/mobile_player_bottom_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="0dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <!-- 'More' Videos Pill Button -->
+                    <!-- 'More' Videos Pill Button (Liquid Glass) -->
                     <TextView
                         android:id="@+id/mobile_player_more_hint"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="36dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/bg_player_glass_pill"
                         android:clickable="true"
@@ -551,14 +539,14 @@
                         android:drawableStart="@drawable/ic_mobile_more_videos_up"
                         android:focusable="true"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="14dp"
+                        android:paddingHorizontal="12dp"
                         android:shadowColor="#CC000000"
                         android:shadowDx="0"
                         android:shadowDy="1"
                         android:shadowRadius="3"
                         android:text="@string/mobile_player_more_videos"
                         android:textColor="@android:color/white"
-                        android:textSize="11.5sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
@@ -568,23 +556,23 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_player_glass_circle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/mobile_player_hide_actions"
-                        android:padding="10dp"
+                        android:padding="9dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_chips_expand"
                         android:visibility="gone" />
 
-                    <!-- Fullscreen Toggle Button -->
+                    <!-- Fullscreen Toggle Button (borderless white icon) -->
                     <com.newtube.mobile.ui.playback.PlayerButton
                         android:id="@+id/mobile_player_fullscreen"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_player_glass_circle"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/mobile_player_fullscreen"
-                        android:padding="10dp"
+                        android:padding="9dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_fullscreen" />
 

@@ -20,49 +20,205 @@
         android:id="@+id/mobile_blur_target"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mobile_color_background">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:background="#0F0F0F">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <!--
-        No fitsSystemWindows needed: MobileActivity.applyMobileSystemBars() keeps the decor fitting
-        the system windows (solid app-colored status/nav bars), so this layout never renders
-        under the bars regardless of what the player did to the display in between. -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/mobile_coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-        <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
-             gesture when a section shows the error placeholder (the error overlay doesn't
-             consume touches, so the pull still reaches this layout). -->
-        <com.newtube.mobile.ui.common.HapticSwipeRefreshLayout
-            android:id="@+id/mobile_content_swipe"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            <!-- Unified Header AppBarLayout (Top Bar + Category Chips) -->
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/mobile_appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#0F0F0F"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:elevation="8dp"
+                android:translationZ="8dp"
+                android:outlineProvider="none"
+                android:stateListAnimator="@null"
+                app:elevation="0dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mobile_content_grid"
+                <LinearLayout
+                    android:id="@+id/mobile_header_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#0F0F0F"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                    <!-- Top Bar: GuTube brand logo, title, cast button -->
+                    <LinearLayout
+                        android:id="@+id/mobile_top_glass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="#0F0F0F"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/mobile_brand_glass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@android:color/transparent"
+                            android:elevation="0dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="16dp">
+
+                            <!-- NEWTUBE(you-subscreen): only on a section opened from a You row - BrowseTopBar. -->
+                            <ImageButton
+                                android:id="@+id/mobile_title_back"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_marginStart="-6dp"
+                                android:layout_marginEnd="4dp"
+                                android:background="@android:color/transparent"
+                                android:contentDescription="@string/mobile_dialog_back"
+                                android:padding="7dp"
+                                android:src="@drawable/ic_mobile_back_arrow"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/mobile_brand_mark"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_marginEnd="8dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_gutube_mark_default" />
+
+                            <TextView
+                                android:id="@+id/mobile_title_bar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:maxWidth="200dp"
+                                android:text="@string/app_name"
+                                android:textColor="@color/mobile_color_on_surface"
+                                android:textSize="15sp" />
+
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <LinearLayout
+                            android:id="@+id/mobile_actions_glass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:background="@android:color/transparent"
+                            android:elevation="0dp"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="2dp">
+
+                            <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
+                                 accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->
+                            <ImageButton
+                                android:id="@+id/mobile_cast_button"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@android:color/transparent"
+                                android:contentDescription="@string/mobile_cast_button"
+                                android:padding="11dp"
+                                android:src="@drawable/ic_mobile_cast" />
+
+                            <ImageButton
+                                android:id="@+id/mobile_search_button"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@android:color/transparent"
+                                android:contentDescription="@string/mobile_search_button"
+                                android:padding="11dp"
+                                android:src="@drawable/ic_mobile_search"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Category Chip Bar -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/mobile_chip_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:overScrollMode="never"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="12dp"
+                        android:background="#0F0F0F"
+                        android:visibility="gone" />
+
+                    <!-- Segmented Chip Track -->
+                    <com.newtube.mobile.ui.common.GlassChipTrack
+                        android:id="@+id/mobile_chip_track"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:background="#0F0F0F"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <!-- Scrolling Content under AppBarLayout -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipChildren="false"
                 android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/mobile_card_spacing"
-                android:paddingBottom="@dimen/gutube_nav_clearance"
-                android:scrollbars="none"
-                tools:listitem="@layout/item_video_card" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </com.newtube.mobile.ui.common.HapticSwipeRefreshLayout>
+                <com.newtube.mobile.ui.common.HapticSwipeRefreshLayout
+                    android:id="@+id/mobile_content_swipe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
 
-        <include
-            layout="@layout/mobile_feed_skeleton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/mobile_content_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/mobile_card_spacing"
+                        android:paddingBottom="@dimen/gutube_nav_clearance"
+                        android:scrollbars="none"
+                        tools:listitem="@layout/item_video_card" />
+
+                </com.newtube.mobile.ui.common.HapticSwipeRefreshLayout>
+
+                <include
+                    layout="@layout/mobile_feed_skeleton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
 
         <!--
              The empty/error placeholder is anchored to the title bar / bottom nav / parent
@@ -75,17 +231,13 @@
         -->
         <LinearLayout
             android:id="@+id/mobile_error_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp"
             android:paddingBottom="@dimen/gutube_nav_clearance"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/mobile_error_icon"
@@ -116,18 +268,14 @@
         <!-- "You" tab (replaces the old navigation drawer + top-bar settings icon): account row,
              every enabled BrowsePresenter section that isn't in the bottom nav, then Settings.
              Rows are inflated from item_mobile_you_row in MobileBrowseActivity.rebuildYouRows(). -->
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/mobile_you_panel"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/bg_you_ambient"
             android:scrollbars="none"
             android:overScrollMode="never"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
             <FrameLayout
@@ -981,21 +1129,16 @@
 
             </FrameLayout>
 
-        </ScrollView>
-
+        </androidx.core.widget.NestedScrollView>
 
         <!-- GUTUBE(shorts): the Shorts tab shows only this while its player opens. -->
         <FrameLayout
             android:id="@+id/mobile_shorts_loading"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/mobile_color_background"
             android:clickable="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:visibility="gone">
 
             <ProgressBar
                 style="@style/Widget.GuTube.GlassSpinner"
@@ -1003,150 +1146,11 @@
 
         </FrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </com.newtube.mobile.ui.common.GlassSource>
-
-    <!-- GUTUBE(top bar): fixed, solid top bar containing brand on the left and actions on the right.
-         The page content scrolls underneath; MobileBrowseActivity pads the lists by this row's height. -->
-    <LinearLayout
-        android:id="@+id/mobile_top_glass"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:background="@color/mobile_color_background"
-        android:elevation="8dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/mobile_brand_glass"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginEnd="12dp"
-            android:background="@android:color/transparent"
-            android:elevation="0dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="14dp"
-            android:paddingEnd="16dp">
-
-            <!-- NEWTUBE(you-subscreen): only on a section opened from a You row - BrowseTopBar. -->
-            <ImageButton
-                android:id="@+id/mobile_title_back"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="-6dp"
-                android:layout_marginEnd="4dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/mobile_dialog_back"
-                android:padding="7dp"
-                android:src="@drawable/ic_mobile_back_arrow"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/mobile_brand_mark"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginEnd="8dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_gutube_mark_default" />
-
-            <TextView
-                android:id="@+id/mobile_title_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:maxWidth="200dp"
-                android:text="@string/app_name"
-                android:textColor="@color/mobile_color_on_surface"
-                android:textSize="15sp" />
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:id="@+id/mobile_actions_glass"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:background="@android:color/transparent"
-            android:elevation="0dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="2dp">
-
-            <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
-                 accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->
-            <ImageButton
-                android:id="@+id/mobile_cast_button"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/mobile_cast_button"
-                android:padding="11dp"
-                android:src="@drawable/ic_mobile_cast" />
-
-            <ImageButton
-                android:id="@+id/mobile_search_button"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/mobile_search_button"
-                android:padding="11dp"
-                android:src="@drawable/ic_mobile_search"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- GUTUBE(feed-strip): Home's topic chips, liquid-glass pills floating under the top pills;
-         the feed scrolls under them (FeedStrip, the page padded by this row too).
-         GUTUBE(issue #161): 4dp of headroom laid over the top row, so the chips' shadows aren't
-         cut flat on top; refreshTopPadding takes it back off. -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mobile_chip_row"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:elevation="4dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_top_glass" />
-
-    <!-- GUTUBE(glass segmented): the same chips as one glass segment (Settings > Customization > Chips
-         style); ChipBar floats whichever is picked. -->
-    <com.newtube.mobile.ui.common.GlassChipTrack
-        android:id="@+id/mobile_chip_track"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginHorizontal="8dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:elevation="4dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_top_glass" />
 
     <!-- GUTUBE(quotes): the quote a tap on the brand pill shows for three seconds (QuoteCard),
          on the same liquid glass as the pills. -->

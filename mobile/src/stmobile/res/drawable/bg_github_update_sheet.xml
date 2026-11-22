@@ -1,44 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  GitHub Releases in-app updater glassmorphism card background.
-  Slate-tinted translucent dark glass with subtle indigo ambient glow and 1dp border.
+  Glassmorphism Card Sheet:
+  - Slate translucent dark glass: rgba(30, 41, 59, 0.92) to rgba(2, 6, 23, 0.97)
+  - 1px border: rgba(100, 116, 139, 0.2) -> #3364748B
+  - Inset Indigo Ambient Glow: inset 0 0 120px rgba(79, 70, 229, 0.08) -> #204F46E5
+  - Inset Specular Rim Highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -> #26FFFFFF
+  - 48dp top corner radius (border-radius: 50px)
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Slate glass surface with vertical gradient -->
+    <!-- Base slate glass surface -->
     <item>
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="36dp"
-                android:topRightRadius="36dp"
+                android:topLeftRadius="48dp"
+                android:topRightRadius="48dp"
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#F01E283C"
-                android:centerColor="#F5151B27"
-                android:endColor="#FA0F131C"
+                android:startColor="#EB1E293B"
+                android:centerColor="#F20F172A"
+                android:endColor="#F8020617"
                 android:type="linear" />
             <stroke
                 android:width="1dp"
-                android:color="#33FFFFFF" />
+                android:color="#3364748B" />
         </shape>
     </item>
-    <!-- Soft top inner ambient edge highlight -->
+
+    <!-- Inset Indigo Ambient Glow: rgba(79, 70, 229, 0.08) -->
     <item
         android:top="1dp"
         android:left="1dp"
         android:right="1dp"
-        android:bottom="80dp">
+        android:bottom="60dp">
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="35dp"
-                android:topRightRadius="35dp"
+                android:topLeftRadius="47dp"
+                android:topRightRadius="47dp"
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#1AFFFFFF"
+                android:startColor="#204F46E5"
+                android:centerColor="#0D4F46E5"
                 android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Inset Specular Rim Highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -->
+    <item
+        android:top="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:bottom="120dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="47dp"
+                android:topRightRadius="47dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#26FFFFFF"
+                android:endColor="#00FFFFFF" />
         </shape>
     </item>
 </layer-list>

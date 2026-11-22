@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- In-app GitHub update bottom sheet modal dialog -->
+<!-- In-app GitHub update bottom sheet modal dialog (Glassmorphism Card) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,7 +17,7 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_mobile_sheet_handle" />
 
-    <!-- Header: App Icon, Title, Version Name -->
+    <!-- Card Header (.card-header): Avatar + User Details (.user-info) + Notification Icon (.notification-icon) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,17 +26,27 @@
         android:paddingHorizontal="24dp"
         android:paddingTop="18dp">
 
-        <ImageView
-            android:id="@+id/github_update_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@null"
-            android:src="@mipmap/ic_launcher" />
+        <!-- Avatar Container (.avatar): Circular ring with 2px solid #3b82f6 & translucent fill -->
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_github_update_avatar">
 
+            <ImageView
+                android:id="@+id/github_update_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@mipmap/ic_launcher" />
+
+        </FrameLayout>
+
+        <!-- Details (.user-details) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -46,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="Update Available"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="17.5sp"
                 android:textStyle="bold"
                 android:shadowColor="#33000000"
                 android:shadowDx="0"
@@ -57,7 +67,7 @@
                 android:id="@+id/github_update_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:background="@drawable/bg_github_update_version_pill"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="3dp"
@@ -71,6 +81,17 @@
                 tools:text="Version 3.4.3 · 34 MB" />
 
         </LinearLayout>
+
+        <!-- Notification Icon (.notification-icon) -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:alpha="0.5"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_about_notifications"
+            app:tint="#FFFFFF" />
 
     </LinearLayout>
 
@@ -90,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="#818CF8"
+            app:indicatorColor="#3B82F6"
             app:trackColor="#26FFFFFF"
             app:trackCornerRadius="3dp"
             app:trackThickness="5dp" />
@@ -110,7 +131,7 @@
 
     </LinearLayout>
 
-    <!-- What's New / Changelog Bullet Points -->
+    <!-- Card Body: What's New / Changelog Bullet Points -->
     <LinearLayout
         android:id="@+id/github_update_notes_container"
         android:layout_width="match_parent"
@@ -152,7 +173,7 @@
 
     </LinearLayout>
 
-    <!-- Action Buttons: Cancel and Update Now -->
+    <!-- Action Buttons: Cancel and Update Now (.glass-button) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -175,7 +196,7 @@
             android:textColor="#FFFFFF"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:cornerRadius="20dp"
+            app:cornerRadius="14dp"
             app:rippleColor="#26FFFFFF" />
 
         <com.google.android.material.button.MaterialButton
@@ -187,10 +208,10 @@
             app:backgroundTint="@null"
             android:paddingHorizontal="24dp"
             android:text="Update Now"
-            android:textColor="#111111"
+            android:textColor="#111827"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:cornerRadius="20dp"
+            app:cornerRadius="14dp"
             app:rippleColor="#33000000" />
 
     </LinearLayout>

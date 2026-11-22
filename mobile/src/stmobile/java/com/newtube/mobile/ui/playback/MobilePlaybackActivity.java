@@ -968,12 +968,16 @@ public class MobilePlaybackActivity extends MobileActivity
         // pill); with Frosted player buttons on, a frosted disc of the video instead. Over HDR's
         // SurfaceView (#35) there is nothing to frost, so the tint alone. GUTUBE(minimal buttons):
         // with Player buttons on Minimal, no discs at all (applyButton).
+        // YouTube-style minimalism: Translucent Liquid Glass ONLY for Center Controls and More Videos pill.
+        // Top bar, bottom action buttons, and fullscreen toggle are borderless crisp white icons.
         com.newtube.mobile.ui.common.GlassSource videoGlass =
                 com.newtube.mobile.ui.common.Glass.isPlayerFrost(this) ? findViewById(R.id.mobile_player_glass) : null;
-        for (View control : new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mPlayerScreenshot, mMoreButton,
-                mPrevButton, mNextButton, mFullscreenButton, mActionsToggle}) {
-            com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
-            com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
+        View moreHint = findViewById(R.id.mobile_player_more_hint);
+        for (View control : new View[] {mPrevButton, mPlayPauseButton, mNextButton, moreHint, mPlayerLock, mPlayerUnlock}) {
+            if (control != null) {
+                com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
+                com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
+            }
         }
         // GUTUBE(toasts): the player's own message pills (zoom, 2x, brightness/volume, chapter,
         // notices, skip) frosted like the app's message pill: the video under them, blurred, always -
@@ -987,24 +991,8 @@ public class MobilePlaybackActivity extends MobileActivity
                         findViewById(R.id.mobile_player_glass), 0, pillTint);
             }
         }
-        View time = findViewById(R.id.mobile_player_time);
-        View likeDislikePill = findViewById(R.id.mobile_player_like_dislike_pill);
-        View moreHint = findViewById(R.id.mobile_player_more_hint);
-        View playerShare = findViewById(R.id.mobile_player_share);
-        for (View control : new View[] {mPlayPauseButton, mPlayerLock, mPlayerUnlock,
-                likeDislikePill, mPlayerDownload, mPlayerComments, mPlayerChat, playerShare, moreHint}) {
-            if (control != null) {
-                com.newtube.mobile.ui.common.GlassDrawable.applyButton(control, videoGlass, 0, true);
-                com.newtube.mobile.ui.common.SpotlightHelper.attach(control);
-            }
-        }
-        // the time keeps its see-through pill in every style, Minimal too
-        com.newtube.mobile.ui.common.GlassDrawable.apply(time, videoGlass, 0);
         if (videoGlass != null) {
-            mGlassControls = new View[] {mBackButton, mAudioButton, mCastButton, mSubtitlesButton, mPlayerScreenshot, mMoreButton,
-                    mPrevButton, mNextButton, mFullscreenButton, mActionsToggle, mPlayPauseButton, time,
-                    likeDislikePill, mPlayerComments, mPlayerDownload, playerShare, moreHint,
-                    mPlayerLock, mPlayerUnlock};
+            mGlassControls = new View[] {mPrevButton, mPlayPauseButton, mNextButton, moreHint, mPlayerLock, mPlayerUnlock};
         }
         mDebugViewGroup = findViewById(R.id.mobile_player_debug);
 
@@ -3279,7 +3267,7 @@ public class MobilePlaybackActivity extends MobileActivity
             top = Math.max(bars.top, cutout != null ? cutout.getSafeInsetTop() : 0);
             bottom = Math.max(bars.bottom, cutout != null ? cutout.getSafeInsetBottom() : 0);
 
-            int horizontalSafePad = Math.max(leftInset, rightInset) + dp(16);
+            int horizontalSafePad = Math.max(leftInset, rightInset) + dp(20);
             left = horizontalSafePad;
             right = horizontalSafePad;
         } else if (mPortraitFull) {
@@ -3360,7 +3348,6 @@ public class MobilePlaybackActivity extends MobileActivity
         // GUTUBE(fullscreen): the vertical fullscreen floats the bar like landscape does, just over
         // the gesture bar (applyControlsInsets).
         boolean inline = !isLandscape() && !mPortraitFull;
-        int side = dp(16);
         int lift = inline ? 0 : dp(8);
         // GUTUBE(fullscreen-actions): the actions pill takes the bar's place and the bar, with
         // everything over it, rises above the pill. The chevron beside fullscreen flips it.
@@ -3368,7 +3355,7 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mActionsRow != null && mActionsToggle != null) {
             mActionsRow.setVisibility(actions ? View.VISIBLE : View.GONE);
             syncPillCounts();
-            setMargins(mActionsRow, dp(16), 0, 0, lift);
+            setMargins(mActionsRow, inline ? dp(16) : 0, 0, 0, lift);
             mActionsToggle.setVisibility(inline ? View.GONE : View.VISIBLE);
             mActionsToggle.setRotation(actions ? 0f : 180f);
             mActionsToggle.setContentDescription(getString(actions
@@ -3380,17 +3367,22 @@ public class MobilePlaybackActivity extends MobileActivity
             int bottomMargin = inline
                     ? getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin)
                     : lift;
-            setMargins(bottomEnd, 0, 0, dp(16), bottomMargin);
+            setMargins(bottomEnd, 0, 0, inline ? dp(16) : 0, bottomMargin);
         }
         if (!inline) {
-            // In fullscreen/landscape, seekbar is ALWAYS kept above the bottom-right buttons (^ and Fullscreen)
-            // with the same vertical stack as the expanded state, never passing behind them.
+            // In fullscreen/landscape, seekbar is ALWAYS kept above the bottom action row (Row 3)
+            // with a clean vertical stack, never passing behind or through any buttons.
             lift += dp(44);
         }
-        setMargins(mTimeBar, left + side, 0, right + side, bottom + lift);
+        // Portrait: 0dp start/end margin (full edge-to-edge on 16:9 box).
+        // Landscape: symmetric horizontal safe margin Math.max(leftInset, rightInset) + 20dp.
+        int barHorizontalMargin = inline ? 0 : left;
+        setMargins(mTimeBar, barHorizontalMargin, 0, barHorizontalMargin, bottom + lift);
         mTimeBar.setTrackAtBottom(inline);
         updateSeekBarLine();
-        setMargins(mBottomRow, 0, 0, 0,
+
+        // Row 1 (Above Seekbar): Timestamp & Chapter with 8dp-10dp clear gap above seekbar
+        setMargins(mBottomRow, inline ? dp(16) : left, 0, inline ? dp(16) : right,
                 getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin) + lift);
         setMargins(mScrubChapterView, 0, 0, 0,
                 getResources().getDimensionPixelSize(R.dimen.mobile_player_scrub_pill_margin) + bottom + lift);

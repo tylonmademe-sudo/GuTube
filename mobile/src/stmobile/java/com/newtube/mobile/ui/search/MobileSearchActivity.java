@@ -178,34 +178,24 @@ public class MobileSearchActivity extends MobileActivity
 
         mBackButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         mMicButton.setOnClickListener(v -> startVoiceRecognition());
+
+        mPresenter = SearchPresenter.instance(this);
+        mPresenter.setView(this);
+        mPresenter.onViewInitialized();
+
         // GUTUBE(search filters, #11): YouTube's own filter dialog.
         findViewById(R.id.mobile_search_filters).setOnClickListener(v -> SearchFiltersDialog.show(this,
-                mPresenter.getSearchOptions(), options -> {
-                    mPresenter.setSearchOptions(options);
-                    syncChips();
+                mPresenter != null ? mPresenter.getSearchOptions() : 0, options -> {
+                    if (mPresenter != null) {
+                        mPresenter.setSearchOptions(options);
+                    }
                 }));
-        setupChips();
-        // GUTUBE(issue #250): the default light frost left the titles scrolling under the pill
-        // readable, tangled with the query; a heavier one turns them into colour, not words.
-        for (int glass : new int[] {R.id.mobile_search_glass, R.id.mobile_search_back_glass,
-                R.id.mobile_search_filters_glass}) {
-            com.newtube.mobile.ui.common.Glass.blur(findViewById(glass),
-                    findViewById(R.id.mobile_search_glass_source));
-            ((com.newtube.mobile.ui.common.GlassView) findViewById(glass)).setBlur(24f);
-        }
-        if (savedInstanceState == null) {
-            getWindow().getDecorView().post(() -> SiriGlow.play(this)); // GUTUBE(search glow)
-        }
         // Clear the query, keep editing: focus stays, history rows replace the suggestions.
         mClearButton.setOnClickListener(v -> {
             setQueryText("");
             showKeyboard();
             loadSearchTags("");
         });
-
-        mPresenter = SearchPresenter.instance(this);
-        mPresenter.setView(this);
-        mPresenter.onViewInitialized();
     }
 
     private void bindViews() {
@@ -238,46 +228,48 @@ public class MobileSearchActivity extends MobileActivity
         if (!com.newtube.mobile.ui.browse.MobileBrowseActivity.copyNavTabs(this,
                 (com.google.android.material.bottomnavigation.BottomNavigationView) bar,
                 () -> mGrid.smoothScrollToPosition(0))) {
+            mNavDocked = false;
+            refreshContentInsets();
             return;
         }
         mNavPill = pill;
         com.newtube.mobile.ui.common.Glass.blur(pill, findViewById(R.id.mobile_search_glass_source));
-        // The pill floats above the system bar already: the bar must not pad itself by it too.
+        // The bar must not pad itself by system navigation insets - dockBar handles the bottom inset on pill.
         ViewCompat.setOnApplyWindowInsetsListener(bar, (v, insets) -> insets);
-        int clearance = getResources().getDimensionPixelSize(R.dimen.gutube_nav_clearance);
-        mGrid.setPadding(mGrid.getPaddingLeft(), mGrid.getPaddingTop(), mGrid.getPaddingRight(), clearance);
-        ((android.view.ViewGroup.MarginLayoutParams) findViewById(R.id.mobile_mini_player).getLayoutParams())
-                .bottomMargin = clearance;
-        if (com.newtube.mobile.ui.common.YouTubeMode.isOn(this)) {
-            // GUTUBE(youtube mode): docked to the bottom edge; the results end above it.
-            mNavDocked = true;
-            refreshContentInsets();
-            int gap = Math.round(10 * getResources().getDisplayMetrics().density);
-            com.newtube.mobile.ui.common.YouTubeMode.dockBar(pill, height -> {
-                com.newtube.mobile.ui.common.YouTubeMode.padBottom(mGrid, height);
-                com.newtube.mobile.ui.common.YouTubeMode.marginBottom(findViewById(R.id.mobile_mini_player), height + gap);
-            });
-        }
-        com.newtube.mobile.ui.common.NavHider navHider = new com.newtube.mobile.ui.common.NavHider(pill);
-        navHider.setOnSlide(navY -> { // GUTUBE(issue #125): the mini card rides the nav bar, as on Home
+
+        mNavDocked = true;
+        refreshContentInsets();
+        int gap = Math.round(10 * getResources().getDisplayMetrics().density);
+        com.newtube.mobile.ui.common.YouTubeMode.dockBar(pill, height -> {
+            com.newtube.mobile.ui.common.YouTubeMode.padBottom(mGrid, height);
+            com.newtube.mobile.ui.common.YouTubeMode.marginBottom(findViewById(R.id.mobile_mini_player), height + gap);
+        });
+
+        mNavHider = new com.newtube.mobile.ui.common.NavHider(pill);
+        mNavHider.setOnSlide(navY -> { // GUTUBE(issue #125): the mini card rides the nav bar, as on Home
             if (mMiniPlayer != null) { // made after this pill on Search
                 mMiniPlayer.followNav(navY);
             }
         });
-        mGrid.addOnScrollListener(navHider);
+        mGrid.addOnScrollListener(mNavHider);
         showNavPill();
     }
 
     /** The bar is the results' only: typing has the suggestions and the keyboard there. */
     private void showNavPill() {
         if (mNavPill != null) {
-            mNavPill.setVisibility(mSearchInput.hasFocus() ? View.GONE : View.VISIBLE);
+            boolean typing = mSearchInput != null && mSearchInput.hasFocus();
+            mNavPill.setVisibility(typing ? View.GONE : View.VISIBLE);
+            if (!typing && mNavHider != null) {
+                mNavHider.show();
+            }
         }
     }
 
     private View mNavPill;
-    /** GUTUBE(youtube mode): the docked tab bar, there only when Search came from Browse. */
-    private boolean mNavDocked;
+    private com.newtube.mobile.ui.common.NavHider mNavHider;
+    /** Docked bottom tab bar matching Home page: content container runs edge-to-edge behind the docked bar. */
+    private boolean mNavDocked = true;
 
     @Override
     protected boolean shouldInsetContentForNavigationBar() {
@@ -348,89 +340,6 @@ public class MobileSearchActivity extends MobileActivity
     @Override
     protected boolean drawsUnderKeyboard() {
         return true;
-    }
-
-    /** GUTUBE(search chips): {label, filter flag}; All is no flag. */
-    private static final int[][] CHIPS = {
-            {R.string.mobile_search_filter_all, 0},
-            {R.string.mobile_search_filter_videos, SearchOptions.TYPE_VIDEO},
-            {R.string.mobile_search_filter_shorts, SearchOptions.TYPE_SHORTS},
-            {R.string.mobile_search_filter_live, SearchOptions.FEATURE_LIVE},
-            {R.string.mobile_search_filter_recent, SearchOptions.UPLOAD_DATE_THIS_WEEK}};
-    /** The flags a chip replaces with its own: every type, Live and every upload date. */
-    private static final int CHIP_FLAGS = SearchOptions.TYPE_VIDEO | SearchOptions.TYPE_SHORTS
-            | SearchOptions.TYPE_CHANNEL | SearchOptions.TYPE_PLAYLIST | SearchOptions.TYPE_MOVIE
-            | SearchOptions.FEATURE_LIVE | SearchOptions.UPLOAD_DATE_TODAY | SearchOptions.UPLOAD_DATE_THIS_WEEK
-            | SearchOptions.UPLOAD_DATE_THIS_MONTH | SearchOptions.UPLOAD_DATE_THIS_YEAR;
-    private android.widget.LinearLayout mChips;
-    private com.newtube.mobile.ui.common.GlassChipTrack mChipTrack;
-
-    private boolean segmentChips() {
-        return com.newtube.mobile.ui.common.Glass.chipStyle(this) == com.newtube.mobile.ui.common.Glass.CHIPS_SEGMENT;
-    }
-
-    private void pickChip(int flag) {
-        int options = (mPresenter.getSearchOptions() & ~CHIP_FLAGS) | flag;
-        if (options != mPresenter.getSearchOptions()) {
-            mPresenter.setSearchOptions(options);
-        }
-        syncChips();
-    }
-
-    /**
-     * GUTUBE(search chips): YouTube's chip row over the results. A chip is a one-tap filter: it
-     * searches again with its flag in place of the other chips' (Duration, Prioritize and Features
-     * from the dialog stay). Picked in the dialog, a mix no chip names leaves none picked.
-     */
-    private void setupChips() {
-        mChips = findViewById(R.id.mobile_search_chips);
-        com.newtube.mobile.ui.common.GlassSource results = findViewById(R.id.mobile_search_chips_source);
-        // GUTUBE(glass segmented): the same filters as one glass segment (Settings > Customization > Chips style).
-        mChipTrack = findViewById(R.id.mobile_search_chip_track);
-        mChipTrack.setGlassSource(results);
-        java.util.List<CharSequence> labels = new java.util.ArrayList<>();
-        for (int[] entry : CHIPS) {
-            labels.add(getString(entry[0]));
-        }
-        mChipTrack.setChips(labels);
-        mChipTrack.setOnPicked(index -> pickChip(CHIPS[index][1]));
-        for (int[] entry : CHIPS) {
-            TextView chip = (TextView) getLayoutInflater().inflate(R.layout.mobile_search_chip, mChips, false);
-            chip.setText(entry[0]);
-            // GUTUBE(glass): frosted results under each chip, as the Home feed strip's pills.
-            com.newtube.mobile.ui.common.GlassDrawable.applyPage(chip, results, 0);
-            chip.setTag(R.id.mobile_search_chips, chip.getBackground());
-            int flag = entry[1];
-            chip.setOnClickListener(v -> pickChip(flag));
-            mChips.addView(chip);
-        }
-    }
-
-    private void syncChips() {
-        int picked = mPresenter.getSearchOptions() & CHIP_FLAGS;
-        int pickedIndex = -1;
-        for (int i = 0; i < CHIPS.length; i++) {
-            if (CHIPS[i][1] == picked) {
-                pickedIndex = i;
-            }
-        }
-        mChipTrack.setSelected(pickedIndex);
-        boolean segment = segmentChips();
-        View pills = (View) mChips.getParent();
-        if (pills.getVisibility() == View.VISIBLE || mChipTrack.getVisibility() == View.VISIBLE) {
-            pills.setVisibility(segment ? View.GONE : View.VISIBLE);
-            mChipTrack.setVisibility(segment ? View.VISIBLE : View.GONE);
-        }
-        for (int i = 0; i < CHIPS.length; i++) {
-            TextView chip = (TextView) mChips.getChildAt(i);
-            boolean selected = CHIPS[i][1] == picked;
-            // The selected chip has no solid pill background; preserves the touch/ripple background
-            chip.setBackground((android.graphics.drawable.Drawable) chip.getTag(R.id.mobile_search_chips));
-            // Indicated ONLY by its text color
-            chip.setTextColor(androidx.core.content.ContextCompat.getColor(this, selected
-                    ? R.color.mobile_color_on_surface
-                    : R.color.mobile_color_on_surface_secondary));
-        }
     }
 
     private void setupSuggestions() {
@@ -640,8 +549,6 @@ public class MobileSearchActivity extends MobileActivity
         mSearchInput.clearFocus();
         mSuggestions.setVisibility(View.GONE);
         mTagAdapter.clearTags();
-        (segmentChips() ? mChipTrack : (View) mChips.getParent()).setVisibility(View.VISIBLE);
-        syncChips();
         mPresenter.onSearch(normalized);
     }
 

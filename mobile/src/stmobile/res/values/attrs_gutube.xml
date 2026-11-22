@@ -134,4 +134,45 @@
         <attr name="fcFlipped" format="boolean" />
         <attr name="fcDisabled" format="boolean" />
     </declare-styleable>
+
+    <!-- GUTUBE(jelly-radio): React Bits JellyRadio component attributes with mass-spring dynamics. -->
+    <declare-styleable name="JellyRadio">
+        <attr name="jrChipColor" format="color" />
+        <attr name="jrActiveColor" format="color" />
+        <attr name="jrTextColor" format="color" />
+        <attr name="jrActiveTextColor" format="color" />
+        <attr name="jrSize" format="enum">
+            <enum name="sm" value="0" />
+            <enum name="md" value="1" />
+            <enum name="lg" value="2" />
+        </attr>
+        <attr name="jrGap" format="dimension" />
+        <attr name="jrRadius" format="dimension" />
+        <attr name="jrSwell" format="float" />
+        <attr name="jrBarge" format="dimension" />
+        <attr name="jrShrink" format="float" />
+        <attr name="jrJelly" format="float" />
+        <attr name="jrBounce" format="float" />
+        <attr name="jrStagger" format="integer" />
+        <attr name="jrStiffness" format="float" />
+        <attr name="jrDisabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="JellyRadioLayout">
+        <attr name="jrChipColor" />
+        <attr name="jrActiveColor" />
+        <attr name="jrTextColor" />
+        <attr name="jrActiveTextColor" />
+        <attr name="jrSize" />
+        <attr name="jrGap" />
+        <attr name="jrRadius" />
+        <attr name="jrSwell" />
+        <attr name="jrBarge" />
+        <attr name="jrShrink" />
+        <attr name="jrJelly" />
+        <attr name="jrBounce" />
+        <attr name="jrStagger" />
+        <attr name="jrStiffness" />
+        <attr name="jrDisabled" />
+    </declare-styleable>
 </resources>

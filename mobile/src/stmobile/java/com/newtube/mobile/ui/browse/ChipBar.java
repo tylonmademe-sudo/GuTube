@@ -9,7 +9,7 @@ import android.view.animation.DecelerateInterpolator;
  * scrolling back up smoothly slides them back down into view and fades them back in (alpha 0.0 -> 1.0).
  * The row keeps its layout height while hidden (INVISIBLE, never GONE) so the feed never jumps under it.
  */
-final class ChipBar {
+public final class ChipBar {
     private static final int SHOWN = 0;
     private static final int HIDDEN = 1;
     private static final long DURATION_MS = 240;
@@ -20,13 +20,13 @@ final class ChipBar {
     private int mState = SHOWN;
     private int mTravel; // signed scroll distance since the last change of direction
 
-    ChipBar(View row) {
+    public ChipBar(View row) {
         mRow = row;
         mSlopPx = Math.round(16 * row.getResources().getDisplayMetrics().density);
     }
 
     /** On for Home and its topics (not over the You panel); off hides row, without animation. */
-    void setActive(boolean active) {
+    public void setActive(boolean active) {
         if (active == mActive) {
             return;
         }
@@ -39,12 +39,12 @@ final class ChipBar {
         mRow.setVisibility(active ? View.VISIBLE : View.GONE);
     }
 
-    boolean isActive() {
+    public boolean isActive() {
         return mActive;
     }
 
     /** From the feed's scroll listener; {@code atTop} = the feed cannot scroll further up. */
-    void onScrolled(int dy, boolean atTop) {
+    public void onScrolled(int dy, boolean atTop) {
         if (!mActive) {
             return;
         }
@@ -60,12 +60,14 @@ final class ChipBar {
         if (mTravel > mSlopPx && mState != HIDDEN) {
             mTravel = 0;
             hide();
+        } else if (mTravel < -mSlopPx && mState != SHOWN) {
+            mTravel = 0;
+            show();
         }
-        // Intermediate upward scrolls do not show the chips; only atTop shows them.
     }
 
     /** A new section, scroll to the top, or scroll up: show the chips smoothly. */
-    void show() {
+    public void show() {
         if (!mActive) {
             return;
         }
@@ -84,7 +86,7 @@ final class ChipBar {
                 .start();
     }
 
-    private void hide() {
+    public void hide() {
         if (mState == HIDDEN) {
             return;
         }
