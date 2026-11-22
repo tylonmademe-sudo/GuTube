@@ -125,6 +125,7 @@ public class MobileSearchActivity extends MobileActivity
     private boolean mLoading;
     private View mSearchMessage;
     private SearchLoadState mLoadState;
+    private com.newtube.mobile.ui.common.NoInternetOverlayController mNoInternetController;
     /** LoadFailure state of the search in flight, set by showLoadFailure; -1 = none reported. */
     private int mPendingFailure = -1;
 
@@ -216,6 +217,18 @@ public class MobileSearchActivity extends MobileActivity
                 submitSearch(mSubmittedQuery);
             }
         });
+        mNoInternetController = new com.newtube.mobile.ui.common.NoInternetOverlayController(
+                this,
+                getWindow().getDecorView(),
+                () -> {
+                    if (mSubmittedQuery != null) {
+                        submitSearch(mSubmittedQuery);
+                    } else if (mSearchInput != null && !TextUtils.isEmpty(mSearchInput.getText())) {
+                        submitSearch(mSearchInput.getText().toString().trim());
+                    }
+                },
+                () -> false
+        );
     }
 
     /**
@@ -545,6 +558,10 @@ public class MobileSearchActivity extends MobileActivity
         mSubmittedQuery = normalized;
         mPendingFailure = -1;
         mSearchMessage.setVisibility(View.GONE);
+        if (!com.newtube.mobile.ui.common.NoInternetOverlayController.isNetworkOnline(this)
+                && mNoInternetController != null) {
+            mNoInternetController.showOverlay();
+        }
         hideKeyboard();
         mSearchInput.clearFocus();
         mSuggestions.setVisibility(View.GONE);
@@ -754,6 +771,9 @@ public class MobileSearchActivity extends MobileActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (mNoInternetController != null) {
+            mNoInternetController.onResume();
+        }
 
         if (mPresenter != null) {
             mPresenter.onViewResumed();
@@ -783,6 +803,9 @@ public class MobileSearchActivity extends MobileActivity
 
     @Override
     protected void onPause() {
+        if (mNoInternetController != null) {
+            mNoInternetController.onPause();
+        }
         if (isFinishing()) {
             sAddPlaylistId = null; // add mode lasts as long as this search screen
             sAddPlaylistTitle = null;
@@ -810,6 +833,9 @@ public class MobileSearchActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        if (mNoInternetController != null) {
+            mNoInternetController.onDestroy();
+        }
         MiniPlayerBridge.unregisterMiniHost(this);
         mTornDown = true; // NEWTUBE(shorts): the teardown's spinner-off must not page on
 
@@ -942,6 +968,9 @@ public class MobileSearchActivity extends MobileActivity
                     + " shortsHidden=" + shortsHidden + " total=" + mVideos.size());
             if (!mVideos.isEmpty()) {
                 mSearchMessage.setVisibility(View.GONE);
+                if (mNoInternetController != null) {
+                    mNoInternetController.hideOverlaySilently();
+                }
                 setSkeletonVisible(false);
             }
         });
@@ -1103,9 +1132,20 @@ public class MobileSearchActivity extends MobileActivity
                 // Retry stays unless the search positively came back empty: a request that failed
                 // into a cause-free error (a 503 surfaces that way) classifies as EMPTY too.
                 boolean failed = mPendingFailure >= 0;
-                mLoadState.show(failed ? mPendingFailure
-                        : com.liskovsoft.smartyoutubetv2.common.utils.LoadFailure.classify(this, null),
-                        mSubmittedQuery, !failed);
+                int failureType = failed ? mPendingFailure
+                        : com.liskovsoft.smartyoutubetv2.common.utils.LoadFailure.classify(this, null);
+                if (failureType == com.liskovsoft.smartyoutubetv2.common.utils.LoadFailure.NO_CONNECTION
+                        || !com.newtube.mobile.ui.common.NoInternetOverlayController.isNetworkOnline(this)) {
+                    if (mNoInternetController != null) {
+                        mNoInternetController.showOverlay();
+                    }
+                    mSearchMessage.setVisibility(View.GONE);
+                } else {
+                    if (mNoInternetController != null) {
+                        mNoInternetController.hideOverlaySilently();
+                    }
+                    mLoadState.show(failureType, mSubmittedQuery, !failed);
+                }
             }
         });
     }

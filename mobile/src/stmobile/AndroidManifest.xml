@@ -24,6 +24,7 @@
           tools:ignore="UnsupportedTvHardware">
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
         android:name="android.software.leanback"
@@ -131,6 +132,10 @@
         <receiver
             android:name="com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlReceiver"
             tools:node="remove" />
+
+        <receiver
+            android:name="com.newtube.mobile.notify.NotificationActionReceiver"
+            android:exported="false" />
 
         <!-- The TV manifest makes Splash singleInstance, which puts it in a separate task and
              forces Android's non-overridable cross-task slide when it routes into mobile Home.

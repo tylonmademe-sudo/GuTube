@@ -31,6 +31,7 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.MobileMainApplication;
 import com.newtube.mobile.ui.update.MobileUpdateActivity;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public class UpdateNotifyWorker extends Worker {
     private static final String TAG = "UpdateNotifyWorker";
     private static final String WORK = "update_notify";
-    private static final String CHANNEL_ID = "gutube_new_version";
+    private static final String CHANNEL_ID = com.newtube.mobile.notify.NotificationHelper.CHANNEL_APP_UPDATES;
     private static final int NOTIFICATION_ID = 0x4E5503;
     /** The manifest is ~2 KB; a check that hasn't answered by then failed quietly. */
     private static final long CHECK_TIMEOUT_S = 30;
@@ -52,6 +53,10 @@ public class UpdateNotifyWorker extends Worker {
 
     public UpdateNotifyWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
+    }
+
+    public static void fireTestNotification(Context context) {
+        UpdateNotificationWorker.fireTestNotification(context);
     }
 
     /** At app start and when "Notify about updates" changes: on with update checks, off without. */
@@ -129,35 +134,8 @@ public class UpdateNotifyWorker extends Worker {
     private static void post(Context context, AppUpdates updates) {
         String version = updates.getUpdateVersionName();
         Log.d(TAG, "new version " + version);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    context.getString(R.string.mobile_update_notify_channel), NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(context.getString(R.string.mobile_update_notify_channel_desc));
-            context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
-        }
-
-        // Expanded: the newest release's first lines as bullets, then a soft coffee line
-        String text = context.getString(R.string.mobile_update_notify_text, version);
-        StringBuilder big = new StringBuilder(text);
         ReleaseNotes newest = updates.getNewestNotes();
-        if (newest != null && newest.lines != null && !newest.lines.isEmpty()) {
-            big.append("\n");
-            for (int i = 0; i < Math.min(NOTES_LINES, newest.lines.size()); i++) {
-                big.append("\n• ").append(newest.lines.get(i));
-            }
-        }
-        big.append("\n\n").append(context.getString(R.string.mobile_update_notify_love));
-
-        PendingIntent tap = PendingIntent.getActivity(context, NOTIFICATION_ID, MobileUpdateActivity.showIntent(context),
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_mobile_update)
-                .setContentTitle(context.getString(R.string.mobile_update_notify_title))
-                .setContentText(text)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(big))
-                .setContentIntent(tap)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
-                .build());
+        List<String> notes = newest != null ? newest.lines : null;
+        UpdateNotificationWorker.postUpdateNotification(context, version, notes);
     }
 }

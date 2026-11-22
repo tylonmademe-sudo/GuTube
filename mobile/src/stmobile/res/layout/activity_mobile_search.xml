@@ -58,6 +58,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="52dp" />
 
+            <!-- No Internet Connection Overlay with Lottie animation -->
+            <include
+                layout="@layout/layout_no_internet_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="52dp" />
+
         </FrameLayout>
 
     </com.newtube.mobile.ui.common.GlassSource>

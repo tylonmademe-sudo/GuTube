@@ -794,9 +794,12 @@ public class MobileMainApplication extends MainApplication {
                                 context != null ? context : MobileMainApplication.this);
                     }
                 });
-        // GUTUBE(update notify): a new version shows up in the notification shade, app closed or not
+        // GUTUBE: Create notification channels early
+        com.newtube.mobile.notify.NotificationHelper.createNotificationChannels(this);
+        // GUTUBE: Schedule channel notifications and app update checks
+        com.newtube.mobile.notify.ChannelNotificationWorker.schedule(this);
+        com.newtube.mobile.update.UpdateNotificationWorker.schedule(this);
         com.newtube.mobile.update.UpdateNotifyWorker.schedule(this);
-        // GUTUBE(issue #220): new uploads from subscriptions in the notification shade
         com.newtube.mobile.notify.NewUploadsWorker.schedule(this);
 
         // FEED FIRST-PAINT (mobile-only, round 2): Home's eager row-pad continuations exist to

@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 public class NewUploadsWorker extends Worker {
     private static final String TAG = "NewUploads";
     private static final String WORK = "new_uploads";
-    private static final String CHANNEL_ID = "gutube_new_uploads";
+    private static final String CHANNEL_ID = NotificationHelper.CHANNEL_CHANNEL_ACTIVITY;
     private static final String PREFS = "new_uploads";
     private static final String KEY_ON = "on";
     private static final String KEY_SEEN = "seen";
@@ -68,6 +68,10 @@ public class NewUploadsWorker extends Worker {
 
     public NewUploadsWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
+    }
+
+    public static void fireTestNotification(Context context) {
+        ChannelNotificationWorker.fireTestNotification(context);
     }
 
     public static boolean isEnabled(Context context) {
@@ -201,28 +205,16 @@ public class NewUploadsWorker extends Worker {
     private static void post(Context context, MediaItem item) {
         String videoId = item.getVideoId();
         Log.d(TAG, "new upload " + videoId);
-        // The same router a shared YouTube link goes through: it opens the player in GuTube's task
-        Intent open = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videoId))
-                .setComponent(new ComponentName(context, "com.liskovsoft.smartyoutubetv2.tv.ui.main.IntentRouterActivity"))
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        int id = videoId.hashCode();
-        PendingIntent tap = PendingIntent.getActivity(context, id, open,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_about_notifications)
-                .setContentTitle(channelName(item.getAuthor()))
-                .setContentText(item.getTitle())
-                .setContentIntent(tap)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
-        Bitmap thumb = thumbnail(context, videoId);
-        if (thumb != null) {
-            builder.setLargeIcon(thumb)
-                    .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(thumb)
-                            .bigLargeIcon((Bitmap) null).setSummaryText(item.getTitle()));
-        }
-        NotificationManagerCompat.from(context).notify(TAG, id, builder.build());
+        ChannelNotificationWorker.postNotification(
+                context,
+                videoId,
+                channelName(item.getAuthor()),
+                item.getTitle(),
+                item.isShorts(),
+                item.getType() == MediaItem.TYPE_CHANNEL,
+                null,
+                item.getCardImageUrl()
+        );
     }
 
     /** By channel id, or by name when the feed's tile carries no id. */

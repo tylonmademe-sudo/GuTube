@@ -367,6 +367,12 @@ public final class AppUpdates implements AppUpdateCheckerListener {
 
         try {
             activity.startActivity(intent);
+            // Trigger B: Flag post-update confetti so it triggers immediately when user opens updated app
+            activity.getSharedPreferences("gutube_app", Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("pending_update_confetti", true)
+                    .apply();
+            Log.d("UpdateConfetti", "AppUpdates: Set pending_update_confetti = true before launching installer.");
         } catch (ActivityNotFoundException | SecurityException e) {
             Log.e(TAG, "no installer for the update: " + e);
             return false;

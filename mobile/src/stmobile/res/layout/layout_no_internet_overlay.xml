@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  No Internet Connection Overlay (MobileBrowseActivity & MobileSearchActivity):
+  Centered 200dp x 200dp Lottie animation (@raw/no_internet), clean title, subtitle, and sleek pill Retry button.
+  Positioned with 104dp bottom padding and 16dp top padding to guarantee zero overlap with the floating
+  bottom navigation bar, keeping the Retry button 100% visible and clickable with balanced optical centering.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_internet_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="136dp"
+    android:visibility="gone"
+    android:alpha="0"
+    android:background="#000000">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/no_internet_lottie"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/no_internet"
+        app:lottie_renderMode="automatic" />
+
+    <TextView
+        android:id="@+id/no_internet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-6dp"
+        android:gravity="center"
+        android:text="@string/mobile_no_internet_title"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/no_internet_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="@string/mobile_no_internet_subtitle"
+        android:textColor="@color/mobile_color_on_surface_secondary"
+        android:textSize="14sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/no_internet_retry_btn"
+        style="@style/Widget.NewTube.Button.Pill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/mobile_no_internet_retry" />
+
+</LinearLayout>

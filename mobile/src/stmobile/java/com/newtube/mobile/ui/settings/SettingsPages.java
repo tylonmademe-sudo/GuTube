@@ -188,6 +188,31 @@ public final class SettingsPages {
                     context.getString(R.string.mobile_settings_tv_summary), TV_INSTALL));
         }
 
+        // Notification Testing (Demo)
+        rows.add(SettingsRow.header("Notification Testing (Demo)"));
+        rows.add(icon(R.drawable.ic_about_notifications, SettingsRow.action("Test Channel Notification",
+                "Fire realistic YouTube upload & short notification", page -> {
+                    android.app.Activity activity = page.requireActivity();
+                    if (!com.newtube.mobile.notify.NotificationHelper.hasNotificationPermission(activity)) {
+                        com.newtube.mobile.notify.NotificationHelper.requestNotificationPermission(activity);
+                        android.widget.Toast.makeText(activity, "Please grant Notification permission to test", android.widget.Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    com.newtube.mobile.notify.ChannelNotificationWorker.fireTestNotification(activity);
+                    android.widget.Toast.makeText(activity, "Sample Channel notification sent! Check notification shade.", android.widget.Toast.LENGTH_SHORT).show();
+                })));
+        rows.add(icon(R.drawable.ic_mobile_update, SettingsRow.action("Test App Update Notification",
+                "Fire formatted App Update notification with 'Update Now' button", page -> {
+                    android.app.Activity activity = page.requireActivity();
+                    if (!com.newtube.mobile.notify.NotificationHelper.hasNotificationPermission(activity)) {
+                        com.newtube.mobile.notify.NotificationHelper.requestNotificationPermission(activity);
+                        android.widget.Toast.makeText(activity, "Please grant Notification permission to test", android.widget.Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    com.newtube.mobile.update.UpdateNotificationWorker.fireTestNotification(activity);
+                    android.widget.Toast.makeText(activity, "Sample App Update notification sent! Check notification shade.", android.widget.Toast.LENGTH_SHORT).show();
+                })));
+
         return new Page(context.getString(R.string.header_settings), rows);
     }
 

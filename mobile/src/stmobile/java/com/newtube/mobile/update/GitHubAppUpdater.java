@@ -152,6 +152,79 @@ public final class GitHubAppUpdater {
     }
 
     /**
+     * Synchronously fetches the latest release from GitHub API.
+     * Safe to call from background worker threads.
+     * @return ReleaseInfo if available, null on error or no release.
+     */
+    @Nullable
+    public static ReleaseInfo fetchLatestReleaseSync() {
+        try {
+            Request request = new Request.Builder()
+                    .url(RELEASES_API_URL)
+                    .header("Accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "GuTube-Android-App")
+                    .build();
+
+            try (Response response = HTTP_CLIENT.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    Log.e(TAG, "fetchLatestReleaseSync: HTTP " + response.code() + ": " + response.message());
+                    return null;
+                }
+
+                ResponseBody body = response.body();
+                if (body == null) {
+                    Log.e(TAG, "fetchLatestReleaseSync: empty body");
+                    return null;
+                }
+
+                String jsonStr = body.string();
+                JSONObject json = new JSONObject(jsonStr);
+
+                String tagName = json.optString("tag_name", "");
+                if (tagName.isEmpty()) {
+                    return null;
+                }
+
+                String cleanRelease = cleanVersionName(tagName);
+
+                JSONArray assets = json.optJSONArray("assets");
+                String apkUrl = null;
+                String apkName = null;
+                long apkSize = 0;
+                if (assets != null) {
+                    for (int i = 0; i < assets.length(); i++) {
+                        JSONObject asset = assets.optJSONObject(i);
+                        if (asset == null) continue;
+                        String name = asset.optString("name", "");
+                        String downloadUrl = asset.optString("browser_download_url", "");
+                        long size = asset.optLong("size", 0);
+
+                        if (name.endsWith(".apk") && !downloadUrl.isEmpty()) {
+                            if (name.contains("arm64") || name.contains("v8a")) {
+                                apkUrl = downloadUrl;
+                                apkSize = size;
+                                break;
+                            }
+                            if (apkUrl == null || name.contains("universal")) {
+                                apkUrl = downloadUrl;
+                                apkName = name;
+                                apkSize = size;
+                            }
+                        }
+                    }
+                }
+
+                String rawBody = json.optString("body", "");
+                List<String> changelog = parseChangelog(rawBody);
+                return new ReleaseInfo(tagName, cleanRelease, apkUrl, apkSize, changelog, rawBody);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "fetchLatestReleaseSync failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Startup check: queries GitHub Releases API silently in background.
      */
     public static void checkUpdateOnStartup(Activity activity) {
@@ -776,6 +849,13 @@ public final class GitHubAppUpdater {
             );
 
             Log.d(TAG, "Launching Android Package Installer with URI: " + apkUri);
+            // Trigger B: Flag post-update confetti so it triggers immediately when user opens updated app
+            activity.getSharedPreferences("gutube_app", Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("pending_update_confetti", true)
+                    .apply();
+            Log.d("UpdateConfetti", "GitHubAppUpdater: Set pending_update_confetti = true before launching installer.");
+
             Intent installIntent = new Intent(Intent.ACTION_VIEW);
             installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

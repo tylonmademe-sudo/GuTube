@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -289,6 +290,10 @@ public class MobileBrowseActivity extends MobileActivity
     private BrowseTopBar mTopBar;
     private View mErrorContainer;
     private ImageView mErrorIcon;
+    private com.airbnb.lottie.LottieAnimationView mDownloadsEmptyLottie;
+    private TextView mDownloadsEmptyTitle;
+    private TextView mDownloadsEmptySubtitle;
+    private com.newtube.mobile.ui.common.NoInternetOverlayController mNoInternetController;
     private TextView mErrorMessage;
     private MaterialButton mErrorAction;
     private ImageButton mSearchButton;
@@ -440,6 +445,11 @@ public class MobileBrowseActivity extends MobileActivity
                 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_POST_NOTIFICATIONS);
         }
+
+        // Live background notification scheduling (15-30m channel activity, 8h app updates)
+        com.newtube.mobile.notify.NotificationHelper.createNotificationChannels(this);
+        com.newtube.mobile.notify.ChannelNotificationWorker.schedule(this);
+        com.newtube.mobile.update.UpdateNotificationWorker.schedule(this);
     }
 
     private void bindViews() {
@@ -464,6 +474,23 @@ public class MobileBrowseActivity extends MobileActivity
 
         mErrorContainer = findViewById(R.id.mobile_error_container);
         mErrorIcon = findViewById(R.id.mobile_error_icon);
+        mDownloadsEmptyLottie = findViewById(R.id.downloads_empty_lottie);
+        mDownloadsEmptyTitle = findViewById(R.id.downloads_empty_title);
+        mDownloadsEmptySubtitle = findViewById(R.id.downloads_empty_subtitle);
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.setFailureListener(e ->
+                    Log.e("DownloadsLottie", "Lottie parse/render failure: " + e.getMessage(), e));
+        }
+        mNoInternetController = new com.newtube.mobile.ui.common.NoInternetOverlayController(
+                this,
+                getWindow().getDecorView(),
+                () -> {
+                    if (mPresenter != null) {
+                        mPresenter.refresh(false);
+                    }
+                },
+                () -> isDownloadsSectionShowing()
+        );
         mErrorMessage = findViewById(R.id.mobile_error_message);
         mErrorAction = findViewById(R.id.mobile_error_action);
         mCastButton = findViewById(R.id.mobile_cast_button);
@@ -536,53 +563,108 @@ public class MobileBrowseActivity extends MobileActivity
         checkPostUpdateConfetti();
     }
 
+    private static final String PREF_KEY_LAST_SEEN_CODE = "last_seen_version_code";
+    private static final String PREF_KEY_LAST_SEEN_NAME = "last_seen_version_name";
+    private static final String PREF_KEY_PENDING_CONFETTI = "pending_update_confetti";
+    private static final String TAG_CONFETTI = "UpdateConfetti";
+
     /**
      * Celebratory Confetti Lottie animation played once on the first launch after an app update.
      */
     private void checkPostUpdateConfetti() {
         android.content.SharedPreferences prefs = getSharedPreferences("gutube_app", MODE_PRIVATE);
-        String lastSeenVersion = prefs.getString("last_seen_version", null);
-        String currentVersion = BuildConfig.VERSION_NAME + "_" + BuildConfig.VERSION_CODE;
 
-        if (lastSeenVersion == null) {
-            // Fresh install: save current version and do not play confetti
-            prefs.edit().putString("last_seen_version", currentVersion).apply();
+        int currentCode = BuildConfig.VERSION_CODE;
+        String currentName = BuildConfig.VERSION_NAME;
+
+        boolean hasSavedCode = prefs.contains(PREF_KEY_LAST_SEEN_CODE);
+        boolean hasSavedName = prefs.contains(PREF_KEY_LAST_SEEN_NAME);
+        int savedCode = prefs.getInt(PREF_KEY_LAST_SEEN_CODE, -1);
+        String savedName = prefs.getString(PREF_KEY_LAST_SEEN_NAME, null);
+        boolean pendingFlag = prefs.getBoolean(PREF_KEY_PENDING_CONFETTI, false);
+
+        // Fresh install: neither version code nor name ever stored, and no in-app updater flag
+        if (!hasSavedCode && !hasSavedName && !pendingFlag) {
+            prefs.edit()
+                    .putInt(PREF_KEY_LAST_SEEN_CODE, currentCode)
+                    .putString(PREF_KEY_LAST_SEEN_NAME, currentName)
+                    .apply();
+            Log.d(TAG_CONFETTI, "Fresh install detected: savedCode=" + currentCode
+                    + ", savedName=" + currentName + ". Skipping confetti.");
             return;
         }
 
-        if (!currentVersion.equals(lastSeenVersion)) {
-            // After Update: immediately record current version so it triggers strictly once
-            prefs.edit().putString("last_seen_version", currentVersion).apply();
+        // Trigger A: Version change check (also check legacy last_seen_version key if upgrading from previous build)
+        boolean isVersionChanged = false;
+        if (hasSavedCode && currentCode > savedCode) {
+            isVersionChanged = true;
+        } else if (savedName != null && !currentName.equals(savedName)) {
+            isVersionChanged = true;
+        } else if (!hasSavedCode && prefs.contains("last_seen_version")) {
+            String oldVersion = prefs.getString("last_seen_version", "");
+            String currentVersionTag = currentName + "_" + currentCode;
+            if (!currentVersionTag.equals(oldVersion)) {
+                isVersionChanged = true;
+            }
+        }
 
-            com.airbnb.lottie.LottieAnimationView confettiView = findViewById(R.id.mobile_confetti_view);
-            if (confettiView == null) {
+        // Trigger B: In-app updater flag (pending_update_confetti = true)
+        boolean shouldTrigger = isVersionChanged || pendingFlag;
+
+        Log.d(TAG_CONFETTI, "Post-update check: currentCode=" + currentCode + ", savedCode=" + savedCode
+                + ", currentName=" + currentName + ", savedName=" + savedName
+                + ", isVersionChanged=" + isVersionChanged + ", pendingFlag=" + pendingFlag
+                + " -> shouldTrigger=" + shouldTrigger);
+
+        if (!shouldTrigger) {
+            Log.d(TAG_CONFETTI, "Confetti skipped: not a post-update launch.");
+            return;
+        }
+
+        // Save new version and clear pending flag immediately so it triggers strictly once
+        prefs.edit()
+                .putInt(PREF_KEY_LAST_SEEN_CODE, currentCode)
+                .putString(PREF_KEY_LAST_SEEN_NAME, currentName)
+                .putBoolean(PREF_KEY_PENDING_CONFETTI, false)
+                .remove("last_seen_version")
+                .apply();
+
+        com.airbnb.lottie.LottieAnimationView confettiView = findViewById(R.id.mobile_confetti_view);
+        if (confettiView == null) {
+            Log.e(TAG_CONFETTI, "mobile_confetti_view not found in layout!");
+            return;
+        }
+
+        confettiView.setFailureListener(e ->
+                Log.e(TAG_CONFETTI, "Lottie parse/render failure: " + e.getMessage(), e));
+
+        confettiView.postDelayed(() -> {
+            if (isFinishing() || isDestroyed()) {
+                Log.d(TAG_CONFETTI, "Activity finishing/destroyed before playing animation.");
                 return;
             }
-
-            confettiView.postDelayed(() -> {
-                if (isFinishing() || isDestroyed()) {
-                    return;
+            Log.d(TAG_CONFETTI, "Playing post-update celebratory Confetti Lottie animation!");
+            confettiView.setVisibility(View.VISIBLE);
+            confettiView.setProgress(0f);
+            confettiView.setRepeatCount(0);
+            confettiView.addAnimatorListener(new android.animation.AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(android.animation.Animator animation) {
+                    Log.d(TAG_CONFETTI, "Confetti animation ended. Hiding view.");
+                    confettiView.setVisibility(View.GONE);
+                    confettiView.cancelAnimation();
+                    confettiView.setImageDrawable(null);
                 }
-                confettiView.setVisibility(View.VISIBLE);
-                confettiView.setRepeatCount(0);
-                confettiView.addAnimatorListener(new android.animation.AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(android.animation.Animator animation) {
-                        confettiView.setVisibility(View.GONE);
-                        confettiView.cancelAnimation();
-                        confettiView.setImageDrawable(null);
-                    }
 
-                    @Override
-                    public void onAnimationCancel(android.animation.Animator animation) {
-                        confettiView.setVisibility(View.GONE);
-                        confettiView.cancelAnimation();
-                        confettiView.setImageDrawable(null);
-                    }
-                });
-                confettiView.playAnimation();
-            }, 350);
-        }
+                @Override
+                public void onAnimationCancel(android.animation.Animator animation) {
+                    confettiView.setVisibility(View.GONE);
+                    confettiView.cancelAnimation();
+                    confettiView.setImageDrawable(null);
+                }
+            });
+            confettiView.playAnimation();
+        }, 400);
     }
 
     /** CoordinatorLayout + AppBarLayout handles top positioning automatically. */
@@ -631,6 +713,13 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** A pull to refresh, or (issue #130) a tap on the tab you are on with its feed at the top. */
     private void refreshFeed() {
+        if (!isDownloadsSectionShowing()) {
+            hideDownloadsEmptyState();
+            hideError();
+            if (mContentGrid != null) {
+                mContentGrid.setVisibility(View.VISIBLE);
+            }
+        }
         com.newtube.mobile.ui.common.RefreshFeedback.play(mContentSwipe);
         if (isHomeChip(mCurrentSectionId) && mHomeChip == null) {
             rememberSeenHome();
@@ -1534,6 +1623,13 @@ public class MobileBrowseActivity extends MobileActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_POST_NOTIFICATIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                com.newtube.mobile.notify.NotificationHelper.createNotificationChannels(this);
+                com.newtube.mobile.notify.ChannelNotificationWorker.schedule(this);
+                com.newtube.mobile.update.UpdateNotificationWorker.schedule(this);
+            }
+        }
         // Cast picker's local-network gate (the POST_NOTIFICATIONS request needs no follow-up).
         CastPickerLauncher.handlePermissionResult(this, requestCode, CastPickerLauncher::presentPlain);
     }
@@ -1910,6 +2006,11 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void onNavItemChosen(int itemId) {
+        int chosenSectionId = itemId == YOU_ITEM_ID ? MediaGroup.TYPE_SETTINGS : (itemId - ITEM_ID_OFFSET);
+        if (chosenSectionId != VideoDownloads.SECTION_ID) {
+            hideDownloadsEmptyState();
+            hideError();
+        }
         // GUTUBE(shorts): like YouTube, the Shorts tab IS the vertical player - no grid. The tab
         // loads the feed (spinner only) and opens its first unseen short; leaving the player comes
         // back to the tab you were on (onResume).
@@ -2507,6 +2608,13 @@ public class MobileBrowseActivity extends MobileActivity
         stopTypewriter();
         mYouShowing = false;
         mYouPanel.setVisibility(View.GONE);
+        if (mCurrentSectionId != VideoDownloads.SECTION_ID) {
+            hideDownloadsEmptyState();
+            hideError();
+            if (mContentGrid != null) {
+                mContentGrid.setVisibility(View.VISIBLE);
+            }
+        }
         View top = findViewById(R.id.mobile_top_glass);
         if (top != null) {
             top.setVisibility(View.VISIBLE);
@@ -2897,6 +3005,11 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
+        if (sectionId != VideoDownloads.SECTION_ID) {
+            hideDownloadsEmptyState();
+            hideError();
+        }
+
         boolean switched = mCurrentSectionId != sectionId;
         if (switched || mSubsChannel != null) {
             clearSubsChannel(); // GUTUBE(feed-strip): a filter belongs to the visit that set it
@@ -2910,6 +3023,9 @@ public class MobileBrowseActivity extends MobileActivity
         onYouPanelToggled(); // GUTUBE: the large title names the tab on screen
         updateGridSpanCount(computeSpanCount());
         showShortsTab(sectionId == MediaGroup.TYPE_SHORTS);
+        if (mNoInternetController != null) {
+            mNoInternetController.updateState();
+        }
 
         if (mPresenter != null) {
             mPresenter.onSectionFocused(sectionId);
@@ -2926,6 +3042,9 @@ public class MobileBrowseActivity extends MobileActivity
         // The error overlay (e.g. the previous section's sign-in gate) belongs to the section
         // that showed it - a switch repaints, so drop it here. updateSection can't be relied on
         // for this: a fresh-within-TTL section skips the refetch and never emits a group.
+        if (sectionId != VideoDownloads.SECTION_ID) {
+            hideDownloadsEmptyState();
+        }
         hideError();
         cancelFeedSwap(); // NEWTUBE(feed-swap): the previous section's swap is moot now
 
@@ -2952,6 +3071,9 @@ public class MobileBrowseActivity extends MobileActivity
         markLiveChannels();
         mContentGrid.animate().cancel();
         mContentGrid.setAlpha(1f);
+        if (sectionId != VideoDownloads.SECTION_ID) {
+            mContentGrid.setVisibility(View.VISIBLE);
+        }
         if (switched) {
             // NEWTUBE(motion): another section is a new page, not an edit of the old one. Through
             // the item animator it played as a shuffle (Pixel 9, History -> Home: the old cards
@@ -3766,7 +3888,21 @@ public class MobileBrowseActivity extends MobileActivity
     private int mPendingShortcutSection = -1;
 
     private void handleShortcutIntent(Intent intent) {
-        if (intent == null || intent.getAction() == null) {
+        if (intent == null) {
+            return;
+        }
+        if (intent.getBooleanExtra(com.newtube.mobile.update.UpdateNotificationWorker.EXTRA_TRIGGER_UPDATE, false)
+                || com.newtube.mobile.update.UpdateNotificationWorker.ACTION_TRIGGER_UPDATE.equals(intent.getAction())) {
+            intent.removeExtra(com.newtube.mobile.update.UpdateNotificationWorker.EXTRA_TRIGGER_UPDATE);
+            intent.setAction(null);
+            getWindow().getDecorView().postDelayed(() -> {
+                if (!isFinishing() && !isDestroyed()) {
+                    com.newtube.mobile.update.GitHubAppUpdater.checkUpdate(this, true);
+                }
+            }, 300);
+            return;
+        }
+        if (intent.getAction() == null) {
             return;
         }
         String action = intent.getAction();
@@ -3868,11 +4004,31 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** The Downloads tab with nothing in it: say what the tab is for instead of a blank grid. */
     private void showEmptyAfterRemoval() {
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.cancelAnimation();
+            mDownloadsEmptyLottie.setVisibility(View.GONE);
+            mDownloadsEmptyLottie.setAlpha(0f);
+        }
         setSkeletonVisible(false);
         mContentSwipe.setRefreshing(false);
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
+        mErrorContainer.setAlpha(1f);
+        mErrorContainer.setScaleX(1f);
+        mErrorContainer.setScaleY(1f);
         mErrorIcon.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.VISIBLE);
+        if (mDownloadsEmptyTitle != null) {
+            mDownloadsEmptyTitle.setVisibility(View.GONE);
+        }
+        if (mDownloadsEmptySubtitle != null) {
+            mDownloadsEmptySubtitle.setVisibility(View.GONE);
+        }
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.cancelAnimation();
+            mDownloadsEmptyLottie.setVisibility(View.GONE);
+            mDownloadsEmptyLottie.setAlpha(0f);
+        }
         mErrorMessage.setText(mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
                 ? R.string.mobile_empty_subscriptions : R.string.mobile_empty_generic);
         mErrorAction.setVisibility(View.GONE);
@@ -3880,14 +4036,107 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void showDownloadsEmptyState() {
+        if (!isDownloadsSectionShowing()) {
+            return;
+        }
         setSkeletonVisible(false);
         mContentSwipe.setRefreshing(false);
         mContentGrid.setVisibility(View.GONE);
-        mErrorContainer.setVisibility(View.VISIBLE);
-        mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(R.string.mobile_downloads_empty);
+
+        mErrorIcon.setVisibility(View.GONE);
+        mErrorMessage.setVisibility(View.GONE);
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
+
+        if (mDownloadsEmptyTitle != null) {
+            mDownloadsEmptyTitle.setVisibility(View.VISIBLE);
+        }
+        if (mDownloadsEmptySubtitle != null) {
+            mDownloadsEmptySubtitle.setVisibility(View.VISIBLE);
+        }
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.setVisibility(View.VISIBLE);
+            mDownloadsEmptyLottie.setAlpha(1f);
+            if (!mDownloadsEmptyLottie.isAnimating()) {
+                mDownloadsEmptyLottie.playAnimation();
+            }
+        }
+
+        if (mErrorContainer != null) {
+            mErrorContainer.animate().cancel();
+            mErrorContainer.setVisibility(View.VISIBLE);
+            mErrorContainer.setAlpha(0f);
+            mErrorContainer.setScaleX(0.96f);
+            mErrorContainer.setScaleY(0.96f);
+            mErrorContainer.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(280)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                    .start();
+        }
+    }
+
+    private void hideDownloadsEmptyState() {
+        if (mErrorContainer != null) {
+            mErrorContainer.animate().cancel();
+            if (mErrorContainer.getVisibility() == View.VISIBLE && mErrorContainer.getAlpha() > 0f) {
+                mErrorContainer.animate()
+                        .alpha(0f)
+                        .setDuration(220)
+                        .setInterpolator(new android.view.animation.AccelerateInterpolator())
+                        .withEndAction(() -> {
+                            if (mErrorContainer != null) {
+                                mErrorContainer.setVisibility(View.GONE);
+                                mErrorContainer.setScaleX(1f);
+                                mErrorContainer.setScaleY(1f);
+                            }
+                            if (mDownloadsEmptyLottie != null) {
+                                mDownloadsEmptyLottie.cancelAnimation();
+                                mDownloadsEmptyLottie.setVisibility(View.GONE);
+                                mDownloadsEmptyLottie.setAlpha(0f);
+                            }
+                            if (mDownloadsEmptyTitle != null) {
+                                mDownloadsEmptyTitle.setVisibility(View.GONE);
+                            }
+                            if (mDownloadsEmptySubtitle != null) {
+                                mDownloadsEmptySubtitle.setVisibility(View.GONE);
+                            }
+                        })
+                        .start();
+            } else {
+                mErrorContainer.setVisibility(View.GONE);
+                mErrorContainer.setAlpha(0f);
+                if (mDownloadsEmptyLottie != null) {
+                    mDownloadsEmptyLottie.cancelAnimation();
+                    mDownloadsEmptyLottie.setVisibility(View.GONE);
+                    mDownloadsEmptyLottie.setAlpha(0f);
+                }
+                if (mDownloadsEmptyTitle != null) {
+                    mDownloadsEmptyTitle.setVisibility(View.GONE);
+                }
+                if (mDownloadsEmptySubtitle != null) {
+                    mDownloadsEmptySubtitle.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            if (mDownloadsEmptyLottie != null) {
+                mDownloadsEmptyLottie.animate().cancel();
+                mDownloadsEmptyLottie.cancelAnimation();
+                mDownloadsEmptyLottie.setVisibility(View.GONE);
+                mDownloadsEmptyLottie.setAlpha(0f);
+            }
+            if (mDownloadsEmptyTitle != null) {
+                mDownloadsEmptyTitle.setVisibility(View.GONE);
+            }
+            if (mDownloadsEmptySubtitle != null) {
+                mDownloadsEmptySubtitle.setVisibility(View.GONE);
+            }
+        }
+        if (mContentGrid != null && !isDownloadsSectionShowing()) {
+            mContentGrid.setVisibility(View.VISIBLE);
+        }
     }
 
     private void rebuildBottomNav() {
@@ -4257,6 +4506,15 @@ public class MobileBrowseActivity extends MobileActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (mNoInternetController != null) {
+            mNoInternetController.onResume();
+        }
+        checkPostUpdateConfetti();
+        if (isDownloadsSectionShowing() && mCurrentVideos != null && mCurrentVideos.isEmpty()
+                && mDownloadsEmptyLottie != null && mDownloadsEmptyLottie.getVisibility() == View.VISIBLE
+                && !mDownloadsEmptyLottie.isAnimating()) {
+            mDownloadsEmptyLottie.resumeAnimation();
+        }
         com.newtube.mobile.update.GitHubAppUpdater.resumePendingInstall(this);
         mPreview.schedule();
         mTopBar.syncMark(this);
@@ -4419,6 +4677,12 @@ public class MobileBrowseActivity extends MobileActivity
     @Override
     protected void onPause() {
         super.onPause();
+        if (mNoInternetController != null) {
+            mNoInternetController.onPause();
+        }
+        if (mDownloadsEmptyLottie != null && mDownloadsEmptyLottie.isAnimating()) {
+            mDownloadsEmptyLottie.pauseAnimation();
+        }
         stopTypewriter();
         mPreview.stop();
         mBottomNav.removeCallbacks(mLeaveShortsTab);
@@ -4590,6 +4854,13 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        if (mNoInternetController != null) {
+            mNoInternetController.onDestroy();
+        }
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.cancelAnimation();
+            mDownloadsEmptyLottie.setImageDrawable(null);
+        }
         stopTypewriter();
         unwatchMiniScreenOn(); // the shared player outlives this Activity
         mPreview.release();
@@ -4961,6 +5232,7 @@ public class MobileBrowseActivity extends MobileActivity
                 if (mCurrentVideos.isEmpty()) {
                     showDownloadsEmptyState();
                 } else {
+                    hideDownloadsEmptyState();
                     setSkeletonVisible(false);
                 }
                 return;
@@ -4975,6 +5247,15 @@ public class MobileBrowseActivity extends MobileActivity
             }
 
             if (!mCurrentVideos.isEmpty()) {
+                hideDownloadsEmptyState();
+                hideError();
+                if (mContentGrid != null) {
+                    mContentGrid.setVisibility(View.VISIBLE);
+                }
+                if (mNoInternetController != null
+                        && com.newtube.mobile.ui.common.NoInternetOverlayController.isNetworkOnline(this)) {
+                    mNoInternetController.hideOverlaySilently();
+                }
                 mLastSessionFallback = null;
                 setSkeletonVisible(false);
                 com.newtube.mobile.LaunchMilestones.onFeedFreshBound(mCurrentSectionId, mCurrentVideos.size());
@@ -5438,15 +5719,34 @@ public class MobileBrowseActivity extends MobileActivity
                 return;
             }
 
+            if (mDownloadsEmptyLottie != null) {
+                mDownloadsEmptyLottie.cancelAnimation();
+                mDownloadsEmptyLottie.setVisibility(View.GONE);
+                mDownloadsEmptyLottie.setAlpha(0f);
+            }
+            if (mDownloadsEmptyTitle != null) {
+                mDownloadsEmptyTitle.setVisibility(View.GONE);
+            }
+            if (mDownloadsEmptySubtitle != null) {
+                mDownloadsEmptySubtitle.setVisibility(View.GONE);
+            }
+
             mContentGrid.setVisibility(View.GONE);
             mErrorContainer.setVisibility(View.VISIBLE);
+            mErrorContainer.setAlpha(1f);
+            mErrorContainer.setScaleX(1f);
+            mErrorContainer.setScaleY(1f);
             mErrorIcon.setVisibility(View.VISIBLE);
+            mErrorMessage.setVisibility(View.VISIBLE);
 
             if (hasSignInAction) {
                 mErrorMessage.setText(SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));
                 mErrorAction.setText(actionText);
                 mErrorAction.setVisibility(View.VISIBLE);
             } else if (!hasValidatedNetwork()) {
+                if (mNoInternetController != null && !isDownloadsSectionShowing()) {
+                    mNoInternetController.showOverlay();
+                }
                 // NEWTUBE(offline-feed): a load that failed because the phone has no working
                 // network used to render as "Nothing to show here yet" with no affordance - the
                 // app blaming YouTube for the user's tunnel, on the screen where "nothing loads"
@@ -5478,16 +5778,7 @@ public class MobileBrowseActivity extends MobileActivity
      * offline failure from a genuinely empty section.
      */
     private boolean hasValidatedNetwork() {
-        android.net.ConnectivityManager cm = (android.net.ConnectivityManager)
-                getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
-        if (cm == null) {
-            return true; // can't tell - keep the neutral wording
-        }
-
-        android.net.Network active = cm.getActiveNetwork();
-        android.net.NetworkCapabilities caps = active != null ? cm.getNetworkCapabilities(active) : null;
-        return caps != null
-                && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+        return com.newtube.mobile.ui.common.NoInternetOverlayController.isNetworkOnline(this);
     }
 
     private String getCurrentSectionTitle() {
@@ -5500,12 +5791,30 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void hideError() {
-        if (mErrorContainer.getVisibility() != View.VISIBLE) {
-            return;
+        if (mDownloadsEmptyLottie != null) {
+            mDownloadsEmptyLottie.animate().cancel();
+            mDownloadsEmptyLottie.cancelAnimation();
+            mDownloadsEmptyLottie.setVisibility(View.GONE);
+            mDownloadsEmptyLottie.setAlpha(0f);
         }
-
-        mErrorContainer.setVisibility(View.GONE);
-        mContentGrid.setVisibility(View.VISIBLE);
+        if (mDownloadsEmptyTitle != null) {
+            mDownloadsEmptyTitle.setVisibility(View.GONE);
+        }
+        if (mDownloadsEmptySubtitle != null) {
+            mDownloadsEmptySubtitle.setVisibility(View.GONE);
+        }
+        if (mNoInternetController != null && mNoInternetController.isOverlayShowing()
+                && com.newtube.mobile.ui.common.NoInternetOverlayController.isNetworkOnline(this)) {
+            mNoInternetController.hideOverlaySilently();
+        }
+        if (mErrorContainer != null) {
+            mErrorContainer.animate().cancel();
+            mErrorContainer.setVisibility(View.GONE);
+            mErrorContainer.setAlpha(0f);
+        }
+        if (mContentGrid != null && !isDownloadsSectionShowing()) {
+            mContentGrid.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
