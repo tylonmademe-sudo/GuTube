@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Glassmorphism Card Sheet:
-  - Slate translucent dark glass: rgba(30, 41, 59, 0.92) to rgba(2, 6, 23, 0.97)
-  - 1px border: rgba(100, 116, 139, 0.2) -> #3364748B
-  - Inset Indigo Ambient Glow: inset 0 0 120px rgba(79, 70, 229, 0.08) -> #204F46E5
-  - Inset Specular Rim Highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -> #26FFFFFF
   - 48dp top corner radius (border-radius: 50px)
+  - Bottom edge is completely seamless with ZERO stroke line (android:bottom="-4dp")
+  - Translucent glass surface: background: rgba(23, 23, 23, 0.12) to rgba(15, 15, 15, 0.88)
+  - 1px border: border: 1px solid rgba(82, 82, 82, 0.25) -> #40525252
+  - Inset specular rim highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -> #26FFFFFF
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Base slate glass surface -->
-    <item>
+    <!-- Base glass surface: bottom="-4dp" clips out bottom border stroke completely -->
+    <item android:bottom="-4dp">
         <shape android:shape="rectangle">
             <corners
                 android:topLeftRadius="48dp"
@@ -18,33 +18,13 @@
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#EB1E293B"
-                android:centerColor="#F20F172A"
-                android:endColor="#F8020617"
+                android:startColor="#CC171717"
+                android:centerColor="#D9131313"
+                android:endColor="#E60D0D0D"
                 android:type="linear" />
             <stroke
                 android:width="1dp"
-                android:color="#3364748B" />
-        </shape>
-    </item>
-
-    <!-- Inset Indigo Ambient Glow: rgba(79, 70, 229, 0.08) -->
-    <item
-        android:top="1dp"
-        android:left="1dp"
-        android:right="1dp"
-        android:bottom="60dp">
-        <shape android:shape="rectangle">
-            <corners
-                android:topLeftRadius="47dp"
-                android:topRightRadius="47dp"
-                android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="0dp" />
-            <gradient
-                android:angle="270"
-                android:startColor="#204F46E5"
-                android:centerColor="#0D4F46E5"
-                android:endColor="#00000000" />
+                android:color="#40525252" />
         </shape>
     </item>
 
@@ -53,7 +33,7 @@
         android:top="1dp"
         android:left="1dp"
         android:right="1dp"
-        android:bottom="120dp">
+        android:bottom="80dp">
         <shape android:shape="rectangle">
             <corners
                 android:topLeftRadius="47dp"

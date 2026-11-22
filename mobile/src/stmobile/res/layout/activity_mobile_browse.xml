@@ -1534,4 +1534,24 @@
 
     </com.newtube.mobile.ui.common.GlassView>
 
+    <!-- Confetti Celebratory Lottie Animation (Non-blocking full-screen overlay on post-update first launch) -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/mobile_confetti_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:elevation="24dp"
+        android:translationZ="24dp"
+        app:lottie_rawRes="@raw/confetti"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

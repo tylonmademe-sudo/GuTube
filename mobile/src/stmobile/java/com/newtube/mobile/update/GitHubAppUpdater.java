@@ -322,6 +322,7 @@ public final class GitHubAppUpdater {
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawableResource(android.R.color.transparent);
+            window.setDimAmount(0.40f);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
                 window.getAttributes().setBlurBehindRadius((int) (14 * activity.getResources().getDisplayMetrics().density));
@@ -348,7 +349,15 @@ public final class GitHubAppUpdater {
 
         titleView.setText("Update Available");
         String sizeStr = release.apkSize > 0 ? Formatter.formatFileSize(activity, release.apkSize) : "";
-        versionView.setText("Version " + release.cleanVersion + (sizeStr.isEmpty() ? "" : " · " + sizeStr));
+        versionView.setText("GuTube " + release.cleanVersion + (sizeStr.isEmpty() ? "" : " · " + sizeStr));
+        TextView whatsNewHeader = view.findViewById(R.id.github_update_whats_new_header);
+        if (whatsNewHeader != null) {
+            whatsNewHeader.setText("What's new in " + release.cleanVersion);
+        }
+        btnAction.setVisibility(View.VISIBLE);
+        btnAction.setEnabled(true);
+        btnAction.setText("Update now");
+        btnCancel.setText("Not now");
 
         // Populate changelog bullet points with clean Markdown-to-Spannable parser
         renderMarkdownNotes(activity, notesList, release.rawBody, release.changelog);
@@ -389,8 +398,8 @@ public final class GitHubAppUpdater {
             progressContainer.setVisibility(View.VISIBLE);
             progressBar.setIndeterminate(true);
             progressText.setText("Connecting...");
-            btnAction.setEnabled(false);
-            btnAction.setText("Downloading...");
+            btnAction.setVisibility(View.GONE);
+            btnCancel.setText("Cancel");
 
             EXECUTOR.execute(() -> {
                 File updatesDir = new File(activity.getCacheDir(), "updates");
@@ -495,8 +504,10 @@ public final class GitHubAppUpdater {
                             if (dialog.isShowing()) {
                                 titleView.setText("Update Available");
                                 progressContainer.setVisibility(View.GONE);
+                                btnAction.setVisibility(View.VISIBLE);
                                 btnAction.setEnabled(true);
                                 btnAction.setText("Retry");
+                                btnCancel.setText("Not now");
                                 isDownloading[0] = false;
                                 showToast(activity, "Download failed. Please try again.");
                             }
@@ -682,7 +693,7 @@ public final class GitHubAppUpdater {
             if (isBullet) {
                 SpannableStringBuilder bulletSsb = new SpannableStringBuilder();
                 bulletSsb.append("•  ");
-                bulletSsb.setSpan(new ForegroundColorSpan(0xFF818CF8), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                bulletSsb.setSpan(new ForegroundColorSpan(0xFFCBD5E1), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 bulletSsb.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 bulletSsb.append(content);
                 container.addView(createBulletView(activity, bulletSsb, density));

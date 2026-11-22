@@ -533,6 +533,56 @@ public class MobileBrowseActivity extends MobileActivity
                 findViewById(R.id.mobile_mini_audio));
         // NEWTUBE(mini-inset): the last card can scroll clear of the docked mini-player.
         com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(mMiniPlayerBar, mContentGrid);
+        checkPostUpdateConfetti();
+    }
+
+    /**
+     * Celebratory Confetti Lottie animation played once on the first launch after an app update.
+     */
+    private void checkPostUpdateConfetti() {
+        android.content.SharedPreferences prefs = getSharedPreferences("gutube_app", MODE_PRIVATE);
+        String lastSeenVersion = prefs.getString("last_seen_version", null);
+        String currentVersion = BuildConfig.VERSION_NAME + "_" + BuildConfig.VERSION_CODE;
+
+        if (lastSeenVersion == null) {
+            // Fresh install: save current version and do not play confetti
+            prefs.edit().putString("last_seen_version", currentVersion).apply();
+            return;
+        }
+
+        if (!currentVersion.equals(lastSeenVersion)) {
+            // After Update: immediately record current version so it triggers strictly once
+            prefs.edit().putString("last_seen_version", currentVersion).apply();
+
+            com.airbnb.lottie.LottieAnimationView confettiView = findViewById(R.id.mobile_confetti_view);
+            if (confettiView == null) {
+                return;
+            }
+
+            confettiView.postDelayed(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                confettiView.setVisibility(View.VISIBLE);
+                confettiView.setRepeatCount(0);
+                confettiView.addAnimatorListener(new android.animation.AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        confettiView.setVisibility(View.GONE);
+                        confettiView.cancelAnimation();
+                        confettiView.setImageDrawable(null);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(android.animation.Animator animation) {
+                        confettiView.setVisibility(View.GONE);
+                        confettiView.cancelAnimation();
+                        confettiView.setImageDrawable(null);
+                    }
+                });
+                confettiView.playAnimation();
+            }, 350);
+        }
     }
 
     /** CoordinatorLayout + AppBarLayout handles top positioning automatically. */

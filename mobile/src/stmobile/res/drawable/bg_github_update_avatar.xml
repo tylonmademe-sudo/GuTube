@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Circular Avatar container: background rgba(255,255,255,0.1), border 2px solid #3b82f6 -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="#1AFFFFFF" />
-    <stroke
-        android:width="2dp"
-        android:color="#3B82F6" />
-</shape>

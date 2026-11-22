@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- In-app GitHub update bottom sheet modal dialog (Glassmorphism Card) -->
+<!-- In-app GitHub update bottom sheet modal dialog (Liquid Glass Card) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,32 +17,22 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_mobile_sheet_handle" />
 
-    <!-- Card Header (.card-header): Avatar + User Details (.user-info) + Notification Icon (.notification-icon) -->
+    <!-- Card Header: App Icon + Title & Version -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="24dp"
-        android:paddingTop="18dp">
+        android:paddingTop="16dp">
 
-        <!-- Avatar Container (.avatar): Circular ring with 2px solid #3b82f6 & translucent fill -->
-        <FrameLayout
+        <ImageView
+            android:id="@+id/github_update_icon"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@drawable/bg_github_update_avatar">
+            android:contentDescription="@null"
+            android:src="@mipmap/app_icon" />
 
-            <ImageView
-                android:id="@+id/github_update_icon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:contentDescription="@null"
-                android:src="@mipmap/ic_launcher" />
-
-        </FrameLayout>
-
-        <!-- Details (.user-details) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -56,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Update Available"
                 android:textColor="#FFFFFF"
-                android:textSize="17.5sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:shadowColor="#33000000"
                 android:shadowDx="0"
@@ -67,31 +57,17 @@
                 android:id="@+id/github_update_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/bg_github_update_version_pill"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
-                android:textColor="#E2E8F0"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:layout_marginTop="2dp"
+                android:alpha="0.75"
+                android:textColor="#CBD5E1"
+                android:textSize="13sp"
                 android:shadowColor="#33000000"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="2"
-                tools:text="Version 3.4.3 · 34 MB" />
+                tools:text="GuTube 3.5.0 · 34 MB" />
 
         </LinearLayout>
-
-        <!-- Notification Icon (.notification-icon) -->
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            android:alpha="0.5"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_about_notifications"
-            app:tint="#FFFFFF" />
 
     </LinearLayout>
 
@@ -111,10 +87,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:indicatorColor="#3B82F6"
+            app:indicatorColor="#EF4444"
             app:trackColor="#26FFFFFF"
-            app:trackCornerRadius="3dp"
-            app:trackThickness="5dp" />
+            app:trackCornerRadius="2dp"
+            app:trackThickness="3.5dp" />
 
         <TextView
             android:id="@+id/github_update_progress_text"
@@ -131,14 +107,14 @@
 
     </LinearLayout>
 
-    <!-- Card Body: What's New / Changelog Bullet Points -->
+    <!-- Card Body (.card-body): What's New (.card-title) & Changelog (.card-description) - Single unified card -->
     <LinearLayout
         android:id="@+id/github_update_notes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="16dp">
+        android:paddingTop="18dp">
 
         <TextView
             android:id="@+id/github_update_whats_new_header"
@@ -146,22 +122,23 @@
             android:layout_height="wrap_content"
             android:text="What's new"
             android:textColor="#FFFFFF"
-            android:textSize="14.5sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:shadowColor="#33000000"
             android:shadowDx="0"
             android:shadowDy="1"
-            android:shadowRadius="3" />
+            android:shadowRadius="3"
+            tools:text="What's new in 3.5.0" />
 
         <com.newtube.mobile.ui.update.MaxHeightScrollView
             android:id="@+id/github_update_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
+            android:fadingEdgeLength="16dp"
             android:overScrollMode="never"
             android:requiresFadingEdge="vertical"
-            android:fadingEdgeLength="24dp"
-            android:scrollbars="vertical">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/github_update_notes_list"
@@ -173,7 +150,7 @@
 
     </LinearLayout>
 
-    <!-- Action Buttons: Cancel and Update Now (.glass-button) -->
+    <!-- Action Buttons (.glass-button): Cancel and Update Now -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -190,13 +167,13 @@
             android:minHeight="40dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_github_update_btn_cancel"
-            app:backgroundTint="@null"
-            android:paddingHorizontal="20dp"
-            android:text="Cancel"
+            android:paddingHorizontal="18dp"
+            android:text="Not now"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="13.5sp"
             android:textStyle="bold"
-            app:cornerRadius="14dp"
+            app:backgroundTint="@null"
+            app:cornerRadius="10dp"
             app:rippleColor="#26FFFFFF" />
 
         <com.google.android.material.button.MaterialButton
@@ -205,14 +182,14 @@
             android:layout_height="40dp"
             android:minHeight="40dp"
             android:background="@drawable/bg_github_update_btn_action"
-            app:backgroundTint="@null"
-            android:paddingHorizontal="24dp"
-            android:text="Update Now"
-            android:textColor="#111827"
-            android:textSize="13sp"
+            android:paddingHorizontal="22dp"
+            android:text="Update now"
+            android:textColor="#FFFFFF"
+            android:textSize="13.5sp"
             android:textStyle="bold"
-            app:cornerRadius="14dp"
-            app:rippleColor="#33000000" />
+            app:backgroundTint="@null"
+            app:cornerRadius="10dp"
+            app:rippleColor="#33FFFFFF" />
 
     </LinearLayout>
 

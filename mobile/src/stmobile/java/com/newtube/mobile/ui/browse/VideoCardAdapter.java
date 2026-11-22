@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
 import com.newtube.mobile.ui.playback.PlayerTransitionBridge;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
@@ -839,6 +840,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     .load(thumbnailUrl(context, video))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888)
+                    .downsample(DownsampleStrategy.AT_MOST)
                     .override(w, sThumbH)
                     .centerCrop();
         }
@@ -904,6 +906,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                         .load(fallbackUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .format(DecodeFormat.PREFER_ARGB_8888)
+                        .downsample(DownsampleStrategy.AT_MOST)
                         .override(w, sThumbH)
                         .centerCrop());
             }

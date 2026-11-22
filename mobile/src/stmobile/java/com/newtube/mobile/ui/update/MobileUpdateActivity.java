@@ -18,7 +18,9 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -200,9 +202,28 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         if (mSecondary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mSecondary);
         if (mDontAsk != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mDontAsk);
 
-        mSheet = Haptics.watch(new BottomSheetDialog(this));
+        mSheet = Haptics.watch(new BottomSheetDialog(this, R.style.ThemeOverlay_NewTube_BottomSheetDialog));
         mSheet.setContentView(content);
         mSheet.setOnDismissListener(dialog -> finish());
+
+        mSheet.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundResource(android.R.color.transparent);
+            }
+        });
+
+        Window window = mSheet.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+            window.setDimAmount(0.40f);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                window.getAttributes().setBlurBehindRadius((int) (14 * getResources().getDisplayMetrics().density));
+            }
+        }
+
         // The whole sheet or nothing: a half-open peek hid the buttons under a long list of notes
         mSheet.getBehavior().setSkipCollapsed(true);
         mSheet.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -549,24 +570,24 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         // Under the "What's new" title, "What's new in 1.10.5" would say it twice
         header.setText(getString(mMode == MODE_WHATS_NEW ? R.string.mobile_update_version : R.string.mobile_update_whats_new_in,
                 release.versionName));
-        header.setTextColor(ContextCompat.getColor(this, R.color.mobile_color_on_surface));
-        header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        header.setTextColor(0xFFFFFFFF);
+        header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         header.setTypeface(header.getTypeface(), android.graphics.Typeface.BOLD);
-        header.setPadding(0, dp(16), 0, dp(4));
+        header.setPadding(0, dp(14), 0, dp(6));
         mNotes.addView(header);
 
-        int color = ContextCompat.getColor(this, R.color.mobile_color_on_surface_secondary);
+        int color = 0xFFCBD5E1;
 
         for (String line : release.lines) {
             SpannableString text = new SpannableString(line);
-            BulletSpan bullet = Build.VERSION.SDK_INT >= 28 ? new BulletSpan(dp(10), color, dp(2)) : new BulletSpan(dp(10), color);
+            BulletSpan bullet = Build.VERSION.SDK_INT >= 28 ? new BulletSpan(dp(8), color, dp(2)) : new BulletSpan(dp(8), color);
             text.setSpan(bullet, 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             TextView item = new TextView(this);
             item.setText(text);
             item.setTextColor(color);
-            item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            item.setLineSpacing(0, 1.15f);
+            item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
+            item.setLineSpacing(dp(4), 1.0f);
             item.setPadding(0, dp(3), 0, dp(3));
             mNotes.addView(item);
         }

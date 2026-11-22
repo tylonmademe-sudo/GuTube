@@ -46,7 +46,6 @@ final class HomeRowsAdapter extends RecyclerView.Adapter<HomeRowsAdapter.RowHold
     HomeRowsAdapter(VideoCardAdapter.OnVideoClickListener click, VideoCardAdapter.OnVideoLongClickListener longClick) {
         mClick = click;
         mLongClick = longClick;
-        setHasStableIds(true);
     }
 
     void submit(List<Video> videos) {

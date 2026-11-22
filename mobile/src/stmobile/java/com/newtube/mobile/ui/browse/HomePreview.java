@@ -39,7 +39,7 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
     public static final int ALWAYS = 2;
 
     private static final String PREFS = "gutube_app";
-    private static final long SETTLE_MS = 400;
+    private static final long SETTLE_MS = 700;
     private static final float MIN_VISIBLE = 0.65f;
 
     public static int mode(Context context) {
@@ -188,6 +188,9 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
             public void onScrollStateChanged(@NonNull RecyclerView rv, int state) {
                 if (state == RecyclerView.SCROLL_STATE_IDLE) {
                     schedule();
+                } else if (state == RecyclerView.SCROLL_STATE_DRAGGING || state == RecyclerView.SCROLL_STATE_SETTLING) {
+                    mMain.removeCallbacks(mPick);
+                    stop();
                 } else {
                     mMain.removeCallbacks(mPick);
                 }
@@ -195,6 +198,9 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
 
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                if (dx != 0 || dy != 0) {
+                    mMain.removeCallbacks(mPick);
+                }
                 if (mHolder != null && !(visibleFraction(mHolder) >= MIN_VISIBLE / 2)) {
                     stop(); // scrolled mostly out of sight
                 }
@@ -205,6 +211,9 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
     /** Looks again for the card to play, once the screen has been still for a moment. */
     void schedule() {
         mMain.removeCallbacks(mPick);
+        if (mGrid.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
+            return;
+        }
         mMain.postDelayed(mPick, SETTLE_MS);
     }
 
@@ -229,6 +238,9 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
     }
 
     private void pick() {
+        if (mGrid.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
+            return;
+        }
         if (!enabled()) {
             stop();
             return;
