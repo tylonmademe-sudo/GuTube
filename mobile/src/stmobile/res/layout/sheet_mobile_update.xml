@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Update sheet (MobileUpdateActivity): Glassmorphism card for the entire update flow
-  (checking, up to date, update available, downloading, ready to install, and what's new).
+  Google Stitch Glassmorphism In-App Update Sheet (MobileUpdateActivity):
   Unified with dialog_github_update.xml for 100% consistent frosted glass styling.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_update_sheet_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_github_update_sheet"
     android:orientation="vertical"
     android:paddingBottom="24dp">
 
-    <!-- Top Drag Handle -->
+    <!-- Modal Drag Handle -->
     <View
+        android:id="@+id/update_sheet_drag_handle"
         android:layout_width="36dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:background="@drawable/bg_mobile_sheet_handle" />
+        android:background="@drawable/bg_github_update_handle" />
 
-    <!-- Card Header: App Icon + Title & Version -->
+    <!-- App Identity Header: 14dp Squircle App Icon + Title & Version Subtitle -->
     <LinearLayout
+        android:id="@+id/update_sheet_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -30,12 +32,20 @@
         android:paddingHorizontal="24dp"
         android:paddingTop="16dp">
 
-        <ImageView
-            android:id="@+id/mobile_update_icon"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:contentDescription="@null"
-            android:src="@mipmap/app_icon" />
+        <FrameLayout
+            android:id="@+id/update_sheet_icon_container"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_github_update_icon_squircle">
+
+            <ImageView
+                android:id="@+id/mobile_update_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@mipmap/app_icon" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -50,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:accessibilityHeading="true"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:shadowColor="#33000000"
                 android:shadowDx="0"
@@ -63,14 +73,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:alpha="0.75"
                 android:textColor="#CBD5E1"
-                android:textSize="13sp"
+                android:textSize="13.5sp"
                 android:shadowColor="#33000000"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="2"
-                tools:text="GuTube 3.5.0 · 34 MB" />
+                tools:text="GuTube 1.4 · 45.60 MB" />
 
         </LinearLayout>
 
@@ -87,7 +96,7 @@
         app:indicatorColor="#EF4444"
         app:trackColor="#26FFFFFF"
         app:trackCornerRadius="2dp"
-        app:trackThickness="3.5dp"
+        app:trackThickness="4dp"
         tools:visibility="visible" />
 
     <TextView
@@ -96,14 +105,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:paddingHorizontal="24dp"
-        android:textColor="#94A3B8"
+        android:textColor="#CBD5E1"
         android:textSize="13sp"
         android:shadowColor="#33000000"
         android:shadowDx="0"
         android:shadowDy="1"
         android:shadowRadius="2"
         android:visibility="gone"
-        tools:text="1.9 MB of 34 MB"
+        tools:text="Downloading... 1.9 MB of 34 MB"
         tools:visibility="visible" />
 
     <!-- Card Body: Message, Release Notes & Link -->
@@ -112,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fadingEdgeLength="16dp"
+        android:fadingEdgeLength="20dp"
         android:overScrollMode="never"
         android:requiresFadingEdge="vertical"
         android:scrollbars="none">
@@ -128,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:lineSpacingMultiplier="1.15"
+                android:lineSpacingMultiplier="1.2"
                 android:textColor="#CBD5E1"
                 android:textSize="14sp"
                 android:shadowColor="#33000000"
@@ -165,8 +174,9 @@
 
     </com.newtube.mobile.ui.update.MaxHeightScrollView>
 
-    <!-- Action Buttons: Don't ask, Cancel/Later, Update/Install -->
+    <!-- Action Buttons Footer: Don't ask, Cancel/Later, Update/Install -->
     <LinearLayout
+        android:id="@+id/update_sheet_actions_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -199,12 +209,12 @@
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_github_update_btn_cancel"
             android:paddingHorizontal="18dp"
-            android:textColor="#FFFFFF"
-            android:textSize="13.5sp"
+            android:textColor="#F1F5F9"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone"
             app:backgroundTint="@null"
-            app:cornerRadius="10dp"
+            app:cornerRadius="20dp"
             app:rippleColor="#26FFFFFF"
             tools:text="Cancel"
             tools:visibility="visible" />
@@ -217,11 +227,11 @@
             android:background="@drawable/bg_github_update_btn_action"
             android:paddingHorizontal="22dp"
             android:textColor="#FFFFFF"
-            android:textSize="13.5sp"
+            android:textSize="14.5sp"
             android:textStyle="bold"
             android:visibility="gone"
             app:backgroundTint="@null"
-            app:cornerRadius="10dp"
+            app:cornerRadius="14dp"
             app:rippleColor="#33FFFFFF"
             tools:text="Update now"
             tools:visibility="visible" />

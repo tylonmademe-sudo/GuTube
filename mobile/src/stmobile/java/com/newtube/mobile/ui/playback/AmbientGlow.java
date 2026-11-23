@@ -16,33 +16,37 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.view.TextureView;
 import android.view.View;
+import android.view.animation.Interpolator;
+import android.view.animation.PathInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
+
 /**
- * GUTUBE(ambient): YouTube's ambient mode. Every couple of seconds a tiny frame is read off the
- * playing video, box-blurred, saturated, and painted as the watch page's background behind the
- * title - a soft glow that spreads down from the player and fades into the page colour. New frames
- * cross-fade in so the glow drifts with the scene instead of jumping.
- *
- * <p>In the vertical fullscreen the same frames also fill the black bands above and below the
- * video ({@link #setFill}): the frame blown up to the whole screen, dimmed, behind the picture.
- * Both follow the Ambient mode setting (on unless turned off, {@link #isOn}).</p>
- *
- * <p>Upright, the status bar above the video takes the colours of its top edge too, YouTube's
- * ({@link #setBar}).</p>
+ * GUTUBE(ambient): YouTube's ambient mode.
+ * Downscaled to a tiny buffer (32x18) on a background thread with triple buffering, per-pixel temporal EMA smoothing,
+ * synced 220ms sampling / 200ms crossfade, and zero-dip layering.
+ * Automatically pauses sampling when playback is paused or inactive to save 100% battery.
  */
 public final class AmbientGlow implements Runnable {
-    private static final int FRAME_W = 48;
-    private static final int FRAME_H = 27;
-    private static final int BLUR_RADIUS = 3;
-    private static final long INTERVAL_MS = 2000;
-    private static final long FADE_MS = 1200;
-    private static final int GLOW_ALPHA = 210; // ~0.8: YouTube's glow reads strong right under the video
+    private static final int FRAME_W = 32;
+    private static final int FRAME_H = 18;
+    private static final int BLUR_RADIUS = 2;
+    private static final long INTERVAL_MS = 220; // 220ms sampling interval
+    private static final long FADE_MS = 200; // 200ms crossfade finishes before next sample
+    private static final float GLOW_BRIGHTNESS = 0.82f; // ~210/255 brightness baked into ColorMatrix
+
+    private static final Interpolator INTERPOLATOR = new PathInterpolator(0f, 0f, 0.2f, 1f); // LinearOutSlowIn
 
     private static final String PREFS = "gutube_player";
     private static final String KEY_ON = "ambient_mode";
+
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     private final View mHost;
     private final TextureView mVideo;
@@ -54,6 +58,25 @@ public final class AmbientGlow implements Runnable {
     @Nullable
     private View mFillHost;
     private boolean mRunning;
+    private boolean mPlaying;
+    @Nullable
+    private BooleanSupplier mPlayingSupplier;
+
+    // Pre-allocated capture and triple-buffered display Bitmaps (zero GC churn, zero drawing overwrite)
+    private final Bitmap mCaptureBitmap = Bitmap.createBitmap(FRAME_W, FRAME_H, Bitmap.Config.ARGB_8888);
+    private final Bitmap[] mBuffers = new Bitmap[] {
+            Bitmap.createBitmap(FRAME_W, FRAME_H, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(FRAME_W, FRAME_H, Bitmap.Config.ARGB_8888),
+            Bitmap.createBitmap(FRAME_W, FRAME_H, Bitmap.Config.ARGB_8888)
+    };
+    private int mBufferIndex = 0;
+
+    private final int[] mRawPixels = new int[FRAME_W * FRAME_H];
+    private final int[] mBlurredPixels = new int[FRAME_W * FRAME_H];
+    private final int[] mBlurTemp = new int[FRAME_W * FRAME_H];
+    private final int[] mSmoothedPixels = new int[FRAME_W * FRAME_H];
+    private boolean mHasSmoothed = false;
+    private final AtomicBoolean mProcessing = new AtomicBoolean(false);
 
     /** Until the user sets it: on in the dark theme, off in the light one (a glow on a white page). */
     public static boolean isOn(Context context) {
@@ -66,10 +89,41 @@ public final class AmbientGlow implements Runnable {
     }
 
     AmbientGlow(@NonNull View host, @NonNull TextureView video, int pageColor) {
+        this(host, video, pageColor, null);
+    }
+
+    AmbientGlow(@NonNull View host, @NonNull TextureView video, int pageColor, @Nullable BooleanSupplier isPlayingSupplier) {
         mHost = host;
         mVideo = video;
+        mPlayingSupplier = isPlayingSupplier;
         mDrawable = new GlowDrawable(pageColor, host.getResources().getDisplayMetrics().density);
         host.setBackground(mDrawable);
+    }
+
+    public void setPlayingSupplier(@Nullable BooleanSupplier supplier) {
+        mPlayingSupplier = supplier;
+    }
+
+    public void setPlaying(boolean playing) {
+        if (mPlaying == playing) {
+            return;
+        }
+        mPlaying = playing;
+        if (playing) {
+            if (mRunning) {
+                mHost.removeCallbacks(this);
+                mHost.post(this);
+            }
+        } else {
+            mHost.removeCallbacks(this);
+        }
+    }
+
+    private boolean isPlaybackActive() {
+        if (mPlayingSupplier != null) {
+            return mPlayingSupplier.getAsBoolean();
+        }
+        return mPlaying;
     }
 
     void start() {
@@ -81,6 +135,7 @@ public final class AmbientGlow implements Runnable {
 
     void stop() {
         mRunning = false;
+        mHasSmoothed = false;
         mHost.removeCallbacks(this);
     }
 
@@ -95,9 +150,9 @@ public final class AmbientGlow implements Runnable {
         mFillHost = area;
         if (area != null) {
             area.setBackground(mFill);
-            if (mRunning) {
+            if (mRunning && isPlaybackActive()) {
                 mHost.removeCallbacks(this);
-                mHost.post(this); // a frame now, not in up to two seconds
+                mHost.post(this); // a frame now
             }
         }
     }
@@ -122,17 +177,91 @@ public final class AmbientGlow implements Runnable {
         if (!mRunning) {
             return;
         }
+        if (!isPlaybackActive()) {
+            // Video is paused, in background, or stopped: pause sampling to save 100% battery
+            return;
+        }
         boolean fill = mFillHost != null && mFillHost.isShown();
-        if ((mHost.isShown() || fill) && mVideo.isAvailable()) {
-            Bitmap frame = mVideo.getBitmap(FRAME_W, FRAME_H);
-            if (frame != null) {
-                blur(frame);
-                mDrawable.push(frame);
-                mFill.push(frame);
-                mBar.push(frame);
-            }
+        boolean hostShown = mHost.isShown();
+        if ((hostShown || fill) && mVideo.isAvailable()) {
+            sampleFrame();
         }
         mHost.postDelayed(this, INTERVAL_MS);
+    }
+
+    private void sampleFrame() {
+        if (!mVideo.isAvailable()) {
+            return;
+        }
+
+        Bitmap captured;
+        try {
+            captured = mVideo.getBitmap(mCaptureBitmap);
+        } catch (Throwable t) {
+            captured = null;
+        }
+
+        if (captured == null) {
+            return;
+        }
+
+        if (!mProcessing.compareAndSet(false, true)) {
+            return; // Previous background computation still running, drop this frame without lag
+        }
+
+        captured.getPixels(mRawPixels, 0, FRAME_W, 0, 0, FRAME_W, FRAME_H);
+
+        EXECUTOR.execute(() -> {
+            try {
+                // Two-pass box blur in pre-allocated arrays
+                System.arraycopy(mRawPixels, 0, mBlurredPixels, 0, mRawPixels.length);
+                boxPass(mBlurredPixels, mBlurTemp, FRAME_W, FRAME_H, 1, FRAME_W, BLUR_RADIUS);
+                boxPass(mBlurTemp, mBlurredPixels, FRAME_H, FRAME_W, FRAME_W, 1, BLUR_RADIUS);
+                boxPass(mBlurredPixels, mBlurTemp, FRAME_W, FRAME_H, 1, FRAME_W, BLUR_RADIUS);
+                boxPass(mBlurTemp, mBlurredPixels, FRAME_H, FRAME_W, FRAME_W, 1, BLUR_RADIUS);
+
+                // Per-pixel temporal EMA smoothing: out = 0.40f * new + 0.60f * prev
+                if (!mHasSmoothed) {
+                    System.arraycopy(mBlurredPixels, 0, mSmoothedPixels, 0, mBlurredPixels.length);
+                    mHasSmoothed = true;
+                } else {
+                    for (int i = 0; i < mBlurredPixels.length; i++) {
+                        int newPix = mBlurredPixels[i];
+                        int prevPix = mSmoothedPixels[i];
+
+                        int newR = (newPix >> 16) & 0xFF;
+                        int newG = (newPix >> 8) & 0xFF;
+                        int newB = newPix & 0xFF;
+
+                        int prevR = (prevPix >> 16) & 0xFF;
+                        int prevG = (prevPix >> 8) & 0xFF;
+                        int prevB = prevPix & 0xFF;
+
+                        int outR = Math.round(0.40f * newR + 0.60f * prevR);
+                        int outG = Math.round(0.40f * newG + 0.60f * prevG);
+                        int outB = Math.round(0.40f * newB + 0.60f * prevB);
+
+                        mSmoothedPixels[i] = 0xFF000000 | (outR << 16) | (outG << 8) | outB;
+                    }
+                }
+
+                // Write into triple-buffered ring target (never conflicts with currently drawn frame)
+                Bitmap targetBuffer = mBuffers[mBufferIndex];
+                mBufferIndex = (mBufferIndex + 1) % 3;
+                targetBuffer.setPixels(mSmoothedPixels, 0, FRAME_W, 0, 0, FRAME_W, FRAME_H);
+
+                mHost.post(() -> {
+                    if (mRunning) {
+                        mDrawable.push(targetBuffer);
+                        mFill.push(targetBuffer);
+                        mBar.push(targetBuffer);
+                    }
+                });
+            } catch (Throwable ignored) {
+            } finally {
+                mProcessing.set(false);
+            }
+        });
     }
 
     /** GUTUBE(playlist page): shared tiny-bitmap box blur for ambient video frames and playlist covers. */
@@ -143,19 +272,19 @@ public final class AmbientGlow implements Runnable {
         int[] tmp = new int[w * h];
         bitmap.getPixels(px, 0, w, 0, 0, w, h);
         for (int pass = 0; pass < 2; pass++) {
-            boxPass(px, tmp, w, h, 1, w);  // horizontal
-            boxPass(tmp, px, h, w, w, 1);  // vertical
+            boxPass(px, tmp, w, h, 1, w, 3); // horizontal
+            boxPass(tmp, px, h, w, w, 1, 3); // vertical
         }
         bitmap.setPixels(px, 0, w, 0, 0, w, h);
     }
 
     /** Blurs `lines` lines of `len` pixels; `step` walks a line, `stride` jumps between lines. */
-    private static void boxPass(int[] src, int[] dst, int len, int lines, int step, int stride) {
+    private static void boxPass(int[] src, int[] dst, int len, int lines, int step, int stride, int radius) {
         for (int line = 0; line < lines; line++) {
             int base = line * stride;
             for (int i = 0; i < len; i++) {
                 int r = 0, g = 0, b = 0, n = 0;
-                for (int k = Math.max(0, i - BLUR_RADIUS); k <= Math.min(len - 1, i + BLUR_RADIUS); k++) {
+                for (int k = Math.max(0, i - radius); k <= Math.min(len - 1, i + radius); k++) {
                     int c = src[base + k * step];
                     r += (c >> 16) & 0xFF;
                     g += (c >> 8) & 0xFF;
@@ -191,6 +320,7 @@ public final class AmbientGlow implements Runnable {
                 mFadeIn.cancel();
             }
             mFadeIn = ValueAnimator.ofFloat(0f, 1f).setDuration(FADE_MS);
+            mFadeIn.setInterpolator(INTERPOLATOR);
             mFadeIn.addUpdateListener(a -> {
                 mMix = (float) a.getAnimatedValue();
                 invalidateSelf();
@@ -200,17 +330,15 @@ public final class AmbientGlow implements Runnable {
 
         @Override
         public void draw(@NonNull Canvas canvas) {
-            // Its own box only: the video area does not clip its children's parent (clipChildren
-            // off), so a whole-canvas fill blacked out the comments beside a landscape video.
             int save = canvas.save();
             canvas.clipRect(getBounds());
             canvas.drawColor(Color.BLACK);
             if (mCurrent != null) {
                 if (mPrevious != null && mMix < 1f) {
-                    mFrame.setAlpha(Math.round(255 * (1f - mMix)));
+                    mFrame.setAlpha(255);
                     canvas.drawBitmap(mPrevious, null, getBounds(), mFrame);
                 }
-                mFrame.setAlpha(Math.round(255 * mMix));
+                mFrame.setAlpha(mMix >= 1f ? 255 : Math.round(255 * mMix));
                 canvas.drawBitmap(mCurrent, null, getBounds(), mFrame);
             }
             canvas.restoreToCount(save);
@@ -242,9 +370,12 @@ public final class AmbientGlow implements Runnable {
         private int mAlpha = 255; // the swipe down to the mini player fades it with the page
 
         BarDrawable() {
-            ColorMatrix saturate = new ColorMatrix();
-            saturate.setSaturation(1.6f); // the glow under the video's look, so the two read as one
-            mFrame.setColorFilter(new ColorMatrixColorFilter(saturate));
+            ColorMatrix look = new ColorMatrix();
+            look.setSaturation(1.6f); // the glow under the video's look, so the two read as one
+            ColorMatrix dim = new ColorMatrix();
+            dim.setScale(GLOW_BRIGHTNESS, GLOW_BRIGHTNESS, GLOW_BRIGHTNESS, 1f);
+            look.postConcat(dim);
+            mFrame.setColorFilter(new ColorMatrixColorFilter(look));
         }
 
         void push(Bitmap frame) {
@@ -254,6 +385,7 @@ public final class AmbientGlow implements Runnable {
                 mFadeIn.cancel();
             }
             mFadeIn = ValueAnimator.ofFloat(0f, 1f).setDuration(mPrevious == null ? FADE_MS / 2 : FADE_MS);
+            mFadeIn.setInterpolator(INTERPOLATOR);
             mFadeIn.addUpdateListener(a -> {
                 mMix = (float) a.getAnimatedValue();
                 invalidateSelf();
@@ -275,10 +407,10 @@ public final class AmbientGlow implements Runnable {
             mBand.set(bounds.left, bounds.top, bounds.right, bounds.top + top);
             mSource.set(0, 0, FRAME_W, FRAME_H / 4); // the top quarter: what the bar sits on
             if (mPrevious != null && mMix < 1f) {
-                mFrame.setAlpha(Math.round(GLOW_ALPHA * (1f - mMix) * mAlpha / 255f));
+                mFrame.setAlpha(mAlpha);
                 canvas.drawBitmap(mPrevious, mSource, mBand, mFrame);
             }
-            mFrame.setAlpha(Math.round(GLOW_ALPHA * mMix * mAlpha / 255f));
+            mFrame.setAlpha(mMix >= 1f ? mAlpha : Math.round(mAlpha * mMix));
             canvas.drawBitmap(mCurrent, mSource, mBand, mFrame);
         }
 
@@ -315,9 +447,12 @@ public final class AmbientGlow implements Runnable {
         GlowDrawable(int pageColor, float density) {
             mPageColor = pageColor;
             mDensity = density;
-            ColorMatrix saturate = new ColorMatrix();
-            saturate.setSaturation(1.6f);
-            mFrame.setColorFilter(new ColorMatrixColorFilter(saturate));
+            ColorMatrix look = new ColorMatrix();
+            look.setSaturation(1.6f);
+            ColorMatrix dim = new ColorMatrix();
+            dim.setScale(GLOW_BRIGHTNESS, GLOW_BRIGHTNESS, GLOW_BRIGHTNESS, 1f);
+            look.postConcat(dim);
+            mFrame.setColorFilter(new ColorMatrixColorFilter(look));
         }
 
         void push(Bitmap frame) {
@@ -327,6 +462,7 @@ public final class AmbientGlow implements Runnable {
                 mFadeIn.cancel();
             }
             mFadeIn = ValueAnimator.ofFloat(0f, 1f).setDuration(mPrevious == null ? FADE_MS / 2 : FADE_MS);
+            mFadeIn.setInterpolator(INTERPOLATOR);
             mFadeIn.addUpdateListener(a -> {
                 mMix = (float) a.getAnimatedValue();
                 invalidateSelf();
@@ -355,10 +491,10 @@ public final class AmbientGlow implements Runnable {
             canvas.save();
             canvas.clipRect(getBounds());
             if (mPrevious != null && mMix < 1f) {
-                mFrame.setAlpha(Math.round(GLOW_ALPHA * (1f - mMix)));
+                mFrame.setAlpha(255);
                 canvas.drawBitmap(mPrevious, null, mFrameRect, mFrame);
             }
-            mFrame.setAlpha(Math.round(GLOW_ALPHA * mMix));
+            mFrame.setAlpha(mMix >= 1f ? 255 : Math.round(255 * mMix));
             canvas.drawBitmap(mCurrent, null, mFrameRect, mFrame);
             canvas.drawRect(mFrameRect, mFade);
             canvas.restore();

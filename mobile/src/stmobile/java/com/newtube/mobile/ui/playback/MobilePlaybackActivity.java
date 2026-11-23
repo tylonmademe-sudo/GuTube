@@ -85,6 +85,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.ui.TimeBar;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemFormatInfo;
 import com.liskovsoft.sharedutils.helpers.Helpers;
+import com.newtube.mobile.player.WatchProgressStore;
 import com.liskovsoft.mediaserviceinterfaces.data.ChatItem;
 import com.liskovsoft.mediaserviceinterfaces.data.PlaylistInfo;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
@@ -526,6 +527,10 @@ public class MobilePlaybackActivity extends MobileActivity
     private boolean mScrubbing;
     private boolean mIsEnded;
     private boolean mIsInPip;
+    // GUTUBE: Handoff and local watch-progress resume state
+    private long mPendingStartPositionMs = 0L;
+    @Nullable
+    private String mPendingStartVideoId = null;
     /** True between onStop and onStart; distinguishes PiP-dismiss orderings (see onPictureInPictureModeChanged). */
     private boolean mIsStopped;
     /** True between onResume and onPause. Gates auto-enter PiP (see {@link #shouldAutoEnterPip()}). */
@@ -625,6 +630,14 @@ public class MobilePlaybackActivity extends MobileActivity
         // window animation so it cannot fade/scale the custom thumbnail morph a second time.
         if (PlayerTransitionBridge.hasPending()) {
             overridePendingTransition(0, 0);
+        }
+
+        Intent openIntent = getIntent();
+        if (openIntent != null && openIntent.hasExtra(WatchProgressStore.EXTRA_START_POSITION_MS)) {
+            long pos = openIntent.getLongExtra(WatchProgressStore.EXTRA_START_POSITION_MS, 0L);
+            if (pos > 0L) {
+                mPendingStartPositionMs = pos;
+            }
         }
 
         // NOTE: buffer tuning is applied locally around createPlayer() (see createPlayerObjects),
@@ -796,6 +809,13 @@ public class MobilePlaybackActivity extends MobileActivity
     protected void onNewIntent(Intent intent) {
         cancelClose();
         super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent != null && intent.hasExtra(WatchProgressStore.EXTRA_START_POSITION_MS)) {
+            long pos = intent.getLongExtra(WatchProgressStore.EXTRA_START_POSITION_MS, 0L);
+            if (pos > 0L) {
+                mPendingStartPositionMs = pos;
+            }
+        }
         // REORDER_TO_FRONT reuses this instance after mini mode. The pending card snapshot means
         // this is a new feed selection, not a plain mini-card expansion.
         if (PlayerTransitionBridge.hasPending()) {
@@ -2534,6 +2554,7 @@ public class MobilePlaybackActivity extends MobileActivity
 
     @Override
     protected void onPause() {
+        saveCurrentWatchPosition(getVideo());
         if (mVideoArea != null) {
             mVideoArea.removeCallbacks(mShortsSingleTap); // GUTUBE(issue #172): no tap after leaving.
         }
@@ -2552,6 +2573,7 @@ public class MobilePlaybackActivity extends MobileActivity
 
     @Override
     protected void onStop() {
+        saveCurrentWatchPosition(getVideo());
         super.onStop();
 
         mIsStopped = true;
@@ -5619,7 +5641,7 @@ public class MobilePlaybackActivity extends MobileActivity
         boolean ambient = AmbientGlow.isOn(this);
         if (ambient && mAmbient == null && mVideoTexture != null && mWatchContent != null) {
             mAmbient = new AmbientGlow(mWatchContent, mVideoTexture,
-                    androidx.core.content.ContextCompat.getColor(this, R.color.mobile_color_background));
+                    androidx.core.content.ContextCompat.getColor(this, R.color.mobile_color_background), this::isPlaying);
             mAmbient.setBar(findViewById(android.R.id.content)); // the status bar glows too
         } else if (!ambient && mAmbient != null) {
             mAmbient.stop();
@@ -5630,6 +5652,7 @@ public class MobilePlaybackActivity extends MobileActivity
         }
         if (mAmbient != null) {
             mAmbient.start();
+            mAmbient.setPlaying(isPlaying());
             mAmbient.setFill(isTallMode() || isLandscape() ? mVideoArea : null);
         }
     }
@@ -6349,7 +6372,20 @@ public class MobilePlaybackActivity extends MobileActivity
         }
 
         @Override
+        public void onIsPlayingChanged(boolean isPlaying) {
+            if (mAmbient != null) {
+                mAmbient.setPlaying(isPlaying);
+            }
+        }
+
+        @Override
         public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
+            if (!playWhenReady) {
+                saveCurrentWatchPosition(getVideo());
+            }
+            if (mAmbient != null) {
+                mAmbient.setPlaying(playWhenReady && !mIsEnded);
+            }
             // The old 2-arg onPlayerStateChanged callback split in two in media3; both re-enter
             // the same state handler so the icon/PiP/screen-on logic sees every combination.
             if (mPlayer != null) {
@@ -6377,7 +6413,10 @@ public class MobilePlaybackActivity extends MobileActivity
             // A seek (a double tap's jump) shows on the bar now, not at the loop's next tick, which
             // is up to a second away (more while the seek buffers).
             if (reason == Player.DISCONTINUITY_REASON_SEEK) {
+                mPendingStartPositionMs = 0L;
+                mPendingStartVideoId = null;
                 startProgressUpdates();
+                saveCurrentWatchPosition(getVideo());
             }
         }
 
@@ -6389,6 +6428,20 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_READY:
                     showProgressBar(false);
                     mIsEnded = false;
+                    if (mAmbient != null) {
+                        mAmbient.setPlaying(playWhenReady);
+                    }
+                    if (mPendingStartPositionMs > 0L && mPlayer != null) {
+                        Video current = getVideo();
+                        if (current != null && (mPendingStartVideoId == null || Helpers.equals(current.videoId, mPendingStartVideoId))) {
+                            long targetMs = mPendingStartPositionMs;
+                            mPendingStartPositionMs = 0L;
+                            mPendingStartVideoId = null;
+                            if (Math.abs(mPlayer.getCurrentPosition() - targetMs) > 500L) {
+                                mPlayer.seekTo(targetMs);
+                            }
+                        }
+                    }
                     // CASTING: the TV owns playback while a session is active - the local engine
                     // may load/buffer (so disconnect can resume instantly) but must never audibly
                     // play. Re-pause the moment any (re)load reaches READY.
@@ -6424,6 +6477,12 @@ public class MobilePlaybackActivity extends MobileActivity
                 case Player.STATE_ENDED:
                     showProgressBar(false);
                     mIsEnded = true;
+                    if (mAmbient != null) {
+                        mAmbient.setPlaying(false);
+                    }
+                    if (getVideo() != null && getVideo().videoId != null) {
+                        WatchProgressStore.removePosition(MobilePlaybackActivity.this, getVideo().videoId);
+                    }
                     // Surface the replay affordance - but NOT while in PiP: full-size controls would
                     // appear inside the tiny PiP window and onAutoHideTick would keep re-arming them
                     // (mIsEnded stays true), so they'd never hide. In PiP the RemoteAction handles it.
@@ -6443,6 +6502,9 @@ public class MobilePlaybackActivity extends MobileActivity
             // replaces the TV ScreensaverManager dim, which is disabled on mobile.
             applyKeepScreenOn(playWhenReady
                     && (playbackState == Player.STATE_READY || playbackState == Player.STATE_BUFFERING));
+            if (mShorts != null && isShortsMode()) {
+                mShorts.setPlaying(playWhenReady && playbackState != Player.STATE_ENDED);
+            }
         }
 
         @Override
@@ -7326,7 +7388,9 @@ public class MobilePlaybackActivity extends MobileActivity
     private final Runnable mShortsSingleTap = () -> {
         togglePlayPause();
         if (mShorts != null && mPlayer != null) {
-            mShorts.flashPlayState(mPlayer.getPlayWhenReady());
+            boolean playing = mPlayer.getPlayWhenReady();
+            mShorts.flashPlayState(playing);
+            mShorts.setPlaying(playing);
         }
     };
 
@@ -7793,6 +7857,7 @@ public class MobilePlaybackActivity extends MobileActivity
     public void onSwipeMove(int swipe, float dx, float dy) {
         switch (swipe) {
             case SWIPE_SHORTS:
+                mShorts.cancelHeart();
                 mShorts.drag(dy);
                 break;
             case SWIPE_MORE_VIDEOS:
@@ -11734,7 +11799,8 @@ public class MobilePlaybackActivity extends MobileActivity
         boolean pill = mActionsRow != null && mActionsRow.isShown();
         View likeIcon = mShorts != null && mShorts.isActive() ? mShorts.likeIcon() : pill ? mPlayerLike : mWatchLikeIcon;
         if (!like) {
-            Motion.pop(pill ? mPlayerDislike : mWatchDislikeIcon);
+            View dislikeTarget = mShorts != null && mShorts.isActive() ? mShorts.dislikeIcon() : pill ? mPlayerDislike : mWatchDislikeIcon;
+            Motion.pop(dislikeTarget);
         }
         WatchActionFeedback.confirmRating(this, like, stateAfter == BUTTON_ON,
                 undoRating(ratingBefore, ratingAfter));
@@ -11851,6 +11917,9 @@ public class MobilePlaybackActivity extends MobileActivity
             }
             if (mWatchDislike != null) {
                 mWatchDislike.setSelected(on);
+                if (mShorts != null) {
+                    mShorts.setDisliked(on);
+                }
             }
         } else if (buttonId == R.id.lb_control_closed_captioning && mSubtitlesButton != null) {
             // YouTube-style: filled CC glyph while captions are on, outlined while off.
@@ -12955,6 +13024,25 @@ public class MobilePlaybackActivity extends MobileActivity
         // TODO Wave N: forced video-frame gravity (rare edge case, HQDialog sheet).
     }
 
+    private void saveCurrentWatchPosition(@Nullable Video video) {
+        if (video == null || video.videoId == null) {
+            return;
+        }
+        if (video.isLive || video.belongsToShorts() || isShortsMode()) {
+            return;
+        }
+        if (mPlayer == null) {
+            return;
+        }
+        long posMs = mPlayer.getCurrentPosition();
+        long durMs = mPlayer.getDuration();
+        if (durMs > 0L && posMs >= (long) (0.95f * durMs)) {
+            WatchProgressStore.removePosition(this, video.videoId);
+        } else if (posMs > 3000L) {
+            WatchProgressStore.savePosition(this, video.videoId, posMs);
+        }
+    }
+
     // ---------------------------------------------------------------------------------
     // PlayerManager
     // ---------------------------------------------------------------------------------
@@ -12991,13 +13079,54 @@ public class MobilePlaybackActivity extends MobileActivity
                 MiniPlayerBridge.cancelClosing();
             }
         }
-        if (mExoPlayerController != null) {
-            mExoPlayerController.setVideo(item);
-        }
 
         // Same keep-last-known-good rule as bindWatchVideo: a same-video rebind with an empty
         // title (bare error-reload Video) must not blank the controls title.
         boolean sameVideo = item != null && Helpers.equals(item.videoId, mWatchVideoId);
+        if (!sameVideo) {
+            Video previous = getVideo();
+            if (previous != null && previous != item) {
+                saveCurrentWatchPosition(previous);
+            }
+
+            mPendingStartPositionMs = 0L;
+            mPendingStartVideoId = null;
+
+            if (item != null && item.videoId != null) {
+                // Priority 1: Inline-preview handoff
+                long previewHandoffMs = 0L;
+                Intent currentIntent = getIntent();
+                if (currentIntent != null && currentIntent.hasExtra(WatchProgressStore.EXTRA_START_POSITION_MS)) {
+                    previewHandoffMs = currentIntent.getLongExtra(WatchProgressStore.EXTRA_START_POSITION_MS, 0L);
+                    currentIntent.removeExtra(WatchProgressStore.EXTRA_START_POSITION_MS);
+                }
+                if (previewHandoffMs <= 0L) {
+                    previewHandoffMs = WatchProgressStore.consumePendingPreviewPosition(item.videoId);
+                }
+                if (previewHandoffMs <= 0L && item.pendingPosMs > 0L) {
+                    previewHandoffMs = item.pendingPosMs;
+                }
+
+                if (previewHandoffMs > 0L) {
+                    mPendingStartPositionMs = previewHandoffMs;
+                    mPendingStartVideoId = item.videoId;
+                    item.pendingPosMs = previewHandoffMs;
+                } else if (!item.isLive && !item.belongsToShorts() && !isShortsMode()) {
+                    // Priority 2: Lightweight local watch-position resume (regular videos only)
+                    long savedPos = WatchProgressStore.getPosition(this, item.videoId);
+                    if (savedPos > 3000L) {
+                        mPendingStartPositionMs = savedPos;
+                        mPendingStartVideoId = item.videoId;
+                        item.pendingPosMs = savedPos;
+                    }
+                }
+            }
+        }
+
+        if (mExoPlayerController != null) {
+            mExoPlayerController.setVideo(item);
+        }
+
         if (!sameVideo) {
             mVideoShapePending = true; // NEWTUBE(issue #69): known again at its first frame
             showPlaybackNotice(null);

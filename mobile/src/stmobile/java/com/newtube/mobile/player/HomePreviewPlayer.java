@@ -164,6 +164,15 @@ public final class HomePreviewPlayer {
                 ? -1 : Math.max(0, mPlayer.getDuration() - mPlayer.getCurrentPosition());
     }
 
+    /** Current playback position in milliseconds. */
+    public long getCurrentPosition() {
+        return mPlayer != null ? mPlayer.getCurrentPosition() : 0L;
+    }
+
+    public boolean isPlaying() {
+        return mPlayer != null && mPlayer.isPlaying();
+    }
+
     /** 0..1 of the video played so far. */
     public float progress() {
         if (mPlayer == null || mPlayer.getDuration() <= 0) {

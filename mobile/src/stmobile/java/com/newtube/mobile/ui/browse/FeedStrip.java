@@ -74,6 +74,7 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
     @Nullable private final GlassSource mGlass;
     private final ItemAdapter mItems = new ItemAdapter();
     @Nullable private com.newtube.mobile.ui.common.GlassChipTrack mTrack;
+    @Nullable private CategoryPillNavView mPillNav;
     private int mMode = MODE_NONE;
     private long mSelected;
     /** GUTUBE(all subscriptions): long-press on the avatars' "All". */
@@ -117,8 +118,26 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
             notifyItemInserted(0);
         }
         syncTrack();
+        syncPillNav();
         if (mMode == MODE_CHIPS && mItems.mRecyclerView != null) {
             mItems.mRecyclerView.post(() -> mItems.applyJelly(mItems.getSelectedIndex(), true));
+        }
+    }
+
+    /** The native PillNav view for the top category bar with elastic gliding pill physics. */
+    void setPillNav(@Nullable CategoryPillNavView pillNav) {
+        mPillNav = pillNav;
+        syncPillNav();
+    }
+
+    private void syncPillNav() {
+        if (mPillNav == null) {
+            return;
+        }
+        if (mMode == MODE_CHIPS) {
+            mPillNav.setItems(mItems.mList, mSelected);
+        } else {
+            mPillNav.setItems(null, -1);
         }
     }
 
@@ -171,6 +190,9 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
             mItems.notifyDataSetChanged();
         }
         syncTrack();
+        if (mPillNav != null && mMode == MODE_CHIPS) {
+            mPillNav.setSelectedId(selected);
+        }
     }
 
     long selected() {

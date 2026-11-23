@@ -21,6 +21,7 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -34,6 +35,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -383,28 +387,15 @@ public final class GitHubAppUpdater {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
-        // Ensure bottom sheet container is transparent so rounded glass card displays cleanly
-        dialog.setOnShowListener(d -> {
-            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            if (bottomSheet != null) {
-                bottomSheet.setBackgroundResource(android.R.color.transparent);
-            }
-        });
-
-        // Android 12+ (API 31+) native window backdrop blur
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setDimAmount(0.40f);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
-                window.getAttributes().setBlurBehindRadius((int) (14 * activity.getResources().getDisplayMetrics().density));
-            }
-        }
-
+        // Find views
+        View dragHandle = view.findViewById(R.id.github_update_drag_handle);
+        View iconContainer = view.findViewById(R.id.github_update_icon_container);
         ImageView iconView = view.findViewById(R.id.github_update_icon);
+        View iconTarget = iconContainer != null ? iconContainer : iconView;
         TextView titleView = view.findViewById(R.id.github_update_title);
         TextView versionView = view.findViewById(R.id.github_update_version);
+        TextView whatsNewHeader = view.findViewById(R.id.github_update_whats_new_header);
+        View subheading = view.findViewById(R.id.github_update_subheading);
         View progressContainer = view.findViewById(R.id.github_update_progress_container);
         LinearProgressIndicator progressBar = view.findViewById(R.id.github_update_progress_bar);
         TextView progressText = view.findViewById(R.id.github_update_progress_text);
@@ -412,8 +403,10 @@ public final class GitHubAppUpdater {
         LinearLayout notesList = view.findViewById(R.id.github_update_notes_list);
         MaterialButton btnCancel = view.findViewById(R.id.github_update_btn_cancel);
         MaterialButton btnAction = view.findViewById(R.id.github_update_btn_action);
-
         com.newtube.mobile.ui.update.MaxHeightScrollView scroll = view.findViewById(R.id.github_update_scroll);
+
+        float density = activity.getResources().getDisplayMetrics().density;
+
         if (scroll != null) {
             scroll.setMaxHeight((int) (activity.getResources().getDisplayMetrics().heightPixels * 0.35f));
         }
@@ -423,7 +416,6 @@ public final class GitHubAppUpdater {
         titleView.setText("Update Available");
         String sizeStr = release.apkSize > 0 ? Formatter.formatFileSize(activity, release.apkSize) : "";
         versionView.setText("GuTube " + release.cleanVersion + (sizeStr.isEmpty() ? "" : " · " + sizeStr));
-        TextView whatsNewHeader = view.findViewById(R.id.github_update_whats_new_header);
         if (whatsNewHeader != null) {
             whatsNewHeader.setText("What's new in " + release.cleanVersion);
         }
@@ -432,8 +424,112 @@ public final class GitHubAppUpdater {
         btnAction.setText("Update now");
         btnCancel.setText("Not now");
 
+        // Attach tactile feedback micro-interactions
+        attachTactileFeedback(btnAction);
+        attachTactileFeedback(btnCancel);
+
         // Populate changelog bullet points with clean Markdown-to-Spannable parser
         renderMarkdownNotes(activity, notesList, release.rawBody, release.changelog);
+
+        dialog.setOnShowListener(d -> {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundResource(android.R.color.transparent);
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setHideable(true);
+                behavior.setSkipCollapsed(true);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View sheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dialog.cancel();
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View sheet, float slideOffset) {
+                        if (dragHandle != null) {
+                            float scale = 1.0f + Math.max(0f, -slideOffset) * 0.25f;
+                            dragHandle.setScaleX(Math.min(1.25f, scale));
+                        }
+                    }
+                });
+            }
+
+            // Google Stitch entrance animations & micro-interactions
+            view.setTranslationY(activity.getResources().getDisplayMetrics().heightPixels * 0.35f);
+            view.setAlpha(0f);
+            view.animate()
+                    .translationY(0f)
+                    .alpha(1f)
+                    .setDuration(360)
+                    .setInterpolator(new DecelerateInterpolator(1.8f))
+                    .start();
+
+            if (iconTarget != null) {
+                iconTarget.setScaleX(0.65f);
+                iconTarget.setScaleY(0.65f);
+                iconTarget.setRotation(-6f);
+                iconTarget.setAlpha(0f);
+                iconTarget.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .rotation(0f)
+                        .alpha(1f)
+                        .setStartDelay(100)
+                        .setDuration(420)
+                        .setInterpolator(new OvershootInterpolator(2.0f))
+                        .start();
+            }
+
+            titleView.setAlpha(0f);
+            titleView.setTranslationY(14 * density);
+            titleView.animate().alpha(1f).translationY(0f).setStartDelay(120).setDuration(340).setInterpolator(new DecelerateInterpolator(1.5f)).start();
+
+            versionView.setAlpha(0f);
+            versionView.setTranslationY(14 * density);
+            versionView.animate().alpha(1f).translationY(0f).setStartDelay(140).setDuration(340).setInterpolator(new DecelerateInterpolator(1.5f)).start();
+
+            if (whatsNewHeader != null) {
+                whatsNewHeader.setAlpha(0f);
+                whatsNewHeader.setTranslationY(14 * density);
+                whatsNewHeader.animate().alpha(1f).translationY(0f).setStartDelay(160).setDuration(340).setInterpolator(new DecelerateInterpolator(1.5f)).start();
+            }
+
+            if (subheading != null) {
+                subheading.setAlpha(0f);
+                subheading.setTranslationY(14 * density);
+                subheading.animate().alpha(1f).translationY(0f).setStartDelay(180).setDuration(340).setInterpolator(new DecelerateInterpolator(1.5f)).start();
+            }
+
+            int count = notesList.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = notesList.getChildAt(i);
+                if (child != null) {
+                    child.setAlpha(0f);
+                    child.setTranslationY(12 * density);
+                    child.animate()
+                            .alpha(1f)
+                            .translationY(0f)
+                            .setStartDelay(200 + i * 40)
+                            .setDuration(340)
+                            .setInterpolator(new DecelerateInterpolator(1.5f))
+                            .start();
+                }
+            }
+        });
+
+        // Android 12+ (API 31+) native window backdrop blur & 65% contrast scrim
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+            window.setDimAmount(0.65f);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+                window.getAttributes().setBlurBehindRadius((int) (14 * activity.getResources().getDisplayMetrics().density));
+            }
+        }
 
         final Call[] activeCall = new Call[1];
         final boolean[] isDownloading = new boolean[]{false};
@@ -448,7 +544,14 @@ public final class GitHubAppUpdater {
                 }
                 EXECUTOR.execute(() -> deleteTempUpdateFile(activity));
             }
-            dialog.dismiss();
+            float slideDistance = view.getHeight() > 0 ? view.getHeight() : 350 * density;
+            view.animate()
+                    .translationY(slideDistance)
+                    .alpha(0f)
+                    .setDuration(220)
+                    .setInterpolator(new DecelerateInterpolator(1.5f))
+                    .withEndAction(dialog::dismiss)
+                    .start();
         });
 
         dialog.setOnCancelListener(dialogInterface -> {
@@ -466,12 +569,36 @@ public final class GitHubAppUpdater {
             if (isDownloading[0]) return;
             isDownloading[0] = true;
 
-            // Switch to downloading state
-            titleView.setText("Downloading update");
+            // Switch to downloading state with smooth animations
+            btnAction.animate()
+                    .scaleX(0.85f)
+                    .scaleY(0.85f)
+                    .alpha(0f)
+                    .setDuration(180)
+                    .withEndAction(() -> btnAction.setVisibility(View.GONE))
+                    .start();
+
+            titleView.animate()
+                    .alpha(0f)
+                    .setDuration(120)
+                    .withEndAction(() -> {
+                        titleView.setText("Downloading update");
+                        titleView.animate().alpha(1f).setDuration(160).start();
+                    })
+                    .start();
+
             progressContainer.setVisibility(View.VISIBLE);
+            progressContainer.setAlpha(0f);
+            progressContainer.setTranslationY(-8 * density);
+            progressContainer.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(240)
+                    .setInterpolator(new DecelerateInterpolator(1.5f))
+                    .start();
+
             progressBar.setIndeterminate(true);
             progressText.setText("Connecting...");
-            btnAction.setVisibility(View.GONE);
             btnCancel.setText("Cancel");
 
             EXECUTOR.execute(() -> {
@@ -575,11 +702,35 @@ public final class GitHubAppUpdater {
                         tempFile.delete();
                         MAIN_HANDLER.post(() -> {
                             if (dialog.isShowing()) {
-                                titleView.setText("Update Available");
-                                progressContainer.setVisibility(View.GONE);
+                                titleView.animate()
+                                        .alpha(0f)
+                                        .setDuration(120)
+                                        .withEndAction(() -> {
+                                            titleView.setText("Update Available");
+                                            titleView.animate().alpha(1f).setDuration(160).start();
+                                        })
+                                        .start();
+
+                                progressContainer.animate()
+                                        .alpha(0f)
+                                        .setDuration(180)
+                                        .withEndAction(() -> progressContainer.setVisibility(View.GONE))
+                                        .start();
+
+                                btnAction.setText("Retry");
                                 btnAction.setVisibility(View.VISIBLE);
                                 btnAction.setEnabled(true);
-                                btnAction.setText("Retry");
+                                btnAction.setScaleX(0.85f);
+                                btnAction.setScaleY(0.85f);
+                                btnAction.setAlpha(0f);
+                                btnAction.animate()
+                                        .scaleX(1f)
+                                        .scaleY(1f)
+                                        .alpha(1f)
+                                        .setDuration(200)
+                                        .setInterpolator(new OvershootInterpolator(1.5f))
+                                        .start();
+
                                 btnCancel.setText("Not now");
                                 isDownloading[0] = false;
                                 showToast(activity, "Download failed. Please try again.");
@@ -590,7 +741,41 @@ public final class GitHubAppUpdater {
             });
         });
 
+        dialog.setOnDismissListener(dialogInterface -> {
+            view.animate().cancel();
+            if (iconTarget != null) iconTarget.animate().cancel();
+            titleView.animate().cancel();
+            versionView.animate().cancel();
+            if (whatsNewHeader != null) whatsNewHeader.animate().cancel();
+            if (subheading != null) subheading.animate().cancel();
+            int c = notesList.getChildCount();
+            for (int i = 0; i < c; i++) {
+                View child = notesList.getChildAt(i);
+                if (child != null) child.animate().cancel();
+            }
+            btnAction.animate().cancel();
+            btnCancel.animate().cancel();
+            progressContainer.animate().cancel();
+        });
+
         dialog.show();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private static void attachTactileFeedback(View button) {
+        if (button == null) return;
+        button.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().scaleX(0.96f).scaleY(0.96f).setDuration(100).start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).setInterpolator(new OvershootInterpolator(1.5f)).start();
+                    break;
+            }
+            return false;
+        });
     }
 
     /**

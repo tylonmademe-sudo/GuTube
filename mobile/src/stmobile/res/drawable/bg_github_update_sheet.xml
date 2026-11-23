@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Glassmorphism Card Sheet:
-  - 48dp top corner radius (border-radius: 50px)
+  Google Stitch Glassmorphism Card Sheet:
+  - 34dp top corner radius (rounded-t-[34px])
   - Bottom edge is completely seamless with ZERO stroke line (android:bottom="-4dp")
-  - Translucent glass surface: background: rgba(23, 23, 23, 0.12) to rgba(15, 15, 15, 0.88)
-  - 1px border: border: 1px solid rgba(82, 82, 82, 0.25) -> #40525252
-  - Inset specular rim highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -> #26FFFFFF
+  - Translucent obsidian glass surface (#F2212226 to #FC17181C)
+  - 1px border stroke: 1px solid rgba(255, 255, 255, 0.20)
+  - Inset specular rim highlight: rgba(255, 255, 255, 0.15) fading out
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base glass surface: bottom="-4dp" clips out bottom border stroke completely -->
     <item android:bottom="-4dp">
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="48dp"
-                android:topRightRadius="48dp"
+                android:topLeftRadius="34dp"
+                android:topRightRadius="34dp"
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#CC171717"
-                android:centerColor="#D9131313"
-                android:endColor="#E60D0D0D"
+                android:startColor="#F2212226"
+                android:centerColor="#F71C1D21"
+                android:endColor="#FC17181C"
                 android:type="linear" />
             <stroke
                 android:width="1dp"
-                android:color="#40525252" />
+                android:color="#33FFFFFF" />
         </shape>
     </item>
 
-    <!-- Inset Specular Rim Highlight: inset 0px 0px 4px 2px rgba(255, 255, 255, 0.1) -->
+    <!-- Inset Specular Rim Highlight -->
     <item
         android:top="1dp"
         android:left="1dp"
@@ -36,8 +36,8 @@
         android:bottom="80dp">
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="47dp"
-                android:topRightRadius="47dp"
+                android:topLeftRadius="33dp"
+                android:topRightRadius="33dp"
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp" />
             <gradient

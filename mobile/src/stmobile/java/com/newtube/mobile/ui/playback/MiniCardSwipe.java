@@ -491,7 +491,7 @@ public final class MiniCardSwipe implements View.OnTouchListener {
      */
     private float topClearance(View parent) {
         float fallback = TOP_CLEARANCE_DP * mDensity;
-        View chips = parent.getRootView().findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.mobile_chip_track);
+        View chips = parent.getRootView().findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.mobile_category_bar_strip);
         if (chips == null) {
             return fallback; // not Home: under the screen's own top bar
         }

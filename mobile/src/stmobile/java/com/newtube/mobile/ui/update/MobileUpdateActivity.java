@@ -217,7 +217,7 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         Window window = mSheet.getWindow();
         if (window != null) {
             window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setDimAmount(0.40f);
+            window.setDimAmount(0.65f);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
                 window.getAttributes().setBlurBehindRadius((int) (14 * getResources().getDisplayMetrics().density));

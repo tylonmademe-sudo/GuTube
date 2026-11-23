@@ -225,7 +225,23 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
         schedule();
     }
 
-    void stop() {
+    @Nullable
+    public String activeVideoId() {
+        if (mHolder != null && mHolder.video() != null) {
+            return mHolder.video().videoId;
+        }
+        return mPlayer != null ? mPlayer.videoId() : null;
+    }
+
+    public long getCurrentPosition() {
+        return mPlayer != null ? mPlayer.getCurrentPosition() : 0L;
+    }
+
+    public boolean isPlaying() {
+        return mPlayer != null && mPlayer.isPlaying();
+    }
+
+    public void stop() {
         mMain.removeCallbacks(mPick);
         mMain.removeCallbacks(mTick);
         mPlayer.stop();

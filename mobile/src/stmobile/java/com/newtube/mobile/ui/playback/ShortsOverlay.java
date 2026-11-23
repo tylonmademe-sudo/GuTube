@@ -125,6 +125,7 @@ final class ShortsOverlay {
     private final TextView mSubscribe;
     private final TextView mSeekTime;
     private final ImageView mLikeIcon;
+    private final ImageView mDislikeIcon;
     private final ImageView mAvatar;
     private final ImageView mFlash;
     private final LottieAnimationView mHeart;
@@ -141,6 +142,13 @@ final class ShortsOverlay {
     private final SeekBar mProgress;
     private final Watch mWatch;
     private final Host mHost;
+    private final TextView mHeader;
+    private final View mDownload;
+    private final View mMute;
+    private final View mSearch;
+    private final View mTopMore;
+    private final View mBack;
+    private boolean mIsPlaying = true;
     private boolean mAvatarKnown;
     private Drawable mAvatarOrb;
     private boolean mInPip;
@@ -184,6 +192,7 @@ final class ShortsOverlay {
         mSubscribe = root.findViewById(R.id.mobile_shorts_subscribe);
         mSeekTime = root.findViewById(R.id.mobile_shorts_seek_time);
         mLikeIcon = root.findViewById(R.id.mobile_shorts_like);
+        mDislikeIcon = root.findViewById(R.id.mobile_shorts_dislike);
         mAvatar = root.findViewById(R.id.mobile_shorts_avatar);
         mFlash = root.findViewById(R.id.mobile_shorts_flash);
         mHeart = root.findViewById(R.id.mobile_shorts_heart);
@@ -207,41 +216,31 @@ final class ShortsOverlay {
         // through to the video, where a double tap likes).
         forward(R.id.mobile_shorts_avatar, watch.channel);
         forward(R.id.mobile_shorts_channel, watch.channel);
+        mHeader = mOverlay.findViewById(R.id.mobile_shorts_header);
+        mDownload = mOverlay.findViewById(R.id.mobile_shorts_download);
+        mMute = mOverlay.findViewById(R.id.mobile_shorts_mute);
+        mSearch = mOverlay.findViewById(R.id.mobile_shorts_search);
+        mTopMore = mOverlay.findViewById(R.id.mobile_shorts_top_more);
+        mBack = mOverlay.findViewById(R.id.mobile_shorts_back);
+
         mOverlay.findViewById(R.id.mobile_shorts_comments).setOnClickListener(v -> mHost.openShortsComments());
         mOverlay.findViewById(R.id.mobile_shorts_more).setOnClickListener(v -> mHost.openShortsMore());
+        if (mTopMore != null) {
+            mTopMore.setOnClickListener(v -> mHost.openShortsMore());
+        }
         mOverlay.findViewById(R.id.mobile_shorts_back).setOnClickListener(v -> mHost.exitShorts());
         mOverlay.findViewById(R.id.mobile_shorts_search).setOnClickListener(v -> mHost.openShortsSearch());
         mOverlay.findViewById(R.id.mobile_shorts_mute).setOnClickListener(v -> showMuted(mHost.toggleShortsMute()));
-        // GUTUBE(glass): as on the player, the buttons over the short (and the play / pause flash)
-        // sit on see-through tinted discs (frosted ones of the short with Frosted player buttons on);
-        // the actions keep their 48dp discs, the labels their shadows.
-        com.newtube.mobile.ui.common.GlassSource glass = com.newtube.mobile.ui.common.Glass.isPlayerFrost(
-                root.getContext()) ? root.findViewById(R.id.mobile_player_glass) : null;
-        for (int id : new int[] {R.id.mobile_shorts_like, R.id.mobile_shorts_dislike, R.id.mobile_shorts_comments,
-                R.id.mobile_shorts_share, R.id.mobile_shorts_more, R.id.mobile_shorts_flash}) {
-            View v = mOverlay.findViewById(id);
-            if (v != null) {
-                GlassDrawable.applyButton(v, glass, 0, true);
-                com.newtube.mobile.ui.common.SpotlightHelper.attach(v);
-            }
-        }
-        for (int id : new int[] {R.id.mobile_shorts_back, R.id.mobile_shorts_download, R.id.mobile_shorts_mute,
-                R.id.mobile_shorts_search, R.id.mobile_shorts_subscribe}) {
-            View v = mOverlay.findViewById(id);
-            if (v != null) {
-                GlassDrawable.applyButton(v, glass,
-                        Math.round(4 * root.getResources().getDisplayMetrics().density), true); // the player's minimize disc
-                com.newtube.mobile.ui.common.SpotlightHelper.attach(v);
-            }
-        }
+
         // GUTUBE(shorts header): no pill; the word itself is glass, frosted white that thins toward
         // its foot (a vertical gradient over one line), with a soft shadow to read over any short.
-        android.widget.TextView header = mOverlay.findViewById(R.id.mobile_shorts_header);
-        float line = header.getLineHeight();
-        header.getPaint().setShader(new android.graphics.LinearGradient(0, 0, 0, line,
-                new int[] {0xFFFFFFFF, 0xE6FFFFFF, 0x80FFFFFF}, new float[] {0f, 0.45f, 1f},
-                android.graphics.Shader.TileMode.CLAMP));
-        header.setShadowLayer(6 * root.getResources().getDisplayMetrics().density, 0, 1, 0x66000000);
+        if (mHeader != null) {
+            float line = mHeader.getLineHeight();
+            mHeader.getPaint().setShader(new android.graphics.LinearGradient(0, 0, 0, line,
+                    new int[] {0xFFFFFFFF, 0xE6FFFFFF, 0x80FFFFFF}, new float[] {0f, 0.45f, 1f},
+                    android.graphics.Shader.TileMode.CLAMP));
+            mHeader.setShadowLayer(6 * root.getResources().getDisplayMetrics().density, 0, 1, 0x66000000);
+        }
         // GUTUBE(shorts description, issue #33): the title opens the Description panel, as YouTube's.
         mTitle.setOnClickListener(v -> mHost.openShortsDescription());
 
@@ -342,6 +341,7 @@ final class ShortsOverlay {
      * True when it stood in (the caller drops its thumbnail at once, not in a fade over the video).
      */
     boolean onPictureVisible(@Nullable String videoId) {
+        cancelHeart();
         if (mPeekCoverId != null && mPeekCoverId.equals(videoId)) {
             uncover();
             return true;
@@ -376,12 +376,14 @@ final class ShortsOverlay {
 
     /** The comments sheet takes the lower part of the screen; the short shrinks above it. */
     void setCommentsOpen(boolean open) {
+        cancelHeart();
         mCommentsOpen = open;
         mOverlay.setVisibility(mActive && !open && !mInPip ? View.VISIBLE : View.GONE);
     }
 
     /** GUTUBE(shorts-pip): the PiP window shows only the short; the buttons come back on expand. */
     void setInPip(boolean pip) {
+        cancelHeart();
         mInPip = pip;
         uncover();
         hidePeek();
@@ -390,6 +392,7 @@ final class ShortsOverlay {
 
     /** Every setVideo: shorts mode follows the video that is playing now. */
     void bind(@Nullable Video item) {
+        cancelHeart();
         boolean on = item != null && item.belongsToShorts();
         if (on && mPaging && !item.equals(mCurrent)) {
             mPendingBind = item;
@@ -408,6 +411,8 @@ final class ShortsOverlay {
             mChannel.setText(item.getAuthor());
             mTitle.setText(item.getTitle());
             if (fresh) {
+                setLiked(false);
+                setDisliked(false);
                 com.newtube.mobile.ui.common.UsageStats.videoOpened();
                 mTitle.setMaxLines(2);
                 com.bumptech.glide.Glide.with(mAvatar).clear(mAvatar);
@@ -447,6 +452,9 @@ final class ShortsOverlay {
             }
             mHost.onShortsModeChanged(on);
         }
+        if (on) {
+            applyPlayingState(mIsPlaying, false);
+        }
     }
 
     // ponytail: counts from entering Shorts, app in the background included; track resumed time if that nags.
@@ -465,16 +473,107 @@ final class ShortsOverlay {
     }
 
     void setLiked(boolean liked) {
-        mLikeIcon.setImageResource(liked ? R.drawable.ic_watch_thumb_up : R.drawable.ic_watch_thumb_up_outline);
+        if (mLikeIcon != null) {
+            mLikeIcon.setSelected(liked);
+            mLikeIcon.setImageResource(liked ? R.drawable.ic_watch_thumb_up : R.drawable.ic_watch_thumb_up_outline);
+        }
+        if (liked && mDislikeIcon != null) {
+            mDislikeIcon.setSelected(false);
+            mDislikeIcon.setImageResource(R.drawable.ic_watch_thumb_down_outline);
+        }
+    }
+
+    void setDisliked(boolean disliked) {
+        if (mDislikeIcon != null) {
+            mDislikeIcon.setSelected(disliked);
+            mDislikeIcon.setImageResource(disliked ? R.drawable.ic_watch_thumb_down : R.drawable.ic_watch_thumb_down_outline);
+        }
+        if (disliked && mLikeIcon != null) {
+            mLikeIcon.setSelected(false);
+            mLikeIcon.setImageResource(R.drawable.ic_watch_thumb_up_outline);
+        }
     }
 
     void setSubscribed(boolean subscribed) {
         mSubscribe.setSelected(subscribed);
+        mSubscribe.setText(subscribed ? R.string.mobile_watch_subscribed : R.string.mobile_watch_subscribe);
+    }
+
+    void cancelHeart() {
+        if (mHeart != null) {
+            mHeart.animate().cancel();
+            mHeart.removeAllAnimatorListeners();
+            mHeart.cancelAnimation();
+            mHeart.setProgress(0f);
+            mHeart.setAlpha(0f);
+            mHeart.setVisibility(View.GONE);
+        }
+    }
+
+    void setPlaying(boolean playing) {
+        if (mIsPlaying == playing) {
+            return;
+        }
+        mIsPlaying = playing;
+        applyPlayingState(playing, true);
+    }
+
+    private void applyPlayingState(boolean playing, boolean animate) {
+        if (!mActive) {
+            return;
+        }
+        View[] dynamicViews = new View[] {mHeader, mDownload, mMute};
+        if (playing) {
+            // While Playing (Clean Immersive Mode):
+            // Smoothly fade out (200ms) Shorts title, Mute button, and Download button
+            for (View v : dynamicViews) {
+                if (v == null) continue;
+                v.animate().cancel();
+                if (animate && v.getVisibility() == View.VISIBLE) {
+                    v.animate().alpha(0f).setDuration(200).withEndAction(() -> {
+                        v.setVisibility(View.GONE);
+                    }).start();
+                } else {
+                    v.setAlpha(0f);
+                    v.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            // When Paused (Full Controls Mode):
+            // Smoothly fade in (220ms) full top bar
+            for (View v : dynamicViews) {
+                if (v == null) continue;
+                v.animate().cancel();
+                v.setVisibility(View.VISIBLE);
+                if (animate) {
+                    v.animate().alpha(1f).setDuration(220).start();
+                } else {
+                    v.setAlpha(1f);
+                }
+            }
+        }
+        // Minimal borderless top icons visible: Back on top-left, Search + More on top-right
+        if (mBack != null) {
+            mBack.setVisibility(View.VISIBLE);
+            mBack.setAlpha(1f);
+        }
+        if (mSearch != null) {
+            mSearch.setVisibility(View.VISIBLE);
+            mSearch.setAlpha(1f);
+        }
+        if (mTopMore != null) {
+            mTopMore.setVisibility(View.VISIBLE);
+            mTopMore.setAlpha(1f);
+        }
     }
 
     /** GUTUBE(burst): where a like or a subscribe made in Shorts splashes. */
     View likeIcon() {
         return mLikeIcon;
+    }
+
+    View dislikeIcon() {
+        return mDislikeIcon;
     }
 
     View subscribeButton() {
@@ -488,16 +587,18 @@ final class ShortsOverlay {
         }
     }
 
-    /** The tap's answer: a play or pause glyph that pops up in the middle and fades. */
+    /** The tap's answer: a circular play or pause glyph that pops up in the middle and fades. */
     void flashPlayState(boolean playing) {
-        mFlash.setImageResource(playing ? R.drawable.ic_player_pause : R.drawable.ic_player_play); // paused shows play
+        mFlash.setImageResource(playing ? R.drawable.ic_player_play : R.drawable.ic_player_pause);
         mFlash.animate().cancel();
+        mFlash.setVisibility(View.VISIBLE);
         mFlash.setAlpha(1f);
-        // GUTUBE(issue #216): a quick pop that keeps up with the finger (was 150 + 450 held + 200 ms).
         mFlash.setScaleX(0.85f);
         mFlash.setScaleY(0.85f);
         mFlash.animate().scaleX(1f).scaleY(1f).setStartDelay(0).setDuration(90).withEndAction(() ->
-                mFlash.animate().alpha(0f).setStartDelay(220).setDuration(140).start()).start();
+                mFlash.animate().alpha(0f).setStartDelay(220).setDuration(140).withEndAction(() -> {
+                    mFlash.setVisibility(View.GONE);
+                }).start()).start();
     }
 
     /**
@@ -507,9 +608,7 @@ final class ShortsOverlay {
     void popHeart(float posX, float posY) {
         if (mHeart == null) return;
 
-        mHeart.animate().cancel();
-        mHeart.removeAllAnimatorListeners();
-        mHeart.cancelAnimation();
+        cancelHeart();
 
         float width = mOverlay.getWidth() > 0 ? mOverlay.getWidth() : 1080f;
         float height = mOverlay.getHeight() > 0 ? mOverlay.getHeight() : 1920f;
@@ -548,6 +647,7 @@ final class ShortsOverlay {
         mHeart.setScaleY(0.5f);
 
         // Start Lottie burst animation
+        mHeart.setRepeatCount(0);
         mHeart.setFrame(0);
         mHeart.setSpeed(1.35f);
         mHeart.playAnimation();
@@ -572,6 +672,7 @@ final class ShortsOverlay {
                         .withEndAction(() -> {
                             mHeart.setVisibility(View.GONE);
                             mHeart.setAlpha(0f);
+                            mHeart.setProgress(0f);
                         })
                         .start();
             }
@@ -584,6 +685,7 @@ final class ShortsOverlay {
 
     /** The short follows the finger; the neighbour's thumbnail comes in behind it. */
     void drag(float dy) {
+        cancelHeart();
         int dir = dy < 0 ? 1 : dy > 0 ? -1 : 0; // finger up: the next short comes up from below
         if (mPaging) {
             mVideo.animate().cancel(); // a new swipe inside the slide: land the last one first
@@ -597,6 +699,7 @@ final class ShortsOverlay {
     }
 
     void release(float dy, float yVelocity) {
+        cancelHeart();
         float height = Math.max(1, mVideo.getHeight());
         boolean far = Math.abs(dy) > height * 0.18f;
         boolean fling = Math.abs(yVelocity) > FLING_PX_PER_S && Math.signum(yVelocity) == Math.signum(dy);
@@ -626,6 +729,7 @@ final class ShortsOverlay {
      * swiped (it opens from the slide). False with no next short queued: the caller opens it.
      */
     boolean pageNext() {
+        cancelHeart();
         if (mPaging) {
             return true;
         }
@@ -639,6 +743,7 @@ final class ShortsOverlay {
 
     /** The paged-to short opens, under the paged-away one's frozen last frame. */
     private void openPaged() {
+        cancelHeart();
         if (!mPaging || mPagedOpen) {
             return;
         }
@@ -661,6 +766,7 @@ final class ShortsOverlay {
 
     /** The slide is over (or cut short): the new short takes the screen. */
     private void endPaging() {
+        cancelHeart();
         if (!mPaging) {
             return;
         }
@@ -698,6 +804,9 @@ final class ShortsOverlay {
 
     /** GUTUBE(shorts): a held short shows only itself - every button and line fades until the finger lifts. */
     void setClean(boolean clean) {
+        if (clean) {
+            cancelHeart();
+        }
         mOverlay.animate().cancel();
         mOverlay.animate().alpha(clean ? 0f : 1f).setDuration(150).start();
     }
@@ -754,6 +863,7 @@ final class ShortsOverlay {
     }
 
     private void hidePeek() {
+        cancelHeart();
         mOverlay.removeCallbacks(mHidePeek);
         mPeekDir = 0;
         mPeekVideo = null;

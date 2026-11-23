@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +48,8 @@ import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItem;
 import com.liskovsoft.mediaserviceinterfaces.oauth.Account;
 import com.liskovsoft.sharedutils.helpers.Helpers;
+import com.newtube.mobile.player.WatchProgressStore;
+import com.newtube.mobile.ui.playback.MobilePlaybackActivity;
 import com.liskovsoft.smartyoutubetv2.tv.BuildConfig;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsGroup;
@@ -204,8 +207,9 @@ public class MobileBrowseActivity extends MobileActivity
     private VideoCardAdapter mAdapter;
     // GUTUBE(feed-strip, 2.9.8): Home's topic chips / Subscriptions' channel avatars above the feed.
     private FeedStrip mStrip;
-    private RecyclerView mChipRow;
-    private com.newtube.mobile.ui.common.GlassChipTrack mChipTrack;
+    private FrameLayout mCategoryStrip;
+    private HorizontalScrollView mCategoryScroll;
+    private CategoryPillNavView mCategoryPillNav;
     private com.google.android.material.appbar.AppBarLayout mAppBar;
     // GUTUBE(nav hide, issue #37): the floating nav pill slides away while a feed scrolls down.
     private com.newtube.mobile.ui.common.NavHider mNavHider;
@@ -683,13 +687,11 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private void updateChipRow() {
-        if (mChipRow == null || mStrip == null) {
+        if (mCategoryStrip == null || mStrip == null) {
             return;
         }
         boolean active = mStrip.mode() == FeedStrip.MODE_CHIPS && !mYouShowing;
-        boolean segment = com.newtube.mobile.ui.common.Glass.chipStyle(this) == com.newtube.mobile.ui.common.Glass.CHIPS_SEGMENT;
-        mChipRow.setVisibility(active && !segment ? View.VISIBLE : View.GONE);
-        mChipTrack.setVisibility(active && segment ? View.VISIBLE : View.GONE);
+        mCategoryStrip.setVisibility(active ? View.VISIBLE : View.GONE);
         if (mAppBar != null) {
             mAppBar.setExpanded(true, true);
         }
@@ -1377,25 +1379,20 @@ public class MobileBrowseActivity extends MobileActivity
             }
         });
         mStrip.setOnAvatarLongPressed(this::onStripLongPressed); // GUTUBE(issue #87): the channel's menu.
-        mChipRow = findViewById(R.id.mobile_chip_row);
-        mChipRow.setClipChildren(false);
-        mChipRow.setClipToPadding(false);
-        mChipRow.setElevation(8 * getResources().getDisplayMetrics().density);
-        mChipRow.setTranslationZ(8 * getResources().getDisplayMetrics().density);
-        android.view.ViewParent chipParent = mChipRow.getParent();
-        while (chipParent instanceof android.view.ViewGroup) {
-            ((android.view.ViewGroup) chipParent).setClipChildren(false);
-            ((android.view.ViewGroup) chipParent).setClipToPadding(false);
-            chipParent = chipParent.getParent();
+        mCategoryStrip = findViewById(R.id.mobile_category_bar_strip);
+        if (mCategoryStrip != null) {
+            mCategoryStrip.bringToFront();
         }
-        mChipRow.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        mChipRow.setItemAnimator(null);
-        mChipRow.setAdapter(mStrip.items());
-        mChipTrack = findViewById(R.id.mobile_chip_track);
-        mChipTrack.setGlassSource(findViewById(R.id.mobile_blur_target));
-        mStrip.setTrack(mChipTrack);
+        mCategoryScroll = findViewById(R.id.mobile_category_scroll);
+        mCategoryPillNav = findViewById(R.id.mobile_category_pill_nav);
+        if (mCategoryPillNav != null) {
+            mCategoryPillNav.setHorizontalScrollView(mCategoryScroll);
+            mCategoryPillNav.setOnChipClickListener((item, index) -> onStripPicked(item));
+            mStrip.setPillNav(mCategoryPillNav);
+        }
         mAppBar = findViewById(R.id.mobile_appbar);
         if (mAppBar != null) {
+            mAppBar.bringToFront();
             mAppBar.addOnOffsetChangedListener((appBar, offset) -> {
                 if (mContentSwipe != null) {
                     mContentSwipe.setEnabled(offset == 0);
@@ -3138,6 +3135,18 @@ public class MobileBrowseActivity extends MobileActivity
         if (download != null && !download.isDone()) {
             DownloadMenu.show(this, download);
             return;
+        }
+
+        // GUTUBE: Seamless inline preview -> full player handoff
+        if (mPreview != null) {
+            if (video != null && video.videoId != null && video.videoId.equals(mPreview.activeVideoId())) {
+                long previewPosMs = mPreview.getCurrentPosition();
+                if (previewPosMs > 0L) {
+                    video.pendingPosMs = previewPosMs;
+                    WatchProgressStore.setPendingPreviewPosition(video.videoId, previewPosMs);
+                }
+            }
+            mPreview.stop();
         }
 
         mPresenter.onVideoItemSelected(video);
@@ -4885,6 +4894,30 @@ public class MobileBrowseActivity extends MobileActivity
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        if (intent != null && intent.getComponent() != null
+                && MobilePlaybackActivity.class.getName().equals(intent.getComponent().getClassName())) {
+            long pendingPos = WatchProgressStore.getPendingPreviewPosition();
+            if (pendingPos > 0L) {
+                intent.putExtra(WatchProgressStore.EXTRA_START_POSITION_MS, pendingPos);
+            }
+        }
+        super.startActivityForResult(intent, requestCode, options);
+    }
+
+    @Override
+    public void startActivity(Intent intent, @Nullable Bundle options) {
+        if (intent != null && intent.getComponent() != null
+                && MobilePlaybackActivity.class.getName().equals(intent.getComponent().getClassName())) {
+            long pendingPos = WatchProgressStore.getPendingPreviewPosition();
+            if (pendingPos > 0L) {
+                intent.putExtra(WatchProgressStore.EXTRA_START_POSITION_MS, pendingPos);
+            }
+        }
+        super.startActivity(intent, options);
     }
 
     @Override
