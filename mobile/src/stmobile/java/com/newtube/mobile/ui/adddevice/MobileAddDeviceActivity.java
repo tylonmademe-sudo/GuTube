@@ -38,7 +38,7 @@ import com.newtube.mobile.ui.common.MobileActivity;
 public class MobileAddDeviceActivity extends MobileActivity implements AddDeviceView {
     private AddDevicePresenter mPresenter;
 
-    private ProgressBar mProgress;
+    private View mProgress;
     private View mContent;
     private TextView mCodeView;
     private MaterialButton mDoneButton;

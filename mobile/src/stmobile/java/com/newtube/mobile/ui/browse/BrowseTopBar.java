@@ -76,11 +76,28 @@ final class BrowseTopBar {
         // GUTUBE(brand name): without the name, the icon sits alone in a round pill.
         boolean named = subScreen || NavTabs.showBrandName(mTitle.getContext());
         mTitle.setVisibility(named ? View.VISIBLE : View.GONE);
+        android.content.Context ctx = mTitle.getContext();
+        if (subScreen) {
+            mTitle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 19);
+            mTitle.setTypeface(com.newtube.mobile.ui.common.AppFonts.displayBold(ctx));
+            mTitle.setLetterSpacing(-0.01f);
+            mTitle.setIncludeFontPadding(true);
+        } else {
+            mTitle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 21);
+            mTitle.setTypeface(com.newtube.mobile.ui.common.AppFonts.displayBold(ctx));
+            mTitle.setLetterSpacing(-0.035f);
+            mTitle.setIncludeFontPadding(false);
+        }
+
         float density = mMark.getResources().getDisplayMetrics().density;
-        ((View) mMark.getParent()).setPaddingRelative(Math.round((named ? 14 : 11) * density), 0,
-                Math.round((named ? 16 : 11) * density), 0);
+        View parent = (View) mMark.getParent();
+        if (parent != null) {
+            parent.setPaddingRelative(0, parent.getPaddingTop(), Math.round(8 * density), parent.getPaddingBottom());
+        }
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mMark.getLayoutParams();
-        lp.setMarginEnd(named ? Math.round(8 * density) : 0);
-        mMark.setLayoutParams(lp);
+        if (lp != null) {
+            lp.setMarginEnd(named ? Math.round(6 * density) : 0);
+            mMark.setLayoutParams(lp);
+        }
     }
 }

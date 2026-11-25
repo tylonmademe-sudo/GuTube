@@ -222,7 +222,7 @@ public class JellyRadioLayout extends HorizontalScrollView {
             TextView chip = new TextView(context);
             chip.setText(item.label);
             chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
-            chip.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+            chip.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(context));
             chip.setGravity(Gravity.CENTER);
             chip.setSingleLine(true);
             chip.setIncludeFontPadding(false);

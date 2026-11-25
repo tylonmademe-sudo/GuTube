@@ -102,7 +102,7 @@ public class MobileChannelActivity extends MobileActivity
     private View mTabsSpace;
     private TextView mSubscribe;
     private android.widget.ImageView mBell;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
     private TextView mTitleView;
     /** The header holds a real channel name (from the card, or from the loaded videos). */
     private boolean mTitleFromCard;

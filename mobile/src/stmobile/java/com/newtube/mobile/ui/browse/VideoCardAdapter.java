@@ -248,7 +248,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mTitle = new TextView(context);
             mTitle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 18);
             mTitle.setTextColor(ContextCompat.getColor(context, R.color.mobile_color_on_surface));
-            mTitle.setTypeface(mTitle.getTypeface(), android.graphics.Typeface.BOLD);
+            mTitle.setTypeface(com.newtube.mobile.ui.common.AppFonts.bold(context));
             mTitle.setSingleLine();
             int side = Math.round(16 * density);
             mTitle.setPadding(side, 0, side, Math.round(8 * density));
@@ -865,7 +865,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             if (thumbQuality != ClickbaitRemover.THUMB_QUALITY_DEFAULT) {
                 return ClickbaitRemover.updateThumbnail(video, thumbQuality);
             }
-            // YouTube high-resolution thumbnail from InnerTube (720p or 1080p, stored in bgImageUrl)
+            // Standard videos: True 1280x720 16:9 crisp WebP thumbnail (~35-45% smaller payload than JPEG)
+            if (!video.isLive && video.videoId != null && !video.videoId.isEmpty()) {
+                return "https://i.ytimg.com/vi_webp/" + video.videoId + "/hq720.webp";
+            }
+            // YouTube high-resolution thumbnail from InnerTube (live streams, etc.)
             if (video.bgImageUrl != null && !video.bgImageUrl.isEmpty()) {
                 return video.bgImageUrl;
             }
@@ -893,22 +897,44 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 request = request.addListener(FIRST_THUMB_LISTENER);
             }
 
-            // High-resolution fallback: if high-res URL fails (e.g. very old video without hq720),
-            // fall back to standard cardImageUrl / hqdefault in ARGB_8888.
-            String fallbackUrl = video.belongsToShorts() && video.videoId != null
-                    ? "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg" // no portrait image
-                    : video.getCardImageUrl();
-            if (fallbackUrl == null && video.videoId != null) {
-                fallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
+            // High-resolution fallbacks: Primary is hq720.webp.
+            // Fallback 1: hq720.jpg (if different)
+            // Fallback 2: video.bgImageUrl / video.getCardImageUrl() / hqdefault.jpg
+            String lastFallbackUrl = video.belongsToShorts() && video.videoId != null
+                    ? "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg"
+                    : (video.bgImageUrl != null && !video.bgImageUrl.isEmpty() ? video.bgImageUrl : video.getCardImageUrl());
+            if (lastFallbackUrl == null && video.videoId != null) {
+                lastFallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
             }
-            if (fallbackUrl != null && !fallbackUrl.equals(thumbnailUrl)) {
-                request = request.error(Glide.with(context)
-                        .load(fallbackUrl)
+
+            com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> lastFallback = null;
+            if (lastFallbackUrl != null && !lastFallbackUrl.equals(thumbnailUrl)) {
+                lastFallback = Glide.with(context)
+                        .load(lastFallbackUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .downsample(DownsampleStrategy.AT_MOST)
                         .override(w, sThumbH)
-                        .centerCrop());
+                        .centerCrop();
+            }
+
+            String jpg720Url = !video.belongsToShorts() && video.videoId != null && !video.videoId.isEmpty()
+                    ? "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg"
+                    : null;
+            if (jpg720Url != null && !jpg720Url.equals(thumbnailUrl)) {
+                com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> jpgFallback = Glide.with(context)
+                        .load(jpg720Url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .downsample(DownsampleStrategy.AT_MOST)
+                        .override(w, sThumbH)
+                        .centerCrop();
+                if (lastFallback != null && !lastFallbackUrl.equals(jpg720Url)) {
+                    jpgFallback = jpgFallback.error(lastFallback);
+                }
+                request = request.error(jpgFallback);
+            } else if (lastFallback != null) {
+                request = request.error(lastFallback);
             }
 
             request.into(mThumbnail);

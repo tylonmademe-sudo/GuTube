@@ -190,7 +190,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         private final ImageButton mDownload;
         private final View mSort;
         private final TextView mSortLabel;
-        private final ProgressBar mSortProgress;
+        private final View mSortProgress;
         private final com.newtube.mobile.ui.common.GlassChipTrack mFilters;
         private final Callbacks mCallbacks;
 

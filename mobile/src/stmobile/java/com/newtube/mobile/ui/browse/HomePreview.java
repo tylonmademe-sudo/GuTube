@@ -39,7 +39,7 @@ public final class HomePreview implements HomePreviewPlayer.Callback {
     public static final int ALWAYS = 2;
 
     private static final String PREFS = "gutube_app";
-    private static final long SETTLE_MS = 700;
+    private static final long SETTLE_MS = 300;
     private static final float MIN_VISIBLE = 0.65f;
 
     public static int mode(Context context) {

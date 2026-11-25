@@ -89,7 +89,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
     private RecyclerView mGrid;
     private GridLayoutManager mLayoutManager;
     private VideoCardAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
     private TextView mTitleView;
     private ImageButton mBackButton;
     private MaterialButton mPlayAllButton;

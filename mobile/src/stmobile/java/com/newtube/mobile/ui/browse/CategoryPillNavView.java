@@ -136,7 +136,7 @@ public class CategoryPillNavView extends View {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        mTextPaint.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(context));
         mTextPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 

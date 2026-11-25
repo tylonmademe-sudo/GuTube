@@ -67,7 +67,7 @@ public class Media3PlayerInitializer {
     // visible-picture delay by ~618ms versus 1000ms, with unchanged decoded-first-frame timing.
     // This spends 500ms of initial cushion; the forward buffer and rebuffer gate stay intact.
     // 250ms remains a debug comparison until its latency/stability tradeoff is measured.
-    private static final int START_BUFFER_MS = 500;
+    private static final int START_BUFFER_MS = 350;
     // 1500 beat the old 2500 in every pair of a 5-pair interleaved starve/refill A/B on the
     // Pixel 9 (pinned 1080p vp9, 800->2400kbps shaping): median stall 3.21s -> 1.71s. The gain
     // tracks the theoretical refill time of the removed 1000ms of media, so it generalizes.

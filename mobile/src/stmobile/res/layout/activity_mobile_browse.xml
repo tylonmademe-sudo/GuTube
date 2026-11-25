@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:background="#0F0F0F">
+        android:background="@color/mobile_color_background">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/mobile_coordinator"
@@ -36,7 +36,7 @@
                 android:id="@+id/mobile_appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#000000"
+                android:background="@color/mobile_color_background"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:elevation="20dp"
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#000000"
+                    android:background="@color/mobile_color_background"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     app:layout_scrollFlags="scroll|enterAlways|snap">
@@ -64,7 +64,7 @@
                         android:clipToPadding="false"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:background="#000000"
+                        android:background="@color/mobile_color_background"
                         android:clickable="true"
                         android:focusable="false"
                         android:paddingHorizontal="16dp"
@@ -80,8 +80,8 @@
                             android:elevation="0dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="16dp">
+                            android:paddingStart="0dp"
+                            android:paddingEnd="8dp">
 
                             <!-- NEWTUBE(you-subscreen): only on a section opened from a You row - BrowseTopBar. -->
                             <ImageButton
@@ -98,9 +98,10 @@
 
                             <ImageView
                                 android:id="@+id/mobile_brand_mark"
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_marginEnd="8dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_marginEnd="6dp"
+                                android:scaleType="fitCenter"
                                 android:importantForAccessibility="no"
                                 android:src="@drawable/ic_gutube_mark_default" />
 
@@ -109,12 +110,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_condensed_bold"
+                                android:letterSpacing="-0.035"
+                                android:includeFontPadding="false"
                                 android:maxLines="1"
                                 android:maxWidth="200dp"
                                 android:text="@string/app_name"
                                 android:textColor="@color/mobile_color_on_surface"
-                                android:textSize="15sp" />
+                                android:textSize="21sp" />
 
                         </LinearLayout>
 
@@ -163,7 +166,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="52dp"
-                        android:background="#000000"
+                        android:background="@color/mobile_color_background"
                         android:elevation="20dp"
                         android:translationZ="20dp"
                         android:outlineProvider="none"
@@ -414,7 +417,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_welcome_back"
                                 android:textColor="#FFFFFF"
@@ -433,7 +436,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
-                                    android:fontFamily="sans-serif"
+                                    android:fontFamily="@font/roboto"
                                     android:maxLines="1"
                                     android:text="@string/mobile_you_phrase_sync"
                                     android:textColor="#99FFFFFF"
@@ -481,7 +484,7 @@
                             android:id="@+id/mobile_you_signin_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/roboto_medium"
                             android:text="@string/mobile_you_signin_now"
                             android:textColor="#000000"
                             android:textSize="15sp"
@@ -520,7 +523,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:text="@string/mobile_you_switch_account"
                                 android:textColor="#E6FFFFFF"
                                 android:textSize="13sp" />
@@ -550,7 +553,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:text="@string/header_settings"
                                 android:textColor="#E6FFFFFF"
                                 android:textSize="13sp" />
@@ -567,11 +570,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginBottom="10dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:letterSpacing="-0.01"
                     android:text="@string/mobile_you_library"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -620,7 +623,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_nav_subs"
                                 android:textColor="#FFFFFF"
@@ -662,7 +665,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/header_downloads"
                                 android:textColor="#FFFFFF"
@@ -713,7 +716,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_watch_later"
                                 android:textColor="#FFFFFF"
@@ -755,7 +758,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_liked_videos"
                                 android:textColor="#FFFFFF"
@@ -806,7 +809,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/header_playlists"
                                 android:textColor="#FFFFFF"
@@ -848,7 +851,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_my_videos"
                                 android:textColor="#FFFFFF"
@@ -867,11 +870,11 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:letterSpacing="-0.01"
                     android:text="@string/mobile_you_explore"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -912,7 +915,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_kids"
                                 android:textColor="#E6FFFFFF"
@@ -946,7 +949,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_hyped"
                                 android:textColor="#E6FFFFFF"
@@ -980,7 +983,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_sports"
                                 android:textColor="#E6FFFFFF"
@@ -1014,7 +1017,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_live"
                                 android:textColor="#E6FFFFFF"
@@ -1057,7 +1060,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_gaming"
                                 android:textColor="#E6FFFFFF"
@@ -1091,7 +1094,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_news"
                                 android:textColor="#E6FFFFFF"
@@ -1125,7 +1128,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/roboto_medium"
                                 android:maxLines="1"
                                 android:text="@string/mobile_you_music"
                                 android:textColor="#E6FFFFFF"
@@ -1161,12 +1164,13 @@
                         android:background="?attr/selectableItemBackground"
                         android:drawableEnd="@drawable/ic_chevron_right"
                         android:drawablePadding="4dp"
+                        android:fontFamily="@font/roboto_condensed_bold"
                         android:gravity="center_vertical"
+                        android:letterSpacing="-0.01"
                         android:paddingHorizontal="4dp"
                         android:text="@string/header_history"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/mobile_you_history_list"
@@ -1200,8 +1204,9 @@
             android:clickable="true"
             android:visibility="gone">
 
-            <ProgressBar
-                style="@style/Widget.GuTube.GlassSpinner"
+            <com.newtube.mobile.ui.common.YouTubeLoadingView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_gravity="center" />
 
         </FrameLayout>
@@ -1241,7 +1246,7 @@
                 android:id="@+id/mobile_quote_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/roboto"
                 android:lineSpacingMultiplier="1.15"
                 android:textColor="@color/mobile_color_on_surface"
                 android:textSize="20sp"
@@ -1252,7 +1257,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/roboto_medium"
                 android:gravity="end"
                 android:textColor="@color/mobile_color_on_surface_secondary"
                 android:textSize="13sp" />
@@ -1567,11 +1572,11 @@
                         android:id="@+id/mobile_greet_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/roboto_condensed_bold"
                         android:gravity="center"
+                        android:letterSpacing="-0.02"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="38sp"
-                        android:textStyle="bold"
                         tools:text="Good evening" />
 
                     <TextView
@@ -1580,7 +1585,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="28dp"
-                        android:fontFamily="sans-serif"
+                        android:fontFamily="@font/roboto"
                         android:gravity="center"
                         android:textColor="@color/mobile_color_on_surface_secondary"
                         android:textSize="15sp"

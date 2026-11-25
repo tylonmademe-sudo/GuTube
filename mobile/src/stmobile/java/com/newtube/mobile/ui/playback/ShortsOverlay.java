@@ -146,7 +146,6 @@ final class ShortsOverlay {
     private final View mDownload;
     private final View mMute;
     private final View mSearch;
-    private final View mTopMore;
     private final View mBack;
     private boolean mIsPlaying = true;
     private boolean mAvatarKnown;
@@ -220,14 +219,10 @@ final class ShortsOverlay {
         mDownload = mOverlay.findViewById(R.id.mobile_shorts_download);
         mMute = mOverlay.findViewById(R.id.mobile_shorts_mute);
         mSearch = mOverlay.findViewById(R.id.mobile_shorts_search);
-        mTopMore = mOverlay.findViewById(R.id.mobile_shorts_top_more);
         mBack = mOverlay.findViewById(R.id.mobile_shorts_back);
 
         mOverlay.findViewById(R.id.mobile_shorts_comments).setOnClickListener(v -> mHost.openShortsComments());
         mOverlay.findViewById(R.id.mobile_shorts_more).setOnClickListener(v -> mHost.openShortsMore());
-        if (mTopMore != null) {
-            mTopMore.setOnClickListener(v -> mHost.openShortsMore());
-        }
         mOverlay.findViewById(R.id.mobile_shorts_back).setOnClickListener(v -> mHost.exitShorts());
         mOverlay.findViewById(R.id.mobile_shorts_search).setOnClickListener(v -> mHost.openShortsSearch());
         mOverlay.findViewById(R.id.mobile_shorts_mute).setOnClickListener(v -> showMuted(mHost.toggleShortsMute()));
@@ -552,7 +547,7 @@ final class ShortsOverlay {
                 }
             }
         }
-        // Minimal borderless top icons visible: Back on top-left, Search + More on top-right
+        // Minimal borderless top icons visible: Back on top-left, Search on top-right
         if (mBack != null) {
             mBack.setVisibility(View.VISIBLE);
             mBack.setAlpha(1f);
@@ -560,10 +555,6 @@ final class ShortsOverlay {
         if (mSearch != null) {
             mSearch.setVisibility(View.VISIBLE);
             mSearch.setAlpha(1f);
-        }
-        if (mTopMore != null) {
-            mTopMore.setVisibility(View.VISIBLE);
-            mTopMore.setAlpha(1f);
         }
     }
 

@@ -56,9 +56,10 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp">
-            <ProgressBar
+            <com.newtube.mobile.ui.common.YouTubeLoadingView
                 android:id="@+id/web_signin_progress"
-                style="@style/Widget.GuTube.GlassSpinner" />
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
             <TextView
                 android:id="@+id/web_signin_message"
                 android:layout_width="match_parent"

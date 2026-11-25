@@ -956,7 +956,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
                     meta.setSpan(new ForegroundColorSpan(mHandleColor), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    meta.setSpan(new TypefaceSpan("sans-serif-medium"), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    meta.setSpan(createTypefaceSpan(itemView.getContext()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             if (!TextUtils.isEmpty(date)) {
@@ -966,6 +966,24 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 meta.append(date);
             }
             return meta;
+        }
+
+        private static android.text.style.MetricAffectingSpan createTypefaceSpan(Context context) {
+            Typeface tf = com.newtube.mobile.ui.common.AppFonts.medium(context);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                return new TypefaceSpan(tf);
+            }
+            return new android.text.style.MetricAffectingSpan() {
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    ds.setTypeface(tf);
+                }
+
+                @Override
+                public void updateMeasureState(@NonNull TextPaint paint) {
+                    paint.setTypeface(tf);
+                }
+            };
         }
 
         /** Asks for the avatar near its drawn size (YouTube serves 48/88/176px of the same image). */
@@ -1116,10 +1134,11 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final float mHeight;
         private final int mFill;
         private final int mTextColor;
-        private final Typeface mTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+        private final Typeface mTypeface;
         private final RectF mRect = new RectF();
 
         CreatorPillSpan(Context context, int fill) {
+            mTypeface = com.newtube.mobile.ui.common.AppFonts.medium(context);
             float density = context.getResources().getDisplayMetrics().density;
             mTextSize = android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP, 11,
                     context.getResources().getDisplayMetrics());

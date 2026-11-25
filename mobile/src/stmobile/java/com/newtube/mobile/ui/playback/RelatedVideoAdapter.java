@@ -271,6 +271,8 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
                 thumbnailUrl = video.altCardImageUrl;
             } else if (thumbQuality != ClickbaitRemover.THUMB_QUALITY_DEFAULT) {
                 thumbnailUrl = ClickbaitRemover.updateThumbnail(video, thumbQuality);
+            } else if (!video.isLive && video.videoId != null && !video.videoId.isEmpty()) {
+                thumbnailUrl = "https://i.ytimg.com/vi_webp/" + video.videoId + "/hq720.webp";
             } else if (video.bgImageUrl != null && !video.bgImageUrl.isEmpty()) {
                 thumbnailUrl = video.bgImageUrl;
             } else if (video.videoId != null && !video.videoId.isEmpty()) {
@@ -291,17 +293,39 @@ public class RelatedVideoAdapter extends ListAdapter<Video, RelatedVideoAdapter.
                     // Fade network loads in over the placeholder; cache hits skip the transition.
                     .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(150));
 
-            String fallbackUrl = video.getCardImageUrl();
-            if (fallbackUrl == null && video.videoId != null) {
-                fallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
+            String lastFallbackUrl = video.bgImageUrl != null && !video.bgImageUrl.isEmpty()
+                    ? video.bgImageUrl
+                    : video.getCardImageUrl();
+            if (lastFallbackUrl == null && video.videoId != null) {
+                lastFallbackUrl = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
             }
-            if (fallbackUrl != null && !fallbackUrl.equals(thumbnailUrl)) {
-                request = request.error(Glide.with(context)
-                        .load(fallbackUrl)
+
+            com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> lastFallback = null;
+            if (lastFallbackUrl != null && !lastFallbackUrl.equals(thumbnailUrl)) {
+                lastFallback = Glide.with(context)
+                        .load(lastFallbackUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .format(DecodeFormat.PREFER_ARGB_8888)
                         .override(w, h)
-                        .centerCrop());
+                        .centerCrop();
+            }
+
+            String jpg720Url = video.videoId != null && !video.videoId.isEmpty()
+                    ? "https://i.ytimg.com/vi/" + video.videoId + "/hq720.jpg"
+                    : null;
+            if (jpg720Url != null && !jpg720Url.equals(thumbnailUrl)) {
+                com.bumptech.glide.RequestBuilder<android.graphics.drawable.Drawable> jpgFallback = Glide.with(context)
+                        .load(jpg720Url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                        .override(w, h)
+                        .centerCrop();
+                if (lastFallback != null && !lastFallbackUrl.equals(jpg720Url)) {
+                    jpgFallback = jpgFallback.error(lastFallback);
+                }
+                request = request.error(jpgFallback);
+            } else if (lastFallback != null) {
+                request = request.error(lastFallback);
             }
 
             request.into(mThumbnail);

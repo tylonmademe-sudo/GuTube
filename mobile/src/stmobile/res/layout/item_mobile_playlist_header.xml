@@ -119,7 +119,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/white"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/roboto_medium"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:minHeight="48dp"
@@ -220,11 +220,10 @@
                     android:src="@drawable/ic_chips_expand"
                     app:tint="@color/mobile_color_on_surface" />
 
-                <ProgressBar
+                <com.newtube.mobile.ui.common.YouTubeLoadingView
                     android:id="@+id/mobile_channel_uploads_sort_progress"
-                    style="@style/Widget.GuTube.GlassSpinner"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="8dp"
                     android:visibility="gone" />
 

@@ -83,9 +83,10 @@
              (and with it the playlist header row) is GONE while this shows. -->
         <include layout="@layout/mobile_page_load_state" />
 
-        <ProgressBar
-            style="@style/Widget.GuTube.GlassSpinner"
+        <com.newtube.mobile.ui.common.YouTubeLoadingView
             android:id="@+id/mobile_channel_uploads_progress"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
             android:visibility="gone" />
 
@@ -142,7 +143,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="12dp"
             android:backgroundTint="@color/mobile_color_inverse_surface"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/roboto_medium"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:minHeight="40dp"

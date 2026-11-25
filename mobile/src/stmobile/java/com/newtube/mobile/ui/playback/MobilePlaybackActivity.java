@@ -39,6 +39,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -217,6 +218,7 @@ public class MobilePlaybackActivity extends MobileActivity
      * the choice is kept.
      */
     @Nullable private View mActionsRow;
+    @Nullable private HorizontalScrollView mActionsScroll;
     @Nullable private ImageButton mActionsToggle;
     @Nullable private ImageButton mPlayerLike;
     @Nullable private ImageButton mPlayerDislike;
@@ -257,7 +259,7 @@ public class MobilePlaybackActivity extends MobileActivity
     @Nullable private LevelBar mLevelBar;
     /** The controls faded aside for a seek-bar drag (setScrubChrome). */
     private boolean mScrubChromeHidden;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
     /** First-run only: "one-time setup" line under the spinner while the session is cold. */
     private TextView mSetupHint;
     /** Persistent "why playback stopped" line (see {@link #showPlaybackNotice}). */
@@ -920,8 +922,15 @@ public class MobilePlaybackActivity extends MobileActivity
         mLiveChip.setOnClickListener(v -> jumpToLiveEdge());
         mTimeBar = findViewById(R.id.mobile_player_time_bar);
         mBottomRow = findViewById(R.id.mobile_player_bottom_row);
+        mActionsScroll = findViewById(R.id.mobile_player_actions_scroll);
         mActionsRow = findViewById(R.id.mobile_player_actions);
         mActionsToggle = findViewById(R.id.mobile_player_actions_toggle);
+        View bottomEnd = findViewById(R.id.mobile_player_bottom_end);
+        if (bottomEnd != null) {
+            bottomEnd.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or_, ob) -> {
+                updateActionsScrollClearance();
+            });
+        }
         mPlayerLike = findViewById(R.id.mobile_player_like);
         mPlayerDislike = findViewById(R.id.mobile_player_dislike);
         mPlayerDownload = findViewById(R.id.mobile_player_download);
@@ -3308,6 +3317,8 @@ public class MobilePlaybackActivity extends MobileActivity
                 // ...and the bottom rows stop over the gesture bar, YouTube's.
                 bottom = rootInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars()).bottom;
             }
+            left = dp(16);
+            right = dp(16);
         }
         if (mControlsRoot.getPaddingLeft() != left || mControlsRoot.getPaddingTop() != top
                 || mControlsRoot.getPaddingRight() != right || mControlsRoot.getPaddingBottom() != bottom) {
@@ -3329,31 +3340,101 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     /**
-     * GUTUBE(fullscreen): the vertical fullscreen lays the top out like YouTube's: the title under
-     * the top row, the screen's width, and the channel under it. Elsewhere the title sits between
-     * the top-left buttons and the options (landscape), or is gone (portrait: the page has it).
+     * GUTUBE(fullscreen): the vertical fullscreen lays the top out like YouTube's: the title in a second
+     * row under the top controls, the screen's full width, and the channel under it. In landscape the title
+     * sits between the top-left buttons and the options. In normal inline portrait watch the title is hidden
+     * and the top spacer keeps left and right controls docked to the screen edges.
      */
     private void placeTitle() {
         if (mTitleView == null || mPlayerAuthor == null) {
             return;
         }
-        boolean full = mPortraitFull && !isLandscape();
-        if (mTitleView.getParent() != null && mTitleView.getParent() != mControlsRoot) {
-            mPlayerAuthor.setVisibility((full || isLandscape() || !TextUtils.isEmpty(mPlayerAuthor.getText())) ? View.VISIBLE : View.GONE);
-            return;
+        View titleGroup = findViewById(R.id.mobile_player_title_group);
+        ViewGroup topBar = findViewById(R.id.mobile_player_top_bar);
+        ViewGroup portraitSlot = findViewById(R.id.mobile_player_portrait_title_slot);
+        View topSpacer = findViewById(R.id.mobile_player_top_spacer);
+
+        // Reduce right-side icon margins inside mobile_player_options from 12dp to 6dp in portrait/inline
+        int optMargin = dp(isLandscape() ? 12 : 6);
+        for (int optId : new int[] {R.id.mobile_player_subtitles, R.id.mobile_player_screenshot, R.id.mobile_player_more}) {
+            View optBtn = findViewById(optId);
+            if (optBtn != null) {
+                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) optBtn.getLayoutParams();
+                if (mlp != null && mlp.getMarginStart() != optMargin) {
+                    mlp.setMarginStart(optMargin);
+                    optBtn.setLayoutParams(mlp);
+                }
+            }
         }
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mTitleView.getLayoutParams();
-        lp.setMarginStart(dp(full ? 16 : 104));
-        lp.topMargin = dp(full ? 62 : 10);
-        lp.setMarginEnd(dp(full ? 16 : 148));
-        mTitleView.setLayoutParams(lp);
-        // Landscape: centred on the top row's buttons (issue #165); upright: its first line at the top.
-        // Both: TextView.setMinHeight leaves the View-level floor (the layout's minHeight) in place,
-        // which kept a one-line title's box 48dp tall (issue #205).
-        mTitleView.setMinHeight(full ? 0 : dp(48));
-        mTitleView.setMinimumHeight(full ? 0 : dp(48));
-        mTitleView.setGravity((full ? Gravity.TOP : Gravity.CENTER_VERTICAL) | Gravity.START);
-        mPlayerAuthor.setVisibility((full || isLandscape()) ? View.VISIBLE : View.GONE);
+
+        if (mPortraitFull && !isLandscape()) {
+            // Portrait Fullscreen: move titleGroup into portraitSlot
+            if (titleGroup != null && portraitSlot != null) {
+                if (titleGroup.getParent() != portraitSlot) {
+                    if (titleGroup.getParent() instanceof ViewGroup) {
+                        ((ViewGroup) titleGroup.getParent()).removeView(titleGroup);
+                    }
+                    FrameLayout.LayoutParams flp = new FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    titleGroup.setLayoutParams(flp);
+                    portraitSlot.addView(titleGroup);
+                }
+                portraitSlot.setVisibility(View.VISIBLE);
+                titleGroup.setVisibility(View.VISIBLE);
+            }
+            if (topSpacer != null) {
+                topSpacer.setVisibility(View.VISIBLE);
+            }
+            mTitleView.setMaxLines(2);
+            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            mTitleView.setGravity(Gravity.TOP | Gravity.START);
+            mPlayerAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            mPlayerAuthor.setTextColor(0xCCFFFFFF);
+            mPlayerAuthor.setVisibility(View.VISIBLE);
+        } else if (isLandscape()) {
+            // Landscape Fullscreen: move titleGroup back into topBar right after audio button
+            if (portraitSlot != null) {
+                portraitSlot.setVisibility(View.GONE);
+            }
+            if (topSpacer != null) {
+                topSpacer.setVisibility(View.GONE);
+            }
+            if (titleGroup != null && topBar != null) {
+                if (titleGroup.getParent() != topBar) {
+                    if (titleGroup.getParent() instanceof ViewGroup) {
+                        ((ViewGroup) titleGroup.getParent()).removeView(titleGroup);
+                    }
+                    int audioIndex = topBar.indexOfChild(mAudioButton);
+                    int targetIndex = audioIndex >= 0 ? audioIndex + 1 : 1;
+                    LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
+                            0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+                    llp.gravity = Gravity.CENTER_VERTICAL;
+                    llp.setMarginStart(dp(10));
+                    llp.setMarginEnd(dp(12));
+                    titleGroup.setLayoutParams(llp);
+                    topBar.addView(titleGroup, Math.min(targetIndex, topBar.getChildCount()));
+                }
+                titleGroup.setVisibility(View.VISIBLE);
+            }
+            mTitleView.setMaxLines(1);
+            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            mTitleView.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+            mPlayerAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+            mPlayerAuthor.setTextColor(0xCCFFFFFF);
+            mPlayerAuthor.setVisibility(View.VISIBLE);
+        } else {
+            // Normal Inline Portrait Watch
+            if (titleGroup != null) {
+                titleGroup.setVisibility(View.GONE);
+            }
+            if (portraitSlot != null) {
+                portraitSlot.setVisibility(View.GONE);
+            }
+            if (topSpacer != null) {
+                topSpacer.setVisibility(View.VISIBLE);
+            }
+            mPlayerAuthor.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -3374,10 +3455,17 @@ public class MobilePlaybackActivity extends MobileActivity
         // GUTUBE(fullscreen-actions): the actions pill takes the bar's place and the bar, with
         // everything over it, rises above the pill. The chevron beside fullscreen flips it.
         boolean actions = !inline && mActionsShown && !mLockedChrome;
-        if (mActionsRow != null && mActionsToggle != null) {
-            mActionsRow.setVisibility(actions ? View.VISIBLE : View.GONE);
+        View actionsTarget = mActionsScroll != null ? mActionsScroll : mActionsRow;
+        if (actionsTarget != null && mActionsToggle != null) {
+            actionsTarget.setVisibility(actions ? View.VISIBLE : View.GONE);
+            if (mActionsRow != null && mActionsRow != actionsTarget) {
+                mActionsRow.setVisibility(View.VISIBLE);
+            }
             syncPillCounts();
-            setMargins(mActionsRow, inline ? dp(16) : 0, 0, 0, lift);
+            updateActionButtonsSpacing();
+            updateActionsScrollClearance();
+            int actionsMarginEnd = getActionsScrollMarginEnd();
+            setMargins(actionsTarget, inline ? dp(16) : 0, 0, actionsMarginEnd, lift);
             mActionsToggle.setVisibility(inline ? View.GONE : View.VISIBLE);
             mActionsToggle.setRotation(actions ? 0f : 180f);
             mActionsToggle.setContentDescription(getString(actions
@@ -3403,9 +3491,13 @@ public class MobilePlaybackActivity extends MobileActivity
         mTimeBar.setTrackAtBottom(inline);
         updateSeekBarLine();
 
-        // Row 1 (Above Seekbar): Timestamp & Chapter with 8dp-10dp clear gap above seekbar
-        setMargins(mBottomRow, inline ? dp(16) : left, 0, inline ? dp(16) : right,
-                getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin) + lift);
+        // Row 1 (Above Seekbar): Timestamp & Chapter with 8dp clear gap above seekbar track line
+        int barHeight = getResources().getDimensionPixelSize(R.dimen.mobile_player_bar_height);
+        int trackOffsetFromBarBottom = barHeight / 2;
+        int bottomRowBottomMargin = inline
+                ? getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin)
+                : (lift + trackOffsetFromBarBottom + dp(8));
+        setMargins(mBottomRow, inline ? dp(16) : 0, 0, inline ? dp(16) : 0, bottomRowBottomMargin);
         setMargins(mScrubChapterView, 0, 0, 0,
                 getResources().getDimensionPixelSize(R.dimen.mobile_player_scrub_pill_margin) + bottom + lift);
         setMargins(mChapterPill, 0, 0, 0,
@@ -3418,6 +3510,74 @@ public class MobilePlaybackActivity extends MobileActivity
         // The skip pill: left of fullscreen (and its chevron outside portrait), centered on the row.
         setMargins(mSkipSegmentPill, 0, 0, right + dp(inline ? 56 : 96), bottom + lift
                 + getResources().getDimensionPixelSize(R.dimen.mobile_player_bottom_row_margin) + dp(8));
+
+        View topBar = findViewById(R.id.mobile_player_top_bar);
+        if (topBar != null) {
+            topBar.setPaddingRelative(inline ? dp(16) : 0, topBar.getPaddingTop(), inline ? dp(16) : 0, topBar.getPaddingBottom());
+        }
+    }
+
+    private int getActionsScrollMarginEnd() {
+        View bottomEnd = findViewById(R.id.mobile_player_bottom_end);
+        if (bottomEnd != null) {
+            int width = bottomEnd.getWidth();
+            if (width <= 0) {
+                bottomEnd.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                width = bottomEnd.getMeasuredWidth();
+            }
+            if (width > 0) {
+                return width + dp(8);
+            }
+        }
+        return 0;
+    }
+
+    private void updateActionsScrollClearance() {
+        if (mActionsScroll == null) {
+            return;
+        }
+        int marginEnd = getActionsScrollMarginEnd();
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mActionsScroll.getLayoutParams();
+        if (lp != null && lp.getMarginEnd() != marginEnd) {
+            lp.setMarginEnd(marginEnd);
+            mActionsScroll.setLayoutParams(lp);
+        }
+    }
+
+    private void updateActionButtonsSpacing() {
+        boolean compact = mPortraitFull && !isLandscape();
+        int size = dp(compact ? 36 : 40);
+        int spacing = dp(compact ? 6 : 16);
+
+        View pill = findViewById(R.id.mobile_player_like_dislike_pill);
+        if (pill != null) {
+            ViewGroup.LayoutParams pillLp = pill.getLayoutParams();
+            if (pillLp != null) {
+                pillLp.height = size;
+                pill.setLayoutParams(pillLp);
+            }
+        }
+
+        View[] buttons = new View[] {mPlayerLike, mPlayerDislike, mPlayerComments, mPlayerChat, mPlayerDownload, findViewById(R.id.mobile_player_share)};
+        for (View btn : buttons) {
+            if (btn == null) continue;
+            ViewGroup.LayoutParams lp = btn.getLayoutParams();
+            if (lp != null && (lp.width != size || lp.height != size)) {
+                lp.width = size;
+                lp.height = size;
+                btn.setLayoutParams(lp);
+            }
+        }
+
+        View[] spacedViews = new View[] {mPlayerDislike, mPlayerComments, mPlayerChat, mPlayerDownload, findViewById(R.id.mobile_player_share)};
+        for (View v : spacedViews) {
+            if (v == null) continue;
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            if (mlp != null && mlp.getMarginStart() != spacing) {
+                mlp.setMarginStart(spacing);
+                v.setLayoutParams(mlp);
+            }
+        }
     }
 
     /**
@@ -7251,16 +7411,29 @@ public class MobilePlaybackActivity extends MobileActivity
         if (hint == null) {
             return;
         }
-        boolean show = (isLandscape() || mPortraitFull) && mActionsRow != null && mActionsRow.getVisibility() == View.VISIBLE
+        View actionsTarget = mActionsScroll != null ? mActionsScroll : mActionsRow;
+        boolean show = (isLandscape() || mPortraitFull) && actionsTarget != null && actionsTarget.getVisibility() == View.VISIBLE
                 && !mRelatedVideos.isEmpty();
         hint.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (hint instanceof TextView) {
+            TextView hintTv = (TextView) hint;
+            if (mPortraitFull && !isLandscape()) {
+                hintTv.setText("");
+                hintTv.setCompoundDrawablePadding(0);
+                hintTv.setPaddingRelative(dp(10), hintTv.getPaddingTop(), dp(10), hintTv.getPaddingBottom());
+            } else {
+                hintTv.setText(R.string.mobile_player_more_videos);
+                hintTv.setCompoundDrawablePadding(dp(6));
+                hintTv.setPaddingRelative(dp(12), hintTv.getPaddingTop(), dp(12), hintTv.getPaddingBottom());
+            }
+        }
         hint.setOnClickListener(v -> {
             if (mMoreVideos != null && mMoreVideos.begin()) {
                 mMoreVideos.open();
             }
         });
-        if (show && !(hint.getParent() instanceof LinearLayout)) {
-            setMargins(hint, 0, 0, dp(12), ((ViewGroup.MarginLayoutParams) mActionsRow.getLayoutParams()).bottomMargin);
+        if (show && !(hint.getParent() instanceof LinearLayout) && actionsTarget != null) {
+            setMargins(hint, 0, 0, dp(12), ((ViewGroup.MarginLayoutParams) actionsTarget.getLayoutParams()).bottomMargin);
         }
     }
 
@@ -9995,7 +10168,7 @@ public class MobilePlaybackActivity extends MobileActivity
         float alpha = scrubbing ? 0f : 1f;
         long duration = scrubbing ? Motion.FADE_OUT_MS : Motion.FADE_IN_MS;
         for (View view : new View[] {mBackButton, mAudioButton, mTitleView, mPlayerAuthor, mOptionsRow, mTransport,
-                mBottomRow, mActionsRow, mTopScrim}) {
+                mBottomRow, mActionsScroll != null ? mActionsScroll : mActionsRow, mTopScrim}) {
             if (view != null) {
                 view.animate().cancel();
                 view.animate().alpha(alpha).setDuration(duration).setInterpolator(Motion.STANDARD).start();
@@ -11796,7 +11969,8 @@ public class MobilePlaybackActivity extends MobileActivity
         Haptics.click(like ? mWatchLike : mWatchDislike);
         // GUTUBE(burst): a like splashes - on the Shorts thumb or the fullscreen pill when the tap
         // came from there.
-        boolean pill = mActionsRow != null && mActionsRow.isShown();
+        View actionsTarget = mActionsScroll != null ? mActionsScroll : mActionsRow;
+        boolean pill = actionsTarget != null && actionsTarget.isShown();
         View likeIcon = mShorts != null && mShorts.isActive() ? mShorts.likeIcon() : pill ? mPlayerLike : mWatchLikeIcon;
         if (!like) {
             View dislikeTarget = mShorts != null && mShorts.isActive() ? mShorts.dislikeIcon() : pill ? mPlayerDislike : mWatchDislikeIcon;

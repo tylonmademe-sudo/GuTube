@@ -2,39 +2,31 @@ package com.newtube.mobile.ui.common;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Canvas;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.liskovsoft.smartyoutubetv2.tv.R;
-
 import java.lang.reflect.Field;
 
 /**
- * NEWTUBE(haptics): pull-to-refresh that you can feel - the faint grain while the spinner is pulled
- * ({@link Haptics#tension}), and one click the moment the pull passes the point where letting go
- * refreshes, the same click if it comes back under ({@link Haptics#threshold}); the platform names
- * pull-to-refresh as the example of exactly this (HapticFeedbackConstants.GESTURE_THRESHOLD_*).
+ * GUTUBE: YouTube-styled pull-to-refresh with native Haptic feedback.
  *
- * <p>SwipeRefreshLayout keeps how far it is pulled to itself, so this reads its two private fields
- * after each step of the pull (swiperefreshlayout 1.2.0: {@code mTotalUnconsumed} for a pull that
- * comes through the list's nested scrolling, {@code mInitialMotionY} for one it catches itself).
- * If a later version renames them, the pull just goes back to being silent.</p>
- *
- * <p>GUTUBE(loader): the circle that comes down shows the loader picked in Settings (the theme's
- * {@code gutubeLoader}, as every other spinner) on a see-through glass disc, in place of the stock arrow;
- * SwipeRefreshLayout still animates its own arrow drawable, which is just no longer drawn.</p>
+ * <p>Replaces the default Android SwipeRefreshLayout circle and arrow spinner with
+ * an overlay of {@link YouTubeLoadingView} (32dp × 32dp inside a clean, floating dark-glass disc).
+ * The default CircleImageView is completely suppressed from drawing, while pull distance,
+ * tension haptics, and smooth translation/fade/scale animations mirror YouTube's exact feel.</p>
  */
 public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
     /** SwipeRefreshLayout.DRAG_RATE: its own touch pull moves the spinner at half the finger. */
@@ -53,10 +45,19 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
     private static Field sInitialMotionY;
     @Nullable
     private static Field sActivePointerId;
+    @Nullable
+    private static Field sCircleViewField;
+    @Nullable
+    private static Field sTargetField;
 
     /** The pull is past the refresh point: letting go now refreshes. */
     private boolean mEngaged;
     private long mLastClickAt;
+
+    @Nullable
+    private View mCircleView;
+    private FrameLayout mIndicatorContainer;
+    private YouTubeLoadingView mLoadingView;
 
     public HapticSwipeRefreshLayout(@NonNull Context context) {
         this(context, null);
@@ -64,30 +65,188 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
 
     public HapticSwipeRefreshLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        useLoader(context);
+        initCustomIndicator(context);
+        suppressDefaultCircle();
     }
 
-    /** Puts the picked loader into SwipeRefreshLayout's circle; left as the arrow if that fails. */
-    private void useLoader(Context context) {
-        TypedArray a = context.obtainStyledAttributes(new int[] {R.attr.gutubeLoader});
-        Drawable loader = a.getDrawable(0);
-        a.recycle();
-        Field circleField = field("mCircleView");
-        if (loader == null || circleField == null) {
+    private void initCustomIndicator(Context context) {
+        setClipChildren(false);
+
+        float dp = getResources().getDisplayMetrics().density;
+        int containerSize = Math.round(42 * dp);
+        int spinnerSize = Math.round(32 * dp);
+
+        mIndicatorContainer = new FrameLayout(context);
+        FrameLayout.LayoutParams containerLp = new FrameLayout.LayoutParams(containerSize, containerSize);
+        containerLp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+        mIndicatorContainer.setLayoutParams(containerLp);
+
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.OVAL);
+        bg.setColor(0xE6212121); // YouTube dark translucent disc (~90% opacity)
+        bg.setStroke(Math.max(1, Math.round(dp)), 0x33FFFFFF); // Clean translucent rim
+        mIndicatorContainer.setBackground(bg);
+        mIndicatorContainer.setElevation(4 * dp);
+        mIndicatorContainer.setVisibility(View.GONE);
+        mIndicatorContainer.setAlpha(0f);
+        mIndicatorContainer.setScaleX(0.4f);
+        mIndicatorContainer.setScaleY(0.4f);
+        mIndicatorContainer.setTranslationY(-containerSize);
+
+        // Passthrough touches
+        mIndicatorContainer.setClickable(false);
+        mIndicatorContainer.setFocusable(false);
+
+        mLoadingView = new YouTubeLoadingView(context);
+        FrameLayout.LayoutParams spinnerLp = new FrameLayout.LayoutParams(spinnerSize, spinnerSize);
+        spinnerLp.gravity = Gravity.CENTER;
+        mIndicatorContainer.addView(mLoadingView, spinnerLp);
+    }
+
+    private void suppressDefaultCircle() {
+        lookUp();
+        if (mCircleView == null && sCircleViewField != null) {
+            try {
+                mCircleView = (View) sCircleViewField.get(this);
+            } catch (Exception ignored) {
+            }
+        }
+        if (mCircleView != null) {
+            mCircleView.setVisibility(View.GONE);
+            mCircleView.setAlpha(0f);
+            if (mCircleView instanceof ImageView) {
+                ((ImageView) mCircleView).setImageDrawable(null);
+            }
+        }
+    }
+
+    private void ensureIndicator() {
+        if (mIndicatorContainer != null && mIndicatorContainer.getParent() == null) {
+            lookUp();
+            try {
+                if (sTargetField != null && sTargetField.get(this) == null) {
+                    for (int i = 0; i < getChildCount(); i++) {
+                        View child = getChildAt(i);
+                        if (!child.getClass().getName().contains("CircleImageView")
+                                && child != mIndicatorContainer) {
+                            sTargetField.set(this, child);
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+            addView(mIndicatorContainer);
+        }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        suppressDefaultCircle();
+        ensureIndicator();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        suppressDefaultCircle();
+        ensureIndicator();
+    }
+
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        suppressDefaultCircle();
+        ensureIndicator();
+        if (mIndicatorContainer != null) {
+            float dp = getResources().getDisplayMetrics().density;
+            int size = Math.round(42 * dp);
+            mIndicatorContainer.measure(
+                    MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY));
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        suppressDefaultCircle();
+        ensureIndicator();
+        if (mIndicatorContainer != null) {
+            int width = getMeasuredWidth();
+            int indW = mIndicatorContainer.getMeasuredWidth();
+            int indH = mIndicatorContainer.getMeasuredHeight();
+            int indLeft = (width - indW) / 2;
+            int indTop = getPaddingTop();
+            mIndicatorContainer.layout(indLeft, indTop, indLeft + indW, indTop + indH);
+        }
+    }
+
+    @Override
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        if (mCircleView != null && child == mCircleView) {
+            return false; // Suppress default CircleImageView completely
+        }
+        if (child != null && child.getClass().getName().contains("CircleImageView")) {
+            mCircleView = child;
+            return false;
+        }
+        return super.drawChild(canvas, child, drawingTime);
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        super.setRefreshing(refreshing);
+        updateRefreshingState(refreshing);
+    }
+
+    private void updateRefreshingState(boolean refreshing) {
+        if (mIndicatorContainer == null) {
             return;
         }
-        try {
-            ImageView circle = (ImageView) circleField.get(this);
-            int pad = Math.round(4 * getResources().getDisplayMetrics().density);
-            circle.setPadding(pad, pad, pad, pad);
-            circle.setImageDrawable(loader);
-            circle.setBackground(glass());
-            circle.setElevation(0); // a shadow under see-through glass shows through it as a grey blot
-            if (loader instanceof Animatable) {
-                ((Animatable) loader).start(); // loops forever; drawn only while the circle shows
+        ensureIndicator();
+        float dp = getResources().getDisplayMetrics().density;
+        float targetRestY = 18 * dp;
+        float indH = mIndicatorContainer.getMeasuredHeight() > 0
+                ? mIndicatorContainer.getMeasuredHeight() : 42 * dp;
+
+        mIndicatorContainer.animate().cancel();
+        if (refreshing) {
+            mIndicatorContainer.setVisibility(View.VISIBLE);
+            if (mIndicatorContainer.getAlpha() < 0.1f) {
+                mIndicatorContainer.setTranslationY(targetRestY);
+                mIndicatorContainer.setScaleX(0.4f);
+                mIndicatorContainer.setScaleY(0.4f);
+                mIndicatorContainer.setAlpha(0f);
             }
-        } catch (IllegalAccessException | RuntimeException e) {
-            // keep the stock arrow
+            mIndicatorContainer.animate()
+                    .translationY(targetRestY)
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(200)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            if (mLoadingView != null) {
+                mLoadingView.playAnimation();
+            }
+        } else {
+            // Smoothly scale/fade it out and pause the Lottie animation
+            mIndicatorContainer.animate()
+                    .scaleX(0f)
+                    .scaleY(0f)
+                    .alpha(0f)
+                    .setDuration(200)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .withEndAction(() -> {
+                        mIndicatorContainer.setVisibility(View.GONE);
+                        mIndicatorContainer.setTranslationY(-indH);
+                        if (mLoadingView != null) {
+                            mLoadingView.pauseAnimation();
+                        }
+                    })
+                    .start();
         }
     }
 
@@ -107,7 +266,8 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
     @Override
     public void onStopNestedScroll(View target) {
         super.onStopNestedScroll(target);
-        mEngaged = false; // released: it refreshes or springs back on its own, silently
+        mEngaged = false;
+        onPullEnded();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -117,6 +277,7 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
         int action = ev.getActionMasked();
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
             mEngaged = false;
+            onPullEnded();
         } else if (action == MotionEvent.ACTION_MOVE) {
             follow(touchPull(ev));
         }
@@ -128,8 +289,9 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
         if (pull < 0f || distance <= 0f || isRefreshing()) {
             return;
         }
-        // The line itself is SwipeRefreshLayout's (it decides the refresh), so no dead zone around
-        // it; a finger resting right on it clicks at most once per CLICK_GAP_MS instead.
+
+        updatePullProgress(pull, distance);
+
         boolean engaged = pull > distance;
         if (engaged != mEngaged) {
             mEngaged = engaged;
@@ -143,20 +305,102 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
         }
     }
 
-    /**
-     * The disc as glass: a smoky tint (so the white loaders still read over a light page), a gloss
-     * fading down from the top, and a thin bright rim. No blur: a view can't blur what is behind it.
-     */
-    private Drawable glass() {
+    private void updatePullProgress(float pull, float distance) {
+        if (mIndicatorContainer == null) {
+            return;
+        }
+        ensureIndicator();
+        mIndicatorContainer.animate().cancel();
+
         float dp = getResources().getDisplayMetrics().density;
-        GradientDrawable smoke = new GradientDrawable();
-        smoke.setShape(GradientDrawable.OVAL);
-        smoke.setColor(0x47000000);
-        GradientDrawable gloss = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {0x40FFFFFF, 0x00FFFFFF});
-        gloss.setShape(GradientDrawable.OVAL);
-        gloss.setStroke(Math.max(1, Math.round(dp)), 0x66FFFFFF);
-        return new LayerDrawable(new Drawable[] {smoke, gloss});
+        float targetRestY = 18 * dp;
+        float indH = mIndicatorContainer.getMeasuredHeight() > 0
+                ? mIndicatorContainer.getMeasuredHeight() : 42 * dp;
+        float startY = -indH;
+
+        if (pull <= 0) {
+            mIndicatorContainer.setVisibility(View.GONE);
+            mIndicatorContainer.setTranslationY(startY);
+            mIndicatorContainer.setAlpha(0f);
+            mIndicatorContainer.setScaleX(0.4f);
+            mIndicatorContainer.setScaleY(0.4f);
+            if (mLoadingView != null) {
+                mLoadingView.pauseAnimation();
+            }
+            return;
+        }
+
+        mIndicatorContainer.setVisibility(View.VISIBLE);
+        float fraction = Math.min(1f, pull / distance);
+        float currentY;
+        if (pull <= distance) {
+            currentY = startY + (targetRestY - startY) * fraction;
+        } else {
+            float overscroll = (pull - distance) * 0.25f;
+            currentY = targetRestY + Math.min(overscroll, 32 * dp);
+        }
+
+        mIndicatorContainer.setTranslationY(currentY);
+        mIndicatorContainer.setAlpha(Math.min(1f, fraction * 1.4f));
+        float scale = Math.min(1f, 0.4f + fraction * 0.6f);
+        mIndicatorContainer.setScaleX(scale);
+        mIndicatorContainer.setScaleY(scale);
+
+        if (mLoadingView != null) {
+            if (!isRefreshing()) {
+                if (mLoadingView.isAnimating()) {
+                    mLoadingView.pauseAnimation();
+                }
+                mLoadingView.setProgress(fraction % 1.0f);
+            } else {
+                if (!mLoadingView.isAnimating()) {
+                    mLoadingView.playAnimation();
+                }
+            }
+        }
+    }
+
+    private void onPullEnded() {
+        if (mIndicatorContainer == null) {
+            return;
+        }
+        float dp = getResources().getDisplayMetrics().density;
+        float targetRestY = 18 * dp;
+        float indH = mIndicatorContainer.getMeasuredHeight() > 0
+                ? mIndicatorContainer.getMeasuredHeight() : 42 * dp;
+
+        mIndicatorContainer.animate().cancel();
+        if (isRefreshing()) {
+            mIndicatorContainer.setVisibility(View.VISIBLE);
+            mIndicatorContainer.animate()
+                    .translationY(targetRestY)
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(180)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+            if (mLoadingView != null) {
+                mLoadingView.playAnimation();
+            }
+        } else {
+            mIndicatorContainer.animate()
+                    .translationY(-indH)
+                    .alpha(0f)
+                    .scaleX(0.4f)
+                    .scaleY(0.4f)
+                    .setDuration(220)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .withEndAction(() -> {
+                        if (!isRefreshing()) {
+                            mIndicatorContainer.setVisibility(View.GONE);
+                            if (mLoadingView != null) {
+                                mLoadingView.pauseAnimation();
+                            }
+                        }
+                    })
+                    .start();
+        }
     }
 
     /** How far a nested-scroll pull has gone (px), or -1 when unknown. */
@@ -208,6 +452,8 @@ public class HapticSwipeRefreshLayout extends SwipeRefreshLayout {
         sIsBeingDragged = field("mIsBeingDragged");
         sInitialMotionY = field("mInitialMotionY");
         sActivePointerId = field("mActivePointerId");
+        sCircleViewField = field("mCircleView");
+        sTargetField = field("mTarget");
     }
 
     @Nullable

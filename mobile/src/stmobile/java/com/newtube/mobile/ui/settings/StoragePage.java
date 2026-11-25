@@ -168,7 +168,7 @@ final class StoragePage {
         int onSurface = ContextCompat.getColor(context, R.color.mobile_color_on_surface);
         clear.setTextColor(onSurface);
         clear.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        clear.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        clear.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(context));
         clear.setGravity(Gravity.CENTER);
         clear.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_menu_delete, 0, 0, 0);
         clear.setCompoundDrawableTintList(android.content.res.ColorStateList.valueOf(onSurface));

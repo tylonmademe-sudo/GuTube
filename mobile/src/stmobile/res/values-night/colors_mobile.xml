@@ -6,8 +6,8 @@
     <!-- GUTUBE(app icon): pure white solid color for adaptive icon background (ColorOS 2x2 resizable icon support) -->
     <color name="ic_launcher_white">#FFFFFF</color>
     <color name="mobile_color_cast_active">#64D2FF</color>
-    <!-- GUTUBE(amoled): pages are true black - an AMOLED pixel showing #000 is off. -->
-    <color name="mobile_color_background">#000000</color>
+    <!-- GUTUBE(youtube dark): official YouTube dark theme page background (#0F0F0F). -->
+    <color name="mobile_color_background">#0F0F0F</color>
     <color name="mobile_color_surface">#1C1C21</color>
     <color name="mobile_color_on_surface">#F5F5F7</color>
     <color name="mobile_color_on_surface_secondary">#99FFFFFF</color>
@@ -31,7 +31,7 @@
     <color name="mobile_color_track">#33FFFFFF</color>
     <color name="mobile_color_field">#1C1C21</color>
     <color name="mobile_color_background_scrim">#66000000</color>
-    <color name="mobile_color_navigation_bar">#000000</color>
+    <color name="mobile_color_navigation_bar">#0F0F0F</color>
 
     <!-- The shared edit dialogs keep the library's AppDialog colours (sharedutils / common). -->
     <color name="dialog_bg_color">#101010</color>
@@ -47,7 +47,7 @@
     <color name="gutube_nav_glass_stroke">#40FFFFFF</color>
     <!-- GUTUBE(stats): a milky frost over a blurred page, for a card on the greeting's glass. -->
     <color name="gutube_frost_tint">#2EFFFFFF</color>
-    <color name="gutube_youtube_nav_tint">#C70A0A0A</color>
+    <color name="gutube_youtube_nav_tint">#CC0F0F0F</color>
     <color name="gutube_glass_button">#1AFFFFFF</color>
     <color name="gutube_watch_card">#1AFFFFFF</color>
     <!-- GUTUBE(issue #250): dark translucent glass for search bar, dialogs and greeting overlay. -->
@@ -67,8 +67,8 @@
     <color name="gutube_glass_selected">#2EFFFFFF</color>
     <color name="gutube_nav_inactive">#ADFFFFFF</color>
     <color name="gutube_nav_bloom_plain">#FFFFFFFF</color>
-    <!-- GUTUBE(glass): the frosted top bar - the page colour at ~75%. -->
-    <color name="gutube_bar_tint">#B8000000</color>
+    <!-- GUTUBE(glass): the frosted top bar - the page colour at ~72%. -->
+    <color name="gutube_bar_tint">#B80F0F0F</color>
     <color name="gutube_switch_off">#3A3A3F</color>
     <color name="splash_mono">#FFFFFFFF</color>
     <color name="splash_glass_start">#E6FFFFFF</color>

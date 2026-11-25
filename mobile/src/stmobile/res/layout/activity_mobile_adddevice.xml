@@ -59,9 +59,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ProgressBar
-                style="@style/Widget.GuTube.GlassSpinner"
+            <com.newtube.mobile.ui.common.YouTubeLoadingView
                 android:id="@+id/mobile_add_device_progress"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="64dp" />
 

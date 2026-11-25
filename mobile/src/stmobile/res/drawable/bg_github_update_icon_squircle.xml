@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Stitch Style App Icon Squircle: 14dp corners, vibrant YouTube Red with subtle specular border -->
+<!-- Transparent container for GuTube App Mark -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="14dp" />
-    <solid android:color="#FF0000" />
-    <stroke
-        android:width="1dp"
-        android:color="#26FFFFFF" />
+    <solid android:color="@android:color/transparent" />
 </shape>

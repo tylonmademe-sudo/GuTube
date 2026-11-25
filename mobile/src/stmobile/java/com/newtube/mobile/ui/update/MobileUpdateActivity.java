@@ -180,7 +180,7 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         @SuppressLint("InflateParams") // a dialog's content: BottomSheetDialog.setContentView gives it its parent
         View content = LayoutInflater.from(this).inflate(R.layout.sheet_mobile_update, null);
         mTitle = content.findViewById(R.id.update_sheet_title);
-        com.newtube.mobile.ui.common.AppIcon.show(content.findViewById(R.id.mobile_update_icon), false);
+        com.newtube.mobile.ui.common.AppIcon.show(content.findViewById(R.id.mobile_update_icon), true);
         mSubtitle = content.findViewById(R.id.update_sheet_subtitle);
         mProgress = content.findViewById(R.id.update_sheet_progress);
         mProgressText = content.findViewById(R.id.update_sheet_progress_text);
@@ -198,31 +198,26 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         mScroll = content.findViewById(R.id.update_sheet_scroll);
         mScroll.setMaxHeight(Math.round(screenHeightPx() * NOTES_MAX_HEIGHT_FRACTION));
 
+        // Dedicated Liquid Glass Background Layer (AGSL distortion / blur)
+        View glassBg = content.findViewById(R.id.update_sheet_glass_bg);
+        com.newtube.mobile.ui.common.LiquidGlass.applyLiquidEffect(glassBg);
+
         if (mPrimary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mPrimary);
         if (mSecondary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mSecondary);
         if (mDontAsk != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mDontAsk);
 
-        mSheet = Haptics.watch(new BottomSheetDialog(this, R.style.ThemeOverlay_NewTube_BottomSheetDialog));
+        mSheet = new BottomSheetDialog(this, R.style.ThemeOverlay_GuTube_BottomSheetDialog_LiquidGlass);
         mSheet.setContentView(content);
         mSheet.setOnDismissListener(dialog -> finish());
 
         mSheet.setOnShowListener(dialogInterface -> {
             BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
             FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            if (bottomSheet != null) {
-                bottomSheet.setBackgroundResource(android.R.color.transparent);
-            }
+            com.newtube.mobile.ui.common.LiquidGlass.configureBottomSheetContainer(bottomSheet);
         });
 
-        Window window = mSheet.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setDimAmount(0.65f);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
-                window.getAttributes().setBlurBehindRadius((int) (14 * getResources().getDisplayMetrics().density));
-            }
-        }
+        // Real backdrop blur (blur(8px - 12dp)) and true transparent window styling
+        com.newtube.mobile.ui.common.LiquidGlass.configureWindow(mSheet, this);
 
         // The whole sheet or nothing: a half-open peek hid the buttons under a long list of notes
         mSheet.getBehavior().setSkipCollapsed(true);

@@ -368,7 +368,7 @@ final class FeedStrip extends RecyclerView.Adapter<FeedStrip.Holder> {
                 TextView chip = new TextView(context);
                 chip.setId(android.R.id.text1);
                 chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f);
-                chip.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+                chip.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(context));
                 chip.setSingleLine(true);
                 chip.setIncludeFontPadding(false);
                 chip.setGravity(Gravity.CENTER);

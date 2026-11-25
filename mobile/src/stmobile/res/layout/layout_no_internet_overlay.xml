@@ -20,7 +20,7 @@
     android:paddingBottom="136dp"
     android:visibility="gone"
     android:alpha="0"
-    android:background="#000000">
+    android:background="@color/mobile_color_background">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/no_internet_lottie"

@@ -51,7 +51,7 @@ public class MobileChannelPostsActivity extends MobileActivity implements MiniPl
     private RecyclerView mList;
     private LinearLayoutManager mLayout;
     private SwipeRefreshLayout mSwipe;
-    private ProgressBar mProgress;
+    private View mProgress;
     private PageLoadState mState;
     private LoadMoreFailureAdapter mFooter;
     private MobileMiniPlayerController mMiniPlayer;

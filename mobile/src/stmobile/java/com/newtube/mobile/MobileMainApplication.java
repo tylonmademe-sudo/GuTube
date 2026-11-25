@@ -156,6 +156,7 @@ public class MobileMainApplication extends MainApplication {
         if (isPhoenixProcess()) {
             return;
         }
+        OkHttpManager.setPreferHttp2(true);
         // GUTUBE(glass): the text dialogs (Create playlist, Rename...) as the app's frosted, rounded card.
         com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog.sStyle =
                 new com.liskovsoft.smartyoutubetv2.common.utils.SimpleEditDialog.Style() {

@@ -463,7 +463,7 @@ public class GooeyNavLayout extends FrameLayout implements Choreographer.FrameCa
         TextView tv = new TextView(getContext());
         tv.setText(item.label);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        tv.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
+        tv.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(getContext()));
         tv.setSingleLine(true);
         tv.setIncludeFontPadding(false);
         tv.setTextColor(index == mTargetIndex ? mActiveTextColor : mMutedTextColor);

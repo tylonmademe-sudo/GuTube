@@ -241,22 +241,30 @@ public class MobileSearchActivity extends MobileActivity
         if (!com.newtube.mobile.ui.browse.MobileBrowseActivity.copyNavTabs(this,
                 (com.google.android.material.bottomnavigation.BottomNavigationView) bar,
                 () -> mGrid.smoothScrollToPosition(0))) {
-            mNavDocked = false;
-            refreshContentInsets();
             return;
         }
         mNavPill = pill;
         com.newtube.mobile.ui.common.Glass.blur(pill, findViewById(R.id.mobile_search_glass_source));
-        // The bar must not pad itself by system navigation insets - dockBar handles the bottom inset on pill.
+        // The pill floats above the system bar already: the bar must not pad itself by it too.
         ViewCompat.setOnApplyWindowInsetsListener(bar, (v, insets) -> insets);
 
-        mNavDocked = true;
-        refreshContentInsets();
-        int gap = Math.round(10 * getResources().getDisplayMetrics().density);
-        com.newtube.mobile.ui.common.YouTubeMode.dockBar(pill, height -> {
-            com.newtube.mobile.ui.common.YouTubeMode.padBottom(mGrid, height);
-            com.newtube.mobile.ui.common.YouTubeMode.marginBottom(findViewById(R.id.mobile_mini_player), height + gap);
-        });
+        int clearance = getResources().getDimensionPixelSize(R.dimen.gutube_nav_clearance);
+        mGrid.setPadding(mGrid.getPaddingLeft(), mGrid.getPaddingTop(), mGrid.getPaddingRight(), clearance);
+        View miniPlayer = findViewById(R.id.mobile_mini_player);
+        if (miniPlayer != null && miniPlayer.getLayoutParams() instanceof android.view.ViewGroup.MarginLayoutParams) {
+            ((android.view.ViewGroup.MarginLayoutParams) miniPlayer.getLayoutParams()).bottomMargin = clearance;
+        }
+
+        if (com.newtube.mobile.ui.common.YouTubeMode.isOn(this)) {
+            // GUTUBE(youtube mode): docked to the bottom edge; the page ends above it.
+            mNavDocked = true;
+            refreshContentInsets();
+            int gap = Math.round(10 * getResources().getDisplayMetrics().density);
+            com.newtube.mobile.ui.common.YouTubeMode.dockBar(pill, height -> {
+                com.newtube.mobile.ui.common.YouTubeMode.padBottom(mGrid, height);
+                com.newtube.mobile.ui.common.YouTubeMode.marginBottom(findViewById(R.id.mobile_mini_player), height + gap);
+            });
+        }
 
         mNavHider = new com.newtube.mobile.ui.common.NavHider(pill);
         mNavHider.setOnSlide(navY -> { // GUTUBE(issue #125): the mini card rides the nav bar, as on Home
@@ -281,8 +289,8 @@ public class MobileSearchActivity extends MobileActivity
 
     private View mNavPill;
     private com.newtube.mobile.ui.common.NavHider mNavHider;
-    /** Docked bottom tab bar matching Home page: content container runs edge-to-edge behind the docked bar. */
-    private boolean mNavDocked = true;
+    /** GUTUBE(youtube mode): the docked tab bar, there only when the results came from Browse. */
+    private boolean mNavDocked = false;
 
     @Override
     protected boolean shouldInsetContentForNavigationBar() {

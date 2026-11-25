@@ -381,7 +381,7 @@ public final class GitHubAppUpdater {
     private static void showUpdateDialog(Activity activity, ReleaseInfo release) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
 
-        BottomSheetDialog dialog = new BottomSheetDialog(activity, R.style.ThemeOverlay_NewTube_BottomSheetDialog);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity, R.style.ThemeOverlay_GuTube_BottomSheetDialog_LiquidGlass);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_github_update, null);
         dialog.setContentView(view);
         dialog.setCancelable(true);
@@ -405,13 +405,17 @@ public final class GitHubAppUpdater {
         MaterialButton btnAction = view.findViewById(R.id.github_update_btn_action);
         com.newtube.mobile.ui.update.MaxHeightScrollView scroll = view.findViewById(R.id.github_update_scroll);
 
+        // Dedicated Liquid Glass Background Layer (AGSL distortion / blur)
+        View glassBg = view.findViewById(R.id.github_update_glass_bg);
+        com.newtube.mobile.ui.common.LiquidGlass.applyLiquidEffect(glassBg);
+
         float density = activity.getResources().getDisplayMetrics().density;
 
         if (scroll != null) {
             scroll.setMaxHeight((int) (activity.getResources().getDisplayMetrics().heightPixels * 0.35f));
         }
 
-        AppIcon.show(iconView, false);
+        AppIcon.show(iconView, true);
 
         titleView.setText("Update Available");
         String sizeStr = release.apkSize > 0 ? Formatter.formatFileSize(activity, release.apkSize) : "";
@@ -434,7 +438,7 @@ public final class GitHubAppUpdater {
         dialog.setOnShowListener(d -> {
             View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
-                bottomSheet.setBackgroundResource(android.R.color.transparent);
+                com.newtube.mobile.ui.common.LiquidGlass.configureBottomSheetContainer(bottomSheet);
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setHideable(true);
                 behavior.setSkipCollapsed(true);
@@ -520,16 +524,8 @@ public final class GitHubAppUpdater {
             }
         });
 
-        // Android 12+ (API 31+) native window backdrop blur & 65% contrast scrim
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setDimAmount(0.65f);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
-                window.getAttributes().setBlurBehindRadius((int) (14 * activity.getResources().getDisplayMetrics().density));
-            }
-        }
+        // Real backdrop blur (blur(8px - 12dp)) and true transparent window styling
+        com.newtube.mobile.ui.common.LiquidGlass.configureWindow(dialog, activity);
 
         final Call[] activeCall = new Call[1];
         final boolean[] isDownloading = new boolean[]{false};

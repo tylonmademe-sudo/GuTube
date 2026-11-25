@@ -1038,6 +1038,7 @@ public class MobileBrowseActivity extends MobileActivity
      * GUTUBE(youtube mode): YouTube's top bar styling.
      */
     private void setUpYouTubeTopBar() {
+        float density = getResources().getDisplayMetrics().density;
         View brand = findViewById(R.id.mobile_brand_glass);
         View actions = findViewById(R.id.mobile_actions_glass);
         if (brand instanceof com.newtube.mobile.ui.common.GlassView) {
@@ -1047,9 +1048,8 @@ public class MobileBrowseActivity extends MobileActivity
             ((com.newtube.mobile.ui.common.GlassView) actions).setPlain();
         }
         if (brand != null) {
-            brand.setPaddingRelative(0, brand.getPaddingTop(), brand.getPaddingEnd(), brand.getPaddingBottom());
+            brand.setPaddingRelative(0, brand.getPaddingTop(), Math.round(8 * density), brand.getPaddingBottom());
         }
-        float density = getResources().getDisplayMetrics().density;
         View mark = findViewById(R.id.mobile_brand_mark);
         if (mark != null && mark.getLayoutParams() != null) {
             mark.getLayoutParams().width = Math.round(28 * density);
@@ -1058,8 +1058,9 @@ public class MobileBrowseActivity extends MobileActivity
         TextView name = findViewById(R.id.mobile_title_bar);
         if (name != null) {
             name.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 21);
-            name.setTypeface(android.graphics.Typeface.create("sans-serif-condensed", android.graphics.Typeface.BOLD));
-            name.setLetterSpacing(-0.02f);
+            name.setTypeface(com.newtube.mobile.ui.common.AppFonts.displayBold(this));
+            name.setLetterSpacing(-0.035f);
+            name.setIncludeFontPadding(false);
         }
     }
 

@@ -115,152 +115,175 @@
 
                 <!-- Top bar: back, audio mode, title + channel subtitle, and options (cast, cc, more) -->
                 <LinearLayout
-                    android:id="@+id/mobile_player_top_bar"
+                    android:id="@+id/mobile_player_top_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
-
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_back"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_minimize"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_player_minimize"
-                        android:tint="@color/mobile_player_on_video" />
-
-                    <!-- GUTUBE(audio-only): headphones - play the sound alone (the video track is dropped,
-                         the thumbnail stays), and Home keeps the audio going instead of a PiP window. -->
-                    <com.newtube.mobile.ui.playback.PlayerButton
-                        android:id="@+id/mobile_player_audio"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/mobile_player_audio_only"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_player_headphones"
-                        android:tint="@color/mobile_player_audio_tint" />
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/mobile_player_title_group"
-                        android:layout_width="0dp"
+                        android:id="@+id/mobile_player_top_bar"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="12dp"
-                        android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
 
-                        <TextView
-                            android:id="@+id/mobile_player_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical|start"
-                            android:maxLines="1"
-                            android:shadowColor="#CC000000"
-                            android:shadowDx="0"
-                            android:shadowDy="1"
-                            android:shadowRadius="3"
-                            android:textColor="@android:color/white"
-                            android:textSize="13.5sp"
-                            android:textStyle="bold"
-                            tools:text="Video title goes here and may wrap onto a second line" />
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_back"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/mobile_player_minimize"
+                            android:padding="8dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_player_minimize"
+                            android:tint="@color/mobile_player_on_video" />
 
-                        <TextView
-                            android:id="@+id/mobile_player_author"
-                            android:layout_width="match_parent"
+                        <!-- GUTUBE(audio-only): headphones - play the sound alone (the video track is dropped,
+                             the thumbnail stays), and Home keeps the audio going instead of a PiP window. -->
+                        <com.newtube.mobile.ui.playback.PlayerButton
+                            android:id="@+id/mobile_player_audio"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/mobile_player_audio_only"
+                            android:padding="8dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_player_headphones"
+                            android:tint="@color/mobile_player_audio_tint" />
+
+                        <View
+                            android:id="@+id/mobile_player_top_spacer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/mobile_player_title_group"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:paddingTop="1dp"
-                            android:shadowColor="#CC000000"
-                            android:shadowDx="0"
-                            android:shadowDy="1"
-                            android:shadowRadius="3"
-                            android:textColor="#CCFFFFFF"
-                            android:textSize="11sp"
-                            android:visibility="gone"
-                            tools:text="Channel name" />
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/mobile_player_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical|start"
+                                android:maxLines="1"
+                                android:shadowColor="#CC000000"
+                                android:shadowDx="0"
+                                android:shadowDy="1"
+                                android:shadowRadius="3"
+                                android:textColor="@android:color/white"
+                                android:textSize="13.5sp"
+                                android:textStyle="bold"
+                                tools:text="Video title goes here and may wrap onto a second line" />
+
+                            <TextView
+                                android:id="@+id/mobile_player_author"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingTop="1dp"
+                                android:shadowColor="#CC000000"
+                                android:shadowDx="0"
+                                android:shadowDy="1"
+                                android:shadowRadius="3"
+                                android:textColor="#CCFFFFFF"
+                                android:textSize="11sp"
+                                android:visibility="gone"
+                                tools:text="Channel name" />
+
+                        </LinearLayout>
+
+                        <!-- Top-right player options: Cast, Subtitles/CC, Screenshot, and the gear. -->
+                        <LinearLayout
+                            android:id="@+id/mobile_player_options"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <!-- Cast picker (casting wave): lists DIAL-discovered TVs + paired screens. -->
+                            <com.newtube.mobile.ui.playback.PlayerButton
+                                android:id="@+id/mobile_player_cast"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/mobile_cast_button"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_mobile_cast"
+                                android:tint="@color/mobile_player_on_video" />
+
+                            <com.newtube.mobile.ui.playback.PlayerButton
+                                android:id="@+id/mobile_player_subtitles"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="6dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/mobile_player_subtitles"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_player_cc_off"
+                                android:tint="@color/mobile_player_on_video" />
+
+                            <!-- Frame Studio (Advanced Screenshot Mode) -->
+                            <com.newtube.mobile.ui.playback.PlayerButton
+                                android:id="@+id/mobile_player_screenshot"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="6dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/mobile_player_screenshot"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_player_screenshot"
+                                android:tint="@color/mobile_player_on_video" />
+
+                            <!-- Gear: opens the player-options bottom sheet -->
+                            <com.newtube.mobile.ui.playback.PlayerButton
+                                android:id="@+id/mobile_player_more"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="6dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/mobile_player_settings"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_mobile_settings"
+                                android:tint="@color/mobile_player_on_video" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <!-- Top-right player options: Cast, Subtitles/CC, Screenshot, and the gear. -->
-                    <LinearLayout
-                        android:id="@+id/mobile_player_options"
-                        android:layout_width="wrap_content"
+                    <!-- Second-row container for portrait fullscreen title -->
+                    <FrameLayout
+                        android:id="@+id/mobile_player_portrait_title_slot"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <!-- Cast picker (casting wave): lists DIAL-discovered TVs + paired screens. -->
-                        <com.newtube.mobile.ui.playback.PlayerButton
-                            android:id="@+id/mobile_player_cast"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/mobile_cast_button"
-                            android:padding="8dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_mobile_cast"
-                            android:tint="@color/mobile_player_on_video" />
-
-                        <com.newtube.mobile.ui.playback.PlayerButton
-                            android:id="@+id/mobile_player_subtitles"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="12dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/mobile_player_subtitles"
-                            android:padding="8dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_player_cc_off"
-                            android:tint="@color/mobile_player_on_video" />
-
-                        <!-- Frame Studio (Advanced Screenshot Mode) -->
-                        <com.newtube.mobile.ui.playback.PlayerButton
-                            android:id="@+id/mobile_player_screenshot"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="12dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/mobile_player_screenshot"
-                            android:padding="8dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_player_screenshot"
-                            android:tint="@color/mobile_player_on_video" />
-
-                        <!-- Gear: opens the player-options bottom sheet -->
-                        <com.newtube.mobile.ui.playback.PlayerButton
-                            android:id="@+id/mobile_player_more"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="12dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/mobile_player_settings"
-                            android:padding="8dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_mobile_settings"
-                            android:tint="@color/mobile_player_on_video" />
-
-                    </LinearLayout>
+                        android:layout_marginTop="6dp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -320,8 +343,8 @@
                     android:layout_marginBottom="@dimen/mobile_player_bottom_row_margin"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp">
 
                     <!-- Clean timestamp: position / duration (no heavy box, crisp white text with subtle shadow) -->
                     <LinearLayout
@@ -393,7 +416,7 @@
                             android:ellipsize="end"
                             android:gravity="center_vertical"
                             android:maxLines="1"
-                            android:minHeight="32dp"
+                            android:minHeight="24dp"
                             android:paddingStart="6dp"
                             android:paddingEnd="4dp"
                             android:shadowColor="#80000000"
@@ -408,16 +431,24 @@
 
                 </LinearLayout>
 
-                <!-- Action toolbar (Row 3 Left): Clean borderless action buttons with uniform 16dp spacing -->
-                <LinearLayout
-                    android:id="@+id/mobile_player_actions"
-                    android:layout_width="wrap_content"
+                <!-- Action toolbar (Row 3 Left): Clean borderless action buttons with horizontal scroll wrapper -->
+                <HorizontalScrollView
+                    android:id="@+id/mobile_player_actions_scroll"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|start"
-                    android:layout_marginStart="0dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:scrollbars="none"
+                    android:overScrollMode="never"
+                    android:requiresFadingEdge="horizontal"
+                    android:fadingEdgeLength="16dp"
                     android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/mobile_player_actions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                     <!-- Like / Dislike group (borderless, no heavy capsule) -->
                     <LinearLayout
@@ -516,6 +547,8 @@
                         android:src="@drawable/ic_watch_share" />
 
                 </LinearLayout>
+
+                </HorizontalScrollView>
 
                 <!-- Action toolbar (Row 3 Right): Compact Liquid Glass More Videos Pill & Borderless Fullscreen -->
                 <LinearLayout
@@ -692,11 +725,12 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- GUTUBE(issue #77): a frosted glass disc with a thin white arc, like the
-                     player's other glass, instead of a bare red spinner. -->
-                <ProgressBar
-                    style="@style/Widget.GuTube.GlassSpinner"
-                    android:id="@+id/mobile_player_progress" />
+                <!-- GUTUBE: YouTube Lottie loading spinner for video playback buffering -->
+                <com.newtube.mobile.ui.common.YouTubeLoadingView
+                    android:id="@+id/mobile_player_progress"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center" />
 
                 <!-- GUTUBE(seek pill): during a double-tap burst the spinner's place shows where
                      the video lands (MobilePlaybackActivity.showSeekTime). -->
@@ -1036,7 +1070,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/roboto_medium"
                         android:text="@string/mobile_live_chat_entry"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="14sp" />
@@ -1146,7 +1180,7 @@
                     android:text="@string/mobile_watch_related"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:fontFamily="@font/roboto_medium" />
 
                 <!-- GUTUBE(issue #74): All / From <channel> over the related list. -->
                 <HorizontalScrollView

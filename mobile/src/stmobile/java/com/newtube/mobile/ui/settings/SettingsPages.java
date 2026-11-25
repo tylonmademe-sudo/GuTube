@@ -1,7 +1,6 @@
 package com.newtube.mobile.ui.settings;
 
 import android.content.Context;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -60,7 +59,6 @@ public final class SettingsPages {
     public static final String BATTERY = "battery";
     public static final String ADVANCED = "advanced";
     public static final String ABOUT = "about";
-    public static final String TV_INSTALL = "tv_install";
     public static final String ABOUT_REPORTERS = "about_reporters";
     public static final String ABOUT_CONTRIBUTORS = "about_contributors";
 
@@ -128,8 +126,6 @@ public final class SettingsPages {
                 return PlayerPages.advanced(context);
             case ABOUT:
                 return about(context);
-            case TV_INSTALL:
-                return Build.VERSION.SDK_INT >= 26 ? TvInstall.page(context) : root(context);
             case ABOUT_REPORTERS:
                 return AboutPeople.reporters(context);
             case ABOUT_CONTRIBUTORS:
@@ -183,35 +179,6 @@ public final class SettingsPages {
                 context.getString(R.string.mobile_settings_advanced_summary), ADVANCED));
         rows.add(SettingsRow.page(R.drawable.ic_settings_about, context.getString(R.string.mobile_settings_about),
                 versionLine(context), ABOUT));
-        if (Build.VERSION.SDK_INT >= 26) {
-            rows.add(SettingsRow.page(R.drawable.ic_settings_tv, context.getString(R.string.mobile_settings_tv_title),
-                    context.getString(R.string.mobile_settings_tv_summary), TV_INSTALL));
-        }
-
-        // Notification Testing (Demo)
-        rows.add(SettingsRow.header("Notification Testing (Demo)"));
-        rows.add(icon(R.drawable.ic_about_notifications, SettingsRow.action("Test Channel Notification",
-                "Fire realistic YouTube upload & short notification", page -> {
-                    android.app.Activity activity = page.requireActivity();
-                    if (!com.newtube.mobile.notify.NotificationHelper.hasNotificationPermission(activity)) {
-                        com.newtube.mobile.notify.NotificationHelper.requestNotificationPermission(activity);
-                        android.widget.Toast.makeText(activity, "Please grant Notification permission to test", android.widget.Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    com.newtube.mobile.notify.ChannelNotificationWorker.fireTestNotification(activity);
-                    android.widget.Toast.makeText(activity, "Sample Channel notification sent! Check notification shade.", android.widget.Toast.LENGTH_SHORT).show();
-                })));
-        rows.add(icon(R.drawable.ic_mobile_update, SettingsRow.action("Test App Update Notification",
-                "Fire formatted App Update notification with 'Update Now' button", page -> {
-                    android.app.Activity activity = page.requireActivity();
-                    if (!com.newtube.mobile.notify.NotificationHelper.hasNotificationPermission(activity)) {
-                        com.newtube.mobile.notify.NotificationHelper.requestNotificationPermission(activity);
-                        android.widget.Toast.makeText(activity, "Please grant Notification permission to test", android.widget.Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    com.newtube.mobile.update.UpdateNotificationWorker.fireTestNotification(activity);
-                    android.widget.Toast.makeText(activity, "Sample App Update notification sent! Check notification shade.", android.widget.Toast.LENGTH_SHORT).show();
-                })));
 
         return new Page(context.getString(R.string.header_settings), rows);
     }
@@ -263,34 +230,7 @@ public final class SettingsPages {
                     () -> !updates.isPromptOff(), on -> updates.setPromptOff(!on))));
         }
 
-        rows.add(SettingsRow.divider());
-        rows.add(icon(R.drawable.ic_about_code, SettingsRow.action(context.getString(R.string.about_source_code),
-                context.getString(R.string.app_name),
-                page -> { })));
-        rows.add(icon(R.drawable.ic_about_gavel, SettingsRow.action(context.getString(R.string.about_license),
-                context.getString(R.string.about_license_name),
-                page -> { })));
-        rows.add(SettingsRow.custom(context.getString(R.string.mobile_about_tv_title), SettingsPages::tvTeaser));
-
         return new Page(context.getString(R.string.about_app, context.getString(R.string.app_name)), rows);
-    }
-
-    /**
-     * GUTUBE(about): a look at GuTube TV at the bottom of About. The card leans with the phone and the
-     * screenshot, a little zoomed, pans inside its rounded window. The button opens Install on TV.
-     */
-    private static android.view.View tvTeaser(@NonNull android.view.ViewGroup parent, @NonNull SettingsAdapter.Listener page) {
-        Context context = parent.getContext();
-        android.view.View card = android.view.LayoutInflater.from(context).inflate(R.layout.item_mobile_about_tv, parent, false);
-        card.findViewById(R.id.about_tv_window).setClipToOutline(true);
-        card.findViewById(R.id.about_tv_install).setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= 26 && page instanceof SettingsPageFragment) {
-                ((SettingsPageFragment) page).openPage(TV_INSTALL);
-            }
-        });
-        card.findViewById(R.id.about_tv_repo).setVisibility(android.view.View.GONE);
-        TiltParallax.attach((android.view.ViewGroup) card, 0.6f, card.findViewById(R.id.about_tv_shot));
-        return card;
     }
 
     /** GUTUBE(about): an About row's icon, in the same glass bead as the top level's. */

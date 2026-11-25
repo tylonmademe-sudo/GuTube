@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/roboto"
                     android:text="@string/mobile_cast_smarttube_title"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textSize="14sp" />
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/roboto"
                     android:text="@string/mobile_cast_youtube_title"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textSize="14sp" />
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@color/mobile_color_on_surface"
             android:textSize="14sp"
             android:visibility="gone" />
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="56dp"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/roboto"
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLines="1"
@@ -110,8 +110,9 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <ProgressBar
-                style="@style/Widget.GuTube.GlassSpinner.Small" />
+            <com.newtube.mobile.ui.common.YouTubeLoadingView
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"

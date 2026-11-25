@@ -24,8 +24,8 @@
       stays dark in both, like YouTube's: its chrome uses the fixed mobile_player_* colours.
     -->
     <style name="Theme.NewTube" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="fontFamily">@font/roboto</item>
         <!-- GUTUBE(scrollbars): no scroll bar at the side of anything, sheets and dialogs included
              (screens also turn them off at runtime: BounceOverscroll). -->
         <item name="android:scrollViewStyle">@style/Widget.GuTube.NoScrollbars.ScrollView</item>
@@ -151,10 +151,11 @@
 
     <style name="Widget.NewTube.Snackbar.Action" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/mobile_color_background</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="TextAppearance.NewTube.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
     </style>
@@ -171,7 +172,7 @@
         <item name="android:textColor">@color/mobile_color_on_inverse_surface</item>
         <item name="backgroundTint">@color/mobile_color_inverse_surface</item>
         <item name="rippleColor">@color/mobile_color_inverse_ripple</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
@@ -199,6 +200,18 @@
              #1E1E1E came out as exactly #3F3F3F, which is the pale band that showed under
              the sheet in the first place. -->
         <item name="elevationOverlayEnabled">false</item>
+    </style>
+
+    <!-- Liquid Glass Modal Theme: guarantees 100% transparent window and bottomSheet container -->
+    <style name="ThemeOverlay.GuTube.BottomSheetDialog.LiquidGlass" parent="ThemeOverlay.NewTube.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.GuTube.BottomSheet.LiquidGlass</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.GuTube.BottomSheet.LiquidGlass" parent="Widget.NewTube.BottomSheet">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <!--
@@ -393,14 +406,14 @@
     </style>
 
     <style name="MobileCastCodeDialogTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_condensed_bold</item>
         <item name="android:textColor">@color/mobile_color_on_surface</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:letterSpacing">0</item>
+        <item name="android:letterSpacing">-0.01</item>
     </style>
 
     <style name="MobileCastCodeDialogSecondaryButton" parent="MobileAlertDialogButton">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0</item>
@@ -408,7 +421,7 @@
     </style>
 
     <style name="MobileCastCodeDialogPrimaryButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAllCaps">false</item>
@@ -429,7 +442,7 @@
          "Listas de reproducción" label from the bar). -->
     <style name="MobileBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">10sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <!-- Watch-page loading skeleton (alpha-pulsed from code while related videos load). -->
@@ -642,7 +655,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:gravity">center</item>
         <item name="android:maxLines">1</item>
         <item name="android:shadowColor">#B3000000</item>
@@ -733,7 +746,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">32dp</item>
         <item name="android:drawablePadding">4dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingHorizontal">12dp</item>
         <item name="android:textColor">@android:color/white</item>

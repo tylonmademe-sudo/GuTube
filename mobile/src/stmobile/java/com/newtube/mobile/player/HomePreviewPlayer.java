@@ -57,7 +57,7 @@ public final class HomePreviewPlayer {
     }
 
     private static final ExecutorService BUILD = Executors.newSingleThreadExecutor();
-    private static final int MAX_BITRATE = 2_500_000;
+    private static final int MAX_BITRATE = 1_200_000;
 
     private final Context mContext;
     private final TextureView mView;
@@ -103,14 +103,13 @@ public final class HomePreviewPlayer {
             fail(generation, null);
             return;
         }
-        if (mFactory == null) {
-            mFactory = new Media3SourceFactory(mContext);
-        }
-        final Media3SourceFactory factory = mFactory;
         BUILD.execute(() -> {
             MediaSource source = null;
             try {
-                source = SabrSourcePreference.isPreferred(mContext) ? null : factory.fromDashFormatInfo(info);
+                if (mFactory == null) {
+                    mFactory = new Media3SourceFactory(mContext);
+                }
+                source = mFactory.fromDashFormatInfo(info);
             } catch (Throwable e) { // never kill the build thread
                 NetPath.log("home-preview build failed: " + e);
             }
@@ -225,7 +224,7 @@ public final class HomePreviewPlayer {
             mPlayer = new ExoPlayer.Builder(mContext)
                     .setTrackSelector(mSelector)
                     .setLoadControl(new DefaultLoadControl.Builder()
-                            .setBufferDurationsMs(5000, 15000, 1000, 1500).build())
+                            .setBufferDurationsMs(3000, 10000, 250, 500).build())
                     .build();
             mPlayer.setVideoTextureView(mView);
             mPlayer.addListener(new Player.Listener() {

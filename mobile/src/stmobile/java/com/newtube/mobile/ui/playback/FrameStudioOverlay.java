@@ -896,7 +896,7 @@ public class FrameStudioOverlay {
         labelView.setEllipsize(TextUtils.TruncateAt.END);
         labelView.setShadowLayer(3f, 0f, 1f, 0xCC000000);
         labelView.setTextColor(isSelected ? 0xFFFFFFFF : 0xCCFFFFFF);
-        labelView.setTypeface(Typeface.create("sans-serif-medium", isSelected ? Typeface.BOLD : Typeface.NORMAL));
+        labelView.setTypeface(isSelected ? com.newtube.mobile.ui.common.AppFonts.bold(mActivity) : com.newtube.mobile.ui.common.AppFonts.medium(mActivity));
         chip.addView(labelView);
 
         if (isSelected) {

@@ -97,7 +97,7 @@ final class GreetingOverlay {
         frost(mFocus);
         TextView focusLabel = mFocus.findViewById(R.id.focus_label);
         if (focusLabel != null) {
-            focusLabel.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
+            focusLabel.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(activity));
         }
         mFocus.findViewById(R.id.focus_label).setOnClickListener(v -> {
             if (FocusTimer.remainingMs() < 0) { // running: the countdown is not a picker
@@ -140,7 +140,7 @@ final class GreetingOverlay {
         View option = LayoutInflater.from(mActivity).inflate(R.layout.item_mobile_greet_option, parent, false);
         TextView text = option.findViewById(R.id.mobile_greet_option_label);
         text.setText(label);
-        text.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL));
+        text.setTypeface(com.newtube.mobile.ui.common.AppFonts.medium(mActivity));
         text.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
         frost(option);
         option.setOnClickListener(v -> {
@@ -394,7 +394,7 @@ final class GreetingOverlay {
             label.setGravity(android.view.Gravity.CENTER);
             label.setTextSize(12);
             label.setTextColor(i == 0 ? 0xFFFFFFFF : 0x99FFFFFF);
-            label.setTypeface(android.graphics.Typeface.create("sans-serif-medium", i == 0 ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL));
+            label.setTypeface(i == 0 ? com.newtube.mobile.ui.common.AppFonts.bold(context) : com.newtube.mobile.ui.common.AppFonts.medium(context));
             labels.addView(label, new android.widget.LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         }
         selectDay(-1);
@@ -419,7 +419,7 @@ final class GreetingOverlay {
             }
             TextView label = (TextView) labels.getChildAt(k);
             label.setTextColor(on ? 0xFFFFFFFF : 0x99FFFFFF);
-            label.setTypeface(android.graphics.Typeface.create("sans-serif-medium", on ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL));
+            label.setTypeface(on ? com.newtube.mobile.ui.common.AppFonts.bold(context) : com.newtube.mobile.ui.common.AppFonts.medium(context));
         }
         TextView footer = mStats.findViewById(R.id.stats_footer);
         if (daysAgo < 0) {
@@ -442,14 +442,14 @@ final class GreetingOverlay {
         TextView big = new TextView(mActivity);
         big.setText(value);
         big.setTextSize(21);
-        big.setTypeface(android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.BOLD));
+        big.setTypeface(com.newtube.mobile.ui.common.AppFonts.displayBold(mActivity));
         big.setTextColor(0xFFFFFFFF);
         big.setIncludeFontPadding(false);
         big.setShadowLayer(3f, 0f, 1f, 0x33000000);
         TextView small = new TextView(mActivity);
         small.setText(label);
         small.setTextSize(12);
-        small.setTypeface(android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.NORMAL));
+        small.setTypeface(com.newtube.mobile.ui.common.AppFonts.regular(mActivity));
         small.setTextColor(0x99FFFFFF);
         small.setIncludeFontPadding(false);
         small.setShadowLayer(2f, 0f, 1f, 0x33000000);

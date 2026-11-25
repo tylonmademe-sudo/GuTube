@@ -123,7 +123,8 @@ final class HomeRowsAdapter extends RecyclerView.Adapter<HomeRowsAdapter.RowHold
             title = new TextView(context);
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             title.setTextColor(ContextCompat.getColor(context, R.color.mobile_color_on_surface));
-            title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
+            title.setTypeface(com.newtube.mobile.ui.common.AppFonts.displayBold(context));
+            title.setLetterSpacing(-0.01f);
             title.setSingleLine();
             title.setEllipsize(TextUtils.TruncateAt.END);
             int side = Math.round(16 * density);

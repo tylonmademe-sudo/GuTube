@@ -69,9 +69,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ProgressBar
-                style="@style/Widget.GuTube.GlassSpinner"
+            <com.newtube.mobile.ui.common.YouTubeLoadingView
                 android:id="@+id/mobile_signin_progress"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center" />
 
             <!--
@@ -383,8 +384,10 @@
                 android:visibility="gone"
                 tools:visibility="gone">
 
-                <ProgressBar
-                    style="@style/Widget.GuTube.GlassSpinner" />
+                <com.newtube.mobile.ui.common.YouTubeLoadingView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="wrap_content"

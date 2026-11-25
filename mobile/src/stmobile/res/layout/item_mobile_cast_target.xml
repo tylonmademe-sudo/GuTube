@@ -52,9 +52,10 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        style="@style/Widget.GuTube.GlassSpinner.Small"
+    <com.newtube.mobile.ui.common.YouTubeLoadingView
         android:id="@+id/cast_target_progress"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:visibility="gone" />
 

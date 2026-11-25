@@ -68,7 +68,7 @@ public class MobileSignInActivity extends MobileActivity implements SignInView {
 
     private YTSignInPresenter mSignInPresenter;
 
-    private ProgressBar mProgress;
+    private View mProgress;
     private View mErrorContainer;
     private TextView mErrorView;
     private TextView mErrorDetailView;

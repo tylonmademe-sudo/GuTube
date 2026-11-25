@@ -32,9 +32,10 @@
         android:layout_weight="1"
         android:minHeight="160dp">
 
-        <ProgressBar
-            style="@style/Widget.GuTube.GlassSpinner"
+        <com.newtube.mobile.ui.common.YouTubeLoadingView
             android:id="@+id/transcript_sheet_loading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center" />
 
         <TextView

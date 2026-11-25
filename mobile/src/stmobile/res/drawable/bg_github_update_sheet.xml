@@ -1,49 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Google Stitch Glassmorphism Card Sheet:
-  - 34dp top corner radius (rounded-t-[34px])
-  - Bottom edge is completely seamless with ZERO stroke line (android:bottom="-4dp")
-  - Translucent obsidian glass surface (#F2212226 to #FC17181C)
-  - 1px border stroke: 1px solid rgba(255, 255, 255, 0.20)
-  - Inset specular rim highlight: rgba(255, 255, 255, 0.15) fading out
+  Liquid Glass In-App Update Sheet:
+  - 28dp corner radius (rounded-t-[28px])
+  - Crystal-clear true glass fill: rgba(255, 255, 255, 0.04) to rgba(255, 255, 255, 0.08) (zero opaque grey)
+  - Replicates box-shadow: inset 0 0 6px -3px rgba(255, 255, 255, 0.7) using crisp 1.5dp specular border
+  - Replicates box-shadow: 0px 0px 21px -8px rgba(255, 255, 255, 0.3) with ambient soft white outer glow rim
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Base glass surface: bottom="-4dp" clips out bottom border stroke completely -->
-    <item android:bottom="-4dp">
+    <!-- Outer ambient soft white elevation glow (0px 0px 21px -8px rgba(255, 255, 255, 0.3)) -->
+    <item>
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="34dp"
-                android:topRightRadius="34dp"
-                android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="0dp" />
-            <gradient
-                android:angle="270"
-                android:startColor="#F2212226"
-                android:centerColor="#F71C1D21"
-                android:endColor="#FC17181C"
-                android:type="linear" />
+                android:topLeftRadius="28dp"
+                android:topRightRadius="28dp"
+                android:bottomLeftRadius="28dp"
+                android:bottomRightRadius="28dp" />
             <stroke
-                android:width="1dp"
-                android:color="#33FFFFFF" />
+                android:width="2dp"
+                android:color="#26FFFFFF" />
         </shape>
     </item>
 
-    <!-- Inset Specular Rim Highlight -->
+    <!-- Main crystal-clear liquid glass base surface (rgba(255, 255, 255, 0.04) to rgba(255, 255, 255, 0.08)) -->
     <item
         android:top="1dp"
         android:left="1dp"
         android:right="1dp"
-        android:bottom="80dp">
+        android:bottom="1dp">
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="33dp"
-                android:topRightRadius="33dp"
+                android:topLeftRadius="27dp"
+                android:topRightRadius="27dp"
+                android:bottomLeftRadius="27dp"
+                android:bottomRightRadius="27dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#14FFFFFF"
+                android:centerColor="#0FFFFFFF"
+                android:endColor="#0AFFFFFF"
+                android:type="linear" />
+            <stroke
+                android:width="1.5dp"
+                android:color="#4DFFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Inner Specular Rim Highlight (inset 0 0 6px -3px rgba(255, 255, 255, 0.7): #B3FFFFFF to #26FFFFFF) -->
+    <item
+        android:top="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:bottom="48dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="26dp"
+                android:topRightRadius="26dp"
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#26FFFFFF"
-                android:endColor="#00FFFFFF" />
+                android:startColor="#B3FFFFFF"
+                android:centerColor="#26FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
         </shape>
     </item>
 </layer-list>

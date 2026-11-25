@@ -66,8 +66,9 @@
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="12dp">
 
-                <ProgressBar
-                    style="@style/Widget.GuTube.GlassSpinner.Small" />
+                <com.newtube.mobile.ui.common.YouTubeLoadingView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -124,7 +125,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:elevation="0dp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/roboto_medium"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:letterSpacing="0"

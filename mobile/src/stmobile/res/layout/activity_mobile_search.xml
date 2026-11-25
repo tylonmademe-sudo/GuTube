@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="#0F0F0F">
+    android:background="@color/mobile_color_background">
 
     <com.newtube.mobile.ui.common.GlassSource
         android:id="@+id/mobile_search_glass_source"
@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:background="#0F0F0F">
+        android:background="@color/mobile_color_background">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="52dp"
-        android:background="#0F0F0F"
+        android:background="@color/mobile_color_background"
         android:clipToPadding="false"
         android:elevation="8dp"
         android:outlineProvider="none"
@@ -85,13 +85,13 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_mobile_search_suggestion" />
 
-    <!-- Top Bar: Sleek, compact YouTube Search Toolbar (52dp, solid #0F0F0F) -->
+    <!-- Top Bar: Sleek, compact YouTube Search Toolbar (52dp) -->
     <LinearLayout
         android:id="@+id/mobile_search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_gravity="top"
-        android:background="#0F0F0F"
+        android:background="@color/mobile_color_background"
         android:elevation="6dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -179,23 +179,23 @@
 
     </LinearLayout>
 
-    <!-- Docked bottom nav bar over the results, Search lit -->
+    <!-- Floating Liquid Glass nav pill over the results, Search lit -->
     <com.newtube.mobile.ui.common.GlassView
         android:id="@+id/mobile_nav_glass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginHorizontal="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginHorizontal="?attr/gutubeNavSideMargin"
+        android:layout_marginBottom="?attr/gutubeNavBottomMargin"
         android:elevation="16dp"
-        android:padding="0dp"
+        android:padding="6dp"
         android:visibility="gone"
-        app:glassCornerRadius="0dp"
-        app:glassMaxWidth="4000dp"
-        app:glassLiquid="false"
-        app:glassTint="@color/gutube_youtube_nav_tint"
-        app:glassStrokeColor="@android:color/transparent"
-        app:glassStrokeWidth="0dp">
+        app:glassCornerRadius="?attr/gutubeNavCorner"
+        app:glassMaxWidth="?attr/gutubeNavMaxWidth"
+        app:glassLiquid="?attr/gutubeNavLiquid"
+        app:glassTint="?attr/gutubeNavTint"
+        app:glassStrokeColor="?attr/gutubeNavStrokeColor"
+        app:glassStrokeWidth="?attr/gutubeNavStrokeWidth">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mobile_bottom_nav"
