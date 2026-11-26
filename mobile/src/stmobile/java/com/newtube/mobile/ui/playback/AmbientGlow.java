@@ -395,16 +395,15 @@ public final class AmbientGlow implements Runnable {
 
         @Override
         public void draw(@NonNull Canvas canvas) {
-            if (mAlpha == 0) {
-                return;
-            }
-            canvas.drawColor(mAlpha << 24);
             int top = mBarHost != null ? mBarHost.getPaddingTop() : 0;
-            if (mCurrent == null || top <= 0) {
+            if (mAlpha == 0 || mCurrent == null || top <= 0) {
                 return;
             }
             Rect bounds = getBounds();
             mBand.set(bounds.left, bounds.top, bounds.right, bounds.top + top);
+            canvas.save();
+            canvas.clipRect(mBand);
+            canvas.drawColor(mAlpha << 24);
             mSource.set(0, 0, FRAME_W, FRAME_H / 4); // the top quarter: what the bar sits on
             if (mPrevious != null && mMix < 1f) {
                 mFrame.setAlpha(mAlpha);
@@ -412,6 +411,7 @@ public final class AmbientGlow implements Runnable {
             }
             mFrame.setAlpha(mMix >= 1f ? mAlpha : Math.round(mAlpha * mMix));
             canvas.drawBitmap(mCurrent, mSource, mBand, mFrame);
+            canvas.restore();
         }
 
         @Override

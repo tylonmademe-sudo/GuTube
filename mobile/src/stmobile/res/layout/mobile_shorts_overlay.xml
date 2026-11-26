@@ -343,32 +343,6 @@
         android:thumb="@drawable/gutube_shorts_seek_thumb"
         android:thumbOffset="0dp" />
 
-    <!-- YouTube Shorts Subscription Feedback Toast -->
-    <LinearLayout
-        android:id="@+id/mobile_shorts_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="68dp"
-        android:background="@drawable/bg_shorts_toast"
-        android:elevation="12dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp"
-        android:visibility="gone"
-        android:alpha="0"
-        android:translationY="12dp">
-
-        <TextView
-            android:id="@+id/mobile_shorts_toast_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            tools:text="Subscription added" />
-    </LinearLayout>
-
     <!-- YouTube Authentic Unsubscribe Dialog / Bottom Sheet -->
     <FrameLayout
         android:id="@+id/mobile_shorts_unsubscribe_modal"

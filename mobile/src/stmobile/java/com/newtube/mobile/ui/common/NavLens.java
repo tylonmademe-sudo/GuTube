@@ -301,13 +301,14 @@ public final class NavLens extends View {
         if (w != mEffectW || h != mEffectH) {
             mEffectW = w;
             mEffectH = h;
-            RuntimeShader lens = new RuntimeShader(GlassView.REFRACTION_AGSL);
+            RuntimeShader lens = new RuntimeShader(LiquidGlassEngine.REFRACTION_AGSL);
             lens.setFloatUniform("size", w, h);
             lens.setFloatUniform("radius", Math.min(w, h) / 2f);
             lens.setFloatUniform("refractionHeight", REFRACTION_DP * mDensity);
             lens.setFloatUniform("refractionAmount", -REFRACTION_DP * mDensity);
-            lens.setFloatUniform("depthEffect", 1f);
-            lens.setFloatUniform("chromaticAberration", 1f);
+            lens.setFloatUniform("depthEffect", LiquidGlassEngine.DEPTH_EFFECT);
+            lens.setFloatUniform("chromaticAberration", LiquidGlassEngine.CHROMATIC_ABERRATION);
+            lens.setFloatUniform("waveStrength", LiquidGlassEngine.WAVE_STRENGTH);
             mNode.setRenderEffect(RenderEffect.createRuntimeShaderEffect(lens, "content"));
         }
         // The bar as it sits under the lens, magnified about the lens centre. The view's own scale

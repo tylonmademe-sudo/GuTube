@@ -65,6 +65,20 @@
     <color name="gutube_glass_rim">#36FFFFFF</color>
     <color name="gutube_glass_sheen">#26FFFFFF</color>
     <color name="gutube_glass_selected">#2EFFFFFF</color>
+    <color name="gutube_greet_card_tint">#47000000</color>
+    <color name="gutube_player_glass_underlay">#26000000</color>
+    <color name="gutube_player_glass_fill_start">#26FFFFFF</color>
+    <color name="gutube_player_glass_fill_center">#1AFFFFFF</color>
+    <color name="gutube_player_glass_fill_end">#12FFFFFF</color>
+    <color name="gutube_player_glass_rim">#38FFFFFF</color>
+    <color name="gutube_player_glass_sheen">#26FFFFFF</color>
+    <color name="gutube_frame_dock_fill_start">#33243346</color>
+    <color name="gutube_frame_dock_fill_center">#261E293B</color>
+    <color name="gutube_frame_dock_fill_end">#1F16202C</color>
+    <color name="gutube_frame_popover_fill">#CC12151D</color>
+    <color name="gutube_glass_btn_pressed">#33FFFFFF</color>
+    <color name="gutube_glass_btn_disabled">#0DFFFFFF</color>
+    <color name="gutube_glass_handle">#8CFFFFFF</color>
     <color name="gutube_nav_inactive">#ADFFFFFF</color>
     <color name="gutube_nav_bloom_plain">#FFFFFFFF</color>
     <!-- GUTUBE(glass): the frosted top bar - the page colour at ~72%. -->

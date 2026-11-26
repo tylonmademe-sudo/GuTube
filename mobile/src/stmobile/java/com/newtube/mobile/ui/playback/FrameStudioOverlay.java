@@ -43,6 +43,7 @@ import androidx.media3.exoplayer.SeekParameters;
 
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
+import com.newtube.mobile.ui.common.UnifiedPillNavView;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.ui.common.Haptics;
 
@@ -96,10 +97,7 @@ public class FrameStudioOverlay {
     private final View mSaveBtn;
 
     // Popover Views
-    private final TextView mTabFrame;
-    private final TextView mTabSecond;
-    private final TextView mTabMinute;
-    private final TextView mTabCustom;
+    private final UnifiedPillNavView mStepTabs;
     private final TextView mStepInfoView;
     private final View mChipsFrame;
     private final View mChipsSecond;
@@ -162,10 +160,13 @@ public class FrameStudioOverlay {
         }
 
         // Step Popover Tabs & Chips
-        mTabFrame = root.findViewById(R.id.frame_studio_tab_frame);
-        mTabSecond = root.findViewById(R.id.frame_studio_tab_second);
-        mTabMinute = root.findViewById(R.id.frame_studio_tab_minute);
-        mTabCustom = root.findViewById(R.id.frame_studio_tab_custom);
+        mStepTabs = root.findViewById(R.id.frame_studio_step_tabs);
+        mStepTabs.setLabels(java.util.Arrays.asList(
+                root.getContext().getString(R.string.frame_studio_tab_frame),
+                root.getContext().getString(R.string.frame_studio_tab_second),
+                root.getContext().getString(R.string.frame_studio_tab_minute),
+                root.getContext().getString(R.string.frame_studio_tab_custom)
+        ), STEP_FRAME);
         mStepInfoView = root.findViewById(R.id.frame_studio_step_info);
         mChipsFrame = root.findViewById(R.id.frame_studio_chips_frame);
         mChipsSecond = root.findViewById(R.id.frame_studio_chips_second);
@@ -276,10 +277,7 @@ public class FrameStudioOverlay {
         mSaveBtn.setOnClickListener(v -> captureAndSave());
 
         // Step Popover Tabs
-        mTabFrame.setOnClickListener(v -> selectStepTab(STEP_FRAME));
-        mTabSecond.setOnClickListener(v -> selectStepTab(STEP_SECOND));
-        mTabMinute.setOnClickListener(v -> selectStepTab(STEP_MINUTE));
-        mTabCustom.setOnClickListener(v -> selectStepTab(STEP_CUSTOM));
+        mStepTabs.setOnTabSelectedListener((index, reselected) -> selectStepTab(index));
 
         // Preset Chips
         bindChip(mRoot.findViewById(R.id.frame_chip_1f), STEP_FRAME, 1);
@@ -682,17 +680,9 @@ public class FrameStudioOverlay {
     }
 
     private void selectStepTab(int tabIndex) {
-        mTabFrame.setBackgroundResource(tabIndex == STEP_FRAME ? R.drawable.bg_frame_studio_chip_active : 0);
-        mTabFrame.setTextColor(tabIndex == STEP_FRAME ? 0xFFFFFFFF : 0x99FFFFFF);
-
-        mTabSecond.setBackgroundResource(tabIndex == STEP_SECOND ? R.drawable.bg_frame_studio_chip_active : 0);
-        mTabSecond.setTextColor(tabIndex == STEP_SECOND ? 0xFFFFFFFF : 0x99FFFFFF);
-
-        mTabMinute.setBackgroundResource(tabIndex == STEP_MINUTE ? R.drawable.bg_frame_studio_chip_active : 0);
-        mTabMinute.setTextColor(tabIndex == STEP_MINUTE ? 0xFFFFFFFF : 0x99FFFFFF);
-
-        mTabCustom.setBackgroundResource(tabIndex == STEP_CUSTOM ? R.drawable.bg_frame_studio_chip_active : 0);
-        mTabCustom.setTextColor(tabIndex == STEP_CUSTOM ? 0xFFFFFFFF : 0x99FFFFFF);
+        if (mStepTabs.getSelectedIndex() != tabIndex) {
+            mStepTabs.setSelectedIndex(tabIndex, true);
+        }
 
         mChipsFrame.setVisibility(tabIndex == STEP_FRAME ? View.VISIBLE : View.GONE);
         mChipsSecond.setVisibility(tabIndex == STEP_SECOND ? View.VISIBLE : View.GONE);

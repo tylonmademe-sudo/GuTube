@@ -3,25 +3,34 @@ package com.newtube.mobile.ui.common;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.newtube.mobile.ui.dialog.MobileAppDialogActivity;
+import com.newtube.mobile.ui.playback.MobilePlaybackActivity;
 import com.newtube.mobile.ui.update.MobileUpdateActivity;
 
 import java.lang.ref.WeakReference;
@@ -264,60 +273,167 @@ public final class MobileSnackbar {
             snackbar.setAction(action, v -> onAction.run());
         }
         style(activity, snackbar);
+        position(activity, root, snackbar);
         sLast = new WeakReference<>(snackbar);
         sLastText = text;
-        // Above what sits at the bottom rather than over it: the docked mini-player card (its
-        // pause button was covered for the whole message), else Browse's bottom nav.
-        View mini = activity.findViewById(R.id.mobile_mini_player);
-        View nav = activity.findViewById(R.id.mobile_bottom_nav);
-        if (mini != null && mini.getVisibility() == View.VISIBLE) {
-            snackbar.setAnchorView(mini);
-        } else if (nav != null && nav.getVisibility() == View.VISIBLE) {
-            snackbar.setAnchorView(nav);
-        }
         snackbar.show();
     }
 
     /**
-     * GUTUBE(toasts): the app's message pill - the page behind it frosted (the sheets' glass, with
-     * their rim), fully rounded, no shadow (a see-through surface shows its own through itself);
-     * held sideways, a compact pill on the right instead of a bar across the video.
+     * GUTUBE(snackbar): Adaptive Zero-Overlap Positioning Engine.
+     * Mode A (Shorts & Fullscreen): top-centered below status bar / player top bar.
+     * Mode B (Browse / Search / Channel / Portrait Watch / Settings): bottom-centered above
+     * mini-player, floating Liquid Glass nav pill, search FAB, comment composer, or IME/nav insets.
+     */
+    private static void position(@NonNull Activity activity, @NonNull View root, @NonNull Snackbar snackbar) {
+        View view = snackbar.getView();
+        float density = activity.getResources().getDisplayMetrics().density;
+        int screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
+        view.setTranslationZ(32f * density);
+
+        if (!(view.getLayoutParams() instanceof FrameLayout.LayoutParams)) {
+            return;
+        }
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
+
+        WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(root);
+        int navBottom = 0;
+        int statusTop = 0;
+        int imeBottom = 0;
+        if (rootInsets != null) {
+            Insets sys = rootInsets.getInsets(WindowInsetsCompat.Type.navigationBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            Insets status = rootInsets.getInsets(WindowInsetsCompat.Type.statusBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            navBottom = sys.bottom;
+            statusTop = status.top;
+            imeBottom = rootInsets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+        }
+
+        boolean topPreferred = activity instanceof MobilePlaybackActivity
+                && ((MobilePlaybackActivity) activity).isSnackbarTopPreferred();
+
+        if (topPreferred) {
+            int effectiveStatusTop = Math.max(0, statusTop - root.getPaddingTop());
+            int topClearance = ((MobilePlaybackActivity) activity).getTopSnackbarClearancePx();
+            int topMargin = effectiveStatusTop + (topClearance > 0
+                    ? topClearance + Math.round(8f * density)
+                    : Math.round(12f * density));
+            int maxWidth = Math.min(screenWidth - Math.round(32f * density), Math.round(420f * density));
+            view.measure(
+                    View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            lp.width = view.getMeasuredWidth() >= maxWidth ? maxWidth : ViewGroup.LayoutParams.WRAP_CONTENT;
+            lp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            lp.topMargin = topMargin;
+            lp.bottomMargin = 0;
+            lp.leftMargin = Math.round(16f * density);
+            lp.rightMargin = Math.round(16f * density);
+            view.setLayoutParams(lp);
+            return;
+        }
+
+        int[] rootLoc = new int[2];
+        root.getLocationInWindow(rootLoc);
+        int rootBottom = rootLoc[1] + root.getHeight();
+        int minVisibleTopMargin = Math.round(4f * density);
+        int highestObstacleFromBottom = 0;
+        int[] obstacleIds = {
+                R.id.mobile_mini_player,
+                R.id.mobile_nav_glass,
+                R.id.mobile_search_fab,
+                R.id.comment_composer_root
+        };
+        for (int id : obstacleIds) {
+            View obs = activity.findViewById(id);
+            if (obs != null && obs.isShown() && obs.getAlpha() > 0.1f && obs.getHeight() > 0) {
+                int[] loc = new int[2];
+                obs.getLocationInWindow(loc);
+                if (loc[1] < rootBottom - minVisibleTopMargin) {
+                    highestObstacleFromBottom = Math.max(highestObstacleFromBottom, rootBottom - loc[1]);
+                }
+            }
+        }
+
+        int effectiveNavBottom = Math.max(0, navBottom - Math.min(navBottom, root.getPaddingBottom()));
+        int effectiveImeBottom = Math.max(0, imeBottom - Math.min(imeBottom, root.getPaddingBottom()));
+        int bottomMargin = Math.max(Math.max(effectiveNavBottom, effectiveImeBottom), highestObstacleFromBottom)
+                + Math.round(10f * density);
+
+        int maxWidth = Math.min(screenWidth - Math.round(24f * density), Math.round(480f * density));
+        view.measure(
+                View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        lp.width = view.getMeasuredWidth() >= maxWidth ? maxWidth : ViewGroup.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        lp.topMargin = 0;
+        lp.bottomMargin = bottomMargin;
+        lp.leftMargin = Math.round(12f * density);
+        lp.rightMargin = Math.round(12f * density);
+        view.setLayoutParams(lp);
+    }
+
+    /**
+     * GUTUBE(toasts): Official YouTube snackbar style (#F2212121, 8dp rounded corners, 1dp #1AFFFFFF
+     * border, 6dp elevation, 14sp white Roboto text, #3EA6FF Roboto Medium action).
      */
     public static void style(@NonNull Activity activity, @NonNull Snackbar snackbar) {
         View view = snackbar.getView();
         float density = activity.getResources().getDisplayMetrics().density;
-        float pill = PILL_RADIUS_DP * density; // past half the height: drawn as a capsule
+        float cornerRadius = CORNER_RADIUS_DP * density;
+
         view.setBackgroundTintList(null);
-        android.graphics.drawable.GradientDrawable tint = new android.graphics.drawable.GradientDrawable();
-        tint.setCornerRadius(pill);
-        tint.setColor(ContextCompat.getColor(activity, R.color.gutube_toast_glass));
-        view.setBackground(tint); // until the page's frosted copy lands
-        view.setElevation(0f);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(cornerRadius);
+        bg.setColor(ContextCompat.getColor(activity, R.color.yt_snackbar_bg));
+        bg.setStroke(Math.max(1, Math.round(1f * density)), ContextCompat.getColor(activity, R.color.yt_snackbar_stroke));
+        view.setBackground(bg);
+
+        view.setElevation(6f * density);
+        view.setTranslationZ(32f * density);
+        view.setMinimumHeight(Math.round(48f * density));
+        int padH = Math.round(16f * density);
+        int padV = Math.round(10f * density);
+        view.setPadding(padH, padV, padH, padV);
+        if (view instanceof ViewGroup && ((ViewGroup) view).getChildCount() > 0) {
+            View content = ((ViewGroup) view).getChildAt(0);
+            content.setPadding(0, 0, 0, 0);
+        }
+
         view.setOutlineProvider(new android.view.ViewOutlineProvider() {
             @Override
             public void getOutline(View v, android.graphics.Outline outline) {
-                outline.setRoundRect(0, 0, v.getWidth(), v.getHeight(), v.getHeight() / 2f);
+                outline.setRoundRect(0, 0, v.getWidth(), v.getHeight(), cornerRadius);
             }
         });
         view.setClipToOutline(true);
-        int ink = android.graphics.Color.WHITE; // the pill is the same dark frost in both themes
+
         TextView text = view.findViewById(com.google.android.material.R.id.snackbar_text);
         if (text != null) {
-            text.setTextColor(ink);
+            text.setTextColor(Color.WHITE);
+            text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+            text.setTypeface(AppFonts.regular(activity));
+            text.setMaxLines(2);
+            text.setEllipsize(TextUtils.TruncateAt.END);
         }
-        snackbar.setActionTextColor(ink);
-        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
-                && view.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
-            lp.width = Math.round(activity.getResources().getDisplayMetrics().widthPixels * LANDSCAPE_WIDTH);
-            lp.gravity = Gravity.BOTTOM | Gravity.END;
-            view.setLayoutParams(lp);
+
+        Button actionBtn = view.findViewById(com.google.android.material.R.id.snackbar_action);
+        int actionColor = ContextCompat.getColor(activity, R.color.yt_snackbar_action);
+        snackbar.setActionTextColor(actionColor);
+        if (actionBtn != null) {
+            actionBtn.setTextColor(actionColor);
+            actionBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+            actionBtn.setTypeface(AppFonts.medium(activity));
+            actionBtn.setAllCaps(false);
+            TypedValue ripple = new TypedValue();
+            if (activity.getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)) {
+                actionBtn.setBackgroundResource(ripple.resourceId);
+            }
+            actionBtn.setBackgroundTintList((ColorStateList) null);
         }
-        SheetGlass.frost(view, activity.getWindow(), pill, ContextCompat.getColor(activity, R.color.gutube_toast_glass));
     }
 
-    private static final int PILL_RADIUS_DP = 64;
-    private static final float LANDSCAPE_WIDTH = 0.45f;
+    private static final int CORNER_RADIUS_DP = 8;
 
     private static final class Pending {
         /** Reworded in place by {@link #replaceText}. */

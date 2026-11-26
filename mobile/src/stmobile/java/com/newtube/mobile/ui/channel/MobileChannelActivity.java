@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.widget.HorizontalScrollView;
+
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.tabs.TabLayout;
+import com.newtube.mobile.ui.common.UnifiedPillNavView;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup;
@@ -97,7 +99,9 @@ public class MobileChannelActivity extends MobileActivity
     private RecyclerView mGrid;
     private GridLayoutManager mLayoutManager;
     private VideoCardAdapter mAdapter;
-    private TabLayout mTabs;
+    private UnifiedPillNavView mTabs;
+    private HorizontalScrollView mTabsScroll;
+    private final List<Integer> mTabSectionIds = new ArrayList<>();
     /** The tabs' place in the app bar; the tabs themselves float over the page (setupGlassBars). */
     private View mTabsSpace;
     private TextView mSubscribe;
@@ -519,6 +523,8 @@ public class MobileChannelActivity extends MobileActivity
         // NEWTUBE(mini-inset): the last row can scroll clear of the docked mini-player card.
         com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(findViewById(R.id.mobile_mini_player), mGrid);
         mTabs = findViewById(R.id.mobile_channel_tabs);
+        mTabsScroll = findViewById(R.id.mobile_channel_tabs_scroll);
+        mTabs.setHorizontalScrollView(mTabsScroll);
         mTabsSpace = findViewById(R.id.mobile_channel_tabs_space);
         mSubscribe = findViewById(R.id.mobile_channel_subscribe);
         mSubscribe.setOnClickListener(v -> onSubscribeTapped());
@@ -565,36 +571,36 @@ public class MobileChannelActivity extends MobileActivity
     }
 
     private void setupTabs() {
-        mTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (mSuppressTabCallback || !(tab.getTag() instanceof Integer)) {
-                    return;
-                }
-                Section leaving = mSections.get(mActiveSectionId);
-                if (leaving != null) {
-                    leaving.scroll = mLayoutManager.onSaveInstanceState();
-                }
-                mActiveSectionId = (Integer) tab.getTag();
-                mRestoreSectionTitle = null; // the user picked a tab; a refresh must not undo it
-                showActiveSection(true);
-                Section picked = mSections.get(mActiveSectionId);
-                if (picked != null) {
-                    picked.topUp.onUserAction(); // NEWTUBE(shorts)
-                    picked.topUp.onShown();
-                    topUpActiveIfShort();
-                }
+        mTabs.setOnTabSelectedListener((index, reselected) -> {
+            if (mSuppressTabCallback) {
+                return;
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            if (reselected) {
                 mGrid.scrollToPosition(0);
+            } else {
+                selectChannelTab(index);
             }
         });
         setupTabSwipe();
+    }
+
+    private void selectChannelTab(int index) {
+        if (index < 0 || index >= mTabSectionIds.size()) {
+            return;
+        }
+        Section leaving = mSections.get(mActiveSectionId);
+        if (leaving != null) {
+            leaving.scroll = mLayoutManager.onSaveInstanceState();
+        }
+        mActiveSectionId = mTabSectionIds.get(index);
+        mRestoreSectionTitle = null; // the user picked a tab; a refresh must not undo it
+        showActiveSection(true);
+        Section picked = mSections.get(mActiveSectionId);
+        if (picked != null) {
+            picked.topUp.onUserAction(); // NEWTUBE(shorts)
+            picked.topUp.onShown();
+            topUpActiveIfShort();
+        }
     }
 
     /**
@@ -665,7 +671,7 @@ public class MobileChannelActivity extends MobileActivity
                     case MotionEvent.ACTION_CANCEL:
                         mVelocity.computeCurrentVelocity(1000);
                         float vx = e.getActionMasked() == MotionEvent.ACTION_UP ? mVelocity.getXVelocity() : 0;
-                        int target = mTabs.getSelectedTabPosition() + (dx < 0 ? 1 : -1);
+                        int target = mTabs.getSelectedIndex() + (dx < 0 ? 1 : -1);
                         boolean fling = Math.abs(vx) > minFling && (vx < 0) == (dx < 0);
                         boolean commit = dx != 0 && target >= 0 && target < mTabs.getTabCount()
                                 && (fling || Math.abs(dx) > rv.getWidth() / 4f);
@@ -680,18 +686,17 @@ public class MobileChannelActivity extends MobileActivity
     /** Grid at {@code dx}, the neighbouring tab's cards beside it, the tab indicator in step. */
     private void setSwipeOffset(float dx) {
         int width = mGrid.getWidth();
-        int current = mTabs.getSelectedTabPosition();
+        int current = mTabs.getSelectedIndex();
         int target = current + (dx < 0 ? 1 : -1);
         if (dx == 0 || width == 0 || target < 0 || target >= mTabs.getTabCount()) {
             mGrid.setTranslationX(dx / 4); // rubber band at the ends
             mPeek.setVisibility(View.GONE);
-            mTabs.setScrollPosition(current, 0, false);
+            mTabs.setScrollPosition(current, 0f);
             return;
         }
 
         if (mPeekTab != target) {
-            TabLayout.Tab tab = mTabs.getTabAt(target);
-            Section section = tab != null && tab.getTag() instanceof Integer ? mSections.get((Integer) tab.getTag()) : null;
+            Section section = target < mTabSectionIds.size() ? mSections.get(mTabSectionIds.get(target)) : null;
             mPeek.animate().cancel(); // a hand-over fade from the last swipe
             mPeek.setAlpha(1f);
             mPeekAdapter.submitList(null); // null first: the next list lands at once, no async diff
@@ -707,7 +712,7 @@ public class MobileChannelActivity extends MobileActivity
         mGrid.setTranslationX(dx);
         mPeek.setTranslationX(dx < 0 ? dx + width : dx - width);
         float fraction = Math.abs(dx) / width;
-        mTabs.setScrollPosition(dx < 0 ? current : target, dx < 0 ? fraction : 1 - fraction, false);
+        mTabs.setScrollPosition(dx < 0 ? current : target, dx < 0 ? fraction : 1f - fraction);
     }
 
     /**
@@ -727,11 +732,14 @@ public class MobileChannelActivity extends MobileActivity
                 mSwipeAnim = null;
                 mPeekTab = -1;
                 mGrid.setTranslationX(0);
-                TabLayout.Tab tab = targetTab >= 0 ? mTabs.getTabAt(targetTab) : null;
-                if (tab != null) {
+                if (targetTab >= 0 && targetTab < mTabSectionIds.size()) {
                     mPeekSwapPending = true;
-                    tab.select(); // -> showActiveSection, which hands over from mPeek
+                    mSuppressTabCallback = true;
+                    mTabs.setSelectedIndex(targetTab, true);
+                    mSuppressTabCallback = false;
+                    selectChannelTab(targetTab);
                 } else {
+                    mTabs.setSelectedIndex(mTabs.getSelectedIndex(), true);
                     mPeek.setVisibility(View.GONE);
                 }
             }
@@ -1024,41 +1032,32 @@ public class MobileChannelActivity extends MobileActivity
         return SHORTS_PER_COLUMN * com.newtube.mobile.ui.common.MobileGrid.computeSpanCount(this);
     }
 
-    /** Sync the TabLayout with the current sections (delivery order), keeping the selection. */
+    /** Sync the UnifiedPillNavView with the current sections (delivery order), keeping the selection. */
     private void rebuildTabs() {
         mSuppressTabCallback = true;
 
-        // Add missing tabs / fix titles in place; section order only ever grows by append.
+        mTabSectionIds.clear();
+        List<String> titles = new ArrayList<>();
+        int selectedIndex = 0;
         int index = 0;
         for (Section section : mSections.values()) {
             String title = section.title != null && !section.title.isEmpty() ? section.title
                     : getString(ChannelTabShortcuts.isShortcutRow(section.videos) // NEWTUBE(#63)
                             ? R.string.mobile_channel_tab_more : R.string.mobile_channel_tab_videos);
-
-            TabLayout.Tab tab = index < mTabs.getTabCount() ? mTabs.getTabAt(index) : null;
-            if (tab == null) {
-                tab = mTabs.newTab();
-                mTabs.addTab(tab, false);
-            }
-            if (!(tab.getTag() instanceof Integer) || (Integer) tab.getTag() != section.id) {
-                tab.setTag(section.id);
-            }
-            if (!title.contentEquals(tab.getText() != null ? tab.getText() : "")) {
-                tab.setText(title);
-            }
-
-            if (section.id == mActiveSectionId && !tab.isSelected()) {
-                tab.select();
+            mTabSectionIds.add(section.id);
+            titles.add(title);
+            if (section.id == mActiveSectionId) {
+                selectedIndex = index;
             }
             index++;
         }
-        while (mTabs.getTabCount() > mSections.size()) {
-            mTabs.removeTabAt(mTabs.getTabCount() - 1);
-        }
+
+        mTabs.setLabels(titles, titles.isEmpty() ? -1 : selectedIndex);
 
         // Tab bar only earns its space with 2+ sections; a single section shows as a plain feed.
-        mTabs.setVisibility(mSections.size() > 1 ? View.VISIBLE : View.GONE);
-        mTabsSpace.setVisibility(mTabs.getVisibility());
+        int visibility = mSections.size() > 1 ? View.VISIBLE : View.GONE;
+        mTabsScroll.setVisibility(visibility);
+        mTabsSpace.setVisibility(visibility);
 
         mSuppressTabCallback = false;
     }
@@ -1365,11 +1364,11 @@ public class MobileChannelActivity extends MobileActivity
     @Override
     public void setPosition(int index) {
         runOnUiThread(() -> {
-            if (index >= 0 && index < mTabs.getTabCount()) {
-                TabLayout.Tab tab = mTabs.getTabAt(index);
-                if (tab != null) {
-                    tab.select(); // routes through the listener -> shows that section
-                }
+            if (index >= 0 && index < mTabSectionIds.size()) {
+                mSuppressTabCallback = true;
+                mTabs.setSelectedIndex(index, true);
+                mSuppressTabCallback = false;
+                selectChannelTab(index);
             }
         });
     }
@@ -1393,8 +1392,9 @@ public class MobileChannelActivity extends MobileActivity
                 loadHeader();
             }
             mSuppressTabCallback = true;
-            mTabs.removeAllTabs();
-            mTabs.setVisibility(View.GONE);
+            mTabSectionIds.clear();
+            mTabs.setLabels(null, -1);
+            mTabsScroll.setVisibility(View.GONE);
             mTabsSpace.setVisibility(View.GONE);
             mSuppressTabCallback = false;
             syncLoadMoreFooter();

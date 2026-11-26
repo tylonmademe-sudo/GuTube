@@ -688,6 +688,7 @@
     <string name="mobile_about_coffee_cta" translatable="false">GuTube</string>
     <string name="mobile_stats_today">Today</string>
     <string name="mobile_stats_hero_label">Today\'s Screen Time</string>
+    <string name="mobile_stats_day_hero_label">%1$s · Screen Time</string>
     <string name="mobile_stats_videos">Videos Played</string>
     <string name="mobile_stats_week_title">Weekly Activity · %1$s</string>
     <string name="mobile_stats_tap">Tap a bar for details</string>
@@ -782,6 +783,7 @@
     <string name="mobile_you_gaming">Gaming</string>
     <string name="mobile_you_news">News</string>
     <string name="mobile_you_music">Music</string>
+    <string name="mobile_explore_portal" translatable="false">Browse</string>
     <string name="mobile_you_phrase_sync">Sign in to sync your library</string>
     <string name="mobile_you_phrase_playlists">Access playlists &amp; downloads</string>
     <string name="mobile_you_phrase_history">Keep track of your history</string>

@@ -264,7 +264,10 @@ public final class SpotlightDispatcher {
         }
         int id = v.getId();
         if (id == R.id.mobile_greet_overlay
+                || id == R.id.mobile_greet_scroll
+                || id == R.id.mobile_greet_scroll_inner
                 || id == R.id.mobile_greet_content
+                || id == R.id.mobile_greet_actions
                 || id == R.id.mobile_greet_title
                 || id == R.id.mobile_greet_line
                 || id == R.id.cast_sheet_list
@@ -319,7 +322,10 @@ public final class SpotlightDispatcher {
 
         // Avoid lighting up backdrops, scrims, or full-screen overlay roots (Fix 2: Restrict Glow to Interactive Elements Only)
         if (id == R.id.mobile_greet_overlay
+                || id == R.id.mobile_greet_scroll
+                || id == R.id.mobile_greet_scroll_inner
                 || id == R.id.mobile_greet_content
+                || id == R.id.mobile_greet_actions
                 || id == R.id.mobile_greet_title
                 || id == R.id.mobile_greet_line
                 || id == R.id.cast_sheet_list

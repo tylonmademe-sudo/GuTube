@@ -33,12 +33,9 @@ public final class WatchActionFeedback {
         return true;
     }
 
-    /** "Added to Liked videos" / "Removed from Liked videos" / "You disliked..." / "Dislike removed", with Undo. */
+    /** Silenced per YouTube-style signal-only feedback: icon toggle state speaks for itself. */
     static void confirmRating(Activity activity, boolean like, boolean on, Runnable undo) {
-        int text = like
-                ? (on ? R.string.mobile_liked : R.string.mobile_like_removed)
-                : (on ? R.string.mobile_disliked : R.string.mobile_dislike_removed);
-        MobileSnackbar.show(activity, activity.getString(text), activity.getString(R.string.mobile_undo), undo);
+        // Intentional no-op.
     }
 
     /** A rating YouTube did not take (offline, or the request failed); the thumbs are back as they were. */

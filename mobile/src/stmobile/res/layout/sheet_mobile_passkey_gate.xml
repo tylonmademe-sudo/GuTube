@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/passkey_gate_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="28dp">
+
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_github_update_handle" />
+
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_glass_circle">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_mobile_lock_key"
+            app:tint="@color/mobile_color_on_surface" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/passkey_gate_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="Passkey Required"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/passkey_gate_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:text="Enter your email to receive a unique 6-digit passkey for a 30-minute session."
+        android:textColor="@color/mobile_color_on_surface_secondary"
+        android:textSize="13.5sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_glass_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_mobile_mail"
+            app:tint="@color/mobile_color_on_surface_secondary" />
+
+        <EditText
+            android:id="@+id/passkey_gate_email"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:autofillHints="emailAddress"
+            android:background="@null"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="Enter your email"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="yes"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textColorHint="@color/mobile_color_on_surface_secondary"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/passkey_gate_generate_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="14dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ProgressBar
+            android:id="@+id/passkey_gate_generate_progress"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="10dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/mobile_color_background"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/passkey_gate_generate_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Generate your passkey"
+            android:textColor="@color/mobile_color_background"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/passkey_gate_status_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/passkey_gate_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/passkey_gate_resend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_glass_pill"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="Resend"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="12.5sp" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/passkey_gate_code_card"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_glass_card"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/passkey_gate_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:fontFamily="@font/roboto_bold"
+            android:fontFeatureSettings="tnum"
+            android:gravity="center"
+            android:hint="000000"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:letterSpacing="0.35"
+            android:maxLength="6"
+            android:singleLine="true"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textColorHint="@color/mobile_color_on_surface_secondary"
+            android:textSize="22sp" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/passkey_gate_verify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center"
+        android:text="Verify &amp; Continue"
+        android:textColor="@color/mobile_color_background"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+</LinearLayout>

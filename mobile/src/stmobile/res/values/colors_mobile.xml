@@ -109,6 +109,20 @@
     <color name="gutube_glass_rim">#1F000000</color>
     <color name="gutube_glass_sheen">#80FFFFFF</color>
     <color name="gutube_glass_selected">#14000000</color>
+    <color name="gutube_greet_card_tint">#B3FFFFFF</color>
+    <color name="gutube_player_glass_underlay">#26000000</color>
+    <color name="gutube_player_glass_fill_start">#26FFFFFF</color>
+    <color name="gutube_player_glass_fill_center">#1AFFFFFF</color>
+    <color name="gutube_player_glass_fill_end">#12FFFFFF</color>
+    <color name="gutube_player_glass_rim">#38FFFFFF</color>
+    <color name="gutube_player_glass_sheen">#26FFFFFF</color>
+    <color name="gutube_frame_dock_fill_start">#33243346</color>
+    <color name="gutube_frame_dock_fill_center">#261E293B</color>
+    <color name="gutube_frame_dock_fill_end">#1F16202C</color>
+    <color name="gutube_frame_popover_fill">#CC12151D</color>
+    <color name="gutube_glass_btn_pressed">#1F000000</color>
+    <color name="gutube_glass_btn_disabled">#0A000000</color>
+    <color name="gutube_glass_handle">#33000000</color>
     <color name="gutube_nav_inactive">#99000000</color>
     <!-- GUTUBE(nav bloom): the plain tab glow - grey on the light glass, white on the dark. -->
     <color name="gutube_nav_bloom_plain">#FF8E8E93</color>
@@ -125,4 +139,7 @@
          and the player's over the video - one dark frost in both themes, white text. -->
     <color name="gutube_toast_glass">#A3303034</color>
     <color name="gutube_toast_rim">#3DFFFFFF</color>
+    <color name="yt_snackbar_bg">#F2212121</color>
+    <color name="yt_snackbar_stroke">#1AFFFFFF</color>
+    <color name="yt_snackbar_action">#3EA6FF</color>
 </resources>

@@ -129,6 +129,12 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+def localPropertiesFile = rootProject.file("local.properties")
+def localProps = new Properties()
+if (localPropertiesFile.exists()) {
+    localProps.load(new FileInputStream(localPropertiesFile))
+}
+
 android {
     // NOTE: this is the R package the code imports (unchanged from the TV era on purpose).
     namespace = 'com.liskovsoft.smartyoutubetv2.tv'
@@ -172,6 +178,8 @@ android {
         // NEWTUBE(fdroid): -Pfdroid turns the in-app updater off - F-Droid delivers the updates, and
         // its inclusion policy forbids self-updates that aren't an explicit opt-in.
         buildConfigField "boolean", "IN_APP_UPDATES", project.hasProperty('fdroid') ? "false" : "true"
+        buildConfigField "String", "GUTUBE_SENDER_EMAIL", "\"${localProps.getProperty('GUTUBE_SENDER_EMAIL', '')}\""
+        buildConfigField "String", "GUTUBE_SENDER_APP_PASSWORD", "\"${localProps.getProperty('GUTUBE_SENDER_APP_PASSWORD', '')}\""
 
         // The content of Universal apk
         ndk {
@@ -343,8 +351,8 @@ android {
             // 1.0.0 -> 10000, 1.0.1 -> 10001, 1.1.0 -> 10100, 2.0.0 -> 20000.
             // GUTUBE: every release has a code name after its number (Settings > About, App info);
             // APK files and the update manifest use the number alone.
-            versionCode 111183
-            versionName "1.6"
+            versionCode 111184
+            versionName "1.7"
         }
     }
 }

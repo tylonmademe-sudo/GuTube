@@ -587,6 +587,15 @@
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.NewTube" />
 
+        <activity
+            android:name="com.newtube.mobile.ui.webbrowser.MobileWebPortalActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.NewTube" />
+
     </application>
 
 </manifest>

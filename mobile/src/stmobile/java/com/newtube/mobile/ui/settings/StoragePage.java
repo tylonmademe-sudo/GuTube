@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -197,8 +196,8 @@ final class StoragePage {
                 clear(app);
                 long freed = Math.max(0, before - measure(app)[1]);
                 root.post(() -> {
-                    Toast.makeText(context, context.getString(R.string.mobile_settings_storage_cleared, size(context, freed)),
-                            Toast.LENGTH_SHORT).show();
+                    com.newtube.mobile.ui.common.MobileSnackbar.show(context,
+                            context.getString(R.string.mobile_settings_storage_cleared, size(context, freed)));
                     refresh.run();
                 });
             }, "StorageClear").start();

@@ -2464,8 +2464,9 @@ public class MobilePlaybackActivity extends MobileActivity
         // Re-enable the video track BEFORE any texture reattach below, so the first frame comes
         // back promptly (true background audio-only mode dropped the whole video renderer).
         setBackgroundAudioMode(false);
-        if (!mIsInPip && mExoPlayerController != null) {
-            // Back from the mini card / PiP: full size again, fetch full resolution (VideoViewportCap).
+        if (!mIsInPip && mExoPlayerController != null
+                && android.os.SystemClock.elapsedRealtime() >= mPipExitSuppressSpinnerUntilMs) {
+            // Back from the mini card: full size again, fetch full resolution (VideoViewportCap).
             mExoPlayerController.clearSmallWindowViewport("resume");
         }
         updatePipActions(); // re-arm the Android 12+ auto-enter flag cleared by the minimize hand-off
@@ -2506,29 +2507,26 @@ public class MobilePlaybackActivity extends MobileActivity
             FrameGate.afterNextFrame(mContainer, HOST_CARD_FOLD_WAIT_MS,
                     () -> MiniPlayerBridge.foldHostCard(null));
         } else if (fromMini && mContainer != null) {
-            // Plain mini-card expansion: exact reverse of minimize, from the card rectangle.
+            // Plain mini-card expansion: zero-stall 120Hz reverse of minimize from the card rectangle.
             overridePendingTransition(0, 0);
             mContainer.setVisibility(View.INVISIBLE);
             mMorphStartPending = true;
-            mContainer.post(() -> {
+            androidx.core.view.OneShotPreDrawListener.add(mContainer, () -> {
                 mMorphStartPending = false;
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
                 if (miniBounds != null) {
                     computeMorphTarget(miniBounds);
                     fitMorphInto(miniBounds);
                 } else {
                     computeMorphTarget();
                 }
+                mMorphExpandingFromMini = true;
                 applyMorph(1f);
                 mContainer.setVisibility(View.VISIBLE);
-                // NEWTUBE(motion): the host kept its card up, frozen (MiniPlayerBridge
-                // .setPendingCardFold). Our frame over it first, then the card folds, then the video
-                // grows: no frame without either. Each step waits at most HOST_CARD_FOLD_WAIT_MS.
-                FrameGate.afterNextFrame(mContainer, HOST_CARD_FOLD_WAIT_MS,
-                        () -> MiniPlayerBridge.foldHostCard(() -> {
-                            if (!isFinishing() && !isDestroyed() && mMorphAnimator == null) {
-                                animateMorph(0f, 250, Motion.EMPHASIZED, this::resetMorph);
-                            }
-                        }));
+                MiniPlayerBridge.foldHostCard(null);
+                animateMorph(0f, 240, new android.view.animation.PathInterpolator(0.2f, 0f, 0f, 1f), this::resetMorph);
             });
         } else {
             MiniPlayerBridge.foldHostCard(null);
@@ -2847,10 +2845,7 @@ public class MobilePlaybackActivity extends MobileActivity
         // watch page into the tiny PiP window. PiP owns its video-only layout; the exit branch of
         // onPictureInPictureModeChanged restores everything below.
         if (mIsInPip) {
-            // The follow-up of PiP entry, or a user resize of the PiP window: re-size the rung cap.
-            if (mExoPlayerController != null) {
-                mExoPlayerController.setSmallWindowViewport("pip", newConfig);
-            }
+            // Keep active playback stream continuous across PiP resize/entry without track-switch stall.
             return;
         }
 
@@ -4165,7 +4160,7 @@ public class MobilePlaybackActivity extends MobileActivity
         }
         showAudioCover(getVideo());
         updatePipActions();
-        com.newtube.mobile.ui.common.MobileSnackbar.show(this, audioOnly ? R.string.mobile_player_audio_only : R.string.mobile_player_audio_off);
+        showTransientPlayerPill(getString(audioOnly ? R.string.mobile_player_audio_only : R.string.mobile_player_audio_off));
     }
 
     /** The audio-only cover: {@code video}'s thumbnail, dimmed, with the headphones over it. */
@@ -4410,10 +4405,8 @@ public class MobilePlaybackActivity extends MobileActivity
             // video. Usually already done (enterPipMode pre-applies it; the auto-enter home
             // gesture is the path that arrives here without it).
             applyPipVideoOnlyLayout();
-            // Fetch NEW chunks at the PiP window's rung; already-buffered chunks keep playing.
-            if (mExoPlayerController != null) {
-                mExoPlayerController.setSmallWindowViewport("pip", newConfig);
-            }
+            showProgressBar(false);
+            // Keep active playback stream continuous across PiP entry (no forced track-switch rebuffer).
             // The PiP window renders only video: an open chat sheet is invisible, so its poll is
             // pure waste (same rule as background audio in setBackgroundAudioMode).
             if (mLiveChatAction != null) {
@@ -4425,10 +4418,10 @@ public class MobilePlaybackActivity extends MobileActivity
             }
             updatePipActions();
         } else {
+            mPipExitSuppressSpinnerUntilMs = android.os.SystemClock.elapsedRealtime() + 1500L;
+            showProgressBar(false);
             SystemPipBridge.onPipEnded();
-            if (mExoPlayerController != null) {
-                mExoPlayerController.clearSmallWindowViewport("pip-exit");
-            }
+            // Keep active playback stream continuous across PiP exit (no forced track-switch rebuffer).
             // Dismiss vs expand: an expand always ends with onResume (which clears the flag); a
             // dismiss ends with onStop. On the older PiP shell the dismissal onStop ran BEFORE this
             // callback, so if we're already stopped this exit can only be a dismissal - finish now.
@@ -6583,7 +6576,10 @@ public class MobilePlaybackActivity extends MobileActivity
         private void handleUiStateChange(boolean playWhenReady, int playbackState) {
             switch (playbackState) {
                 case Player.STATE_BUFFERING:
-                    showProgressBar(true);
+                    if (!mIsInPip && !mPipEnterPending
+                            && android.os.SystemClock.elapsedRealtime() >= mPipExitSuppressSpinnerUntilMs) {
+                        showProgressBar(true);
+                    }
                     break;
                 case Player.STATE_READY:
                     showProgressBar(false);
@@ -8545,7 +8541,9 @@ public class MobilePlaybackActivity extends MobileActivity
         // Remove labels/cards early so they do not ghost over Browse, then fade the solid watch
         // background more slowly. This reads as a black sheet becoming transparent while the live
         // video remains fully opaque above it.
-        float contentAlpha = Math.max(0f, 1f - f * 5f);
+        float contentAlpha = mMorphExpandingFromMini
+                ? Math.max(0f, 1f - f * 2.2f)
+                : Math.max(0f, 1f - f * 5f);
         if (mWatchContent != null) {
             mWatchContent.setAlpha(contentAlpha);
         }
@@ -8553,7 +8551,7 @@ public class MobilePlaybackActivity extends MobileActivity
             mWatchSide.setAlpha(contentAlpha); // GUTUBE(issue #230): the Up next column goes with the page
         }
         float backdrop = morphBackdropAlpha(settled, mMorphOverOwnBackdrop); // NEWTUBE(no-host-minimize)
-        if (setMorphBlur(settled)) {
+        if (!mMorphExpandingFromMini && setMorphBlur(settled)) {
             // GUTUBE(minimize blur): Home shows through blurred, not under a black sheet - the black
             // goes in the first quarter, a light dim stays and clears with the blur.
             backdrop = Math.max(0f, 1f - 4f * settled) * 0.65f + 0.35f * (1f - settled);
@@ -8563,6 +8561,10 @@ public class MobilePlaybackActivity extends MobileActivity
             mWatchScroll.getBackground().mutate().setAlpha(backdropAlpha);
         }
         setWindowBackdropAlpha(backdrop);
+        View content = findViewById(android.R.id.content);
+        if (content != null && content.getBackground() != null) { // GUTUBE(ambient): dissolve status bar glow with watch content
+            content.getBackground().setAlpha(Math.round(255f * Math.max(0f, Math.min(1f, contentAlpha))));
+        }
         if (mControlsRoot != null && mControlsRoot.getVisibility() == View.VISIBLE) {
             mControlsRoot.setAlpha(contentAlpha);
         }
@@ -8630,11 +8632,10 @@ public class MobilePlaybackActivity extends MobileActivity
             int drawableAlpha = Math.round(255f * Math.max(0f, Math.min(1f, alpha)));
             backdrop.mutate().setAlpha(drawableAlpha);
         }
-        View content = findViewById(android.R.id.content);
-        if (content != null && content.getBackground() != null) { // GUTUBE(ambient): the status bar glow
-            content.getBackground().setAlpha(Math.round(255f * Math.max(0f, Math.min(1f, alpha))));
-        }
     }
+
+    private boolean mMorphExpandingFromMini = false;
+    private long mPipExitSuppressSpinnerUntilMs = 0L;
 
     /**
      * NEWTUBE(motion): round the video box as it shrinks toward a card - 12dp ON SCREEN at the card
@@ -8698,7 +8699,12 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mWatchScroll != null && mWatchScroll.getBackground() != null) {
             mWatchScroll.getBackground().mutate().setAlpha(255);
         }
+        mMorphExpandingFromMini = false;
         setWindowBackdropAlpha(1f);
+        View content = findViewById(android.R.id.content);
+        if (content != null && content.getBackground() != null) {
+            content.getBackground().setAlpha(255);
+        }
         setMorphBlur(0f);
         if (mControlsRoot != null) {
             mControlsRoot.setAlpha(mControlsVisible ? 1f : 0f);
@@ -8849,16 +8855,10 @@ public class MobilePlaybackActivity extends MobileActivity
             animateMorph(to, durationMs, new android.view.animation.DecelerateInterpolator(), endAction);
             return;
         }
-        float travel = Math.max(1f, mDragTravelPx);
-        // The curve's own start speed, or the finger's if faster - but never faster than the curve
-        // ever started (its shortest, 90 ms): an unbounded flick in a short window (landscape,
-        // tablet) sprang far enough past the card to shrink the box through zero. Capped, the
-        // overshoot stays under 1.5% of the travel for any window.
-        float launch = Math.max(yVelocity / travel, 2f * distance * 1000f / durationMs); // fraction/s
-        launch = Math.min(launch, 2f * distance * 1000f / SETTLE_MIN_MS);
-        Motion.Spring spring = new Motion.Spring(mMorphFraction, to, launch,
-                SETTLE_LAND_STIFFNESS, SETTLE_LAND_DAMPING, 1f / travel);
-        animateMorph(to, spring.durationMs, spring, endAction);
+        // Smooth critically-damped collapse (170ms..240ms) with zero overshoot before window swap.
+        int collapseMs = Math.max(170, Math.min(240,
+                Math.round(170f + 70f * distance - Math.min(60f, Math.max(0f, yVelocity) * 0.015f))));
+        animateMorph(to, collapseMs, new android.view.animation.PathInterpolator(0.2f, 0f, 0f, 1f), endAction);
     }
 
     /** Start a minimize morph: the drag's first move, a back gesture or Back itself. */
@@ -9216,6 +9216,15 @@ public class MobilePlaybackActivity extends MobileActivity
         mSkipSegmentPill.setVisibility(View.VISIBLE);
         mSkipSegmentPill.removeCallbacks(mHideSkipSegment);
         mSkipSegmentPill.postDelayed(mHideSkipSegment, Math.max(timeoutMs, 3_000));
+        return true;
+    }
+
+    @Override
+    public boolean showSponsorSkipped(String category) {
+        if (isInPictureInPictureMode()) {
+            return false;
+        }
+        showTransientPlayerPill("Skipped " + category);
         return true;
     }
 
@@ -10184,6 +10193,49 @@ public class MobilePlaybackActivity extends MobileActivity
         }
     }
 
+    public boolean isSnackbarTopPreferred() {
+        return isShortsMode() || isLandscape() || mPortraitFull;
+    }
+
+    public int getTopSnackbarClearancePx() {
+        View topBar = null;
+        if (isShortsMode()) {
+            topBar = findViewById(R.id.mobile_shorts_top_bar);
+        } else if (mControlsVisible && mControlsRoot != null && mControlsRoot.getAlpha() > 0.1f) {
+            topBar = findViewById(R.id.mobile_player_top_container);
+        }
+        if (topBar == null || topBar.getVisibility() != View.VISIBLE) {
+            return 0;
+        }
+        View root = findViewById(android.R.id.content);
+        if (root == null) {
+            return 0;
+        }
+        int[] barLoc = new int[2];
+        int[] rootLoc = new int[2];
+        topBar.getLocationInWindow(barLoc);
+        root.getLocationInWindow(rootLoc);
+        int bottomInRoot = (barLoc[1] + topBar.getHeight()) - rootLoc[1];
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(root);
+        int statusTop = insets != null ? insets.getInsets(WindowInsetsCompat.Type.statusBars()).top : 0;
+        int effectiveStatusTop = (rootLoc[1] == 0 && root.getPaddingTop() == 0) ? statusTop : 0;
+        return Math.max(0, bottomInRoot - effectiveStatusTop);
+    }
+
+    private final Runnable mHideTopPill = () -> showTopPill(null);
+
+    /** Show a brief transient player pill (captions/speed/audio/SponsorBlock) that auto-fades after 1.6s. */
+    private void showTransientPlayerPill(@Nullable CharSequence text) {
+        if (mTopPill == null) {
+            return;
+        }
+        mTopPill.removeCallbacks(mHideTopPill);
+        showTopPill(text);
+        if (text != null) {
+            mTopPill.postDelayed(mHideTopPill, 1_600);
+        }
+    }
+
     /** The pill over the top of the video ({@code null} hides it). */
     private void showTopPill(@Nullable CharSequence text) {
         showTopPill(text, 0);
@@ -10570,7 +10622,6 @@ public class MobilePlaybackActivity extends MobileActivity
                 // An explicit pick outranks the error fixer's per-video audio fallback, which
                 // restoreAudioFormat would otherwise re-apply on a reload of this video.
                 playerData.setTempAudioFormat(null);
-                com.newtube.mobile.ui.common.MobileSnackbar.show(this, getString(R.string.mobile_audio_track_toast, choice.label));
             });
         }
 
@@ -10703,7 +10754,7 @@ public class MobilePlaybackActivity extends MobileActivity
 
         setButtonState(R.id.lb_control_closed_captioning, on ? BUTTON_ON : BUTTON_OFF);
 
-        com.newtube.mobile.ui.common.MobileSnackbar.show(this, on ? getString(R.string.mobile_captions_on_toast, captionLabel(format)) : getString(R.string.mobile_captions_off_toast));
+        showTransientPlayerPill(on ? getString(R.string.mobile_captions_on_toast, captionLabel(format)) : getString(R.string.mobile_captions_off_toast));
     }
 
     /** Last-used tracks bubble to the top, like the TV picker (PlayerUIController.reorderSubtitles). */
@@ -10945,7 +10996,7 @@ public class MobilePlaybackActivity extends MobileActivity
             }
         }
 
-        com.newtube.mobile.ui.common.MobileSnackbar.show(this, getString(R.string.mobile_speed_toast, speedLabel(speed)));
+        showTransientPlayerPill(getString(R.string.mobile_speed_toast, speedLabel(speed)));
     }
 
     /**
@@ -12482,10 +12533,8 @@ public class MobilePlaybackActivity extends MobileActivity
         }
         mChipMetadata = metadata;
         mChannelChip.setText(getString(R.string.mobile_watch_chip_channel, metadata.getAuthor()));
-        boolean segment = com.newtube.mobile.ui.common.Glass.chipStyle(this)
-                == com.newtube.mobile.ui.common.Glass.CHIPS_SEGMENT;
-        mRelatedChips.setVisibility(segment ? View.GONE : View.VISIBLE);
-        mRelatedTrack.setVisibility(segment ? View.VISIBLE : View.GONE);
+        mRelatedChips.setVisibility(View.GONE);
+        mRelatedTrack.setVisibility(View.VISIBLE);
         syncRelatedChips(); // the track's labels carry the channel's name
     }
 
@@ -12565,7 +12614,10 @@ public class MobilePlaybackActivity extends MobileActivity
                 }
             }
             mRelatedTrack.setChips(labels);
-            mRelatedTrack.setSelected(mTrackChips.indexOf(mPickedChip));
+            int targetIdx = mTrackChips.indexOf(mPickedChip);
+            if (mRelatedTrack.getSelectedIndex() != targetIdx) {
+                mRelatedTrack.setSelected(targetIdx);
+            }
         }
     }
 

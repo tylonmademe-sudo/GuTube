@@ -51,6 +51,11 @@ public interface PlaybackView extends PlayerManager {
         return false;
     }
 
+    /** GUTUBE(sponsorblock): show a brief transient pill when SponsorBlock auto-skips a segment. */
+    default boolean showSponsorSkipped(String category) {
+        return false;
+    }
+
     /** GUTUBE(sponsorblock): take the skip pill down (skipped, or the segment is over). */
     default void hideSkipSegment() {}
 }

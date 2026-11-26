@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -66,7 +65,7 @@ final class CoffeeSheet {
         if (clipboard != null) {
             clipboard.setPrimaryClip(ClipData.newPlainText(context.getString(R.string.mobile_settings_coffee_upi_label),
                     context.getString(R.string.mobile_settings_coffee_upi_id)));
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            com.newtube.mobile.ui.common.MobileSnackbar.show(context, message);
         }
     }
 }

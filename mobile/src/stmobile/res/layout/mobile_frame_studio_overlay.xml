@@ -150,6 +150,8 @@
             android:layout_gravity="bottom|center_horizontal"
             android:background="@drawable/bg_frame_studio_popover"
             android:clickable="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:elevation="16dp"
             android:focusable="true"
             android:orientation="vertical"
@@ -157,73 +159,15 @@
             android:visibility="gone">
 
             <!-- Segmented Tabs: Frame | Second | Minute | Custom -->
-            <LinearLayout
+            <com.newtube.mobile.ui.common.UnifiedPillNavView
+                android:id="@+id/frame_studio_step_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_frame_studio_tab_bar"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <TextView
-                    android:id="@+id/frame_studio_tab_frame"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_frame_studio_chip_active"
-                    android:gravity="center"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:text="@string/frame_studio_tab_frame"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/frame_studio_tab_second"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:text="@string/frame_studio_tab_second"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/frame_studio_tab_minute"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:text="@string/frame_studio_tab_minute"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/frame_studio_tab_custom"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    android:text="@string/frame_studio_tab_custom"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
-
-            </LinearLayout>
+                android:layout_height="48dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:pillMode="fixed"
+                app:pillShowTrack="false"
+                app:pillTextSize="12sp" />
 
             <!-- Subtitle Info (e.g. Detected FPS) -->
             <TextView

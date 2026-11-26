@@ -65,7 +65,9 @@ class ShortsSegment extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         FrameLayout frame = new FrameLayout(parent.getContext());
         frame.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        frame.setPadding(Math.round(12 * dp), Math.round(4 * dp), Math.round(12 * dp), Math.round(8 * dp));
+        frame.setClipChildren(false);
+        frame.setClipToPadding(false);
+        frame.setPadding(Math.round(12 * dp), Math.round(2 * dp), Math.round(12 * dp), Math.round(4 * dp));
         GlassChipTrack track = new GlassChipTrack(parent.getContext());
         track.setGlassSource(null);
         track.setChips(Arrays.asList(parent.getContext().getString(R.string.mobile_playlist_filter_all),
@@ -75,7 +77,7 @@ class ShortsSegment extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mFilter = index;
             mPicked.onPicked(index);
         });
-        frame.addView(track, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Math.round(44 * dp)));
+        frame.addView(track, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Math.round(52 * dp)));
         return new RecyclerView.ViewHolder(frame) {
         };
     }

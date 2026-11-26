@@ -6,31 +6,29 @@
     android:id="@+id/tiltCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="6dp"
-    android:layout_marginBottom="14dp"
     android:clickable="true"
     android:elevation="12dp"
     app:glassCornerRadius="28dp"
     app:glassLiquid="true"
     app:glassOnGlass="true"
-    app:glassStrokeColor="#33FFFFFF"
+    app:glassStrokeColor="@color/gutube_glass_stroke"
     app:glassStrokeWidth="1.2dp"
-    app:glassTint="#47000000">
+    app:glassTint="@color/gutube_greet_card_tint">
 
     <!-- Starry particle field canvas (locked inside the card) -->
     <com.newtube.mobile.ui.browse.StarfieldView
         android:id="@+id/starfieldCanvas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
 
     <!-- Foreground statistics content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="22dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="22dp">
+        android:paddingHorizontal="18dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="16dp">
 
         <!-- Primary Usage Hero -->
         <TextView
@@ -40,12 +38,13 @@
             android:fontFamily="@font/roboto_medium"
             android:gravity="center"
             android:includeFontPadding="false"
+            android:maxLines="1"
             android:shadowColor="#33000000"
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
             android:textColor="#FFFFFF"
-            android:textSize="48sp"
+            android:textSize="40sp"
             android:textStyle="bold"
             tools:text="41m" />
 
@@ -54,8 +53,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:ellipsize="end"
             android:fontFamily="@font/roboto"
             android:gravity="center"
+            android:maxLines="1"
             android:shadowColor="#33000000"
             android:shadowDx="0"
             android:shadowDy="1"
@@ -70,7 +71,7 @@
             android:id="@+id/stats_numbers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="14dp"
             android:orientation="horizontal" />
 
         <!-- Weekly Trend & Histogram -->
@@ -78,7 +79,7 @@
             android:id="@+id/stats_week_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_medium"
             android:shadowColor="#33000000"
             android:shadowDx="0"
@@ -92,8 +93,8 @@
         <LinearLayout
             android:id="@+id/stats_bars"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="68dp"
+            android:layout_marginTop="10dp"
             android:gravity="bottom"
             android:orientation="horizontal" />
 
@@ -101,46 +102,8 @@
             android:id="@+id/stats_days"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal" />
-
-        <!-- Footnotes -->
-        <TextView
-            android:id="@+id/stats_footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/roboto"
-            android:gravity="center"
-            android:shadowColor="#33000000"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="3"
-            android:textColor="#B3FFFFFF"
-            android:textSize="12sp"
-            tools:text="Tap a bar for details" />
-
-        <!-- Privacy Shield Note (no lock icon) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="2"
-                android:text="@string/mobile_stats_on_device"
-                android:textColor="#8CFFFFFF"
-                android:textSize="11.5sp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

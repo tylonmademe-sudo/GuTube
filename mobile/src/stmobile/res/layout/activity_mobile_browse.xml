@@ -1136,12 +1136,39 @@
 
                         </LinearLayout>
 
-                        <!-- Empty 4th slot to maintain 4-column alignment -->
-                        <Space
+                        <!-- Browse+ (Web Portal) -->
+                        <LinearLayout
+                            android:id="@+id/mobile_you_explore_portal"
                             android:layout_width="0dp"
                             android:layout_height="88dp"
                             android:layout_marginStart="3dp"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_you_explore_tile"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="6dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="6dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_mobile_web_portal"
+                                app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/roboto_medium"
+                                android:maxLines="1"
+                                android:text="@string/mobile_explore_portal"
+                                android:textColor="#E6FFFFFF"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -1325,7 +1352,9 @@
                 android:layout_margin="6dp"
                 android:contentDescription="@string/mobile_mini_play_pause"
                 android:padding="9dp"
-                android:src="@drawable/ic_player_pause" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_player_pause"
+                android:tint="@color/mobile_player_on_video" />
 
             <ImageButton
                 android:id="@+id/mobile_mini_close"
@@ -1335,6 +1364,7 @@
                 android:layout_margin="6dp"
                 android:contentDescription="@string/mobile_mini_close"
                 android:padding="9dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_sheet_close"
                 android:tint="@color/mobile_player_on_video" />
 
@@ -1347,6 +1377,7 @@
                 android:layout_marginBottom="6dp"
                 android:contentDescription="@string/mobile_player_audio_only"
                 android:padding="9dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_player_headphones"
                 android:tint="@color/mobile_player_on_video" />
 
@@ -1555,17 +1586,19 @@
                 android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:gravity="center"
-                android:paddingHorizontal="24dp"
-                android:paddingVertical="32dp">
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp">
 
                 <LinearLayout
                     android:id="@+id/mobile_greet_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:clipChildren="false"
                     android:clipToPadding="false"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
@@ -1576,20 +1609,33 @@
                         android:gravity="center"
                         android:letterSpacing="-0.02"
                         android:textColor="@color/mobile_color_on_surface"
-                        android:textSize="38sp"
+                        android:textSize="34sp"
                         tools:text="Good evening" />
 
                     <TextView
                         android:id="@+id/mobile_greet_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="28dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="16dp"
                         android:fontFamily="@font/roboto"
                         android:gravity="center"
                         android:textColor="@color/mobile_color_on_surface_secondary"
                         android:textSize="15sp"
                         tools:text="Wind down with something good" />
+
+                    <LinearLayout
+                        android:id="@+id/mobile_greet_actions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="14dp"
+                        android:clickable="false"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:focusable="false"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" />
 
                 </LinearLayout>
 

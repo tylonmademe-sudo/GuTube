@@ -1,245 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Liquid Glass In-App GitHub Update Modal Dialog -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/github_update_sheet_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="28dp">
 
-    <!-- Dedicated Liquid Glass Background Layer (AGSL / RenderEffect applied here) -->
+    <!-- Drag Handle -->
     <View
-        android:id="@+id/github_update_glass_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_github_update_sheet" />
+        android:id="@+id/github_update_drag_handle"
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_github_update_handle" />
 
-    <!-- Content Container -->
-    <LinearLayout
+    <!-- Centered 48dp Frosted Glass Circle Badge -->
+    <FrameLayout
+        android:id="@+id/github_update_icon_container"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_glass_circle">
+
+        <ImageView
+            android:id="@+id/github_update_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_mobile_update"
+            app:tint="@color/mobile_color_on_surface" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/github_update_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="Update Available"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/github_update_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_glass_pill"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/mobile_color_on_surface_secondary"
+        android:textSize="12.5sp"
+        tools:text="GuTube 1.5 · 45.60 MB" />
+
+    <!-- Live Download Progress Card -->
+    <LinearLayout
+        android:id="@+id/github_update_progress_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_glass_card"
         android:orientation="vertical"
-        android:paddingBottom="24dp">
+        android:padding="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <!-- Modal Drag Handle -->
-        <View
-            android:id="@+id/github_update_drag_handle"
-            android:layout_width="36dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_github_update_handle" />
-
-        <!-- App Identity Header: 38dp Clean Logo (zero bloated red box) + Title & Version Subtitle -->
-        <LinearLayout
-            android:id="@+id/github_update_header_container"
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/github_update_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp">
+            android:indeterminate="true"
+            app:indicatorColor="@color/mobile_color_on_surface"
+            app:trackColor="@color/gutube_glass_stroke"
+            app:trackCornerRadius="2dp"
+            app:trackThickness="4dp" />
 
-            <FrameLayout
-                android:id="@+id/github_update_icon_container"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@null">
-
-                <ImageView
-                    android:id="@+id/github_update_icon"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_gutube_mark_default" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/github_update_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_condensed_bold"
-                    android:letterSpacing="-0.01"
-                    android:text="Update Available"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:shadowColor="#33000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3" />
-
-                <TextView
-                    android:id="@+id/github_update_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="#E2E8F0"
-                    android:textSize="13.5sp"
-                    android:shadowColor="#33000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
-                    tools:text="GuTube 1.5 · 45.60 MB" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Download Progress Bar & Live Text (Visible during download) -->
-        <LinearLayout
-            android:id="@+id/github_update_progress_container"
+        <TextView
+            android:id="@+id/github_update_progress_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/github_update_progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                app:indicatorColor="#EF4444"
-                app:trackColor="#26FFFFFF"
-                app:trackCornerRadius="2dp"
-                app:trackThickness="4dp" />
-
-            <TextView
-                android:id="@+id/github_update_progress_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#F1F5F9"
-                android:textSize="13sp"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                tools:text="Downloading... 1.9 MB of 34 MB" />
-
-        </LinearLayout>
-
-        <!-- Card Body: What's New Section Title & Changelog List -->
-        <LinearLayout
-            android:id="@+id/github_update_notes_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="18dp">
-
-            <TextView
-                android:id="@+id/github_update_whats_new_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="What's new"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                tools:text="What's new in 1.5" />
-
-            <TextView
-                android:id="@+id/github_update_subheading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="GuTube"
-                android:textColor="#F1F5F9"
-                android:textSize="14.5sp"
-                android:textStyle="bold"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3" />
-
-            <com.newtube.mobile.ui.update.MaxHeightScrollView
-                android:id="@+id/github_update_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fadingEdgeLength="20dp"
-                android:overScrollMode="never"
-                android:requiresFadingEdge="vertical"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/github_update_notes_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
-            </com.newtube.mobile.ui.update.MaxHeightScrollView>
-
-        </LinearLayout>
-
-        <!-- Action Buttons Footer: Not now (Glass Pill) and Update now (Glass Primary) -->
-        <LinearLayout
-            android:id="@+id/github_update_actions_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="end|center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="24dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/github_update_btn_cancel"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:minHeight="40dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_github_update_btn_cancel"
-                android:paddingHorizontal="18dp"
-                android:text="Not now"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                app:backgroundTint="@null"
-                app:cornerRadius="18dp"
-                app:rippleColor="#33FFFFFF" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/github_update_btn_action"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:minHeight="40dp"
-                android:background="@drawable/bg_github_update_btn_action"
-                android:paddingHorizontal="22dp"
-                android:text="Update now"
-                android:textColor="#FFFFFF"
-                android:textSize="14.5sp"
-                android:textStyle="bold"
-                android:shadowColor="#33000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                app:backgroundTint="@null"
-                app:cornerRadius="18dp"
-                app:rippleColor="#33FFFFFF" />
-
-        </LinearLayout>
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13sp"
+            tools:text="Downloading... 1.9 MB of 34 MB" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <!-- Inner Frosted Glass Changelog Card -->
+    <LinearLayout
+        android:id="@+id/github_update_notes_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_glass_card"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/github_update_whats_new_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:text="What's new"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="16sp"
+            tools:text="What's new in 1.5" />
+
+        <TextView
+            android:id="@+id/github_update_subheading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="GuTube"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13sp" />
+
+        <com.newtube.mobile.ui.update.MaxHeightScrollView
+            android:id="@+id/github_update_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fadingEdgeLength="20dp"
+            android:overScrollMode="never"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/github_update_notes_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </com.newtube.mobile.ui.update.MaxHeightScrollView>
+
+    </LinearLayout>
+
+    <!-- Matching 50dp Pill Action Buttons -->
+    <LinearLayout
+        android:id="@+id/github_update_actions_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/github_update_btn_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_glass_pill"
+            android:fontFamily="@font/roboto_medium"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="50dp"
+            android:text="Not now"
+            android:textAllCaps="false"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="15sp"
+            app:backgroundTint="@null"
+            app:cornerRadius="25dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/github_update_btn_action"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="50dp"
+            android:text="Update now"
+            android:textAllCaps="false"
+            android:textColor="@color/mobile_color_background"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/mobile_color_on_surface"
+            app:cornerRadius="25dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

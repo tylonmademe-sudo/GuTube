@@ -195,18 +195,24 @@
         app:glassLiquid="false"
         app:glassTint="@color/gutube_glass_tint">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/mobile_channel_tabs"
+        <HorizontalScrollView
+            android:id="@+id/mobile_channel_tabs_scroll"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@null"
+            android:layout_height="52dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingHorizontal="12dp"
+            android:scrollbars="none"
             android:visibility="gone"
-            app:tabIndicatorColor="@color/mobile_color_on_surface"
-            app:tabMaxWidth="0dp"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/mobile_color_on_surface"
-            app:tabTextColor="@color/mobile_color_on_surface_secondary"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+
+            <com.newtube.mobile.ui.common.UnifiedPillNavView
+                android:id="@+id/mobile_channel_tabs"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                app:pillMode="scrollable" />
+
+        </HorizontalScrollView>
 
     </com.newtube.mobile.ui.common.GlassView>
 

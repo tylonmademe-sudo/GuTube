@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -179,8 +178,8 @@ final class HeadphonePicker {
                 root.post(() -> {
                     list.setEnabled(true);
                     if (applied) {
-                        Toast.makeText(app, app.getString(R.string.mobile_settings_autoeq_applied, entry.name),
-                                Toast.LENGTH_SHORT).show();
+                        com.newtube.mobile.ui.common.MobileSnackbar.show(app,
+                                app.getString(R.string.mobile_settings_autoeq_applied, entry.name));
                         sheet.dismiss();
                         changed.run();
                     } else {

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -50,7 +49,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 }
 
                 new Handler(Looper.getMainLooper()).post(() ->
-                        Toast.makeText(context.getApplicationContext(), "Saved to Watch later", Toast.LENGTH_SHORT).show());
+                        com.newtube.mobile.ui.common.MobileSnackbar.show(context, "Saved to Watch later"));
             }
         } else if (ACTION_DISMISS_UPDATE.equals(action)) {
             NotificationManagerCompat.from(context).cancel(UpdateNotificationWorker.NOTIFICATION_ID);

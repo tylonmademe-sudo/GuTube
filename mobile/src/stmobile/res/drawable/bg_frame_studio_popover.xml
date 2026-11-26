@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Frame Studio Floating Popover Container Background
-  Single clean Liquid Glass card with translucent dark-glass fill, 20dp corners, and 1dp border.
-  Completely eliminates any nested or double border effects.
--->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#CC12151D" />
+    <solid android:color="@color/gutube_frame_popover_fill" />
     <corners android:radius="20dp" />
     <stroke
         android:width="1dp"
-        android:color="#33FFFFFF" />
+        android:color="@color/gutube_glass_rim" />
 </shape>

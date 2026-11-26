@@ -351,6 +351,10 @@ public class MobileBrowseActivity extends MobileActivity
 
     private final List<BrowseSection> mSections = new ArrayList<>();
     private final List<Video> mCurrentVideos = new ArrayList<>();
+    private final List<Video> mSavedHomeVideos = new ArrayList<>();
+    private int mSavedHomeScrollPos = 0;
+    private int mSavedHomeScrollOffset = 0;
+    private boolean mHasLoadedHomeSession = false;
     /**
      * GUTUBE(refresh): cards already on screen when Home or one of its topics (issue #185: Gaming...)
      * was pulled to refresh, by section. YouTube answers a refresh with much the same page, so the
@@ -992,6 +996,7 @@ public class MobileBrowseActivity extends MobileActivity
             mMiniFreeze.setVisibility(View.VISIBLE);
         }
 
+        com.newtube.mobile.ui.playback.MiniSize.apply(this); // pre-size before attaching texture
         MiniPlayerBridge.fitToVideo(mMiniPlayerFrame); // NEWTUBE(issue #9): letterbox, never stretch
         attachMiniTexture();
         stopMiniSwipe();
@@ -1006,7 +1011,6 @@ public class MobileBrowseActivity extends MobileActivity
             mMiniSwipe.restorePlace(mMiniPlace); // same card, back from the app being away
         }
         mMiniPlace = null;
-        com.newtube.mobile.ui.playback.MiniSize.apply(this); // the type may have changed while Home stayed alive
         mMiniPlayerBar.setVisibility(View.VISIBLE);
         mMiniControls.show();
         updateMiniPlayPauseIcon(player);
@@ -1646,6 +1650,9 @@ public class MobileBrowseActivity extends MobileActivity
         mBottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == SEARCH_ITEM_ID) {
                 if (!mSuppressNavCallback) {
+                    if (mPreview != null) {
+                        mPreview.stop();
+                    }
                     com.newtube.mobile.ui.common.Haptics.nav(mBottomNav, 40, 255);
                     SearchPresenter.instance(this).startTextSearch();
                 }
@@ -1653,6 +1660,9 @@ public class MobileBrowseActivity extends MobileActivity
             }
             if (item.getItemId() == CAST_ITEM_ID) {
                 if (!mSuppressNavCallback) {
+                    if (mPreview != null) {
+                        mPreview.stop();
+                    }
                     com.newtube.mobile.ui.common.Haptics.nav(mBottomNav, 40, 255);
                     CastPickerLauncher.open(this, CastPickerLauncher::presentPlain);
                 }
@@ -1698,11 +1708,7 @@ public class MobileBrowseActivity extends MobileActivity
             if (item.getItemId() != YOU_ITEM_ID && mContentGrid != null
                     && mContentGrid.getVisibility() == View.VISIBLE && mContentGrid.canScrollVertically(-1)) {
                 smoothScrollGridToTop();
-            } else if (item.getItemId() != YOU_ITEM_ID && !mYouShowing && mContentSwipe.isEnabled()
-                    && !mContentSwipe.isRefreshing() && mContentGrid != null && mContentGrid.getVisibility() == View.VISIBLE) {
-                mContentSwipe.setRefreshing(true);
-                refreshFeed();
-            } else {
+            } else if (item.getItemId() == YOU_ITEM_ID) {
                 onNavItemChosen(item.getItemId());
             }
         });
@@ -2005,6 +2011,12 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void onNavItemChosen(int itemId) {
         int chosenSectionId = itemId == YOU_ITEM_ID ? MediaGroup.TYPE_SETTINGS : (itemId - ITEM_ID_OFFSET);
+        boolean shorts = itemId == toMenuItemId(MediaGroup.TYPE_SHORTS);
+        if (itemId == YOU_ITEM_ID || shorts || chosenSectionId != mCurrentSectionId) {
+            if (mPreview != null) {
+                mPreview.stop();
+            }
+        }
         if (chosenSectionId != VideoDownloads.SECTION_ID) {
             hideDownloadsEmptyState();
             hideError();
@@ -2012,7 +2024,6 @@ public class MobileBrowseActivity extends MobileActivity
         // GUTUBE(shorts): like YouTube, the Shorts tab IS the vertical player - no grid. The tab
         // loads the feed (spinner only) and opens its first unseen short; leaving the player comes
         // back to the tab you were on (onResume).
-        boolean shorts = itemId == toMenuItemId(MediaGroup.TYPE_SHORTS);
         mShortsLaunchPending = shorts;
         if (!shorts) {
             mLastNonShortsNavItem = itemId;
@@ -2020,16 +2031,37 @@ public class MobileBrowseActivity extends MobileActivity
         }
         if (itemId == YOU_ITEM_ID) {
             showYouPanel();
-            // GUTUBE(frost): the page frosts in on the panel's opaque background, which covers the
-            // last tab at once - frosting the whole panel faded that tab through it for a moment.
-            Motion.frostIn(((ViewGroup) mYouPanel).getChildAt(0));
+            View youChild = ((ViewGroup) mYouPanel).getChildAt(0);
+            if (youChild != null) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    youChild.setRenderEffect(null);
+                }
+                youChild.setAlpha(1f);
+            }
         } else {
             boolean fromYou = mYouShowing;
             mSectionFromYou = false;
             hideYouPanel();
-            onSectionChosen(itemId - ITEM_ID_OFFSET);
-            if (fromYou && !mSectionSwapPending && mContentGrid.getVisibility() == View.VISIBLE) {
-                Motion.frostIn(mContentGrid); // GUTUBE(frost): back to the tab under You - same page, same arrival
+            if (fromYou && chosenSectionId == mCurrentSectionId && !mCurrentVideos.isEmpty()) {
+                syncNavHighlight(chosenSectionId);
+                onYouPanelToggled();
+                if (mContentGrid != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        mContentGrid.setRenderEffect(null);
+                    }
+                    mContentGrid.setAlpha(1f);
+                }
+                if (isHomeChip(mCurrentSectionId) && mPreview != null) {
+                    mPreview.schedule();
+                }
+            } else {
+                onSectionChosen(chosenSectionId);
+                if (mContentGrid != null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        mContentGrid.setRenderEffect(null);
+                    }
+                    mContentGrid.setAlpha(1f);
+                }
             }
         }
         maybeLaunchShorts();
@@ -2104,7 +2136,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** GUTUBE(shorts): the grid never shows on the Shorts tab - a spinner until the player opens. */
     private void showShortsTab(boolean shorts) {
-        mContentSwipe.setAlpha(shorts ? 0f : 1f);
+        mContentSwipe.setAlpha(1f);
         // A skeleton already fading out over the new tab's cards keeps its alpha: putting it back
         // to 1 flashed it over them until the fade caught up.
         if (shorts || mSkeletonLeaving != mSkeletonShows) {
@@ -2392,6 +2424,27 @@ public class MobileBrowseActivity extends MobileActivity
         if (expMusic != null) {
             expMusic.setOnClickListener(v -> openFromYou(MediaGroup.TYPE_MUSIC));
         }
+        View expPortal = findViewById(R.id.mobile_you_explore_portal);
+        if (expPortal != null) {
+            expPortal.setOnClickListener(v -> {
+                if (mPreview != null) {
+                    mPreview.stop();
+                }
+                com.newtube.mobile.ui.common.Haptics.tick(v);
+                if (PasskeyGateSheet.isUnlocked(this)) {
+                    com.newtube.mobile.ui.webbrowser.MobileWebPortalActivity.launch(
+                            this,
+                            "https://toppornsites.com/",
+                            getString(R.string.mobile_explore_portal));
+                } else {
+                    PasskeyGateSheet.show(this, () ->
+                            com.newtube.mobile.ui.webbrowser.MobileWebPortalActivity.launch(
+                                    this,
+                                    "https://toppornsites.com/",
+                                    getString(R.string.mobile_explore_portal)));
+                }
+            });
+        }
 
         View historyTitle = findViewById(R.id.mobile_you_history_title);
         if (historyTitle != null) {
@@ -2588,6 +2641,9 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** Show the You panel over the content area (the panel is opaque; the grid stays put). */
     private void showYouPanel() {
+        if (mPreview != null) {
+            mPreview.stop();
+        }
         mYouShowing = true;
         mSectionFromYou = false;
         rebuildYouRows();
@@ -2618,6 +2674,9 @@ public class MobileBrowseActivity extends MobileActivity
             top.setVisibility(View.VISIBLE);
         }
         onYouPanelToggled();
+        if (isHomeChip(mCurrentSectionId) && mPreview != null) {
+            mPreview.schedule();
+        }
     }
 
     /**
@@ -2993,6 +3052,19 @@ public class MobileBrowseActivity extends MobileActivity
      * drawer, or (indirectly) the presenter's boot selection. Drives the standard
      * {@link BrowsePresenter#onSectionFocused} path and keeps both nav surfaces in sync.
      */
+    private void saveHomeSessionSnapshot() {
+        if (isHomeChip(mCurrentSectionId) && mHomeChip == null && !mCurrentVideos.isEmpty()) {
+            mSavedHomeVideos.clear();
+            mSavedHomeVideos.addAll(mCurrentVideos);
+            mHasLoadedHomeSession = true;
+            if (mLayoutManager != null) {
+                mSavedHomeScrollPos = Math.max(0, mLayoutManager.findFirstVisibleItemPosition());
+                View firstChild = mLayoutManager.findViewByPosition(mSavedHomeScrollPos);
+                mSavedHomeScrollOffset = firstChild != null ? firstChild.getTop() : 0;
+            }
+        }
+    }
+
     private void onSectionChosen(int sectionId) {
         // The Settings section has no video-grid renderer on the mobile shell (its content
         // arrives as a SettingsGroup, which updateSection(SettingsGroup) intentionally
@@ -3003,12 +3075,19 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
+        boolean switched = mCurrentSectionId != sectionId;
+        if (switched && isHomeChip(mCurrentSectionId)) {
+            saveHomeSessionSnapshot();
+        }
+        if (!isHomeChip(sectionId) && mPreview != null) {
+            mPreview.stop();
+        }
+
         if (sectionId != VideoDownloads.SECTION_ID) {
             hideDownloadsEmptyState();
             hideError();
         }
 
-        boolean switched = mCurrentSectionId != sectionId;
         if (switched || mSubsChannel != null) {
             clearSubsChannel(); // GUTUBE(feed-strip): a filter belongs to the visit that set it
         }
@@ -3016,6 +3095,41 @@ public class MobileBrowseActivity extends MobileActivity
         showNav();
         updateStrip();
         applyVideoLayout();
+
+        if (sectionId == MediaGroup.TYPE_HOME && mHomeChip == null
+                && mHasLoadedHomeSession && !mSavedHomeVideos.isEmpty()) {
+            cancelFeedSwap();
+            mCurrentVideos.clear();
+            mCurrentVideos.addAll(mSavedHomeVideos);
+            mAwaitingFreshContent = false;
+            mLastPaginationTriggerCount = -1;
+            mLastNearEndTriggerCount = -1;
+            markLiveChannels();
+            mContentGrid.animate().cancel();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                mContentGrid.setRenderEffect(null);
+            }
+            mContentGrid.setAlpha(1f);
+            mContentGrid.setVisibility(View.VISIBLE);
+            mAdapter.submitList(segmented(mCurrentVideos), () -> {
+                if (mLayoutManager != null) {
+                    mLayoutManager.scrollToPositionWithOffset(mSavedHomeScrollPos, mSavedHomeScrollOffset);
+                }
+            });
+            setSkeletonVisible(false);
+            syncNavHighlight(sectionId);
+            onYouPanelToggled();
+            updateGridSpanCount(computeSpanCount());
+            showShortsTab(false);
+            if (mNoInternetController != null) {
+                mNoInternetController.updateState();
+            }
+            if (mPreview != null) {
+                mPreview.schedule();
+            }
+            return;
+        }
+
         paintCachedSnapshot(sectionId, switched);
         syncNavHighlight(sectionId);
         onYouPanelToggled(); // GUTUBE: the large title names the tab on screen
@@ -3023,6 +3137,9 @@ public class MobileBrowseActivity extends MobileActivity
         showShortsTab(sectionId == MediaGroup.TYPE_SHORTS);
         if (mNoInternetController != null) {
             mNoInternetController.updateState();
+        }
+        if (isHomeChip(sectionId) && mPreview != null) {
+            mPreview.schedule();
         }
 
         if (mPresenter != null) {
@@ -5417,9 +5534,13 @@ public class MobileBrowseActivity extends MobileActivity
         // DiffUtil keeps the viewport anchored on a card both sections share; a new section starts
         // at its top.
         mLayoutManager.scrollToPositionWithOffset(0, 0);
-        if (mAdapter.getItemCount() > 0) {
-            Motion.frostIn(mContentGrid); // GUTUBE(frost): the new tab clears out of frosted glass
+        if (mContentGrid != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                mContentGrid.setRenderEffect(null);
+            }
+            mContentGrid.setAlpha(1f);
         }
+        saveHomeSessionSnapshot();
         restoreItemAnimatorAfterLayout();
     }
 

@@ -76,9 +76,9 @@ public final class MobileMiniPlayerController {
      */
     public static void glassButtons(Activity activity) {
         MiniSize.apply(activity);
-        int inset = Math.round(4 * activity.getResources().getDisplayMetrics().density);
+        int inset = Math.round(2 * activity.getResources().getDisplayMetrics().density);
         // GUTUBE(minimal buttons): Minimal drops these discs too; the card is behind them, no halo
-        com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_play_pause), null, 0, false);
+        com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_play_pause), null, inset, false);
         com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_close), null, inset, false);
         com.newtube.mobile.ui.common.GlassDrawable.applyButton(activity.findViewById(R.id.mobile_mini_audio), null, inset, false);
     }

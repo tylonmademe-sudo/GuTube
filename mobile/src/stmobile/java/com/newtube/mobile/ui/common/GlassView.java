@@ -58,117 +58,8 @@ import java.util.Random;
  * Children draw on top, unrefracted. Wire it with {@link #setSource}.
  */
 public class GlassView extends FrameLayout {
-    private static final float BLUR_DP = 7f; // Liquid Glass: blur(7px)
     /** How far past an edge {@link #setBlurReach} looks: the blur's whole kernel. */
-    public static final float BLUR_REACH_DP = 2 * BLUR_DP;
-    private static final float SATURATION = 1.0f; // Liquid Glass: natural saturation
-    private static final float REFRACTION_HEIGHT_DP = 24f;
-    private static final float REFRACTION_AMOUNT_DP = 24f;
-    private static final float HIGHLIGHT_ANGLE = 45f;
-    private static final int NOISE_ALPHA = 10; // ~4% grain
-    private static final int FALLBACK_ALPHA = 0xEB;
-
-    /*
-     * The two shaders below are Kyant's backdrop (github.com/Kyant0/backdrop v2.0.0,
-     * Copyright 2025 Kyant, Apache License 2.0), as vendored by BitChord; see THIRD_PARTY_NOTICES.
-     */
-    private static final String ROUNDED_RECT_SDF =
-            "float sdRoundedRect(float2 coord, float2 halfSize, float radius) {\n"
-            + "    float2 cornerCoord = abs(coord) - (halfSize - float2(radius));\n"
-            + "    float outside = length(max(cornerCoord, 0.0)) - radius;\n"
-            + "    float inside = min(max(cornerCoord.x, cornerCoord.y), 0.0);\n"
-            + "    return outside + inside;\n"
-            + "}\n"
-            + "float2 gradSdRoundedRect(float2 coord, float2 halfSize, float radius) {\n"
-            + "    float2 cornerCoord = abs(coord) - (halfSize - float2(radius));\n"
-            + "    if (cornerCoord.x >= 0.0 || cornerCoord.y >= 0.0) {\n"
-            + "        return sign(coord) * normalize(max(cornerCoord, 0.0));\n"
-            + "    } else {\n"
-            + "        float gradX = step(cornerCoord.y, cornerCoord.x);\n"
-            + "        return sign(coord) * float2(gradX, 1.0 - gradX);\n"
-            + "    }\n"
-            + "}\n";
-
-    static final String REFRACTION_AGSL =
-            "uniform shader content;\n"
-            + "uniform float2 size;\n"
-            + "uniform float radius;\n"
-            + "uniform float refractionHeight;\n"
-            + "uniform float refractionAmount;\n"
-            + "uniform float depthEffect;\n"
-            + "uniform float chromaticAberration;\n"
-            + ROUNDED_RECT_SDF
-            + "float circleMap(float x) {\n"
-            + "    return 1.0 - sqrt(1.0 - x * x);\n"
-            + "}\n"
-            + "half4 main(float2 coord) {\n"
-            + "    float2 halfSize = size * 0.5;\n"
-            + "    float2 centeredCoord = coord - halfSize;\n"
-            + "    float sd = sdRoundedRect(centeredCoord, halfSize, radius);\n"
-            + "    float2 liquidWave = float2(\n"
-            + "        sin(coord.y * 0.015 + 92.0) * 3.5 + cos(coord.x * 0.030) * 1.5,\n"
-            + "        cos(coord.x * 0.015 + 46.0) * 3.5 + sin(coord.y * 0.030) * 1.5\n"
-            + "    );\n"
-            + "    if (-sd >= refractionHeight) {\n"
-            + "        return content.eval(coord + liquidWave);\n"
-            + "    }\n"
-            + "    sd = min(sd, 0.0);\n"
-            + "    float d = circleMap(1.0 - -sd / refractionHeight) * refractionAmount;\n"
-            + "    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));\n"
-            + "    float2 grad = normalize(gradSdRoundedRect(centeredCoord, halfSize, gradRadius)"
-            + " + depthEffect * normalize(centeredCoord));\n"
-            + "    float2 refractedCoord = coord + d * grad + liquidWave;\n"
-            + "    float dispersionIntensity = chromaticAberration"
-            + " * ((centeredCoord.x * centeredCoord.y) / (halfSize.x * halfSize.y));\n"
-            + "    float2 dispersedCoord = d * grad * dispersionIntensity;\n"
-            + "    half4 color = half4(0.0);\n"
-            + "    half4 red = content.eval(refractedCoord + dispersedCoord);\n"
-            + "    color.r += red.r / 3.5;\n"
-            + "    color.a += red.a / 7.0;\n"
-            + "    half4 orange = content.eval(refractedCoord + dispersedCoord * (2.0 / 3.0));\n"
-            + "    color.r += orange.r / 3.5;\n"
-            + "    color.g += orange.g / 7.0;\n"
-            + "    color.a += orange.a / 7.0;\n"
-            + "    half4 yellow = content.eval(refractedCoord + dispersedCoord * (1.0 / 3.0));\n"
-            + "    color.r += yellow.r / 3.5;\n"
-            + "    color.g += yellow.g / 3.5;\n"
-            + "    color.a += yellow.a / 7.0;\n"
-            + "    half4 green = content.eval(refractedCoord);\n"
-            + "    color.g += green.g / 3.5;\n"
-            + "    color.a += green.a / 7.0;\n"
-            + "    half4 cyan = content.eval(refractedCoord - dispersedCoord * (1.0 / 3.0));\n"
-            + "    color.g += cyan.g / 3.5;\n"
-            + "    color.b += cyan.b / 3.0;\n"
-            + "    color.a += cyan.a / 7.0;\n"
-            + "    half4 blue = content.eval(refractedCoord - dispersedCoord * (2.0 / 3.0));\n"
-            + "    color.b += blue.b / 3.0;\n"
-            + "    color.a += blue.a / 7.0;\n"
-            + "    half4 purple = content.eval(refractedCoord - dispersedCoord);\n"
-            + "    color.r += purple.r / 7.0;\n"
-            + "    color.b += purple.b / 3.0;\n"
-            + "    color.a += purple.a / 7.0;\n"
-            + "    return color;\n"
-            + "}\n";
-
-    private static final String HIGHLIGHT_AGSL =
-            "uniform float2 size;\n"
-            + "uniform float radius;\n"
-            + "layout(color) uniform half4 color;\n"
-            + "uniform float angle;\n"
-            + "uniform float falloff;\n"
-            + ROUNDED_RECT_SDF
-            + "half4 main(float2 coord) {\n"
-            + "    float2 halfSize = size * 0.5;\n"
-            + "    float2 centeredCoord = coord - halfSize;\n"
-            + "    float gradRadius = min(radius * 1.5, min(halfSize.x, halfSize.y));\n"
-            + "    float2 grad = gradSdRoundedRect(centeredCoord, halfSize, gradRadius);\n"
-            + "    float2 normal = float2(cos(angle), sin(angle));\n"
-            + "    float d = dot(grad, normal);\n"
-            + "    float intensity = pow(abs(d), falloff);\n"
-            + "    return color * intensity;\n"
-            + "}\n";
-
-    private static Bitmap sNoise;
+    public static final float BLUR_REACH_DP = 2 * LiquidGlassEngine.BLUR_CHROME_DP;
 
     private final float mCorner;
     private int mTint;
@@ -198,7 +89,7 @@ public class GlassView extends FrameLayout {
     @Nullable private GlassSource mSource;
     /** Sits on glass already (glassOnGlass): its tint is drawn as given, see-through. */
     private boolean mOnGlass;
-    private float mBlurDp = BLUR_DP;
+    private float mBlurDp = LiquidGlassEngine.BLUR_CHROME_DP;
     /** The widest it grows (glassMaxWidth), 0: no limit. */
     private final int mMaxWidth;
     /** The frost fades out over this much of the bottom (glassFadeBottom), 0: a hard edge. */
@@ -246,8 +137,8 @@ public class GlassView extends FrameLayout {
         setClipToOutline(true);
 
         mNoisePaint.setShader(new BitmapShader(noise(), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
-        mNoisePaint.setAlpha(NOISE_ALPHA);
-        setUpRim(mRimPaint, mDensity);
+        mNoisePaint.setAlpha(LiquidGlassEngine.NOISE_ALPHA_VIEW);
+        LiquidGlassEngine.configureRimPaint(mRimPaint, mDensity);
         mSpotlight = new Spotlight(mDensity);
         mSpotlight.setEnabled(false);
         mSpotlight.setDrawSurface(false);
@@ -262,34 +153,20 @@ public class GlassView extends FrameLayout {
         }
     }
 
-    /** Specular rim highlight: softened 1.25dp line matching inset 0 0 6px rgba(255, 255, 255, 0.7). */
-    private static void setUpRim(Paint paint, float density) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1.25f * density);
-    }
-
-    /** The light rim catching the corners, for its {@code w} x {@code h} rounded rect. */
-    private static Shader rimShader(int w, int h, float radius) {
-        // Soft white specular inner highlight matching inset 0 0 6px rgba(255, 255, 255, 0.7)
-        return new LinearGradient(0, 0, 0, h,
-                new int[] {0xB3FFFFFF, 0x33FFFFFF, 0x1AFFFFFF, 0x4DFFFFFF},
-                new float[] {0f, 0.35f, 0.7f, 1f}, Shader.TileMode.CLAMP);
-    }
-
     /**
      * GUTUBE(live chat, issue #32): this glass's specular rim alone, as a foreground for a rounded
      * card that is not a GlassView (the landscape chat and comments cards).
      */
     public static Drawable rim(float cornerPx, float density) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        setUpRim(paint, density);
+        LiquidGlassEngine.configureRimPaint(paint, density);
         RectF rect = new RectF();
         return new Drawable() {
             @Override
             protected void onBoundsChange(@NonNull Rect bounds) {
                 rect.set(bounds);
                 paint.setShader(bounds.isEmpty() ? null
-                        : rimShader(bounds.width(), bounds.height(), Math.min(cornerPx, Math.min(bounds.width(), bounds.height()) / 2f)));
+                        : LiquidGlassEngine.createRimShader(bounds.width(), bounds.height(), true));
             }
 
             @Override
@@ -409,13 +286,11 @@ public class GlassView extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        boolean dark = LiquidGlassEngine.isDarkTheme(getContext());
         mRimRect.set(0, 0, w, h);
-        mRimPaint.setShader(rimShader(w, h, radius(w, h)));
+        mRimPaint.setShader(LiquidGlassEngine.createRimShader(w, h, dark));
         if (w > 0 && h > 0) {
-            // Liquid glass soft specular inner ambient glow
-            mInnerGlowPaint.setShader(new LinearGradient(0, 0, 0, Math.min(h, 40 * mDensity),
-                    new int[] {0x4DFFFFFF, 0x14FFFFFF, 0x00FFFFFF},
-                    new float[] {0f, 0.5f, 1f}, Shader.TileMode.CLAMP));
+            mInnerGlowPaint.setShader(LiquidGlassEngine.createInnerGlowShader(w, h, mDensity, dark));
         }
         if (mFadeBottom > 0) {
             mFadePaint.setShader(new LinearGradient(0, h - mFadeBottom, 0, h,
@@ -476,7 +351,7 @@ public class GlassView extends FrameLayout {
         } else if (mOnGlass) {
             mTintPaint.setColor(mTint);
         } else {
-            mTintPaint.setColor((mTint & 0x00FFFFFF) | (FALLBACK_ALPHA << 24));
+            mTintPaint.setColor((mTint & 0x00FFFFFF) | (LiquidGlassEngine.FALLBACK_ALPHA << 24));
         }
         canvas.drawRect(0, 0, getWidth(), getHeight(), mTintPaint);
         if (mLiquid || r > 0f) {
@@ -548,36 +423,11 @@ public class GlassView extends FrameLayout {
         canvas.drawRenderNode(node);
     }
 
-    /** Saturate, blur, then (API 33+) refract the blurred backdrop - BitChord's order. */
+    /** Saturate, blur, then (API 33+) refract the blurred backdrop via {@link LiquidGlassEngine}. */
     @RequiresApi(api = Build.VERSION_CODES.S)
     private RenderEffect effect(int w, int h) {
-        float blur = mBlurDp * mDensity;
-        ColorMatrix saturate = new ColorMatrix();
-        saturate.setSaturation(SATURATION);
-        RenderEffect frost = RenderEffect.createBlurEffect(blur, blur,
-                RenderEffect.createColorFilterEffect(new ColorMatrixColorFilter(saturate)), Shader.TileMode.CLAMP);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || !mLiquid) {
-            return frost;
-        }
-        RuntimeShader lens = new RuntimeShader(REFRACTION_AGSL);
-        lens.setFloatUniform("size", w, h);
-        lens.setFloatUniform("radius", radius(w, h));
-        lens.setFloatUniform("refractionHeight", REFRACTION_HEIGHT_DP * mDensity);
-        lens.setFloatUniform("refractionAmount", -REFRACTION_AMOUNT_DP * mDensity);
-        lens.setFloatUniform("depthEffect", 1f);
-        lens.setFloatUniform("chromaticAberration", 1f);
-        return RenderEffect.createChainEffect(RenderEffect.createRuntimeShaderEffect(lens, "content"), frost);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private static Shader highlight(int w, int h, float radius) {
-        RuntimeShader shader = new RuntimeShader(HIGHLIGHT_AGSL);
-        shader.setFloatUniform("size", w, h);
-        shader.setFloatUniform("radius", radius);
-        shader.setColorUniform("color", 0x80FFFFFF);
-        shader.setFloatUniform("angle", (float) Math.toRadians(HIGHLIGHT_ANGLE));
-        shader.setFloatUniform("falloff", 1f);
-        return shader;
+        return LiquidGlassEngine.createBackdropEffect(
+                w, h, radius(w, h), mBlurDp, LiquidGlassEngine.SATURATION_CHROME, mLiquid, mDensity);
     }
 
     private float radius(int w, int h) {
@@ -600,16 +450,6 @@ public class GlassView extends FrameLayout {
     }
 
     static Bitmap noise() {
-        if (sNoise == null) {
-            int size = 96;
-            int[] px = new int[size * size];
-            Random random = new Random(7);
-            for (int i = 0; i < px.length; i++) {
-                int v = random.nextInt(256);
-                px[i] = 0xFF000000 | (v << 16) | (v << 8) | v;
-            }
-            sNoise = Bitmap.createBitmap(px, size, size, Bitmap.Config.ARGB_8888);
-        }
-        return sNoise;
+        return LiquidGlassEngine.noiseBitmap();
     }
 }

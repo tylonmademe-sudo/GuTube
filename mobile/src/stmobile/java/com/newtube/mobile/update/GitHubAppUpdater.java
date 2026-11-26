@@ -29,7 +29,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -381,7 +380,7 @@ public final class GitHubAppUpdater {
     private static void showUpdateDialog(Activity activity, ReleaseInfo release) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
 
-        BottomSheetDialog dialog = new BottomSheetDialog(activity, R.style.ThemeOverlay_GuTube_BottomSheetDialog_LiquidGlass);
+        BottomSheetDialog dialog = com.newtube.mobile.ui.common.Haptics.watch(new BottomSheetDialog(activity));
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_github_update, null);
         dialog.setContentView(view);
         dialog.setCancelable(true);
@@ -405,17 +404,11 @@ public final class GitHubAppUpdater {
         MaterialButton btnAction = view.findViewById(R.id.github_update_btn_action);
         com.newtube.mobile.ui.update.MaxHeightScrollView scroll = view.findViewById(R.id.github_update_scroll);
 
-        // Dedicated Liquid Glass Background Layer (AGSL distortion / blur)
-        View glassBg = view.findViewById(R.id.github_update_glass_bg);
-        com.newtube.mobile.ui.common.LiquidGlass.applyLiquidEffect(glassBg);
-
         float density = activity.getResources().getDisplayMetrics().density;
 
         if (scroll != null) {
             scroll.setMaxHeight((int) (activity.getResources().getDisplayMetrics().heightPixels * 0.35f));
         }
-
-        AppIcon.show(iconView, true);
 
         titleView.setText("Update Available");
         String sizeStr = release.apkSize > 0 ? Formatter.formatFileSize(activity, release.apkSize) : "";
@@ -436,9 +429,11 @@ public final class GitHubAppUpdater {
         renderMarkdownNotes(activity, notesList, release.rawBody, release.changelog);
 
         dialog.setOnShowListener(d -> {
+            if (d instanceof BottomSheetDialog) {
+                com.newtube.mobile.ui.common.SheetGlass.frost((BottomSheetDialog) d, true);
+            }
             View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (bottomSheet != null) {
-                com.newtube.mobile.ui.common.LiquidGlass.configureBottomSheetContainer(bottomSheet);
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setHideable(true);
                 behavior.setSkipCollapsed(true);
@@ -524,14 +519,12 @@ public final class GitHubAppUpdater {
             }
         });
 
-        // Real backdrop blur (blur(8px - 12dp)) and true transparent window styling
-        com.newtube.mobile.ui.common.LiquidGlass.configureWindow(dialog, activity);
-
         final Call[] activeCall = new Call[1];
         final boolean[] isDownloading = new boolean[]{false};
         final boolean[] isCancelled = new boolean[]{false};
 
         btnCancel.setOnClickListener(v -> {
+            com.newtube.mobile.ui.common.Haptics.tick(v);
             sDismissedVersionTag = release.tagName;
             if (isDownloading[0]) {
                 isCancelled[0] = true;
@@ -563,6 +556,7 @@ public final class GitHubAppUpdater {
 
         btnAction.setOnClickListener(v -> {
             if (isDownloading[0]) return;
+            com.newtube.mobile.ui.common.Haptics.tick(v);
             isDownloading[0] = true;
 
             // Switch to downloading state with smooth animations
@@ -613,64 +607,64 @@ public final class GitHubAppUpdater {
                             .build();
 
                     activeCall[0] = HTTP_CLIENT.newCall(req);
-                    Response resp = activeCall[0].execute();
-
-                    if (!resp.isSuccessful()) {
-                        throw new IOException("HTTP error " + resp.code());
-                    }
-
-                    ResponseBody respBody = resp.body();
-                    if (respBody == null) throw new IOException("Empty response body");
-
-                    long totalLength = respBody.contentLength();
-                    if (totalLength <= 0 && release.apkSize > 0) {
-                        totalLength = release.apkSize;
-                    }
-
-                    final long finalTotal = totalLength;
-
-                    try (InputStream in = respBody.byteStream();
-                         FileOutputStream out = new FileOutputStream(tempFile)) {
-                        byte[] buffer = new byte[8192];
-                        long downloaded = 0;
-                        int read;
-                        long lastUpdateMs = 0;
-
-                        MAIN_HANDLER.post(() -> {
-                            if (finalTotal > 0) {
-                                progressBar.setIndeterminate(false);
-                                progressBar.setMax(100);
-                                progressBar.setProgress(0);
-                            }
-                        });
-
-                        while ((read = in.read(buffer)) != -1) {
-                            if (isCancelled[0]) {
-                                tempFile.delete();
-                                return;
-                            }
-                            out.write(buffer, 0, read);
-                            downloaded += read;
-
-                            long now = SystemClock.uptimeMillis();
-                            if (now - lastUpdateMs >= 100 || (finalTotal > 0 && downloaded == finalTotal)) {
-                                lastUpdateMs = now;
-                                final long currentDownloaded = downloaded;
-                                MAIN_HANDLER.post(() -> {
-                                    if (dialog.isShowing()) {
-                                        if (finalTotal > 0) {
-                                            int percent = (int) Math.min(100, currentDownloaded * 100 / finalTotal);
-                                            progressBar.setProgress(percent);
-                                            progressText.setText(Formatter.formatFileSize(activity, currentDownloaded)
-                                                    + " of " + Formatter.formatFileSize(activity, finalTotal));
-                                        } else {
-                                            progressText.setText(Formatter.formatFileSize(activity, currentDownloaded));
-                                        }
-                                    }
-                                });
-                            }
+                    try (Response resp = activeCall[0].execute()) {
+                        if (!resp.isSuccessful()) {
+                            throw new IOException("HTTP error " + resp.code());
                         }
-                        out.flush();
+
+                        ResponseBody respBody = resp.body();
+                        if (respBody == null) throw new IOException("Empty response body");
+
+                        long totalLength = respBody.contentLength();
+                        if (totalLength <= 0 && release.apkSize > 0) {
+                            totalLength = release.apkSize;
+                        }
+
+                        final long finalTotal = totalLength;
+
+                        try (InputStream in = respBody.byteStream();
+                             FileOutputStream out = new FileOutputStream(tempFile)) {
+                            byte[] buffer = new byte[8192];
+                            long downloaded = 0;
+                            int read;
+                            long lastUpdateMs = 0;
+
+                            MAIN_HANDLER.post(() -> {
+                                if (finalTotal > 0) {
+                                    progressBar.setIndeterminate(false);
+                                    progressBar.setMax(100);
+                                    progressBar.setProgress(0);
+                                }
+                            });
+
+                            while ((read = in.read(buffer)) != -1) {
+                                if (isCancelled[0]) {
+                                    tempFile.delete();
+                                    return;
+                                }
+                                out.write(buffer, 0, read);
+                                downloaded += read;
+
+                                long now = SystemClock.uptimeMillis();
+                                if (now - lastUpdateMs >= 100 || (finalTotal > 0 && downloaded == finalTotal)) {
+                                    lastUpdateMs = now;
+                                    final long currentDownloaded = downloaded;
+                                    MAIN_HANDLER.post(() -> {
+                                        if (dialog.isShowing()) {
+                                            if (finalTotal > 0) {
+                                                int percent = (int) Math.min(100, currentDownloaded * 100 / finalTotal);
+                                                progressBar.setProgress(percent);
+                                                progressText.setText(Formatter.formatFileSize(activity, currentDownloaded)
+                                                        + " of " + Formatter.formatFileSize(activity, finalTotal));
+                                            } else {
+                                                progressText.setText(Formatter.formatFileSize(activity, currentDownloaded));
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            out.flush();
+                        }
                     }
 
                     if (isCancelled[0]) {
@@ -1135,6 +1129,6 @@ public final class GitHubAppUpdater {
 
     private static void showToast(Context context, String msg) {
         if (context == null) return;
-        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        com.newtube.mobile.ui.common.MobileSnackbar.show(context, msg);
     }
 }

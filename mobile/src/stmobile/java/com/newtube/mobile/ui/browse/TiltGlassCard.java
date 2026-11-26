@@ -9,7 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.ViewParent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -137,6 +137,49 @@ public class TiltGlassCard extends GlassView {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int count = getChildCount();
+        int maxWidth = 0;
+        int maxHeight = 0;
+        int childState = 0;
+        View starfield = null;
+
+        // Measure foreground content first so StarfieldView never inflates wrap_content height
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE) {
+                continue;
+            }
+            if (child.getId() == R.id.starfieldCanvas || child instanceof StarfieldView) {
+                starfield = child;
+                continue;
+            }
+            measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
+            LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            maxWidth = Math.max(maxWidth, child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin);
+            maxHeight = Math.max(maxHeight, child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);
+            childState = combineMeasuredStates(childState, child.getMeasuredState());
+        }
+
+        maxWidth += getPaddingLeft() + getPaddingRight();
+        maxHeight += getPaddingTop() + getPaddingBottom();
+        maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
+        maxHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
+
+        int measuredW = resolveSizeAndState(maxWidth, widthMeasureSpec, childState);
+        int measuredH = resolveSizeAndState(maxHeight, heightMeasureSpec, childState << MEASURED_HEIGHT_STATE_SHIFT);
+        setMeasuredDimension(measuredW, measuredH);
+
+        if (starfield != null) {
+            int starW = Math.max(0, measuredW - getPaddingLeft() - getPaddingRight());
+            int starH = Math.max(0, measuredH - getPaddingTop() - getPaddingBottom());
+            starfield.measure(
+                    MeasureSpec.makeMeasureSpec(starW, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(starH, MeasureSpec.EXACTLY));
+        }
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mBounds.set(0, 0, w, h);
@@ -159,14 +202,9 @@ public class TiltGlassCard extends GlassView {
         float w = getWidth();
         float h = getHeight();
 
-        ViewParent parent = getParent();
-
         if (w > 0 && h > 0) {
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(true);
-                    }
                     mIsTouching = true;
                     Haptics.tick(this);
                     updateTouchTargets(x, y, w, h);
@@ -174,9 +212,6 @@ public class TiltGlassCard extends GlassView {
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(true);
-                    }
                     mIsTouching = true;
                     updateTouchTargets(x, y, w, h);
                     startPhysics();
@@ -184,9 +219,6 @@ public class TiltGlassCard extends GlassView {
 
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(false);
-                    }
                     mIsTouching = false;
                     mTargetRotX = 0f;
                     mTargetRotY = 0f;

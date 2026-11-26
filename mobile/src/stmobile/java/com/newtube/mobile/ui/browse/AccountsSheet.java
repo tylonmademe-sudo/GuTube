@@ -111,7 +111,8 @@ public final class AccountsSheet {
         GlassChipTrack tabs = content.findViewById(R.id.accounts_sheet_tabs);
         View main = content.findViewById(R.id.accounts_sheet_main);
         View web = content.findViewById(R.id.accounts_sheet_web);
-        tabs.setGlassSource(null); // over the sheet's own frost, as the watch page's Up next chips
+        tabs.setFixedMode(true);
+        tabs.setShowTrack(false);
         tabs.setChips(java.util.Arrays.asList(content.getContext().getString(R.string.mobile_accounts_tab_main),
                 content.getContext().getString(R.string.mobile_accounts_tab_web)));
         tabs.setSelected(0);

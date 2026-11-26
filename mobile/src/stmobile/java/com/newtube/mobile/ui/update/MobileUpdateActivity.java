@@ -180,7 +180,6 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         @SuppressLint("InflateParams") // a dialog's content: BottomSheetDialog.setContentView gives it its parent
         View content = LayoutInflater.from(this).inflate(R.layout.sheet_mobile_update, null);
         mTitle = content.findViewById(R.id.update_sheet_title);
-        com.newtube.mobile.ui.common.AppIcon.show(content.findViewById(R.id.mobile_update_icon), true);
         mSubtitle = content.findViewById(R.id.update_sheet_subtitle);
         mProgress = content.findViewById(R.id.update_sheet_progress);
         mProgressText = content.findViewById(R.id.update_sheet_progress_text);
@@ -198,15 +197,19 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
         mScroll = content.findViewById(R.id.update_sheet_scroll);
         mScroll.setMaxHeight(Math.round(screenHeightPx() * NOTES_MAX_HEIGHT_FRACTION));
 
-        // Dedicated Liquid Glass Background Layer (AGSL distortion / blur)
-        View glassBg = content.findViewById(R.id.update_sheet_glass_bg);
-        com.newtube.mobile.ui.common.LiquidGlass.applyLiquidEffect(glassBg);
+        if (com.newtube.mobile.ui.common.SheetGlass.backdrop() != null) {
+            com.newtube.mobile.ui.common.SheetGlass.frost(content, com.newtube.mobile.ui.common.SheetGlass.backdrop());
+        } else {
+            com.newtube.mobile.ui.common.LiquidGlassEngine.applySurface(
+                    content, com.newtube.mobile.ui.common.LiquidGlassEngine.SurfaceRole.SHEET, 28f, false);
+        }
 
         if (mPrimary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mPrimary);
         if (mSecondary != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mSecondary);
         if (mDontAsk != null) com.newtube.mobile.ui.common.SpotlightHelper.attach(mDontAsk);
 
-        mSheet = new BottomSheetDialog(this, R.style.ThemeOverlay_GuTube_BottomSheetDialog_LiquidGlass);
+        mSheet = com.newtube.mobile.ui.common.Haptics.watch(
+                new BottomSheetDialog(this, R.style.ThemeOverlay_GuTube_BottomSheetDialog_LiquidGlass));
         mSheet.setContentView(content);
         mSheet.setOnDismissListener(dialog -> finish());
 
@@ -474,14 +477,14 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
                 break;
             case DOWNLOADING:
                 show(getString(R.string.mobile_update_downloading_title), getString(R.string.mobile_update_app_version, newVersion),
-                        null, info.newReleases);
+                        null, info != null ? info.newReleases : null);
                 renderDownloadProgress();
                 setButtons(R.string.mobile_update_cancel, v -> mUpdates.cancelDownload(), 0, null);
                 mSecondary.setEnabled(!mUpdates.isCancelling());
                 break;
             case DOWNLOAD_FAILED:
                 show(getString(R.string.mobile_update_download_failed_title), getString(R.string.mobile_update_app_version, newVersion),
-                        getString(R.string.mobile_update_download_failed_body, newVersion), info.newReleases);
+                        getString(R.string.mobile_update_download_failed_body, newVersion), info != null ? info.newReleases : null);
                 hideProgress();
                 setButtons(R.string.mobile_update_github, v -> openReleasePage(newVersion), R.string.mobile_update_try_again, v -> {
                     mInstallWhenReady = true;

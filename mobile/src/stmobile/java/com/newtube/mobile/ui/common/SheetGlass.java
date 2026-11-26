@@ -46,16 +46,9 @@ import java.lang.ref.WeakReference;
 public final class SheetGlass {
     /** The copy is this many times smaller than the page; scaling it back up adds to the blur. */
     private static final int SCALE = 8;
-    private static final int BLUR_RADIUS = 3;
     private static final float CORNER_DP = 28f;
     /** A live sheet's copies: about the frame rate of most videos. */
     private static final long LIVE_FRAME_MS = 33;
-    /**
-     * A live copy's GPU blur, in page pixels: as soft as {@link #blur} makes a 1/8 copy (three box
-     * passes of radius 3 are a sigma of 3.5 there, 28 on the page; RenderEffect's radius r is a sigma
-     * of 0.577 r + 0.5).
-     */
-    private static final float LIVE_BLUR_PX = 47f;
 
     private static WeakReference<Activity> sBackdrop = new WeakReference<>(null);
     @Nullable
@@ -221,36 +214,8 @@ public final class SheetGlass {
         new Feed(target, page, decor, cover, cornerPx, live, tint).copy();
     }
 
-    /**
-     * Glassmorphism specular rim and top sheen over the sheet:
-     * - Top sheen fading down (rgba(255, 255, 255, 0.15))
-     * - Hairline stroke rim (inset 0px 0px 4px 2px rgba(255, 255, 255, 0.21))
-     */
     private static void rim(@NonNull View cover, float cornerPx, boolean sheenToo) {
-        if (cover.getTag(R.id.mobile_sheet_rim) != null) {
-            return;
-        }
-        Context context = cover.getContext();
-        float density = context.getResources().getDisplayMetrics().density;
-        android.graphics.drawable.GradientDrawable sheen = new android.graphics.drawable.GradientDrawable(
-                android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {ContextCompat.getColor(context, R.color.gutube_glass_sheen), 0x00FFFFFF});
-        sheen.setCornerRadii(new float[] {cornerPx, cornerPx, cornerPx, cornerPx, 0, 0, 0, 0});
-        android.graphics.drawable.GradientDrawable line = new android.graphics.drawable.GradientDrawable();
-        line.setCornerRadius(cornerPx);
-        int lineColor = ContextCompat.getColor(context, sheenToo ? R.color.gutube_glass_rim : R.color.gutube_toast_rim);
-        line.setStroke(Math.max(1, Math.round(1.2f * density)), lineColor);
-        android.graphics.drawable.LayerDrawable rim = new android.graphics.drawable.LayerDrawable(
-                sheenToo ? new Drawable[] {sheen, line} : new Drawable[] {line});
-        if (sheenToo) {
-            rim.setLayerHeight(0, Math.round(64 * density));
-            rim.setLayerGravity(0, android.view.Gravity.TOP | android.view.Gravity.FILL_HORIZONTAL);
-        }
-        rim.setBounds(0, 0, cover.getWidth(), cover.getHeight());
-        cover.getOverlay().add(rim);
-        cover.setTag(R.id.mobile_sheet_rim, rim);
-        cover.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-                rim.setBounds(0, 0, right - left, bottom - top));
+        LiquidGlassEngine.applySheetRimOverlay(cover, cornerPx, sheenToo);
     }
 
     /**
@@ -304,7 +269,9 @@ public final class SheetGlass {
                     boolean copied = result == PixelCopy.SUCCESS;
                     if (copied && !mLive) {
                         // The message pill is frosted, not see-through: twice the blur, shapes gone.
-                        blur(page, mTint != 0 ? BLUR_RADIUS * 2 : BLUR_RADIUS);
+                        blur(page, mTint != 0
+                                ? LiquidGlassEngine.BLUR_SHEET_BOX_RADIUS * 2
+                                : LiquidGlassEngine.BLUR_SHEET_BOX_RADIUS);
                     }
                     show(copied ? page : null, origin, pageW, pageH);
                 }, mMain);
@@ -428,17 +395,19 @@ public final class SheetGlass {
             if (live && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 mBlurNode = new android.graphics.RenderNode("GuTube sheet glass");
                 mBlurNode.setRenderEffect(android.graphics.RenderEffect.createBlurEffect(
-                        LIVE_BLUR_PX / SCALE, LIVE_BLUR_PX / SCALE, Shader.TileMode.CLAMP));
+                        LiquidGlassEngine.BLUR_SHEET_LIVE_PX / SCALE,
+                        LiquidGlassEngine.BLUR_SHEET_LIVE_PX / SCALE,
+                        Shader.TileMode.CLAMP));
             } else {
                 mBlurNode = null;
             }
             ColorMatrix saturate = new ColorMatrix();
-            saturate.setSaturation(1.8f);
+            saturate.setSaturation(LiquidGlassEngine.SATURATION_SHEET);
             mPage.setColorFilter(new ColorMatrixColorFilter(saturate));
             mTint.setColor(tint != 0 ? tint : ContextCompat.getColor(target.getContext(), R.color.gutube_sheet_glass));
             float density = target.getContext().getResources().getDisplayMetrics().density;
             mRimPaint.setStyle(Paint.Style.STROKE);
-            mRimPaint.setStrokeWidth(1.2f * density);
+            mRimPaint.setStrokeWidth(LiquidGlassEngine.SHEET_RIM_STROKE_DP * density);
             mRimPaint.setColor(ContextCompat.getColor(target.getContext(), R.color.gutube_glass_rim));
             mCorner = corner;
             // A drag moves the sheet without redrawing it: redraw so the page stays put underneath.

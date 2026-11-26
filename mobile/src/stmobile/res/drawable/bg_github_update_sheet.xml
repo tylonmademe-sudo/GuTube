@@ -17,11 +17,11 @@
                 android:bottomRightRadius="28dp" />
             <stroke
                 android:width="2dp"
-                android:color="#26FFFFFF" />
+                android:color="@color/gutube_glass_sheen" />
         </shape>
     </item>
 
-    <!-- Main crystal-clear liquid glass base surface (rgba(255, 255, 255, 0.04) to rgba(255, 255, 255, 0.08)) -->
+    <!-- Main crystal-clear liquid glass base surface -->
     <item
         android:top="1dp"
         android:left="1dp"
@@ -33,19 +33,14 @@
                 android:topRightRadius="27dp"
                 android:bottomLeftRadius="27dp"
                 android:bottomRightRadius="27dp" />
-            <gradient
-                android:angle="270"
-                android:startColor="#14FFFFFF"
-                android:centerColor="#0FFFFFFF"
-                android:endColor="#0AFFFFFF"
-                android:type="linear" />
+            <solid android:color="@color/gutube_sheet_glass" />
             <stroke
                 android:width="1.5dp"
-                android:color="#4DFFFFFF" />
+                android:color="@color/gutube_glass_rim" />
         </shape>
     </item>
 
-    <!-- Inner Specular Rim Highlight (inset 0 0 6px -3px rgba(255, 255, 255, 0.7): #B3FFFFFF to #26FFFFFF) -->
+    <!-- Inner Specular Rim Highlight -->
     <item
         android:top="2dp"
         android:left="2dp"
@@ -59,8 +54,7 @@
                 android:bottomRightRadius="0dp" />
             <gradient
                 android:angle="270"
-                android:startColor="#B3FFFFFF"
-                android:centerColor="#26FFFFFF"
+                android:startColor="@color/gutube_glass_sheen"
                 android:endColor="#00FFFFFF"
                 android:type="linear" />
         </shape>

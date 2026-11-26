@@ -274,8 +274,10 @@ public class SponsorBlockController extends BasePlayerController {
             return;
         }
 
-        MessageHelpers.showMessage(getContext(),
-                String.format("%s: %s", getContext().getString(R.string.content_block_provider), getContext().getString(R.string.msg_skipping_segment, category)));
+        if (getPlayer() == null || !getPlayer().showSponsorSkipped(category)) {
+            MessageHelpers.showMessage(getContext(),
+                    String.format("%s: %s", getContext().getString(R.string.content_block_provider), getContext().getString(R.string.msg_skipping_segment, category)));
+        }
         setPositionMs(skipPosMs);
         closeTransparentDialog();
     }

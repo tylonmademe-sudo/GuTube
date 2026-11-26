@@ -35,16 +35,10 @@ import androidx.annotation.Nullable;
  * With Liquid glass off ({@link Glass#isLiquid}) no grain or rim, as GlassView.
  */
 public final class GlassDrawable extends Drawable {
-    private static final float BLUR_DP = 12f;
-    private static final float PILL_BLUR_DP = 28f;
-    /** GUTUBE(issue #250): a page pill frosts what scrolls under it to colour, as the search bar. */
-    private static final float PAGE_BLUR_DP = 24f;
     /** A dark-theme page pill's tint: the app's glass (gutube_glass_tint), as the search bar. */
     private static final int PAGE_TINT = 0x66000000;
-    private static final float SATURATION = 1.5f;
     private static final int TINT = 0x1AFFFFFF; // Clean translucent frosted glass base (#14FFFFFF to #1FFFFFFF)
     private static final int FALLBACK_TINT = 0x24FFFFFF; // Clean translucent frosted glass fallback
-    private static final int NOISE_ALPHA = 8;
 
     private final View mHost;
     private final GlassSource mSource;
@@ -179,15 +173,17 @@ public final class GlassDrawable extends Drawable {
         mSpotlight.setSizeDp(140f);
         boolean live = GlassSource.HARDWARE && source != null;
         mNode = live ? new RenderNode("GuTube glass button") : null;
-        mNoise.setShader(new BitmapShader(GlassView.noise(), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
-        mNoise.setAlpha(NOISE_ALPHA);
+        mNoise.setShader(new BitmapShader(LiquidGlassEngine.noiseBitmap(), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+        mNoise.setAlpha(LiquidGlassEngine.NOISE_ALPHA_DRAWABLE);
         mRim.setStyle(Paint.Style.STROKE);
         mRim.setStrokeWidth(mDensity);
         if (live) {
             ColorMatrix saturate = new ColorMatrix();
-            saturate.setSaturation(SATURATION);
+            saturate.setSaturation(LiquidGlassEngine.SATURATION_PLAYER);
             // a message pill: frosted as heavily as the app's (SheetGlass), the video only colour under it
-            float blur = (tint != 0 ? PILL_BLUR_DP : page ? PAGE_BLUR_DP : BLUR_DP) * mDensity;
+            float blur = (tint != 0 ? LiquidGlassEngine.BLUR_PLAYER_PILL_DP
+                    : page ? LiquidGlassEngine.BLUR_PILL_DP
+                    : LiquidGlassEngine.BLUR_PLAYER_DP) * mDensity;
             mNode.setRenderEffect(RenderEffect.createBlurEffect(blur, blur,
                     RenderEffect.createColorFilterEffect(new ColorMatrixColorFilter(saturate)), Shader.TileMode.CLAMP));
             mNode.setClipToOutline(true);
@@ -212,10 +208,8 @@ public final class GlassDrawable extends Drawable {
             mRecordedX = Integer.MIN_VALUE;
             return;
         }
-        // 1dp crisp inner white rim (#4DFFFFFF) with top specular lens sheen (#66FFFFFF)
-        mRim.setShader(new LinearGradient(0, mShape.top, 0, mShape.bottom,
-                new int[] {0x66FFFFFF, 0x4DFFFFFF, 0x33FFFFFF, 0x4DFFFFFF},
-                new float[] {0f, 0.35f, 0.7f, 1f}, Shader.TileMode.CLAMP));
+        // Specular rim from LiquidGlassEngine (player controls stay dark)
+        mRim.setShader(LiquidGlassEngine.createRimShader(bounds.width(), bounds.height(), true));
         mRecordedX = Integer.MIN_VALUE;
     }
 

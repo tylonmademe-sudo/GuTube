@@ -81,6 +81,17 @@
         <attr name="spotlightDrawEdge" />
     </declare-styleable>
 
+    <!-- GUTUBE(unified-pill): UnifiedPillNavView attributes. -->
+    <declare-styleable name="UnifiedPillNavView">
+        <attr name="pillMode" format="enum">
+            <enum name="scrollable" value="0" />
+            <enum name="fixed" value="1" />
+        </attr>
+        <attr name="pillShowTrack" format="boolean" />
+        <attr name="pillHeight" format="dimension" />
+        <attr name="pillTextSize" format="dimension" />
+    </declare-styleable>
+
     <!-- GUTUBE(gooey-nav): React Bits GooeyNav component attributes. -->
     <declare-styleable name="GooeyNav">
         <attr name="gnParticleCount" format="integer" />
